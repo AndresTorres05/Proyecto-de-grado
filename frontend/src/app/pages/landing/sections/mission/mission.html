@@ -1,0 +1,24 @@
+<section class="section section--dark" id="nosotros">
+  <div class="container">
+    <div class="mission-intro">
+      <span class="mission-badge">Nuestra misión</span>
+      <h2>Más que una plataforma, <span class="accent-gold">una red de apoyo.</span></h2>
+      <p class="mission-text">
+        En muchas comunidades, el cuidado de las personas mayores depende de esfuerzos aislados,
+        información dispersa y recursos insuficientes. GEMA nace para cambiar eso: unificamos a
+        organizaciones sin fines de lucro, voluntarios, acompañantes y centros de salud en un
+        ecosistema digital que pone a la persona mayor en el centro de cada decisión.
+      </p>
+    </div>
+
+    <div class="mission-grid">
+      @for (pillar of pillars; track pillar.title) {
+        <div class="mission-card">
+          <div class="mission-card__icon">{{ pillar.icon }}</div>
+          <h3>{{ pillar.title }}</h3>
+          <p>{{ pillar.text }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>

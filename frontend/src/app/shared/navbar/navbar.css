@@ -1,0 +1,86 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--gema-cream);
+  border-bottom: 1px solid var(--gema-border);
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 16px;
+}
+
+/* Izquierda: marca */
+
+.navbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navbar__brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.navbar__brand-name {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--gema-navy);
+}
+
+.navbar__brand-tagline {
+  font-size: 0.7rem;
+  color: var(--gema-text-gray-light);
+}
+
+/* Centro: navegacion */
+
+.navbar__links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar__links a {
+  font-weight: 500;
+  color: var(--gema-navy);
+  transition: color 0.2s ease;
+}
+
+.navbar__links a:hover {
+  color: var(--gema-orange);
+}
+
+/* Derecha: acciones */
+
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navbar__login-link {
+  font-weight: 500;
+  color: var(--gema-navy-light);
+}
+
+@media (max-width: 900px) {
+  .navbar__nav {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .navbar__login-link {
+    display: none;
+  }
+}

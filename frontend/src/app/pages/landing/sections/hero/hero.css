@@ -1,0 +1,276 @@
+.hero__grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+/* ---------- Columna de texto ---------- */
+
+.hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: var(--gema-white);
+  border: 1px solid var(--gema-border);
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  color: var(--gema-text-gray);
+}
+
+.hero__badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gema-orange);
+  flex-shrink: 0;
+}
+
+.hero__title {
+  font-size: clamp(2.25rem, 4vw, 3.25rem);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-block: 20px;
+}
+
+.hero__title .accent {
+  color: var(--gema-orange);
+}
+
+.hero__description {
+  color: var(--gema-text-gray);
+  font-size: 1.05rem;
+  max-width: 480px;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.hero__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  margin: 0;
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--gema-border);
+}
+
+.hero__stat {
+  margin: 0;
+}
+
+.hero__stat:not(:last-child) {
+  border-right: 1px solid var(--gema-border);
+  padding-right: 32px;
+}
+
+.hero__stat-value {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--gema-navy);
+}
+
+.hero__stat-label {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  color: var(--gema-text-gray-light);
+}
+
+/* ---------- Columna de ilustración ---------- */
+
+.hero__illustration {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero__stage {
+  position: relative;
+  width: 100%;
+  height: 420px;
+}
+
+.hero__circle {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--gema-navy-light) 12%, var(--gema-cream));
+}
+
+.hero__avatar {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: var(--shadow-card);
+}
+
+.hero__avatar--1 {
+  top: 30%;
+  left: 25%;
+  background: var(--gema-navy);
+}
+
+.hero__avatar--2 {
+  top: 55%;
+  left: 55%;
+  background: var(--gema-orange);
+}
+
+.hero__avatar--3 {
+  top: 25%;
+  left: 60%;
+  background: var(--gema-orange);
+}
+
+.float-card {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--gema-white);
+  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.float-card__icon {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.float-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.float-card__label {
+  color: var(--gema-text-gray-light);
+  font-size: 0.7rem;
+}
+
+.float-card__value {
+  font-weight: 700;
+  color: var(--gema-navy);
+}
+
+.float-card__value--accent {
+  color: var(--gema-orange);
+}
+
+.float-card--1 {
+  top: 4%;
+  left: 0;
+}
+
+.float-card--2 {
+  top: 12%;
+  right: 0;
+}
+
+.float-card--3 {
+  top: 48%;
+  left: -4%;
+}
+
+.float-card--4 {
+  bottom: 10%;
+  right: -2%;
+}
+
+.float-card--5 {
+  bottom: 2%;
+  left: 14%;
+}
+
+.hero__roles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.role-pill {
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--gema-white);
+}
+
+.pill-institution {
+  background: var(--gema-text-gray-light);
+}
+
+.pill-elder {
+  background: var(--gema-navy);
+}
+
+.pill-companion {
+  background: var(--gema-orange);
+}
+
+.pill-volunteer {
+  background: var(--gema-gold);
+  color: var(--gema-navy-darker);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 960px) {
+  .hero__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero__illustration {
+    margin-top: 48px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero__description {
+    max-width: none;
+  }
+
+  .hero__stats {
+    gap: 24px;
+  }
+
+  .hero__stat:not(:last-child) {
+    padding-right: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero__stage {
+    height: 320px;
+  }
+
+  .hero__circle {
+    width: 220px;
+    height: 220px;
+  }
+
+  .float-card--3,
+  .float-card--5 {
+    display: none;
+  }
+}

@@ -1,1 +1,218 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+  /* GEMA — paleta de marca (aproximada del mockup, ajustable) */
+  --gema-cream: #fbf2e1;
+  --gema-cream-soft: #fdf8ef;
+  --gema-navy: #1d3d6e;
+  --gema-navy-light: #2f5fa8;
+  --gema-navy-dark: #142a4f;
+  --gema-navy-darker: #0e1e38;
+  --gema-orange: #e67d4e;
+  --gema-orange-soft: #f3a97c;
+  --gema-gold: #f0c55e;
+  --gema-green: #3fa66b;
+
+  --gema-text: #1d3d6e;
+  --gema-text-gray: #66707f;
+  --gema-text-gray-light: #98a2b3;
+  --gema-border: #e9e1d2;
+  --gema-white: #ffffff;
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 10px 30px rgba(20, 41, 77, 0.08);
+  --shadow-card-lg: 0 20px 45px rgba(20, 41, 77, 0.12);
+
+  --font-body:
+    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  --font-heading: 'Inter Tight', var(--font-body);
+
+  --container-max: 1200px;
+  --section-padding-block: 96px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--gema-text-gray);
+  background: var(--gema-cream);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+  color: var(--gema-navy);
+  margin: 0;
+}
+
+p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Utilidades compartidas por las secciones de la landing */
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+.section {
+  padding-block: var(--section-padding-block);
+}
+
+.section--light {
+  background: var(--gema-cream);
+}
+
+.section--white {
+  background: var(--gema-white);
+}
+
+.section--dark {
+  background: var(--gema-navy-dark);
+  color: var(--gema-cream-soft);
+}
+
+.section--dark h1,
+.section--dark h2,
+.section--dark h3,
+.section--dark h4 {
+  color: var(--gema-white);
+}
+
+.section--darker {
+  background: var(--gema-navy-darker);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--gema-text-gray-light);
+}
+
+.section-header {
+  max-width: 640px;
+  margin-inline: auto;
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.section-header h2 {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 700;
+  margin-block: 16px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 2px solid transparent;
+  transition:
+    transform 0.15s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: var(--gema-navy);
+  color: var(--gema-white);
+}
+
+.btn-primary:hover {
+  background: var(--gema-navy-light);
+}
+
+.btn-outline {
+  background: transparent;
+  border-color: var(--gema-navy);
+  color: var(--gema-navy);
+}
+
+.btn-outline:hover {
+  background: var(--gema-navy);
+  color: var(--gema-white);
+}
+
+.btn-gold {
+  background: var(--gema-gold);
+  color: var(--gema-navy-darker);
+}
+
+.btn-gold:hover {
+  background: #f6d685;
+}
+
+.btn-outline-light {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.5);
+  color: var(--gema-white);
+}
+
+.btn-outline-light:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.card {
+  background: var(--gema-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.logo-mark {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+}

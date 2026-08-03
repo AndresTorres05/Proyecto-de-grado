@@ -1,0 +1,61 @@
+<section class="section section--light hero" id="inicio">
+  <div class="container hero__grid">
+    <div class="hero__content">
+      <span class="hero__badge">
+        <span class="hero__badge-dot"></span>
+        Plataforma de innovación social - 2024
+      </span>
+
+      <h1 class="hero__title">
+        Tecnología que fortalece el cuidado de las
+        <span class="accent">personas mayores.</span>
+      </h1>
+
+      <p class="hero__description">
+        GEMA es una plataforma inteligente que conecta organizaciones, acompañantes,
+        voluntarios e instituciones para gestionar el cuidado de las personas mayores
+        mediante información centralizada, colaboración y analítica de datos.
+      </p>
+
+      <div class="hero__actions">
+        <a href="#solucion" class="btn btn-primary">Conocer la plataforma &rarr;</a>
+        <a href="#contacto" class="btn btn-outline">Solicitar demostración</a>
+      </div>
+
+      <dl class="hero__stats">
+        @for (stat of stats; track stat.label) {
+          <div class="hero__stat">
+            <dt class="hero__stat-value">{{ stat.value }}</dt>
+            <dd class="hero__stat-label">{{ stat.label }}</dd>
+          </div>
+        }
+      </dl>
+    </div>
+
+    <div class="hero__illustration" aria-hidden="true">
+      <div class="hero__stage">
+        <div class="hero__circle">
+          <div class="hero__avatar hero__avatar--1">🧑</div>
+          <div class="hero__avatar hero__avatar--2">🧓</div>
+          <div class="hero__avatar hero__avatar--3">🧓</div>
+        </div>
+
+        @for (card of floatCards; track card.label; let i = $index) {
+          <div class="float-card float-card--{{ i + 1 }}">
+            <span class="float-card__icon">{{ card.icon }}</span>
+            <span class="float-card__text">
+              <span class="float-card__label">{{ card.label }}</span>
+              <span class="float-card__value" [class.float-card__value--accent]="card.accent">{{ card.text }}</span>
+            </span>
+          </div>
+        }
+      </div>
+
+      <div class="hero__roles">
+        @for (role of rolePills; track role.label) {
+          <span class="role-pill" [class]="role.className">{{ role.label }}</span>
+        }
+      </div>
+    </div>
+  </div>
+</section>

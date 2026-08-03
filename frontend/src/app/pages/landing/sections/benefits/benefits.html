@@ -1,0 +1,50 @@
+<section class="section section--light" id="beneficios">
+  <div class="container">
+    <h2 class="benefits-title">Todo lo que necesitas, en un solo lugar.</h2>
+
+    <div class="benefits-row">
+      <div class="mini-dashboard card">
+        <div class="mini-dashboard__stats">
+          @for (stat of stats; track stat.label) {
+            <div class="mini-dashboard__stat">
+              <span class="mini-dashboard__value" [style.color]="stat.color">{{ stat.value }}</span>
+              <span class="mini-dashboard__label">{{ stat.label }}</span>
+            </div>
+          }
+        </div>
+
+        <div class="mini-dashboard__chart" aria-hidden="true">
+          @for (bar of bars; track $index) {
+            <div class="mini-dashboard__bar" [style.height.%]="bar.height" [style.background]="bar.color"></div>
+          }
+        </div>
+
+        <div class="mini-dashboard__donut-row">
+          <div class="mini-dashboard__donut" aria-hidden="true"></div>
+          <ul class="mini-dashboard__legend">
+            @for (item of legend; track item.label) {
+              <li>
+                <span class="mini-dashboard__dot" [style.background]="item.color"></span>
+                {{ item.label }}
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+
+      <div class="benefits-text">
+        <div class="benefits-text__eyebrow-row">
+          <span class="benefits-text__bar"></span>
+          <span class="eyebrow">Gestión centralizada</span>
+        </div>
+        <h3>Centraliza toda la información.</h3>
+        <p>
+          Accede a perfiles completos de cada persona mayor, su historial médico, actividades, visitas, medicamentos
+          y alertas. GEMA elimina la información dispersa y la reemplaza por un expediente digital unificado, seguro
+          y accesible desde cualquier dispositivo.
+        </p>
+        <a href="#analitica" class="benefits-text__link">Conocer más &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>

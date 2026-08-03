@@ -1,0 +1,22 @@
+<section class="section section--light" id="solucion">
+  <div class="container">
+    <div class="section-header">
+      <span class="eyebrow">MÓDULOS DE LA PLATAFORMA</span>
+      <h2>Cada necesidad, un módulo especializado.</h2>
+      <p>GEMA integra 12 módulos diseñados para cubrir todos los aspectos de la gestión del cuidado en un ecosistema unificado.</p>
+    </div>
+
+    <div class="modules-grid">
+      @for (m of modules; track m.title) {
+        <div class="module-card card">
+          @if (m.badge) {
+            <span class="module-badge">{{ m.badge }}</span>
+          }
+          <div class="module-icon">{{ m.icon }}</div>
+          <h3>{{ m.title }}</h3>
+          <p>{{ m.subtitle }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>

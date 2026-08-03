@@ -1,0 +1,26 @@
+<section class="section section--dark cta">
+  <div class="container cta__content">
+    <h2>
+      Únete al movimiento que está transformando
+      <span class="accent-gold">el cuidado de las personas mayores.</span>
+    </h2>
+    <p class="cta__lead">
+      Únete a las organizaciones, instituciones y equipos de cuidado que ya están usando GEMA
+      para hacer más con menos y poner a las personas primero.
+    </p>
+
+    <div class="cta__actions">
+      <a href="#contacto" class="btn btn-gold">Comenzar ahora</a>
+      <a href="#" class="btn btn-outline-light">Ver demostración</a>
+    </div>
+
+    <div class="cta__stats">
+      @for (stat of stats; track stat.label) {
+        <div class="cta__stat">
+          <span class="cta__stat-number">{{ stat.number }}</span>
+          <span class="cta__stat-label">{{ stat.label }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</section>
