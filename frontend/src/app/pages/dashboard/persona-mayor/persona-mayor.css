@@ -1,0 +1,200 @@
+:host {
+  display: block;
+  font-size: 1.1rem;
+}
+
+.page-header {
+  margin-bottom: 28px;
+}
+
+.page-header h1 {
+  font-size: 2.1rem;
+  font-weight: 700;
+}
+
+.page-header p {
+  margin-top: 6px;
+  color: var(--gema-text-gray);
+  font-size: 1.1rem;
+}
+
+/* ---------- Recordatorio ---------- */
+
+.reminder-card {
+  padding: 28px;
+  margin-bottom: 32px;
+  border: 2px solid var(--gema-green);
+  background: color-mix(in srgb, var(--gema-green) 8%, white);
+}
+
+.reminder-card__tag {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--gema-green) 60%, var(--gema-navy));
+  margin-bottom: 16px;
+}
+
+.reminder-card__body {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.reminder-card__icon {
+  font-size: 2.75rem;
+  flex-shrink: 0;
+}
+
+.reminder-card__body h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.reminder-card__time {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--gema-navy);
+  font-size: 1.2rem;
+  margin-top: 4px;
+}
+
+.reminder-card__body p {
+  font-size: 1rem;
+  color: var(--gema-text-gray);
+  margin-top: 4px;
+}
+
+.reminder-card__btn {
+  margin-top: 22px;
+  font-size: 1.05rem;
+  padding: 16px 28px;
+  width: 100%;
+}
+
+/* ---------- Actividades ---------- */
+
+.section-block {
+  margin-bottom: 32px;
+}
+
+.section-block__title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.activities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+.activity-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 22px;
+}
+
+.activity-card__icon {
+  font-size: 2.25rem;
+  flex-shrink: 0;
+}
+
+.activity-card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.activity-card p {
+  margin-top: 3px;
+  font-size: 0.95rem;
+  color: var(--gema-text-gray);
+}
+
+/* ---------- Acompañante ---------- */
+
+.companion-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 22px;
+  margin-bottom: 32px;
+}
+
+.companion-card__avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--gema-cream-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.companion-card__info {
+  flex: 1;
+}
+
+.companion-card__label {
+  font-size: 0.9rem;
+  color: var(--gema-text-gray);
+}
+
+.companion-card h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.companion-card__call {
+  font-size: 1rem;
+  padding: 14px 22px;
+  white-space: nowrap;
+}
+
+/* ---------- Accesos rápidos ---------- */
+
+.access-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+
+.access-tile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gema-navy);
+  border: 1px solid var(--gema-border);
+  text-align: left;
+}
+
+.access-tile span {
+  font-size: 1.6rem;
+}
+
+.access-tile:hover {
+  border-color: var(--gema-green);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 600px) {
+  .reminder-card__body {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .companion-card {
+    flex-wrap: wrap;
+  }
+}

@@ -1,0 +1,106 @@
+<app-dashboard-shell
+  roleLabel="Acompañante"
+  roleAccent="var(--gema-orange)"
+  userName="Laura Peña"
+  userInitials="LP"
+  [navItems]="navItems"
+  [notifCount]="1"
+>
+  <div class="page-header">
+    <div>
+      <h1>Hola, Laura 👋</h1>
+      <p>Acompañante · martes, 11 de agosto de 2026</p>
+    </div>
+    <button type="button" class="btn btn-primary">+ Registrar visita / seguimiento</button>
+  </div>
+
+  <section class="elders-grid" aria-label="Mis personas mayores acompañadas">
+    @for (p of personasMayores; track p.nombre) {
+      <div class="elder-card card">
+        <div class="elder-card__top">
+          <span class="elder-card__avatar">🧓</span>
+          <span
+            class="elder-card__status"
+            [class.elder-card__status--alert]="p.estado === 'Alerta activa'"
+            >{{ p.estado }}</span
+          >
+        </div>
+        <h3>{{ p.nombre }}</h3>
+        <p>{{ p.edad }} años</p>
+        <p class="elder-card__visit">Próxima visita: {{ p.proximaVisita }}</p>
+        <a href="#" class="elder-card__link">Ver perfil completo &rarr;</a>
+      </div>
+    }
+  </section>
+
+  <section class="main-grid">
+    <div class="col">
+      <div class="panel card">
+        <div class="panel__header">
+          <h2>Recordatorios de hoy</h2>
+        </div>
+        <ul class="reminder-list">
+          @for (r of recordatorios; track r.hora + r.detalle) {
+            <li>
+              <span class="reminder-list__time">{{ r.hora }}</span>
+              <div>
+                <strong>{{ r.detalle }}</strong>
+                <p>{{ r.persona }}</p>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <div class="panel card">
+        <div class="panel__header">
+          <h2>Alertas de mis personas mayores</h2>
+        </div>
+        <ul class="alert-list-simple">
+          @for (a of alertas; track a.nombre) {
+            <li>
+              <span class="alert-item__tag" [class]="'alert-item__tag--' + a.prioridad.toLowerCase()">{{ a.prioridad }}</span>
+              <div>
+                <strong>{{ a.nombre }}</strong>
+                <p>{{ a.descripcion }}</p>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="panel card">
+        <div class="panel__header">
+          <h2>Contactos de emergencia</h2>
+        </div>
+        <ul class="contact-list">
+          @for (c of contactos; track c.nombre) {
+            <li>
+              <div>
+                <strong>{{ c.nombre }}</strong>
+                <p>{{ c.parentesco }} de {{ c.persona }}</p>
+              </div>
+              <a href="tel:{{ c.telefono }}" class="contact-list__call" [attr.aria-label]="'Llamar a ' + c.nombre">📞</a>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <div class="panel card">
+        <div class="panel__header">
+          <h2>Próximas actividades</h2>
+        </div>
+        <ul class="mini-activity-list">
+          @for (act of actividades; track act.nombre) {
+            <li>
+              <strong>{{ act.nombre }}</strong>
+              <p>{{ act.fecha }} · {{ act.persona }}</p>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+</app-dashboard-shell>

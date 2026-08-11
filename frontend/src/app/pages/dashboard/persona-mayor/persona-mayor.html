@@ -1,0 +1,61 @@
+<app-dashboard-shell
+  roleLabel="Persona mayor"
+  roleAccent="var(--gema-green)"
+  userName="Doña Rosa"
+  userInitials="R"
+  [navItems]="navItems"
+  [notifCount]="1"
+  [accessible]="true"
+>
+  <div class="page-header">
+    <h1>¡Hola, Rosa! 😊</h1>
+    <p>Hoy es martes, 11 de agosto</p>
+  </div>
+
+  <section class="reminder-card card">
+    <span class="reminder-card__tag">Recordatorio de hoy</span>
+    <div class="reminder-card__body">
+      <span class="reminder-card__icon" aria-hidden="true">💊</span>
+      <div>
+        <h2>{{ recordatorio.detalle }}</h2>
+        <p class="reminder-card__time">{{ recordatorio.hora }}</p>
+        <p>{{ recordatorio.nota }}</p>
+      </div>
+    </div>
+    <button type="button" class="btn btn-primary reminder-card__btn">Ya lo tomé</button>
+  </section>
+
+  <section class="section-block">
+    <h2 class="section-block__title">Mis próximas actividades</h2>
+    <div class="activities-grid">
+      @for (act of actividades; track act.nombre) {
+        <div class="activity-card card">
+          <span class="activity-card__icon" aria-hidden="true">{{ act.icon }}</span>
+          <div>
+            <h3>{{ act.nombre }}</h3>
+            <p>{{ act.cuando }}</p>
+            <p>{{ act.lugar }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="companion-card card">
+    <span class="companion-card__avatar" aria-hidden="true">🤝</span>
+    <div class="companion-card__info">
+      <p class="companion-card__label">{{ acompanante.rol }}</p>
+      <h2>{{ acompanante.nombre }}</h2>
+    </div>
+    <a href="tel:{{ acompanante.telefono }}" class="btn btn-gold companion-card__call">📞 Llamar</a>
+  </section>
+
+  <section class="access-grid">
+    @for (a of accesos; track a.label) {
+      <button type="button" class="access-tile card">
+        <span aria-hidden="true">{{ a.icon }}</span>
+        {{ a.label }}
+      </button>
+    }
+  </section>
+</app-dashboard-shell>

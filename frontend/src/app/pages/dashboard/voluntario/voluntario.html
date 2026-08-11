@@ -1,0 +1,95 @@
+<app-dashboard-shell
+  roleLabel="Voluntario"
+  roleAccent="var(--gema-gold)"
+  userName="Camilo Rey"
+  userInitials="CR"
+  [navItems]="navItems"
+  [notifCount]="2"
+>
+  <div class="page-header">
+    <div>
+      <h1>Hola, Camilo 👋</h1>
+      <p>Gracias por tu apoyo a la comunidad · martes, 11 de agosto de 2026</p>
+    </div>
+  </div>
+
+  <section class="stats-grid" aria-label="Mis indicadores">
+    @for (stat of stats; track stat.label) {
+      <div class="stat-card card">
+        <span class="stat-card__icon">{{ stat.icon }}</span>
+        <div class="stat-card__value">{{ stat.value }}</div>
+        <div class="stat-card__label">{{ stat.label }}</div>
+      </div>
+    }
+  </section>
+
+  <section class="featured card">
+    <div class="featured__tag">Tu próxima actividad</div>
+    <div class="featured__body">
+      <div>
+        <h2>{{ proximaActividad.nombre }}</h2>
+        <p>{{ proximaActividad.fecha }}</p>
+        <p>{{ proximaActividad.lugar }} · {{ proximaActividad.participantes }} personas mayores inscritas</p>
+      </div>
+      <button type="button" class="btn btn-primary">Registrar mi participación</button>
+    </div>
+  </section>
+
+  <section class="main-grid">
+    <div class="col col--wide">
+      <div class="panel card">
+        <div class="panel__header">
+          <h2>Mis actividades programadas</h2>
+          <a href="#" class="panel__link">Ver historial &rarr;</a>
+        </div>
+        <ul class="activity-list">
+          @for (act of actividades; track act.nombre) {
+            <li class="activity-item">
+              <div>
+                <strong>{{ act.nombre }}</strong>
+                <p>{{ act.fecha }} · {{ act.lugar }}</p>
+              </div>
+              <div class="activity-item__right">
+                <span class="estado-tag" [class.estado-tag--pendiente]="act.estado === 'Pendiente'">{{ act.estado }}</span>
+                <button type="button" class="btn-mini">Registrar asistencia</button>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="panel card">
+        <div class="panel__header">
+          <h2>Mi disponibilidad</h2>
+        </div>
+        <div class="availability-row">
+          @for (d of disponibilidad; track d.dia) {
+            <div class="availability-day" [class.availability-day--on]="d.disponible">
+              {{ d.dia }}
+            </div>
+          }
+        </div>
+        <button type="button" class="btn btn-outline availability-btn">Actualizar disponibilidad</button>
+      </div>
+
+      <div class="panel card alerts-panel">
+        <div class="panel__header">
+          <h2>Alertas asignadas</h2>
+        </div>
+        <ul class="alert-list-simple">
+          @for (a of alertas; track a.nombre) {
+            <li>
+              <span class="alert-item__tag" [class]="'alert-item__tag--' + a.prioridad.toLowerCase()">{{ a.prioridad }}</span>
+              <div>
+                <strong>{{ a.nombre }}</strong>
+                <p>{{ a.descripcion }}</p>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+</app-dashboard-shell>
