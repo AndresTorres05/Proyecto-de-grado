@@ -1,0 +1,140 @@
+:host {
+  display: block;
+}
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: var(--gema-cream-soft);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--gema-white);
+  border: 1px solid var(--gema-border);
+  border-top: 3px solid var(--gema-orange);
+  border-radius: var(--radius-md);
+  padding: 32px;
+}
+
+/* ---------- Marca ---------- */
+
+.login-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.login-brand__logo {
+  width: 32px;
+  height: 32px;
+}
+
+.login-brand__name {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--gema-navy);
+}
+
+/* ---------- Cabecera ---------- */
+
+.login-back {
+  display: inline-block;
+  margin-bottom: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--gema-navy-light);
+}
+
+.login-back:hover {
+  text-decoration: underline;
+}
+
+.login-title {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--gema-navy);
+}
+
+.login-subtitle {
+  margin-top: 4px;
+  color: var(--gema-text-gray);
+  font-size: 0.9rem;
+}
+
+/* ---------- Formulario ---------- */
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.login-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--gema-navy);
+  margin-bottom: 6px;
+  margin-top: 16px;
+}
+
+.login-label:first-of-type {
+  margin-top: 0;
+}
+
+.login-input {
+  padding: 12px 14px;
+  border: 1px solid var(--gema-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--gema-navy);
+  background: var(--gema-white);
+  transition: border-color 0.2s ease;
+}
+
+.login-input:focus {
+  outline: none;
+  border-color: var(--gema-orange);
+}
+
+.login-error {
+  color: #c23b3b;
+  background: color-mix(in srgb, #d64545 12%, white);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 0.85rem;
+  margin-top: 14px;
+  margin-bottom: 0;
+}
+
+.login-submit {
+  margin-top: 22px;
+  width: 100%;
+  cursor: pointer;
+  border-radius: var(--radius-pill);
+}
+
+.login-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: var(--gema-text-gray);
+}
+
+.login-footer a {
+  color: var(--gema-orange);
+  font-weight: 600;
+}
