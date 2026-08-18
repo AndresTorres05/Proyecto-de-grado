@@ -1,17 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { DashboardShell, ShellNavItem } from '../../../shared/dashboard-shell/dashboard-shell';
+import { ActividadService, Actividad } from '../../../core/actividades/actividad.service';
 
 interface StatCard {
   icon: string;
   value: string;
   label: string;
-}
-
-interface ActividadProgramada {
-  nombre: string;
-  fecha: string;
-  lugar: string;
-  estado: 'Confirmada' | 'Pendiente';
 }
 
 interface Disponibilidad {
@@ -31,7 +25,13 @@ interface AlertaConsulta {
   templateUrl: './voluntario.html',
   styleUrl: './voluntario.css'
 })
-export class VoluntarioDashboard {
+export class VoluntarioDashboard implements OnInit {
+  constructor(private actividadService: ActividadService) {}
+
+  ngOnInit(): void {
+    this.actividadService.listar().subscribe((actividades) => this.actividades.set(actividades));
+  }
+
   protected readonly navItems: ShellNavItem[] = [
     { icon: '🏠', label: 'Inicio', active: true },
     { icon: '🏃', label: 'Mis actividades' },
@@ -54,12 +54,7 @@ export class VoluntarioDashboard {
     participantes: 12
   };
 
-  protected readonly actividades: ActividadProgramada[] = [
-    { nombre: 'Fisioterapia grupal', fecha: 'Hoy · 3:00 p.m.', lugar: 'Centro de salud San Cristóbal', estado: 'Confirmada' },
-    { nombre: 'Jornada de vacunación', fecha: 'Mañana · 8:00 a.m.', lugar: 'UPL Entrenubes', estado: 'Confirmada' },
-    { nombre: 'Encuentro intergeneracional', fecha: 'Vie 14 ago · 2:00 p.m.', lugar: 'Parque Entrenubes', estado: 'Pendiente' },
-    { nombre: 'Taller de memoria y cognición', fecha: 'Lun 17 ago · 10:00 a.m.', lugar: 'Salón comunal Entrenubes', estado: 'Pendiente' }
-  ];
+  protected readonly actividades = signal<Actividad[]>([]);
 
   protected readonly disponibilidad: Disponibilidad[] = [
     { dia: 'Lun', disponible: true },

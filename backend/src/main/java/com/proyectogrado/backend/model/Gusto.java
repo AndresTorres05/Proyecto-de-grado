@@ -3,30 +3,30 @@ package com.proyectogrado.backend.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "rol")
-public class Rol {
+@Table(name = "gusto")
+public class Gusto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_rol")
-    private Integer idRol;
+    @Column(name = "id_gusto")
+    private Integer idGusto;
 
     @Column(name = "nombre", nullable = false, unique = true)
     private String nombre;
 
-    public Rol() {
+    public Gusto() {
     }
 
-    public Rol(String nombre) {
+    public Gusto(String nombre) {
         this.nombre = nombre;
     }
 
-    public Integer getIdRol() {
-        return idRol;
+    public Integer getIdGusto() {
+        return idGusto;
     }
 
-    public void setIdRol(Integer idRol) {
-        this.idRol = idRol;
+    public void setIdGusto(Integer idGusto) {
+        this.idGusto = idGusto;
     }
 
     public String getNombre() {

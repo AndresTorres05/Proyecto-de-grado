@@ -43,17 +43,15 @@
           <a href="#" class="panel__link">Ver historial &rarr;</a>
         </div>
         <ul class="activity-list">
-          @for (act of actividades; track act.nombre) {
+          @for (act of actividades(); track act.idActividad) {
             <li class="activity-item">
               <div>
                 <strong>{{ act.nombre }}</strong>
-                <p>{{ act.fecha }} · {{ act.lugar }}</p>
-              </div>
-              <div class="activity-item__right">
-                <span class="estado-tag" [class.estado-tag--pendiente]="act.estado === 'Pendiente'">{{ act.estado }}</span>
-                <button type="button" class="btn-mini">Registrar asistencia</button>
+                <p>{{ act.fecha || 'Sin fecha' }} · {{ act.lugar || 'Sin lugar' }}</p>
               </div>
             </li>
+          } @empty {
+            <li>Aún no hay actividades disponibles.</li>
           }
         </ul>
       </div>

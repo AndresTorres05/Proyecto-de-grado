@@ -318,6 +318,80 @@
   gap: 8px;
 }
 
+/* ---------- Formulario de actividades ---------- */
+
+.activity-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.activity-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.activity-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--gema-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-family: inherit;
+  color: var(--gema-navy);
+  background: var(--gema-white);
+}
+
+.activity-input:focus {
+  outline: none;
+  border-color: var(--gema-orange);
+}
+
+.activity-error {
+  color: #c23b3b;
+  background: color-mix(in srgb, #d64545 12%, white);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  margin-bottom: 14px;
+}
+
+.activity-empty {
+  color: var(--gema-text-gray);
+  font-size: 0.85rem;
+  padding: 8px 0;
+}
+
+.activity-item__edit {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.activity-item__actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.activity-item__actions .btn {
+  padding: 8px 12px;
+  font-size: 0.78rem;
+}
+
+.activity-btn--danger {
+  border-color: #c23b3b;
+  color: #c23b3b;
+}
+
+.activity-btn--danger:hover {
+  background: #c23b3b;
+  color: var(--gema-white);
+}
+
 /* ---------- Actividades / listas mini ---------- */
 
 .activity-list,

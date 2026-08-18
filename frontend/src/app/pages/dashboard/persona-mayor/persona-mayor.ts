@@ -1,12 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { DashboardShell, ShellNavItem } from '../../../shared/dashboard-shell/dashboard-shell';
-
-interface Actividad {
-  icon: string;
-  nombre: string;
-  cuando: string;
-  lugar: string;
-}
+import { AuthService } from '../../../core/auth/auth.service';
+import { ActividadService, Actividad } from '../../../core/actividades/actividad.service';
+import { GustoService, Gusto } from '../../../core/gustos/gusto.service';
 
 interface AccesoRapido {
   icon: string;
@@ -15,14 +12,15 @@ interface AccesoRapido {
 
 @Component({
   selector: 'app-persona-mayor-dashboard',
-  imports: [DashboardShell],
+  imports: [DashboardShell, FormsModule],
   templateUrl: './persona-mayor.html',
   styleUrl: './persona-mayor.css'
 })
-export class PersonaMayorDashboard {
+export class PersonaMayorDashboard implements OnInit {
   protected readonly navItems: ShellNavItem[] = [
     { icon: '🏠', label: 'Inicio', active: true },
     { icon: '🏃', label: 'Mis actividades' },
+    { icon: '❤️', label: 'Mis gustos' },
     { icon: '⏰', label: 'Mis recordatorios' },
     { icon: '👤', label: 'Mi información' },
     { icon: '☎️', label: 'Mis contactos' }
@@ -34,10 +32,64 @@ export class PersonaMayorDashboard {
     nota: 'Con un vaso de agua, después de almorzar.'
   };
 
-  protected readonly actividades: Actividad[] = [
-    { icon: '🏃', nombre: 'Fisioterapia grupal', cuando: 'Hoy · 3:00 p.m.', lugar: 'Centro de salud San Cristóbal' },
-    { icon: '🎨', nombre: 'Taller de memoria', cuando: 'Lunes · 10:00 a.m.', lugar: 'Salón comunal Entrenubes' }
-  ];
+  protected readonly actividades = signal<Actividad[]>([]);
+
+  protected readonly gustosDisponibles = signal<Gusto[]>([]);
+  protected readonly gustosSeleccionados = signal<Set<number>>(new Set());
+  protected readonly guardandoGustos = signal(false);
+  protected readonly errorGustos = signal<string | null>(null);
+
+  constructor(
+    private authService: AuthService,
+    private actividadService: ActividadService,
+    private gustoService: GustoService
+  ) {}
+
+  ngOnInit(): void {
+    this.actividadService.listar().subscribe((actividades) => this.actividades.set(actividades));
+
+    const idPersonaMayor = this.authService.getIdUsuario();
+    if (idPersonaMayor === null) {
+      return;
+    }
+
+    this.gustoService.listar().subscribe((gustos) => this.gustosDisponibles.set(gustos));
+    this.gustoService.listarAsignados(idPersonaMayor).subscribe((gustos) =>
+      this.gustosSeleccionados.set(new Set(gustos.map((g) => g.idGusto)))
+    );
+  }
+
+  estaSeleccionado(idGusto: number): boolean {
+    return this.gustosSeleccionados().has(idGusto);
+  }
+
+  alternarGusto(idGusto: number): void {
+    const seleccionados = new Set(this.gustosSeleccionados());
+    if (seleccionados.has(idGusto)) {
+      seleccionados.delete(idGusto);
+    } else {
+      seleccionados.add(idGusto);
+    }
+    this.gustosSeleccionados.set(seleccionados);
+  }
+
+  guardarGustos(): void {
+    const idPersonaMayor = this.authService.getIdUsuario();
+    if (idPersonaMayor === null) {
+      return;
+    }
+
+    this.guardandoGustos.set(true);
+    this.errorGustos.set(null);
+
+    this.gustoService.asignar(idPersonaMayor, Array.from(this.gustosSeleccionados())).subscribe({
+      next: () => this.guardandoGustos.set(false),
+      error: () => {
+        this.guardandoGustos.set(false);
+        this.errorGustos.set('No se pudieron guardar tus gustos');
+      }
+    });
+  }
 
   protected readonly acompanante = {
     nombre: 'Laura Peña',

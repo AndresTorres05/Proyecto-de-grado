@@ -93,11 +93,13 @@
           <h2>Próximas actividades</h2>
         </div>
         <ul class="mini-activity-list">
-          @for (act of actividades; track act.nombre) {
+          @for (act of actividades(); track act.idActividad) {
             <li>
               <strong>{{ act.nombre }}</strong>
-              <p>{{ act.fecha }} · {{ act.persona }}</p>
+              <p>{{ act.fecha || 'Sin fecha' }} · {{ act.lugar || 'Sin lugar' }}</p>
             </li>
+          } @empty {
+            <li>Aún no hay actividades disponibles.</li>
           }
         </ul>
       </div>

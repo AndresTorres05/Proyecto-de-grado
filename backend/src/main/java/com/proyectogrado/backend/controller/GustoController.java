@@ -1,0 +1,75 @@
+package com.proyectogrado.backend.controller;
+
+import com.proyectogrado.backend.dto.GustoRequest;
+import com.proyectogrado.backend.dto.GustoResponse;
+import com.proyectogrado.backend.model.Gusto;
+import com.proyectogrado.backend.repository.GustoRepository;
+import com.proyectogrado.backend.repository.PersonaMayorGustoRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/gustos")
+@CrossOrigin(origins = "http://localhost:4200")
+public class GustoController {
+
+    private final GustoRepository gustoRepository;
+    private final PersonaMayorGustoRepository personaMayorGustoRepository;
+
+    public GustoController(GustoRepository gustoRepository, PersonaMayorGustoRepository personaMayorGustoRepository) {
+        this.gustoRepository = gustoRepository;
+        this.personaMayorGustoRepository = personaMayorGustoRepository;
+    }
+
+    @GetMapping
+    public List<GustoResponse> listar() {
+        return gustoRepository.findAll().stream()
+                .map(g -> new GustoResponse(g.getIdGusto(), g.getNombre()))
+                .toList();
+    }
+
+    @PostMapping
+    public ResponseEntity<?> crear(@RequestBody GustoRequest request) {
+        if (request.getNombre() == null || request.getNombre().isBlank()) {
+            return ResponseEntity.badRequest().body("El nombre es obligatorio");
+        }
+        if (gustoRepository.existsByNombre(request.getNombre())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya existe un gusto con ese nombre");
+        }
+
+        Gusto gusto = gustoRepository.save(new Gusto(request.getNombre()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new GustoResponse(gusto.getIdGusto(), gusto.getNombre()));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizar(@PathVariable Integer id, @RequestBody GustoRequest request) {
+        Gusto gusto = gustoRepository.findById(id).orElse(null);
+        if (gusto == null) {
+            return ResponseEntity.notFound().build();
+        }
+        if (request.getNombre() == null || request.getNombre().isBlank()) {
+            return ResponseEntity.badRequest().body("El nombre es obligatorio");
+        }
+
+        gusto.setNombre(request.getNombre());
+        gusto = gustoRepository.save(gusto);
+        return ResponseEntity.ok(new GustoResponse(gusto.getIdGusto(), gusto.getNombre()));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
+        if (!gustoRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        if (personaMayorGustoRepository.existsByGusto_IdGusto(id)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("No se puede eliminar: hay personas mayores con este gusto asignado");
+        }
+
+        gustoRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+}

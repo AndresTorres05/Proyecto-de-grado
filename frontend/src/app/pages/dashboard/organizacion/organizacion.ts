@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { DashboardShell, ShellNavItem } from '../../../shared/dashboard-shell/dashboard-shell';
+import { ActividadService, Actividad, ActividadRequest } from '../../../core/actividades/actividad.service';
 
 interface StatCard {
   icon: string;
@@ -18,13 +20,6 @@ interface Alerta {
 interface AccionRapida {
   icon: string;
   label: string;
-}
-
-interface Actividad {
-  nombre: string;
-  fecha: string;
-  lugar: string;
-  asistentes: number;
 }
 
 interface Inventario {
@@ -48,11 +43,11 @@ interface Bitacora {
 
 @Component({
   selector: 'app-organizacion-dashboard',
-  imports: [DashboardShell],
+  imports: [DashboardShell, FormsModule],
   templateUrl: './organizacion.html',
   styleUrl: './organizacion.css'
 })
-export class OrganizacionDashboard {
+export class OrganizacionDashboard implements OnInit {
   protected readonly navItems: ShellNavItem[] = [
     { icon: '🏠', label: 'Inicio', active: true },
     { icon: '🧓', label: 'Personas mayores' },
@@ -108,12 +103,76 @@ export class OrganizacionDashboard {
     { icon: '📋', label: 'Generar reporte' }
   ];
 
-  protected readonly actividades: Actividad[] = [
-    { nombre: 'Taller de memoria y cognición', fecha: 'Hoy · 10:00 a.m.', lugar: 'Salón comunal Entrenubes', asistentes: 18 },
-    { nombre: 'Fisioterapia grupal', fecha: 'Hoy · 3:00 p.m.', lugar: 'Centro de salud San Cristóbal', asistentes: 12 },
-    { nombre: 'Jornada de vacunación', fecha: 'Mañana · 8:00 a.m.', lugar: 'UPL Entrenubes', asistentes: 40 },
-    { nombre: 'Encuentro intergeneracional', fecha: 'Vie 14 ago · 2:00 p.m.', lugar: 'Parque Entrenubes', asistentes: 25 }
-  ];
+  protected readonly actividades = signal<Actividad[]>([]);
+  protected readonly errorActividades = signal<string | null>(null);
+
+  protected nuevaActividad: ActividadRequest = { nombre: '', fecha: null, lugar: null, tipo: null };
+
+  protected actividadEditandoId: number | null = null;
+  protected actividadEditando: ActividadRequest = { nombre: '', fecha: null, lugar: null, tipo: null };
+
+  constructor(private actividadService: ActividadService) {}
+
+  ngOnInit(): void {
+    this.cargarActividades();
+  }
+
+  private cargarActividades(): void {
+    this.actividadService.listarMias().subscribe({
+      next: (actividades) => this.actividades.set(actividades),
+      error: () => this.errorActividades.set('No se pudieron cargar las actividades')
+    });
+  }
+
+  crearActividad(): void {
+    if (!this.nuevaActividad.nombre.trim()) {
+      return;
+    }
+    this.errorActividades.set(null);
+    this.actividadService.crear(this.nuevaActividad).subscribe({
+      next: () => {
+        this.nuevaActividad = { nombre: '', fecha: null, lugar: null, tipo: null };
+        this.cargarActividades();
+      },
+      error: () => this.errorActividades.set('No se pudo crear la actividad')
+    });
+  }
+
+  editarActividad(actividad: Actividad): void {
+    this.actividadEditandoId = actividad.idActividad;
+    this.actividadEditando = {
+      nombre: actividad.nombre,
+      fecha: actividad.fecha,
+      lugar: actividad.lugar,
+      tipo: actividad.tipo
+    };
+  }
+
+  cancelarEdicionActividad(): void {
+    this.actividadEditandoId = null;
+  }
+
+  guardarActividad(): void {
+    if (this.actividadEditandoId === null || !this.actividadEditando.nombre.trim()) {
+      return;
+    }
+    this.errorActividades.set(null);
+    this.actividadService.actualizar(this.actividadEditandoId, this.actividadEditando).subscribe({
+      next: () => {
+        this.cancelarEdicionActividad();
+        this.cargarActividades();
+      },
+      error: () => this.errorActividades.set('No se pudo actualizar la actividad')
+    });
+  }
+
+  eliminarActividad(actividad: Actividad): void {
+    this.errorActividades.set(null);
+    this.actividadService.eliminar(actividad.idActividad).subscribe({
+      next: () => this.cargarActividades(),
+      error: () => this.errorActividades.set('No se pudo eliminar la actividad')
+    });
+  }
 
   protected readonly inventario: Inventario[] = [
     { nombre: 'Losartán 50mg', estado: 'Stock bajo', detalle: '4 unidades disponibles' },

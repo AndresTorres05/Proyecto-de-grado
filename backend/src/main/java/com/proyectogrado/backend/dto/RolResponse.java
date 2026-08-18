@@ -1,23 +1,15 @@
-package com.proyectogrado.backend.model;
+package com.proyectogrado.backend.dto;
 
-import jakarta.persistence.*;
+public class RolResponse {
 
-@Entity
-@Table(name = "rol")
-public class Rol {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_rol")
     private Integer idRol;
-
-    @Column(name = "nombre", nullable = false, unique = true)
     private String nombre;
 
-    public Rol() {
+    public RolResponse() {
     }
 
-    public Rol(String nombre) {
+    public RolResponse(Integer idRol, String nombre) {
+        this.idRol = idRol;
         this.nombre = nombre;
     }
 

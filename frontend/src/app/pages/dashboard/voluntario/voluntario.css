@@ -156,43 +156,6 @@
   color: var(--gema-text-gray);
 }
 
-.activity-item__right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.estado-tag {
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--gema-green) 15%, white);
-  color: var(--gema-green);
-  white-space: nowrap;
-}
-
-.estado-tag--pendiente {
-  background: color-mix(in srgb, var(--gema-orange) 15%, white);
-  color: var(--gema-orange);
-}
-
-.btn-mini {
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 8px 14px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--gema-navy);
-  background: transparent;
-  color: var(--gema-navy);
-  white-space: nowrap;
-}
-
-.btn-mini:hover {
-  background: var(--gema-navy);
-  color: var(--gema-white);
-}
-
 /* ---------- Disponibilidad ---------- */
 
 .availability-row {

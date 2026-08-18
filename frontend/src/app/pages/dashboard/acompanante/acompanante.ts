@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { DashboardShell, ShellNavItem } from '../../../shared/dashboard-shell/dashboard-shell';
+import { ActividadService, Actividad } from '../../../core/actividades/actividad.service';
 
 interface PersonaMayor {
   nombre: string;
@@ -27,19 +28,19 @@ interface ContactoEmergencia {
   persona: string;
 }
 
-interface ActividadPersona {
-  nombre: string;
-  fecha: string;
-  persona: string;
-}
-
 @Component({
   selector: 'app-acompanante-dashboard',
   imports: [DashboardShell],
   templateUrl: './acompanante.html',
   styleUrl: './acompanante.css'
 })
-export class AcompananteDashboard {
+export class AcompananteDashboard implements OnInit {
+  constructor(private actividadService: ActividadService) {}
+
+  ngOnInit(): void {
+    this.actividadService.listar().subscribe((actividades) => this.actividades.set(actividades));
+  }
+
   protected readonly navItems: ShellNavItem[] = [
     { icon: '🏠', label: 'Inicio', active: true },
     { icon: '🧓', label: 'Mis personas mayores' },
@@ -73,8 +74,5 @@ export class AcompananteDashboard {
     { nombre: 'Pedro Méndez', parentesco: 'Hijo', telefono: '311 222 3344', persona: 'Carlos Julio Méndez' }
   ];
 
-  protected readonly actividades: ActividadPersona[] = [
-    { nombre: 'Fisioterapia grupal', fecha: 'Hoy · 3:00 p.m.', persona: 'Rosa Elvira Gómez' },
-    { nombre: 'Taller de memoria y cognición', fecha: 'Lun 17 ago', persona: 'Carlos Julio Méndez' }
-  ];
+  protected readonly actividades = signal<Actividad[]>([]);
 }

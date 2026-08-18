@@ -115,6 +115,58 @@
   color: var(--gema-text-gray);
 }
 
+/* ---------- Gustos ---------- */
+
+.gustos-card {
+  padding: 24px;
+}
+
+.gustos-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.gusto-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border: 2px solid var(--gema-border);
+  border-radius: var(--radius-pill);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gema-navy);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.gusto-chip input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--gema-green);
+}
+
+.gusto-chip--activo {
+  border-color: var(--gema-green);
+  background: color-mix(in srgb, var(--gema-green) 10%, white);
+}
+
+.gustos-error {
+  color: #c23b3b;
+  background: color-mix(in srgb, #d64545 12%, white);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  margin-top: 16px;
+}
+
+.gustos-save {
+  margin-top: 20px;
+  font-size: 1.05rem;
+  padding: 16px 28px;
+}
+
 /* ---------- Acompañante ---------- */
 
 .companion-card {

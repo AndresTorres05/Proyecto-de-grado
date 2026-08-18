@@ -28,16 +28,46 @@
   <section class="section-block">
     <h2 class="section-block__title">Mis próximas actividades</h2>
     <div class="activities-grid">
-      @for (act of actividades; track act.nombre) {
+      @for (act of actividades(); track act.idActividad) {
         <div class="activity-card card">
-          <span class="activity-card__icon" aria-hidden="true">{{ act.icon }}</span>
+          <span class="activity-card__icon" aria-hidden="true">🏃</span>
           <div>
             <h3>{{ act.nombre }}</h3>
-            <p>{{ act.cuando }}</p>
-            <p>{{ act.lugar }}</p>
+            <p>{{ act.fecha || 'Sin fecha' }}</p>
+            <p>{{ act.lugar || 'Sin lugar' }}</p>
           </div>
         </div>
+      } @empty {
+        <p>Aún no hay actividades disponibles.</p>
       }
+    </div>
+  </section>
+
+  <section class="section-block">
+    <h2 class="section-block__title">Mis gustos</h2>
+    <div class="gustos-card card">
+      <div class="gustos-grid">
+        @for (gusto of gustosDisponibles(); track gusto.idGusto) {
+          <label class="gusto-chip" [class.gusto-chip--activo]="estaSeleccionado(gusto.idGusto)">
+            <input
+              type="checkbox"
+              [checked]="estaSeleccionado(gusto.idGusto)"
+              (change)="alternarGusto(gusto.idGusto)"
+            />
+            {{ gusto.nombre }}
+          </label>
+        } @empty {
+          <p>Todavía no hay gustos registrados en el sistema.</p>
+        }
+      </div>
+
+      @if (errorGustos()) {
+        <p class="gustos-error">{{ errorGustos() }}</p>
+      }
+
+      <button type="button" class="btn btn-primary gustos-save" [disabled]="guardandoGustos()" (click)="guardarGustos()">
+        {{ guardandoGustos() ? 'Guardando...' : 'Guardar mis gustos' }}
+      </button>
     </div>
   </section>
 

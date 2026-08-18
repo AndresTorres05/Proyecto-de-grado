@@ -106,18 +106,71 @@
     <div class="col">
       <div class="panel card">
         <div class="panel__header">
-          <h2>Actividades próximas</h2>
-          <a href="#" class="panel__link">Ver todas &rarr;</a>
+          <h2>Actividades</h2>
         </div>
+
+        <form class="activity-form" (ngSubmit)="crearActividad()">
+          <input
+            type="text"
+            name="nuevaActividadNombre"
+            class="activity-input"
+            placeholder="Nombre de la actividad"
+            [(ngModel)]="nuevaActividad.nombre"
+            required
+          />
+          <div class="activity-form__row">
+            <input type="date" name="nuevaActividadFecha" class="activity-input" [(ngModel)]="nuevaActividad.fecha" />
+            <input
+              type="text"
+              name="nuevaActividadLugar"
+              class="activity-input"
+              placeholder="Lugar"
+              [(ngModel)]="nuevaActividad.lugar"
+            />
+          </div>
+          <input
+            type="text"
+            name="nuevaActividadTipo"
+            class="activity-input"
+            placeholder="Tipo (ej. salud, recreación)"
+            [(ngModel)]="nuevaActividad.tipo"
+          />
+          <button type="submit" class="btn btn-primary">Registrar actividad</button>
+        </form>
+
+        @if (errorActividades()) {
+          <p class="activity-error">{{ errorActividades() }}</p>
+        }
+
         <ul class="activity-list">
-          @for (act of actividades; track act.nombre) {
+          @for (act of actividades(); track act.idActividad) {
             <li class="activity-item">
-              <div>
-                <strong>{{ act.nombre }}</strong>
-                <p>{{ act.fecha }} · {{ act.lugar }}</p>
-              </div>
-              <span class="activity-item__count">{{ act.asistentes }} inscritos</span>
+              @if (actividadEditandoId === act.idActividad) {
+                <div class="activity-item__edit">
+                  <input type="text" name="actividadEditandoNombre" class="activity-input" [(ngModel)]="actividadEditando.nombre" />
+                  <input type="date" name="actividadEditandoFecha" class="activity-input" [(ngModel)]="actividadEditando.fecha" />
+                  <input type="text" name="actividadEditandoLugar" class="activity-input" placeholder="Lugar" [(ngModel)]="actividadEditando.lugar" />
+                  <input type="text" name="actividadEditandoTipo" class="activity-input" placeholder="Tipo" [(ngModel)]="actividadEditando.tipo" />
+                  <div class="activity-item__actions">
+                    <button type="button" class="btn btn-primary" (click)="guardarActividad()">Guardar</button>
+                    <button type="button" class="btn btn-outline" (click)="cancelarEdicionActividad()">Cancelar</button>
+                  </div>
+                </div>
+              } @else {
+                <div>
+                  <strong>{{ act.nombre }}</strong>
+                  <p>{{ act.fecha || 'Sin fecha' }} · {{ act.lugar || 'Sin lugar' }}</p>
+                </div>
+                <div class="activity-item__actions">
+                  <button type="button" class="btn btn-outline" (click)="editarActividad(act)">Editar</button>
+                  <button type="button" class="btn btn-outline activity-btn--danger" (click)="eliminarActividad(act)">
+                    Eliminar
+                  </button>
+                </div>
+              }
             </li>
+          } @empty {
+            <li class="activity-empty">Aún no has registrado actividades.</li>
           }
         </ul>
       </div>

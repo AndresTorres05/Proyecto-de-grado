@@ -19,6 +19,7 @@ export interface LoginResponse {
   token: string;
   rol: string;
   mensaje: string;
+  idUsuario: number;
 }
 
 const RUTAS_POR_ROL: Record<string, string> = {
@@ -40,6 +41,7 @@ export class AuthService {
       tap((response) => {
         localStorage.setItem('token', response.token);
         localStorage.setItem('rol', response.rol);
+        localStorage.setItem('idUsuario', String(response.idUsuario));
       })
     );
   }
@@ -49,6 +51,7 @@ export class AuthService {
       tap((response) => {
         localStorage.setItem('token', response.token);
         localStorage.setItem('rol', response.rol);
+        localStorage.setItem('idUsuario', String(response.idUsuario));
       })
     );
   }
@@ -61,11 +64,17 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('rol');
+    localStorage.removeItem('idUsuario');
     this.router.navigateByUrl('/');
   }
 
   getToken(): string | null {
     return localStorage.getItem('token');
+  }
+
+  getIdUsuario(): number | null {
+    const idUsuario = localStorage.getItem('idUsuario');
+    return idUsuario ? Number(idUsuario) : null;
   }
 
   estaAutenticado(): boolean {

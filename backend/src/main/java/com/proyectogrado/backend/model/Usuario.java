@@ -21,10 +21,6 @@ public class Usuario {
     @Column(name = "correo", nullable = false, unique = true)
     private String correo;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "rol", nullable = false)
-    private Rol rol;
-
     @Column(name = "id_organizacion")
     private Integer idOrganizacion;
 
@@ -69,14 +65,6 @@ public class Usuario {
 
     public void setCorreo(String correo) {
         this.correo = correo;
-    }
-
-    public Rol getRol() {
-        return rol;
-    }
-
-    public void setRol(Rol rol) {
-        this.rol = rol;
     }
 
     public Integer getIdOrganizacion() {

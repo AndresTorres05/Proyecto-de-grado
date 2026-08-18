@@ -1,0 +1,118 @@
+<app-dashboard-shell
+  roleLabel="Administración"
+  roleAccent="var(--gema-navy)"
+  userName="Administración"
+  userInitials="AD"
+  [navItems]="navItems"
+>
+  <div class="page-header">
+    <div>
+      <h1>Catálogos del sistema</h1>
+      <p>Gestiona los tipos de usuario y los gustos disponibles en GEMA</p>
+    </div>
+  </div>
+
+  <section class="admin-grid">
+    <div class="panel card">
+      <div class="panel__header">
+        <h2>Tipos de usuario</h2>
+      </div>
+
+      <form class="admin-form" (ngSubmit)="crearRol()">
+        <input
+          type="text"
+          name="nuevoRolNombre"
+          class="admin-input"
+          placeholder="Nombre del tipo de usuario"
+          [(ngModel)]="nuevoRolNombre"
+          required
+        />
+        <button type="submit" class="btn btn-primary">Agregar</button>
+      </form>
+
+      @if (errorRoles()) {
+        <p class="admin-error">{{ errorRoles() }}</p>
+      }
+
+      <ul class="admin-list">
+        @for (rol of roles(); track rol.idRol) {
+          <li class="admin-list__item">
+            @if (rolEditandoId === rol.idRol) {
+              <input
+                type="text"
+                name="rolEditandoNombre"
+                class="admin-input admin-input--inline"
+                [(ngModel)]="rolEditandoNombre"
+              />
+              <div class="admin-list__actions">
+                <button type="button" class="btn btn-primary" (click)="guardarRol()">Guardar</button>
+                <button type="button" class="btn btn-outline" (click)="cancelarEdicionRol()">Cancelar</button>
+              </div>
+            } @else {
+              <span class="admin-list__label">{{ rol.nombre }}</span>
+              <div class="admin-list__actions">
+                <button type="button" class="btn btn-outline" (click)="editarRol(rol)">Editar</button>
+                <button type="button" class="btn btn-outline admin-btn--danger" (click)="eliminarRol(rol)">
+                  Eliminar
+                </button>
+              </div>
+            }
+          </li>
+        } @empty {
+          <li class="admin-list__empty">No hay tipos de usuario registrados.</li>
+        }
+      </ul>
+    </div>
+
+    <div class="panel card">
+      <div class="panel__header">
+        <h2>Gustos</h2>
+      </div>
+
+      <form class="admin-form" (ngSubmit)="crearGusto()">
+        <input
+          type="text"
+          name="nuevoGustoNombre"
+          class="admin-input"
+          placeholder="Nombre del gusto"
+          [(ngModel)]="nuevoGustoNombre"
+          required
+        />
+        <button type="submit" class="btn btn-primary">Agregar</button>
+      </form>
+
+      @if (errorGustos()) {
+        <p class="admin-error">{{ errorGustos() }}</p>
+      }
+
+      <ul class="admin-list">
+        @for (gusto of gustos(); track gusto.idGusto) {
+          <li class="admin-list__item">
+            @if (gustoEditandoId === gusto.idGusto) {
+              <input
+                type="text"
+                name="gustoEditandoNombre"
+                class="admin-input admin-input--inline"
+                [(ngModel)]="gustoEditandoNombre"
+              />
+              <div class="admin-list__actions">
+                <button type="button" class="btn btn-primary" (click)="guardarGusto()">Guardar</button>
+                <button type="button" class="btn btn-outline" (click)="cancelarEdicionGusto()">Cancelar</button>
+              </div>
+            } @else {
+              <span class="admin-list__label">{{ gusto.nombre }}</span>
+              <div class="admin-list__actions">
+                <button type="button" class="btn btn-outline" (click)="editarGusto(gusto)">Editar</button>
+                <button type="button" class="btn btn-outline admin-btn--danger" (click)="eliminarGusto(gusto)">
+                  Eliminar
+                </button>
+              </div>
+            }
+          </li>
+        } @empty {
+          <li class="admin-list__empty">No hay gustos registrados.</li>
+        }
+      </ul>
+    </div>
+  </section>
+</app-dashboard-shell>
