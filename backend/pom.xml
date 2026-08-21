@@ -41,6 +41,11 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+</dependency>
+
 		<!-- Base de datos -->
 <dependency>
     <groupId>org.springframework.boot</groupId>
@@ -84,11 +89,6 @@
     <artifactId>spring-boot-starter-web</artifactId>
 </dependency>
 
-<dependency>
-    <groupId>com.twilio.sdk</groupId>
-    <artifactId>twilio</artifactId>
-    <version>12.1.1</version>
-</dependency>
 
 	</dependencies>
 

@@ -13,7 +13,7 @@ import com.proyectogrado.backend.repository.RolRepository;
 import com.proyectogrado.backend.repository.UsuarioRepository;
 import com.proyectogrado.backend.repository.UsuarioRolRepository;
 import com.proyectogrado.backend.security.JwtService;
-import com.proyectogrado.backend.security.TwilioOtpService;
+import com.proyectogrado.backend.security.TextBeeOtpService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,35 +29,33 @@ public class OtpController {
     private static final Set<String> ROLES_POR_TELEFONO =
             Set.of("PERSONA_MAYOR", "ACOMPANANTE");
 
-    private final TwilioOtpService twilioOtpService;
+    private final TextBeeOtpService textBeeOtpService;
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
     private final UsuarioRolRepository usuarioRolRepository;
     private final PersonaMayorRepository personaMayorRepository;
     private final JwtService jwtService;
 
-    public OtpController(
-            TwilioOtpService twilioOtpService,
-            UsuarioRepository usuarioRepository,
-            RolRepository rolRepository,
-            UsuarioRolRepository usuarioRolRepository,
-            PersonaMayorRepository personaMayorRepository,
-            JwtService jwtService
-    ) {
-        this.twilioOtpService = twilioOtpService;
-        this.usuarioRepository = usuarioRepository;
-        this.rolRepository = rolRepository;
-        this.usuarioRolRepository = usuarioRolRepository;
-        this.personaMayorRepository = personaMayorRepository;
-        this.jwtService = jwtService;
-    }
+    public OtpController(TextBeeOtpService textBeeOtpService,
+                      UsuarioRepository usuarioRepository,
+                      RolRepository rolRepository,
+                      UsuarioRolRepository usuarioRolRepository,
+                      PersonaMayorRepository personaMayorRepository,
+                      JwtService jwtService) {
+    this.textBeeOtpService = textBeeOtpService;
+    this.usuarioRepository = usuarioRepository;
+    this.rolRepository = rolRepository;
+    this.usuarioRolRepository = usuarioRolRepository;
+    this.personaMayorRepository = personaMayorRepository;
+    this.jwtService = jwtService;
+}
 
     @PostMapping("/enviar")
     public ResponseEntity<LoginResponse> enviar(
             @RequestBody EnviarOtpRequest request
     ) {
         try {
-            twilioOtpService.enviarCodigo(request.getTelefono());
+            textBeeOtpService.enviarCodigo(request.getTelefono());
 
             return ResponseEntity.ok(
                     new LoginResponse(null, null, "Código enviado")
@@ -65,7 +63,7 @@ public class OtpController {
 
         } catch (Exception e) {
 
-            System.out.println("ERROR TWILIO: " + e.getMessage());
+            System.out.println("ERROR TEXTBEE: " + e.getMessage());
             e.printStackTrace();
 
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
@@ -84,7 +82,7 @@ public class OtpController {
             @RequestBody OtpLoginRequest request
     ) {
 
-        boolean valido = twilioOtpService.verificarCodigo(
+        boolean valido = textBeeOtpService.verificarCodigo(
                 request.getTelefono(),
                 request.getCodigo()
         );
@@ -148,7 +146,7 @@ public class OtpController {
                     );
         }
 
-        boolean valido = twilioOtpService.verificarCodigo(
+        boolean valido = textBeeOtpService.verificarCodigo(
                 request.getTelefono(),
                 request.getCodigo()
         );
