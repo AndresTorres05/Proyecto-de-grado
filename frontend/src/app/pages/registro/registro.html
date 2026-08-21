@@ -22,35 +22,13 @@
         placeholder="Tu nombre"
       />
 
-      <label class="login-label" for="correo">Correo</label>
-      <input
-        id="correo"
-        name="correo"
-        type="email"
-        class="login-input"
-        [(ngModel)]="correo"
-        required
-        placeholder="tucorreo@ejemplo.com"
-      />
-
-      <label class="login-label" for="contrasena">Contraseña</label>
-      <input
-        id="contrasena"
-        name="contrasena"
-        type="password"
-        class="login-input"
-        [(ngModel)]="contrasena"
-        required
-        minlength="6"
-        placeholder="Mínimo 6 caracteres"
-      />
-
       <label class="login-label" for="rol">Tipo de usuario</label>
       <select
         id="rol"
         name="rol"
         class="login-input"
         [(ngModel)]="rol"
+        (ngModelChange)="onCambioRol()"
         required
       >
         <option value="" disabled selected>Selecciona una opción</option>
@@ -59,13 +37,81 @@
         }
       </select>
 
+      @if (rol && !esRegistroPorTelefono) {
+        <label class="login-label" for="correo">Correo</label>
+        <input
+          id="correo"
+          name="correo"
+          type="email"
+          class="login-input"
+          [(ngModel)]="correo"
+          required
+          placeholder="tucorreo@ejemplo.com"
+        />
+
+        <label class="login-label" for="contrasena">Contraseña</label>
+        <input
+          id="contrasena"
+          name="contrasena"
+          type="password"
+          class="login-input"
+          [(ngModel)]="contrasena"
+          required
+          minlength="6"
+          placeholder="Mínimo 6 caracteres"
+        />
+      }
+
+      @if (rol && esRegistroPorTelefono) {
+        <label class="login-label" for="telefono">Número de celular</label>
+        <div class="login-phone-row">
+          <span class="login-phone-prefix">+57</span>
+          <input
+            id="telefono"
+            name="telefono"
+            type="tel"
+            class="login-input login-input--phone"
+            [(ngModel)]="telefonoLocal"
+            required
+            placeholder="3001234567"
+            [disabled]="otpEnviado()"
+          />
+        </div>
+
+        @if (!otpEnviado()) {
+          <button type="button" class="btn btn-primary login-submit" [disabled]="cargando()" (click)="enviarCodigo()">
+            {{ cargando() ? 'Enviando...' : 'Enviar código por SMS' }}
+          </button>
+        }
+
+        @if (otpEnviado()) {
+          <label class="login-label" for="codigo">Código de verificación</label>
+          <input
+            id="codigo"
+            name="codigo"
+            type="text"
+            inputmode="numeric"
+            class="login-input"
+            [(ngModel)]="codigo"
+            required
+            placeholder="123456"
+          />
+        }
+      }
+
+      @if (infoMensaje()) {
+        <p class="login-info">{{ infoMensaje() }}</p>
+      }
+
       @if (errorMensaje()) {
         <p class="login-error">{{ errorMensaje() }}</p>
       }
 
-      <button type="submit" class="btn btn-primary login-submit" [disabled]="cargando()">
-        {{ cargando() ? 'Creando cuenta...' : 'Crear cuenta' }}
-      </button>
+      @if (!esRegistroPorTelefono || otpEnviado()) {
+        <button type="submit" class="btn btn-primary login-submit" [disabled]="cargando()">
+          {{ cargando() ? 'Creando cuenta...' : 'Crear cuenta' }}
+        </button>
+      }
     </form>
 
     <p class="login-footer">

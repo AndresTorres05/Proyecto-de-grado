@@ -25,9 +25,13 @@ public class GustoController {
     }
 
     @GetMapping
-    public List<GustoResponse> listar() {
-        return gustoRepository.findAll().stream()
-                .map(g -> new GustoResponse(g.getIdGusto(), g.getNombre()))
+    public List<GustoResponse> listar(@RequestParam(required = false) String categoria) {
+        List<Gusto> gustos = categoria == null
+                ? gustoRepository.findAll()
+                : gustoRepository.findByCategoria(categoria);
+
+        return gustos.stream()
+                .map(g -> new GustoResponse(g.getIdGusto(), g.getNombre(), g.getCategoria()))
                 .toList();
     }
 
@@ -40,8 +44,9 @@ public class GustoController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya existe un gusto con ese nombre");
         }
 
-        Gusto gusto = gustoRepository.save(new Gusto(request.getNombre()));
-        return ResponseEntity.status(HttpStatus.CREATED).body(new GustoResponse(gusto.getIdGusto(), gusto.getNombre()));
+        Gusto gusto = gustoRepository.save(new Gusto(request.getNombre(), request.getCategoria()));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new GustoResponse(gusto.getIdGusto(), gusto.getNombre(), gusto.getCategoria()));
     }
 
     @PutMapping("/{id}")
@@ -55,8 +60,9 @@ public class GustoController {
         }
 
         gusto.setNombre(request.getNombre());
+        gusto.setCategoria(request.getCategoria());
         gusto = gustoRepository.save(gusto);
-        return ResponseEntity.ok(new GustoResponse(gusto.getIdGusto(), gusto.getNombre()));
+        return ResponseEntity.ok(new GustoResponse(gusto.getIdGusto(), gusto.getNombre(), gusto.getCategoria()));
     }
 
     @DeleteMapping("/{id}")

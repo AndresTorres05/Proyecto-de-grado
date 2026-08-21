@@ -27,10 +27,12 @@ public class PersonaMayorGustoController {
     private final PersonaMayorGustoRepository personaMayorGustoRepository;
     private final UsuarioRepository usuarioRepository;
 
-    public PersonaMayorGustoController(PersonaMayorRepository personaMayorRepository,
-                                        GustoRepository gustoRepository,
-                                        PersonaMayorGustoRepository personaMayorGustoRepository,
-                                        UsuarioRepository usuarioRepository) {
+    public PersonaMayorGustoController(
+            PersonaMayorRepository personaMayorRepository,
+            GustoRepository gustoRepository,
+            PersonaMayorGustoRepository personaMayorGustoRepository,
+            UsuarioRepository usuarioRepository
+    ) {
         this.personaMayorRepository = personaMayorRepository;
         this.gustoRepository = gustoRepository;
         this.personaMayorGustoRepository = personaMayorGustoRepository;
@@ -38,39 +40,89 @@ public class PersonaMayorGustoController {
     }
 
     @GetMapping
-    public List<GustoResponse> listar(@PathVariable Integer idPersonaMayor) {
-        return personaMayorGustoRepository.findByPersonaMayor_IdUsuario(idPersonaMayor).stream()
-                .map(pmg -> new GustoResponse(pmg.getGusto().getIdGusto(), pmg.getGusto().getNombre()))
+    public List<GustoResponse> listar(
+            @PathVariable Integer idPersonaMayor
+    ) {
+        return personaMayorGustoRepository
+                .findByPersonaMayor_IdUsuario(idPersonaMayor)
+                .stream()
+                .map(pmg -> new GustoResponse(
+                        pmg.getGusto().getIdGusto(),
+                        pmg.getGusto().getNombre()
+                ))
                 .toList();
     }
 
     @PutMapping
-    public ResponseEntity<?> asignar(@PathVariable Integer idPersonaMayor,
-                                      @RequestBody GustosAsignadosRequest request,
-                                      Authentication authentication) {
-        Usuario usuarioAutenticado = usuarioRepository.findByCorreo(authentication.getName()).orElse(null);
-        if (usuarioAutenticado == null || !usuarioAutenticado.getIdUsuario().equals(idPersonaMayor)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Solo puedes gestionar tus propios gustos");
+    public ResponseEntity<?> asignar(
+            @PathVariable Integer idPersonaMayor,
+            @RequestBody GustosAsignadosRequest request,
+            Authentication authentication
+    ) {
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("No estás autenticado");
         }
 
-        PersonaMayor personaMayor = personaMayorRepository.findById(idPersonaMayor).orElse(null);
+        String identificador = authentication.getName();
+
+        Usuario usuarioAutenticado = usuarioRepository
+                .findByCorreo(identificador)
+                .or(() -> usuarioRepository.findByTelefono(identificador))
+                .orElse(null);
+
+        if (usuarioAutenticado == null) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body("Usuario autenticado no encontrado");
+        }
+
+        if (!usuarioAutenticado.getIdUsuario().equals(idPersonaMayor)) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body("Solo puedes gestionar tus propios gustos");
+        }
+
+        PersonaMayor personaMayor = personaMayorRepository
+                .findById(idPersonaMayor)
+                .orElse(null);
+
         if (personaMayor == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("Persona mayor no encontrada");
         }
 
-        List<Integer> idsGustos = request.getIdsGustos() == null ? List.of() : request.getIdsGustos();
+        List<Integer> idsGustos = request.getIdsGustos() == null
+                ? List.of()
+                : request.getIdsGustos();
+
         List<Gusto> gustos = gustoRepository.findAllById(idsGustos);
+
         if (gustos.size() != idsGustos.size()) {
-            return ResponseEntity.badRequest().body("Alguno de los gustos indicados no existe");
+            return ResponseEntity
+                    .badRequest()
+                    .body("Alguno de los gustos indicados no existe");
         }
 
-        personaMayorGustoRepository.deleteByPersonaMayor_IdUsuario(idPersonaMayor);
+        personaMayorGustoRepository
+                .deleteByPersonaMayor_IdUsuario(idPersonaMayor);
+
         for (Gusto gusto : gustos) {
-            personaMayorGustoRepository.save(new PersonaMayorGusto(personaMayor, gusto));
+            personaMayorGustoRepository.save(
+                    new PersonaMayorGusto(personaMayor, gusto)
+            );
         }
 
-        return ResponseEntity.ok(gustos.stream()
-                .map(g -> new GustoResponse(g.getIdGusto(), g.getNombre()))
-                .toList());
+        return ResponseEntity.ok(
+                gustos.stream()
+                        .map(g -> new GustoResponse(
+                                g.getIdGusto(),
+                                g.getNombre()
+                        ))
+                        .toList()
+        );
     }
 }

@@ -43,34 +43,6 @@
     </div>
   </section>
 
-  <section class="section-block">
-    <h2 class="section-block__title">Mis gustos</h2>
-    <div class="gustos-card card">
-      <div class="gustos-grid">
-        @for (gusto of gustosDisponibles(); track gusto.idGusto) {
-          <label class="gusto-chip" [class.gusto-chip--activo]="estaSeleccionado(gusto.idGusto)">
-            <input
-              type="checkbox"
-              [checked]="estaSeleccionado(gusto.idGusto)"
-              (change)="alternarGusto(gusto.idGusto)"
-            />
-            {{ gusto.nombre }}
-          </label>
-        } @empty {
-          <p>Todavía no hay gustos registrados en el sistema.</p>
-        }
-      </div>
-
-      @if (errorGustos()) {
-        <p class="gustos-error">{{ errorGustos() }}</p>
-      }
-
-      <button type="button" class="btn btn-primary gustos-save" [disabled]="guardandoGustos()" (click)="guardarGustos()">
-        {{ guardandoGustos() ? 'Guardando...' : 'Guardar mis gustos' }}
-      </button>
-    </div>
-  </section>
-
   <section class="companion-card card">
     <span class="companion-card__avatar" aria-hidden="true">🤝</span>
     <div class="companion-card__info">

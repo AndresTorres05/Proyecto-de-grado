@@ -15,11 +15,14 @@ public class Usuario {
     @Column(name = "nombre_usuario", nullable = false)
     private String nombreUsuario;
 
-    @Column(name = "contrasena_hash", nullable = false)
+    @Column(name = "contrasena_hash")
     private String contrasenaHash;
 
-    @Column(name = "correo", nullable = false, unique = true)
+    @Column(name = "correo", unique = true)
     private String correo;
+
+    @Column(name = "telefono", unique = true)
+    private String telefono;
 
     @Column(name = "id_organizacion")
     private Integer idOrganizacion;
@@ -67,6 +70,14 @@ public class Usuario {
         this.correo = correo;
     }
 
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
     public Integer getIdOrganizacion() {
         return idOrganizacion;
     }
@@ -94,6 +105,7 @@ public class Usuario {
     @PrePersist
     protected void onCreate() {
         this.fechaCreacion = LocalDateTime.now();
+
         if (this.activo == null) {
             this.activo = true;
         }

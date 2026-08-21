@@ -5,6 +5,7 @@ export interface ShellNavItem {
   icon: string;
   label: string;
   active?: boolean;
+  path?: string;
 }
 
 @Component({
@@ -18,6 +19,7 @@ export interface ShellNavItem {
   }
 })
 export class DashboardShell {
+
   @Input() roleLabel = '';
   @Input() roleAccent = 'var(--gema-navy)';
   @Input() userName = '';

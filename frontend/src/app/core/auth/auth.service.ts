@@ -15,6 +15,22 @@ export interface RegistroRequest {
   rol: string;
 }
 
+export interface EnviarOtpRequest {
+  telefono: string;
+}
+
+export interface OtpLoginRequest {
+  telefono: string;
+  codigo: string;
+}
+
+export interface OtpRegistroRequest {
+  telefono: string;
+  codigo: string;
+  nombreUsuario: string;
+  rol: string;
+}
+
 export interface LoginResponse {
   token: string;
   rol: string;
@@ -48,6 +64,30 @@ export class AuthService {
 
   registro(request: RegistroRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/registro`, request).pipe(
+      tap((response) => {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('rol', response.rol);
+        localStorage.setItem('idUsuario', String(response.idUsuario));
+      })
+    );
+  }
+
+  enviarOtp(telefono: string): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/otp/enviar`, { telefono });
+  }
+
+  loginOtp(request: OtpLoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/otp/login`, request).pipe(
+      tap((response) => {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('rol', response.rol);
+        localStorage.setItem('idUsuario', String(response.idUsuario));
+      })
+    );
+  }
+
+  registroOtp(request: OtpRegistroRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/otp/registro`, request).pipe(
       tap((response) => {
         localStorage.setItem('token', response.token);
         localStorage.setItem('rol', response.rol);

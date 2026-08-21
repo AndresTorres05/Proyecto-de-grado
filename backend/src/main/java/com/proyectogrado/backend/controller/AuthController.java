@@ -75,7 +75,7 @@ public class AuthController {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         String rolPrincipal = obtenerRolPrincipal(usuario);
-        String token = jwtService.generarToken(usuario.getCorreo(), rolPrincipal);
+        String token = jwtService.generarToken(usuario.getIdUsuario(), rolPrincipal);
 
         return ResponseEntity.ok(
                 new LoginResponse(token, rolPrincipal, "Inicio de sesión exitoso", usuario.getIdUsuario())
@@ -91,10 +91,15 @@ public class AuthController {
         }
 
         Rol rol = rolRepository.findByNombre(request.getRol()).orElse(null);
-        if (rol == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new LoginResponse(null, null, "Rol inválido"));
-        }
+if (rol == null) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(new LoginResponse(null, null, "Rol inválido"));
+}
+
+if ("PERSONA_MAYOR".equals(rol.getNombre()) || "ACOMPANANTE".equals(rol.getNombre())) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(new LoginResponse(null, null, "Este rol se registra por teléfono, no por correo"));
+}
 
         Usuario usuario = new Usuario();
         usuario.setNombreUsuario(request.getNombreUsuario());
@@ -116,7 +121,7 @@ public class AuthController {
             personaMayorRepository.save(new PersonaMayor(usuario));
         }
 
-        String token = jwtService.generarToken(usuario.getCorreo(), rol.getNombre());
+        String token = jwtService.generarToken(usuario.getIdUsuario(), rol.getNombre());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 new LoginResponse(token, rol.getNombre(), "Cuenta creada exitosamente", usuario.getIdUsuario())

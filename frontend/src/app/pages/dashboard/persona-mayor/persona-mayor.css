@@ -115,41 +115,116 @@
   color: var(--gema-text-gray);
 }
 
-/* ---------- Gustos ---------- */
+/* ---------- Intereses (gustos / talentos / hobbies) ---------- */
 
-.gustos-card {
+.intereses-card {
   padding: 24px;
-}
-
-.gustos-grid {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  gap: 24px;
+  align-items: flex-start;
 }
 
-.gusto-chip {
-  display: inline-flex;
+.intereses-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 190px;
+  flex-shrink: 0;
+}
+
+.intereses-tab {
+  display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 18px;
+  padding: 14px 16px;
   border: 2px solid var(--gema-border);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
+  background: var(--gema-white);
   font-size: 1rem;
   font-weight: 600;
   color: var(--gema-navy);
   cursor: pointer;
+  text-align: left;
   transition: border-color 0.2s ease, background 0.2s ease;
 }
 
-.gusto-chip input {
-  width: 20px;
-  height: 20px;
-  accent-color: var(--gema-green);
+.intereses-tab__label {
+  flex: 1;
 }
 
-.gusto-chip--activo {
+.intereses-tab__count {
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--gema-border);
+  color: var(--gema-navy);
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.intereses-tab--activo {
   border-color: var(--gema-green);
   background: color-mix(in srgb, var(--gema-green) 10%, white);
+}
+
+.intereses-tab--activo .intereses-tab__count {
+  background: var(--gema-green);
+  color: var(--gema-white);
+}
+
+.intereses-panel {
+  flex: 1;
+  min-width: 0;
+}
+
+.gustos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.opcion-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 18px;
+  border: 2px solid var(--gema-border);
+  border-radius: var(--radius-sm);
+  background: var(--gema-white);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gema-navy);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.opcion-card__check {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--gema-border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  color: transparent;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.opcion-card--activo {
+  border-color: var(--gema-green);
+  background: color-mix(in srgb, var(--gema-green) 10%, white);
+}
+
+.opcion-card--activo .opcion-card__check {
+  border-color: var(--gema-green);
+  background: var(--gema-green);
+  color: var(--gema-white);
 }
 
 .gustos-error {
@@ -165,6 +240,18 @@
   margin-top: 20px;
   font-size: 1.05rem;
   padding: 16px 28px;
+}
+
+@media (max-width: 720px) {
+  .intereses-card {
+    flex-direction: column;
+  }
+
+  .intereses-tabs {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+  }
 }
 
 /* ---------- Acompañante ---------- */

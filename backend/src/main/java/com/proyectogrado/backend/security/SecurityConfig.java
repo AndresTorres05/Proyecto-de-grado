@@ -56,6 +56,7 @@ public DaoAuthenticationProvider authenticationProvider() {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+.requestMatchers("/api/persona-mayor/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())

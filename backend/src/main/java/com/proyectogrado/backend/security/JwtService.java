@@ -1,8 +1,8 @@
 package com.proyectogrado.backend.security;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -25,38 +25,53 @@ public class JwtService {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
-    public String generarToken(String correo, String rol) {
+    public String generarToken(Integer idUsuario, String rol) {
+
         Map<String, Object> claims = new HashMap<>();
         claims.put("rol", rol);
+        claims.put("idUsuario", idUsuario);
 
         return Jwts.builder()
                 .claims(claims)
-                .subject(correo)
+                .subject(String.valueOf(idUsuario))
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSigningKey())
                 .compact();
     }
 
-    public String extraerCorreo(String token) {
-        return extraerClaim(token, Claims::getSubject);
+    public Integer extraerIdUsuario(String token) {
+        return extraerClaim(
+                token,
+                claims -> claims.get("idUsuario", Integer.class)
+        );
     }
 
     public String extraerRol(String token) {
-        return extraerClaim(token, claims -> claims.get("rol", String.class));
+        return extraerClaim(
+                token,
+                claims -> claims.get("rol", String.class)
+        );
     }
 
-    public boolean esTokenValido(String token, String correoEsperado) {
-        final String correo = extraerCorreo(token);
-        return correo.equals(correoEsperado) && !esTokenExpirado(token);
+    public boolean esTokenValido(String token, Integer idUsuarioEsperado) {
+        Integer idUsuario = extraerIdUsuario(token);
+
+        return idUsuario != null
+                && idUsuario.equals(idUsuarioEsperado)
+                && !esTokenExpirado(token);
     }
 
     private boolean esTokenExpirado(String token) {
-        return extraerClaim(token, Claims::getExpiration).before(new Date());
+        return extraerClaim(token, Claims::getExpiration)
+                .before(new Date());
     }
 
-    private <T> T extraerClaim(String token, Function<Claims, T> resolver) {
-        final Claims claims = extraerTodosLosClaims(token);
+    private <T> T extraerClaim(
+            String token,
+            Function<Claims, T> resolver
+    ) {
+        Claims claims = extraerTodosLosClaims(token);
         return resolver.apply(claims);
     }
 

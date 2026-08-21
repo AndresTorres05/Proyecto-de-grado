@@ -101,7 +101,10 @@ export class AdminDashboard implements OnInit {
       return;
     }
     this.errorGustos.set(null);
-    this.gustoService.crear({ nombre: this.nuevoGustoNombre.trim() }).subscribe({
+    this.gustoService.crear({
+  nombre: this.nuevoGustoNombre.trim(),
+  categoria: 'GUSTO'
+}).subscribe({
       next: () => {
         this.nuevoGustoNombre = '';
         this.cargarGustos();
@@ -125,7 +128,10 @@ export class AdminDashboard implements OnInit {
       return;
     }
     this.errorGustos.set(null);
-    this.gustoService.actualizar(this.gustoEditandoId, { nombre: this.gustoEditandoNombre.trim() }).subscribe({
+    this.gustoService.actualizar(this.gustoEditandoId, {
+  nombre: this.gustoEditandoNombre.trim(),
+  categoria: 'GUSTO'
+}).subscribe({
       next: () => {
         this.cancelarEdicionGusto();
         this.cargarGustos();

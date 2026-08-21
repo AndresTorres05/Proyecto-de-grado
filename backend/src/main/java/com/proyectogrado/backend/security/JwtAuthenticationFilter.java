@@ -4,7 +4,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,16 +19,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UsuarioDetailsService usuarioDetailsService;
 
-    public JwtAuthenticationFilter(JwtService jwtService, UsuarioDetailsService usuarioDetailsService) {
+    public JwtAuthenticationFilter(
+            JwtService jwtService,
+            UsuarioDetailsService usuarioDetailsService
+    ) {
         this.jwtService = jwtService;
         this.usuarioDetailsService = usuarioDetailsService;
     }
 
     @Override
     protected void doFilterInternal(
-            @NonNull HttpServletRequest request,
-            @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
     ) throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
@@ -40,21 +42,38 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         final String token = authHeader.substring(7);
-        final String correo = jwtService.extraerCorreo(token);
 
-        if (correo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = usuarioDetailsService.loadUserByUsername(correo);
+        try {
+            Integer idUsuario = jwtService.extraerIdUsuario(token);
 
-            if (jwtService.esTokenValido(token, userDetails.getUsername())) {
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities()
-                        );
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+            if (idUsuario != null
+                    && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+                UserDetails userDetails =
+                        usuarioDetailsService.loadUserById(idUsuario);
+
+                if (jwtService.esTokenValido(token, idUsuario)) {
+
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails,
+                                    null,
+                                    userDetails.getAuthorities()
+                            );
+
+                    authToken.setDetails(
+                            new WebAuthenticationDetailsSource()
+                                    .buildDetails(request)
+                    );
+
+                    SecurityContextHolder
+                            .getContext()
+                            .setAuthentication(authToken);
+                }
             }
+
+        } catch (Exception e) {
+            System.out.println("JWT inválido: " + e.getMessage());
         }
 
         filterChain.doFilter(request, response);

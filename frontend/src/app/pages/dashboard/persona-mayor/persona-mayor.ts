@@ -1,13 +1,19 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DashboardShell, ShellNavItem } from '../../../shared/dashboard-shell/dashboard-shell';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ActividadService, Actividad } from '../../../core/actividades/actividad.service';
-import { GustoService, Gusto } from '../../../core/gustos/gusto.service';
+import { GustoService, Gusto, CategoriaGusto } from '../../../core/gustos/gusto.service';
 
 interface AccesoRapido {
   icon: string;
   label: string;
+}
+
+interface CategoriaTab {
+  valor: CategoriaGusto;
+  label: string;
+  icon: string;
 }
 
 @Component({
@@ -18,13 +24,17 @@ interface AccesoRapido {
 })
 export class PersonaMayorDashboard implements OnInit {
   protected readonly navItems: ShellNavItem[] = [
-    { icon: '🏠', label: 'Inicio', active: true },
-    { icon: '🏃', label: 'Mis actividades' },
-    { icon: '❤️', label: 'Mis gustos' },
-    { icon: '⏰', label: 'Mis recordatorios' },
-    { icon: '👤', label: 'Mi información' },
-    { icon: '☎️', label: 'Mis contactos' }
-  ];
+  { icon: '🏠', label: 'Inicio', active: true },
+  { icon: '🏃', label: 'Mis actividades' },
+  {
+    icon: '❤️',
+    label: 'Mis intereses',
+    path: '/panel/persona-mayor/intereses'
+  },
+  { icon: '⏰', label: 'Mis recordatorios' },
+  { icon: '👤', label: 'Mi información' },
+  { icon: '☎️', label: 'Mis contactos' }
+];
 
   protected readonly recordatorio = {
     hora: '2:00 p.m.',
@@ -34,10 +44,22 @@ export class PersonaMayorDashboard implements OnInit {
 
   protected readonly actividades = signal<Actividad[]>([]);
 
+  protected readonly categorias: CategoriaTab[] = [
+    { valor: 'GUSTO', label: 'Gustos', icon: '❤️' },
+    { valor: 'TALENTO', label: 'Talentos', icon: '✨' },
+    { valor: 'HOBBY', label: 'Hobbies', icon: '🎯' }
+  ];
+
+  protected readonly categoriaActiva = signal<CategoriaGusto>('GUSTO');
+
   protected readonly gustosDisponibles = signal<Gusto[]>([]);
   protected readonly gustosSeleccionados = signal<Set<number>>(new Set());
   protected readonly guardandoGustos = signal(false);
   protected readonly errorGustos = signal<string | null>(null);
+
+  protected readonly gustosDeCategoriaActiva = computed(() =>
+    this.gustosDisponibles().filter((g) => g.categoria === this.categoriaActiva())
+  );
 
   constructor(
     private authService: AuthService,
@@ -57,6 +79,15 @@ export class PersonaMayorDashboard implements OnInit {
     this.gustoService.listarAsignados(idPersonaMayor).subscribe((gustos) =>
       this.gustosSeleccionados.set(new Set(gustos.map((g) => g.idGusto)))
     );
+  }
+
+  cambiarCategoria(categoria: CategoriaGusto): void {
+    this.categoriaActiva.set(categoria);
+  }
+
+  contarSeleccionados(categoria: CategoriaGusto): number {
+    const seleccionados = this.gustosSeleccionados();
+    return this.gustosDisponibles().filter((g) => g.categoria === categoria && seleccionados.has(g.idGusto)).length;
   }
 
   estaSeleccionado(idGusto: number): boolean {

@@ -2,13 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export type CategoriaGusto = 'GUSTO' | 'TALENTO' | 'HOBBY';
+
 export interface Gusto {
   idGusto: number;
   nombre: string;
+  categoria: CategoriaGusto;
 }
 
 export interface GustoRequest {
   nombre: string;
+  categoria: CategoriaGusto;
 }
 
 @Injectable({ providedIn: 'root' })

@@ -43,6 +43,14 @@ export const routes: Routes = [
     data: { rol: 'PERSONA_MAYOR' }
   },
   {
+  path: 'panel/persona-mayor/intereses',
+  loadComponent: () =>
+    import('./pages/dashboard/persona-mayor/intereses/intereses')
+      .then(m => m.Intereses),
+  canActivate: [authGuard],
+  data: { rol: 'PERSONA_MAYOR' }
+},
+  {
     path: 'panel/admin',
     loadComponent: () => import('./pages/dashboard/admin/admin').then((m) => m.AdminDashboard),
     canActivate: [authGuard]

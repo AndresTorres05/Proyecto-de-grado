@@ -1,7 +1,6 @@
 package com.proyectogrado.backend.security;
 
 import com.proyectogrado.backend.model.Usuario;
-import com.proyectogrado.backend.model.UsuarioRol;
 import com.proyectogrado.backend.repository.UsuarioRepository;
 import com.proyectogrado.backend.repository.UsuarioRolRepository;
 import org.springframework.security.core.userdetails.User;
@@ -16,24 +15,63 @@ public class UsuarioDetailsService implements UserDetailsService {
     private final UsuarioRepository usuarioRepository;
     private final UsuarioRolRepository usuarioRolRepository;
 
-    public UsuarioDetailsService(UsuarioRepository usuarioRepository, UsuarioRolRepository usuarioRolRepository) {
+    public UsuarioDetailsService(
+            UsuarioRepository usuarioRepository,
+            UsuarioRolRepository usuarioRolRepository
+    ) {
         this.usuarioRepository = usuarioRepository;
         this.usuarioRolRepository = usuarioRolRepository;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String correo) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepository.findByCorreo(correo)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + correo));
+    public UserDetails loadUserByUsername(String identificador)
+            throws UsernameNotFoundException {
 
-        String[] authorities = usuarioRolRepository.findByUsuario_IdUsuario(usuario.getIdUsuario())
+        Usuario usuario = usuarioRepository.findByCorreo(identificador)
+                .or(() -> usuarioRepository.findByTelefono(identificador))
+                .orElseThrow(() ->
+                        new UsernameNotFoundException(
+                                "Usuario no encontrado: " + identificador
+                        )
+                );
+
+        return construirUserDetails(usuario);
+    }
+
+    public UserDetails loadUserById(Integer idUsuario)
+            throws UsernameNotFoundException {
+
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException(
+                                "Usuario no encontrado con ID: " + idUsuario
+                        )
+                );
+
+        return construirUserDetails(usuario);
+    }
+
+    private UserDetails construirUserDetails(Usuario usuario) {
+
+        String[] authorities = usuarioRolRepository
+                .findByUsuario_IdUsuario(usuario.getIdUsuario())
                 .stream()
-                .map(usuarioRol -> "ROLE_" + usuarioRol.getRol().getNombre())
+                .map(usuarioRol ->
+                        "ROLE_" + usuarioRol.getRol().getNombre()
+                )
                 .toArray(String[]::new);
 
+        String username = usuario.getCorreo() != null
+                ? usuario.getCorreo()
+                : usuario.getTelefono();
+
         return User.builder()
-                .username(usuario.getCorreo())
-                .password(usuario.getContrasenaHash())
+                .username(username)
+                .password(
+                        usuario.getContrasenaHash() != null
+                                ? usuario.getContrasenaHash()
+                                : "SIN_CONTRASENA_LOGIN_POR_OTP"
+                )
                 .authorities(authorities)
                 .disabled(!Boolean.TRUE.equals(usuario.getActivo()))
                 .build();
