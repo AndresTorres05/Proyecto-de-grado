@@ -4,16 +4,16 @@ import { Component } from '@angular/core';
   selector: 'app-footer',
   imports: [],
   templateUrl: './footer.html',
-  styleUrl: './footer.css'
+  styleUrl: './footer.scss'
 })
 export class Footer {
   protected readonly anioActual = 2026;
 
   protected readonly redesSociales = [
-    { texto: 'X', etiqueta: 'X / Twitter' },
-    { texto: 'in', etiqueta: 'LinkedIn' },
-    { texto: 'f', etiqueta: 'Facebook' },
-    { texto: '▶', etiqueta: 'YouTube' }
+    { texto: 'GH', etiqueta: 'GitHub Repository', url: 'https://github.com/JuanDGarridoR/Proyecto-de-grado.git' },
+    { texto: 'in', etiqueta: 'LinkedIn', url: '#' },
+    { texto: 'f', etiqueta: 'Facebook', url: '#' },
+    { texto: '▶', etiqueta: 'YouTube', url: '#' }
   ];
 
   protected readonly enlacesPlataforma = [

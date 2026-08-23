@@ -3,57 +3,119 @@
   color: #ffffff;
   padding: 6rem 1.5rem;
   font-family: 'Sora', sans-serif;
+  overflow-x: hidden; // Evita desbordamientos generales en la página
 
   .reto-container {
     max-width: 1200px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
+    grid-template-columns: 1fr 1fr; // Divide estrictamente la pantalla en dos columnas iguales
+    gap: 50px;
+    align-items: flex-start;
 
     @media (max-width: 968px) {
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr; // Se vuelve una sola columna en pantallas pequeñas
       gap: 3rem;
     }
   }
 
-  // Columna Izquierda
-  .reto-intro {
-    .reto-badge {
-      display: inline-flex;
-      padding: 0.4rem 1rem;
-      border-radius: 50px;
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--gema-cream-soft, #f7efe5);
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 1.5rem;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
+  // CONTENEDOR IZQUIERDO: Agrupa texto y carrusel exclusivamente en la columna izquierda
+  .reto-left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem; // Espacio entre el texto y el carrusel debajo de él
+    min-width: 0; // CRÍTICO: Evita que el carrusel desborde el ancho de la columna izquierda
+    width: 100%;
+    overflow: hidden; // Contiene el carrusel dentro de su mitad de pantalla
 
-    .reto-title {
-      font-size: clamp(2rem, 3.5vw, 3rem);
-      font-weight: 800;
-      line-height: 1.15;
-      margin-bottom: 1.5rem;
-      letter-spacing: -0.03em;
-      color: #ffffff;
+    // Texto de la izquierda
+    .reto-intro {
+      .reto-badge {
+        display: inline-flex;
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--gema-cream-soft, #f7efe5);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
 
-      .accent-gold {
-        color: var(--gema-gold, #f6c95e);
+      .reto-title {
+        font-size: clamp(2rem, 3vw, 2.5rem);
+        font-weight: 800;
+        line-height: 1.15;
+        margin-bottom: 1.5rem;
+        letter-spacing: -0.03em;
+        color: #ffffff;
+
+        .accent-gold {
+          color: var(--gema-gold, #f6c95e);
+        }
+      }
+
+      .reto-description {
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 1.05rem;
+        line-height: 1.7;
       }
     }
 
-    .reto-description {
-      color: rgba(255, 255, 255, 0.75);
-      font-size: 1.05rem;
-      line-height: 1.7;
+    // CARRUSEL: Ubicado exactamente debajo del texto, confinado a la izquierda
+    .carousel-container {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+
+      .carousel-track {
+        display: flex;
+        gap: 20px;
+        width: max-content;
+        animation: scrollSlides 30s linear infinite;
+
+        &:hover {
+          animation-play-state: paused; // Pausa el movimiento al pasar el cursor
+        }
+      }
+
+      .carousel-slide {
+        width: 220px;
+        height: 140px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        flex-shrink: 0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.4s ease;
+
+          &:hover {
+            transform: scale(1.06);
+          }
+        }
+      }
     }
   }
 
-  // Columna Derecha (Flujo)
+  @keyframes scrollSlides {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(calc(-50% - 10px));
+    }
+  }
+
+  // COLUMNA DERECHA: Flujo de tarjetas con flechas
   .reto-flow {
     display: flex;
     flex-direction: column;
@@ -103,7 +165,7 @@
         }
       }
 
-      // Estilo especial para la última tarjeta (Solución en tono dorado/amarillo)
+      // Tarjeta final destacada (Solución)
       &.highlight-card {
         background: var(--gema-gold, #f6c95e);
         border-color: var(--gema-gold, #f6c95e);

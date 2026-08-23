@@ -1,0 +1,266 @@
+:host {
+  display: block;
+  // Aumenta el primer valor (por ejemplo de 80px a 120px) para darle más distancia con el borde superior
+  padding-top: 20px; 
+  padding-bottom: 40px;
+}
+.footer-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
+  gap: 40px;
+  align-items: start;
+  margin-bottom: 50px;
+
+  @media (max-width: 960px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.footer-brand {
+  .footer-logo-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+
+    .logo-mark {
+      height: 36px;
+      object-fit: contain;
+    }
+
+    .footer-brand-title {
+      color: #ffffff;
+      font-family: var(--font-heading, sans-serif);
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+  }
+
+  .footer-description {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    max-width: 280px;
+  }
+
+  .social-links-row {
+    display: flex;
+    gap: 12px;
+  }
+}
+
+.footer-heading {
+  color: #ffffff;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  a {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.2s ease, transform 0.2s ease;
+    display: inline-block;
+
+    &:hover {
+      color: #ffffff;
+      transform: translateX(4px);
+    }
+  }
+}
+
+.social-link {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
+}
+
+.footer-contact-col {
+  .contact-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+
+    .contact-link, .contact-text {
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: #ffffff;
+      }
+    }
+  }
+
+  .newsletter-wrapper {
+    margin-top: 10px;
+  }
+}
+
+.newsletter-form {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50px;
+  padding: 4px 4px 4px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  transition: border-color 0.2s ease;
+
+  &:focus-within {
+    border-color: var(--gema-gold, #f6c95e);
+  }
+
+  .newsletter-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 0.85rem;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.35);
+    }
+  }
+
+  .newsletter-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--gema-gold, #f6c95e);
+    color: var(--gema-navy-darker, #0c2b54);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.08);
+    }
+  }
+}
+
+// Barra de Alianzas Institucionales Innovadora
+.footer-partners-bar {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 30px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  .partners-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 600;
+  }
+
+  .partners-logos {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+
+    .inst-logo {
+      height: 38px;
+      object-fit: contain;
+      transition: opacity 0.2s ease;
+      opacity: 0.85;
+
+      &:hover {
+        opacity: 1;
+      }
+
+      // Solo aplica filtro blanco al logo de la Javeriana
+      &.javeriana-logo {
+        filter: brightness(0) invert(1);
+      }
+
+      // Mantiene los colores originales de ProSofi
+      &.original-color {
+        filter: none;
+      }
+    }
+  }
+}
+
+.footer-bottom {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  text-align: center;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+footer.section--darker {
+  padding-top: 30px !important; // Sube este valor a 80px, 100px o lo que necesites para separarlo del borde
+}
+.social-link {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 0.85ns;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  overflow: hidden; // Asegura que la imagen no se salga del círculo
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
+
+  // Estilo específico para la imagen de GitHub
+  .social-icon-img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+  }
+}

@@ -1,17 +1,53 @@
-<section class="reto-section">
+<section class="reto-section" id="reto">
   <div class="container reto-container">
-    <!-- Columna izquierda: Título y descripción -->
-    <div class="reto-intro">
-      <span class="reto-badge">NUESTRO RETO</span>
-      <h2 class="reto-title">
-        Todo comenzó con una <span class="accent-gold">necesidad.</span>
-      </h2>
-      <p class="reto-description">
-        En las organizaciones sociales de la <strong>UPL de Usme</strong>, las fundaciones que acompañan a personas mayores gestionan su información mediante registros manuales o herramientas dispersas. Esto dificulta la organización, consulta y análisis de los datos. Identificamos esa brecha y decidimos construir una solución.
-      </p>
+    
+    <!-- Columna Izquierda: Texto arriba y Carrusel de fotos debajo -->
+    <div class="reto-left-column">
+      <div class="reto-intro">
+        <span class="reto-badge">NUESTRO RETO</span>
+        <h2 class="reto-title">
+          Todo comenzó con una <span class="accent-gold">necesidad.</span>
+        </h2>
+        <p class="reto-description">
+          En las organizaciones sociales de la <strong>UPL de Usme</strong>, las fundaciones que acompañan a personas mayores gestionan su información mediante registros manuales o herramientas dispersas. Esto dificulta la organización, consulta y análisis de los datos. Identificamos esa brecha y decidimos construir una solución.
+        </p>
+      </div>
+
+      <!-- Carrusel ubicado exactamente debajo del texto a la izquierda -->
+      <div class="carousel-container">
+        <div class="carousel-track">
+          <!-- Bloque 1 de fotos -->
+          <div class="carousel-slide">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtdYsslukFFeiJOPLSuChpShGReMasoOkEscDgh28HN_5X6k4IVrVhKqc&s=10" alt="Cuidado de adultos mayores" />
+          </div>
+          <div class="carousel-slide">
+            <img src="https://www.javeriana.edu.co/recursosdb/d/compromiso-social/estudiantes-jpg" alt="Tecnología y comunidad" />
+          </div>
+          <div class="carousel-slide">
+            <img src="https://oab.ambientebogota.gov.co/wp-content/uploads/2022/08/FINCA-FLOR-DE-LUNA-1024x768-1.jpg" alt="Trabajo social en Usme" />
+          </div>
+          <div class="carousel-slide">
+            <img src="https://bogota.gov.co/sites/default/files/2024-11/turismo-en-bogota_-conoce-usme-pueblo-la-puerta-al-area-rural.png" alt="Equipo colaborativo" />
+          </div>
+
+          <!-- Bloque 2 duplicado para bucle infinito fluido -->
+          <div class="carousel-slide">
+            <img src="https://oab.ambientebogota.gov.co/wp-content/uploads/2022/08/FINCA-FLOR-DE-LUNA-1024x768-1.jpg" alt="Cuidado de adultos mayores" />
+          </div>
+          <div class="carousel-slide">
+            <img src="https://www.javeriana.edu.co/recursosdb/d/compromiso-social/estudiantes-jpg" alt="Tecnología y comunidad" />
+          </div>
+          <div class="carousel-slide">
+            <img src="https://oab.ambientebogota.gov.co/wp-content/uploads/2022/08/FINCA-FLOR-DE-LUNA-1024x768-1.jpg" alt="Trabajo social en Usme" />
+          </div>
+          <div class="carousel-slide">
+            <img src="https://bogota.gov.co/sites/default/files/2024-11/turismo-en-bogota_-conoce-usme-pueblo-la-puerta-al-area-rural.png" alt="Equipo colaborativo" />
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Columna derecha: Flujo de tarjetas con flechas -->
+    <!-- Columna Derecha: Flujo de tarjetas con flechas -->
     <div class="reto-flow">
       <!-- Tarjeta 1 -->
       <article class="reto-card">
@@ -55,5 +91,6 @@
         </div>
       </article>
     </div>
+
   </div>
 </section>

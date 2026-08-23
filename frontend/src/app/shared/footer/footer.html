@@ -1,54 +1,76 @@
-<footer class="section--darker" id="contacto">
-  <div class="container">
+<footer class="section--darker" id="contacto" style="padding-top: 100px;">
+  <div class="container footer-wrapper">
     <div class="footer-grid">
+      <!-- Columna 1: Marca, Descripción y Redes -->
       <div class="footer-brand">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <div class="footer-logo-row">
           <img src="logo.png" alt="Logo GEMA" class="logo-mark" />
-          <strong style="color:white; font-family:var(--font-heading); font-size:1.1rem;">GEMA</strong>
+          <strong class="footer-brand-title">GEMA</strong>
         </div>
-        <p style="color: rgba(255,255,255,0.6); font-size:0.85rem; max-width:260px; margin-bottom:20px;">
+        <p class="footer-description">
           Gestión Estratégica para Mayores y su Acompañamiento. Tecnología al servicio del cuidado humano.
         </p>
-        <div style="display:flex; gap:12px;">
+        <div class="social-links-row">
           @for (red of redesSociales; track red.etiqueta) {
-            <a href="#" class="social-link" aria-label="{{ red.etiqueta }}">{{ red.texto }}</a>
+            <a [href]="red.url" target="_blank" rel="noopener noreferrer" class="social-link" [attr.aria-label]="red.etiqueta">
+              @if (red.texto === 'GH') {
+                <img src="https://icones.pro/wp-content/uploads/2021/06/icone-github-rouge.png" alt="GitHub" class="social-icon-img" />
+              } @else {
+                {{ red.texto }}
+              }
+            </a>
           }
         </div>
       </div>
 
+      <!-- Columna 2: Plataforma -->
       <div class="footer-col">
-        <h4 style="color:white; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:16px;">Plataforma</h4>
+        <h4 class="footer-heading">Plataforma</h4>
         <ul class="footer-links">
-          @for (enlace of enlacesPlataforma; track enlace) {
-            <li><a href="#">{{ enlace }}</a></li>
-          }
+          <li><a href="#hero">Inicio</a></li>
+          <li><a href="#modules">Módulos</a></li>
+          <li><a href="#dashboard-preview">Vista Previa</a></li>
+          <li><a href="#benefits">Beneficios</a></li>
         </ul>
       </div>
 
+      <!-- Columna 3: Organización -->
       <div class="footer-col">
-        <h4 style="color:white; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:16px;">Organización</h4>
+        <h4 class="footer-heading">Organización</h4>
         <ul class="footer-links">
-          @for (enlace of enlacesOrganizacion; track enlace) {
-            <li><a href="#">{{ enlace }}</a></li>
-          }
+          <li><a href="#quienes-somos">Quiénes Somos</a></li>
+          <li><a href="#mission">Nuestra Misión</a></li>
+          <li><a href="#cta">Contacto Directo</a></li>
         </ul>
       </div>
 
-      <div class="footer-col">
-        <h4 style="color:white; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:16px;">Contacto</h4>
-        <div style="display:flex; flex-direction:column; gap:10px;">
-          <a href="mailto:hola@gema.social" style="color:rgba(255,255,255,0.65); font-size:0.9rem;">hola&#64;gema.social</a>
-          <a href="tel:+573001234567" style="color:rgba(255,255,255,0.65); font-size:0.9rem;">+57 300 123 4567</a>
-          <span style="color:rgba(255,255,255,0.65); font-size:0.9rem;">Bogotá, Colombia</span>
+      <!-- Columna 4: Contacto y Newsletter -->
+      <div class="footer-col footer-contact-col">
+        <h4 class="footer-heading">Contacto</h4>
+        <div class="contact-info-list">
+          <a href="mailto:hola@gema.social" class="contact-link">hola&#64;gema.social</a>
+          <a href="tel:+573001234567" class="contact-link">+57 300 123 4567</a>
+          <span class="contact-text">Bogotá, Colombia</span>
         </div>
 
-        <div style="margin-top:20px;">
-          <h4 style="color:white; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:16px;">Newsletter</h4>
+        <div class="newsletter-wrapper">
+          <h4 class="footer-heading">Newsletter</h4>
           <form (submit)="$event.preventDefault()" class="newsletter-form">
-            <input type="email" placeholder="tu@correo.com" aria-label="Correo electrónico" style="flex:1; background:transparent; border:none; outline:none; color:white; font-size:0.85rem;">
-            <button type="submit" style="width:32px; height:32px; border-radius:50%; background:var(--gema-gold); color:var(--gema-navy-darker); border:none; display:flex; align-items:center; justify-content:center; font-weight:700;" aria-label="Suscribirse">&rarr;</button>
+            <input type="email" placeholder="tu@correo.com" aria-label="Correo electrónico" class="newsletter-input">
+            <button type="submit" class="newsletter-btn" aria-label="Suscribirse">&rarr;</button>
           </form>
         </div>
+      </div>
+    </div>
+
+    <!-- Franja inferior de Alianzas Institucionales -->
+    <div class="footer-partners-bar">
+      <span class="partners-label">En alianza institucional con:</span>
+      <div class="partners-logos">
+        <!-- Logo Javeriana con filtro blanco -->
+        <img src="https://www.connectbogota.org/sites/default/files/U.JAVERIANA.png" alt="Pontificia Universidad Javeriana" class="inst-logo javeriana-logo" />
+        <!-- Logo ProSofi en sus colores originales -->
+        <img src="https://www.javeriana.edu.co/recursosdb/d/compromiso-social/isologo-prosofi-2026-png" alt="ProSofi" class="inst-logo original-color" />
       </div>
     </div>
 
