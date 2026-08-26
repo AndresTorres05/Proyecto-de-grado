@@ -5,10 +5,12 @@ import com.proyectogrado.backend.dto.LoginResponse;
 import com.proyectogrado.backend.dto.OtpLoginRequest;
 import com.proyectogrado.backend.dto.OtpRegistroRequest;
 import com.proyectogrado.backend.model.PersonaMayor;
+import com.proyectogrado.backend.model.Acompanante;
 import com.proyectogrado.backend.model.Rol;
 import com.proyectogrado.backend.model.Usuario;
 import com.proyectogrado.backend.model.UsuarioRol;
 import com.proyectogrado.backend.repository.PersonaMayorRepository;
+import com.proyectogrado.backend.repository.AcompananteRepository;
 import com.proyectogrado.backend.repository.RolRepository;
 import com.proyectogrado.backend.repository.UsuarioRepository;
 import com.proyectogrado.backend.repository.UsuarioRolRepository;
@@ -34,6 +36,7 @@ public class OtpController {
     private final RolRepository rolRepository;
     private final UsuarioRolRepository usuarioRolRepository;
     private final PersonaMayorRepository personaMayorRepository;
+    private final AcompananteRepository acompananteRepository;
     private final JwtService jwtService;
 
     public OtpController(TextBeeOtpService textBeeOtpService,
@@ -41,12 +44,14 @@ public class OtpController {
                       RolRepository rolRepository,
                       UsuarioRolRepository usuarioRolRepository,
                       PersonaMayorRepository personaMayorRepository,
+                      AcompananteRepository acompananteRepository,
                       JwtService jwtService) {
     this.textBeeOtpService = textBeeOtpService;
     this.usuarioRepository = usuarioRepository;
     this.rolRepository = rolRepository;
     this.usuarioRolRepository = usuarioRolRepository;
     this.personaMayorRepository = personaMayorRepository;
+    this.acompananteRepository = acompananteRepository;
     this.jwtService = jwtService;
 }
 
@@ -193,9 +198,19 @@ public class OtpController {
         );
 
         if ("PERSONA_MAYOR".equals(rol.getNombre())) {
-            personaMayorRepository.save(
-                    new PersonaMayor(usuario)
-            );
+
+                personaMayorRepository.save(
+                        new PersonaMayor(usuario)
+                );
+
+        } else if ("ACOMPANANTE".equals(rol.getNombre())) {
+
+                acompananteRepository.save(
+                        new Acompanante(
+                                usuario,
+                                request.getParentesco()
+                        )
+                );
         }
 
         String token = jwtService.generarToken(

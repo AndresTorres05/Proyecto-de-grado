@@ -6,6 +6,7 @@ public class OtpRegistroRequest {
     private String codigo;
     private String nombreUsuario;
     private String rol;
+    private String parentesco;
 
     public OtpRegistroRequest() {
     }
@@ -40,5 +41,13 @@ public class OtpRegistroRequest {
 
     public void setRol(String rol) {
         this.rol = rol;
+    }
+
+    public String getParentesco() {
+        return parentesco;
+    }
+
+    public void setParentesco(String parentesco) {
+        this.parentesco = parentesco;
     }
 }

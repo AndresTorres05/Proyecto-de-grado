@@ -11,6 +11,6 @@ public interface PersonaMayorAcompananteRepository
                 PersonaMayorAcompanante,
                 PersonaMayorAcompananteId> {
 
-    List<PersonaMayorAcompanante>
-    findByPersonaMayor_IdUsuario(Integer idPersonaMayor);
+        List<PersonaMayorAcompanante>
+        findById_IdPersonaMayor(Integer idPersonaMayor);
 }
