@@ -43,16 +43,109 @@
     </div>
   </section>
 
-  @if (acompanante(); as ac) {
-    <section class="companion-card card">
-      <span class="companion-card__avatar" aria-hidden="true">🤝</span>
-      <div class="companion-card__info">
-        <p class="companion-card__label">Tu acompañante</p>
-        <h2>{{ ac.nombre }}</h2>
+  <section class="contacts-section section-block">
+    <h2 class="section-block__title">Mis contactos</h2>
+
+    @if (acompanante(); as ac) {
+      <div class="companion-card card">
+        <span class="companion-card__avatar" aria-hidden="true">🤝</span>
+
+        <div class="companion-card__info">
+          <p class="companion-card__label">Acompañante</p>
+          <h2>{{ ac.nombre }}</h2>
+          <p class="companion-card__phone">{{ ac.telefono }}</p>
+
+          @if (ac.parentesco) {
+            <p class="companion-card__relationship">
+              {{ ac.parentesco }}
+            </p>
+          }
+        </div>
+
+        <a
+          href="tel:{{ ac.telefono }}"
+          class="btn btn-gold companion-card__call"
+        >
+          📞 Llamar
+        </a>
       </div>
-      <a href="tel:{{ ac.telefono }}" class="btn btn-gold companion-card__call">📞 Llamar</a>
-    </section>
-  }
+    } @else {
+      <div class="empty-contacts card">
+        <span aria-hidden="true">👤</span>
+        <p>No tienes acompañantes registrados.</p>
+      </div>
+    }
+
+    <div class="emergency-card card">
+      <div class="emergency-card__icon" aria-hidden="true">🚨</div>
+
+      <div class="emergency-card__content">
+        <h2>¿Necesitas ayuda?</h2>
+        <p>
+          Envía una alerta de emergencia a tus acompañantes.
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="btn emergency-card__button"
+        (click)="activarConfirmacionEmergencia()"
+      >
+        🚨 Activar emergencia
+      </button>
+      @if (mostrandoConfirmacionEmergencia()) {
+      <div class="emergency-confirmation">
+        <div class="emergency-confirmation__icon" aria-hidden="true">
+          ⚠️
+        </div>
+
+        <div class="emergency-confirmation__content">
+          <h3>¿Confirmar emergencia?</h3>
+
+          <p>
+            Se enviará una alerta a tus acompañantes para informarles
+            que necesitas ayuda.
+          </p>
+
+          <div class="emergency-confirmation__actions">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="cancelarEmergencia()"
+              [disabled]="enviandoEmergencia()"
+            >
+              Cancelar
+            </button>
+
+            <button
+              type="button"
+              class="btn emergency-confirmation__confirm"
+              (click)="confirmarEmergencia()"
+              [disabled]="enviandoEmergencia()"
+            >
+              @if (enviandoEmergencia()) {
+                Enviando...
+              } @else {
+                Sí, enviar alerta
+              }
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+    </div>
+    @if (mensajeEmergencia(); as mensaje) {
+      <div class="emergency-success">
+        ✅ {{ mensaje }}
+      </div>
+    }
+
+    @if (errorEmergencia(); as error) {
+      <div class="emergency-error">
+        ⚠️ {{ error }}
+      </div>
+    }
+  </section>
 
   <section class="access-grid">
     @for (a of accesos; track a.label) {

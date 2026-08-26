@@ -5,6 +5,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { ActividadService, Actividad } from '../../../core/actividades/actividad.service';
 import { GustoService, Gusto, CategoriaGusto } from '../../../core/gustos/gusto.service';
 import { AcompananteService, Acompanante } from '../../../core/acompanantes/acompanante.service';
+import { EmergenciaService } from '../../../core/emergencia/emergencia.service';
 
 interface AccesoRapido {
   icon: string;
@@ -66,7 +67,8 @@ export class PersonaMayorDashboard implements OnInit {
     private authService: AuthService,
     private actividadService: ActividadService,
     private gustoService: GustoService,
-    private acompananteService: AcompananteService
+    private acompananteService: AcompananteService,
+    private emergenciaService: EmergenciaService
   ) {}
 
   ngOnInit(): void {
@@ -128,9 +130,45 @@ export class PersonaMayorDashboard implements OnInit {
   }
 
   protected readonly acompanante = signal<Acompanante | null>(null);
+  protected readonly mostrandoConfirmacionEmergencia = signal(false);
+  protected readonly enviandoEmergencia = signal(false);
+  protected readonly mensajeEmergencia = signal<string | null>(null);
+  protected readonly errorEmergencia = signal<string | null>(null);
 
   protected readonly accesos: AccesoRapido[] = [
     { icon: '👤', label: 'Mi información' },
     { icon: '☎️', label: 'Mis contactos de emergencia' }
   ];
+
+  activarConfirmacionEmergencia(): void {
+    this.mostrandoConfirmacionEmergencia.set(true);
+    this.mensajeEmergencia.set(null);
+    this.errorEmergencia.set(null);
+  }
+
+  cancelarEmergencia(): void {
+    this.mostrandoConfirmacionEmergencia.set(false);
+  }
+
+  confirmarEmergencia(): void {
+    this.enviandoEmergencia.set(true);
+    this.errorEmergencia.set(null);
+    this.mensajeEmergencia.set(null);
+
+    this.emergenciaService.activarEmergencia().subscribe({
+      next: (respuesta) => {
+        this.enviandoEmergencia.set(false);
+        this.mostrandoConfirmacionEmergencia.set(false);
+        this.mensajeEmergencia.set(respuesta);
+      },
+      error: (error) => {
+        this.enviandoEmergencia.set(false);
+
+        const mensaje =
+          error?.error || 'No se pudo enviar la alerta de emergencia.';
+
+        this.errorEmergencia.set(mensaje);
+      }
+    });
+  }
 }

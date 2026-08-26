@@ -6,6 +6,7 @@ import com.proyectogrado.backend.repository.UsuarioRepository;
 import com.proyectogrado.backend.security.TextBeeOtpService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -28,67 +29,81 @@ public class EmergenciaController {
         this.textBeeOtpService = textBeeOtpService;
     }
 
-    @PostMapping("/prueba")
-    public ResponseEntity<String> enviarEmergenciaDePrueba(
-            @RequestParam Integer idPersonaMayor
-    ) {
+    @PostMapping
+        public ResponseEntity<String> enviarEmergencia(
+                Authentication authentication
+        ) {
 
-        List<PersonaMayorAcompanante> relaciones =
-                relacionRepository.findById_IdPersonaMayor(
-                        idPersonaMayor
+                String username = authentication.getName();
+
+                Integer idPersonaMayor = usuarioRepository
+                        .findByCorreo(username)
+                        .or(() -> usuarioRepository.findByTelefono(username))
+                        .map(usuario -> usuario.getIdUsuario())
+                        .orElse(null);
+
+                if (idPersonaMayor == null) {
+                        return ResponseEntity.badRequest().body(
+                                "No se pudo identificar al usuario autenticado"
+                        );
+                }
+
+                List<PersonaMayorAcompanante> relaciones =
+                        relacionRepository.findById_IdPersonaMayor(
+                                idPersonaMayor
+                        );
+
+                if (relaciones.isEmpty()) {
+                        return ResponseEntity.badRequest().body(
+                                "La persona mayor no tiene acompañantes asociados"
+                        );
+                }
+
+                String nombrePersonaMayor = usuarioRepository
+                        .findById(idPersonaMayor)
+                        .map(usuario -> usuario.getNombreUsuario())
+                        .orElse("Una persona mayor");
+
+                int enviados = 0;
+
+                for (PersonaMayorAcompanante relacion : relaciones) {
+
+                        Integer idAcompanante =
+                                relacion.getAcompanante().getIdUsuario();
+
+                        String telefono = usuarioRepository
+                                .findById(idAcompanante)
+                                .map(usuario -> usuario.getTelefono())
+                                .orElse(null);
+
+                        if (telefono == null || telefono.isBlank()) {
+                        continue;
+                        }
+
+                        String mensaje =
+                                "🚨 ALERTA DE EMERGENCIA: "
+                                + nombrePersonaMayor
+                                + " ha activado una alerta desde MemoVida. "
+                                + "Por favor, verifica que se encuentre bien.";
+
+                        textBeeOtpService.enviarMensaje(
+                                telefono,
+                                mensaje
+                        );
+
+                        enviados++;
+                }
+
+                if (enviados == 0) {
+                        return ResponseEntity.badRequest().body(
+                                "No se pudo enviar la alerta a ningún acompañante"
+                        );
+                }
+
+                return ResponseEntity.ok(
+                        "Alerta de emergencia enviada a "
+                        + enviados
+                        + " acompañante(s)"
                 );
-
-        if (relaciones.isEmpty()) {
-            return ResponseEntity.badRequest().body(
-                    "La persona mayor no tiene acompañantes asociados"
-            );
         }
-
-        String nombrePersonaMayor = usuarioRepository
-                .findById(idPersonaMayor)
-                .map(usuario -> usuario.getNombreUsuario())
-                .orElse("Una persona mayor");
-
-        int enviados = 0;
-
-        for (PersonaMayorAcompanante relacion : relaciones) {
-
-            Integer idAcompanante =
-                    relacion.getAcompanante().getIdUsuario();
-
-            String telefono = usuarioRepository
-                    .findById(idAcompanante)
-                    .map(usuario -> usuario.getTelefono())
-                    .orElse(null);
-
-            if (telefono == null || telefono.isBlank()) {
-                continue;
-            }
-
-            String mensaje =
-                    "🚨 ALERTA DE EMERGENCIA: "
-                    + nombrePersonaMayor
-                    + " ha activado una alerta desde Gema. "
-                    + "Por favor, verifica que se encuentre bien.";
-
-            textBeeOtpService.enviarMensaje(
-                    telefono,
-                    mensaje
-            );
-
-            enviados++;
-        }
-
-        if (enviados == 0) {
-            return ResponseEntity.badRequest().body(
-                    "No se pudo enviar la alerta a ningún acompañante"
-            );
-        }
-
-        return ResponseEntity.ok(
-                "Alerta de emergencia enviada a "
-                + enviados
-                + " acompañante(s)"
-        );
-    }
 }
