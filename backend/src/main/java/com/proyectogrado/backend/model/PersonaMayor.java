@@ -11,6 +11,11 @@ public class PersonaMayor {
     @Column(name = "id_usuario")
     private Integer idUsuario;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
+
     @Column(name = "fecha_nacimiento")
     private LocalDate fechaNacimiento;
 
@@ -24,6 +29,7 @@ public class PersonaMayor {
     }
 
     public PersonaMayor(Usuario usuario) {
+        this.usuario = usuario;
         this.idUsuario = usuario.getIdUsuario();
     }
 
@@ -33,6 +39,18 @@ public class PersonaMayor {
 
     public void setIdUsuario(Integer idUsuario) {
         this.idUsuario = idUsuario;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+
+        if (usuario != null) {
+            this.idUsuario = usuario.getIdUsuario();
+        }
     }
 
     public LocalDate getFechaNacimiento() {
