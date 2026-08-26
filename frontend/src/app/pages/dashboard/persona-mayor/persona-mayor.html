@@ -43,14 +43,16 @@
     </div>
   </section>
 
-  <section class="companion-card card">
-    <span class="companion-card__avatar" aria-hidden="true">🤝</span>
-    <div class="companion-card__info">
-      <p class="companion-card__label">{{ acompanante.rol }}</p>
-      <h2>{{ acompanante.nombre }}</h2>
-    </div>
-    <a href="tel:{{ acompanante.telefono }}" class="btn btn-gold companion-card__call">📞 Llamar</a>
-  </section>
+  @if (acompanante(); as ac) {
+    <section class="companion-card card">
+      <span class="companion-card__avatar" aria-hidden="true">🤝</span>
+      <div class="companion-card__info">
+        <p class="companion-card__label">Tu acompañante</p>
+        <h2>{{ ac.nombre }}</h2>
+      </div>
+      <a href="tel:{{ ac.telefono }}" class="btn btn-gold companion-card__call">📞 Llamar</a>
+    </section>
+  }
 
   <section class="access-grid">
     @for (a of accesos; track a.label) {

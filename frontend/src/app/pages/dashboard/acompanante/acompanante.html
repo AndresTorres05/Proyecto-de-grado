@@ -15,21 +15,16 @@
   </div>
 
   <section class="elders-grid" aria-label="Mis personas mayores acompañadas">
-    @for (p of personasMayores; track p.nombre) {
+    @for (p of personasMayores(); track p.idUsuario) {
       <div class="elder-card card">
         <div class="elder-card__top">
           <span class="elder-card__avatar">🧓</span>
-          <span
-            class="elder-card__status"
-            [class.elder-card__status--alert]="p.estado === 'Alerta activa'"
-            >{{ p.estado }}</span
-          >
         </div>
         <h3>{{ p.nombre }}</h3>
-        <p>{{ p.edad }} años</p>
-        <p class="elder-card__visit">Próxima visita: {{ p.proximaVisita }}</p>
-        <a href="#" class="elder-card__link">Ver perfil completo &rarr;</a>
+        <a href="tel:{{ p.telefono }}" class="elder-card__link">📞 {{ p.telefono }}</a>
       </div>
+    } @empty {
+      <p>Aún no tienes personas mayores asignadas.</p>
     }
   </section>
 

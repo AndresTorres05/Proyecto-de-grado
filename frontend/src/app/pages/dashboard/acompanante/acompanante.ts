@@ -1,13 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { DashboardShell, ShellNavItem } from '../../../shared/dashboard-shell/dashboard-shell';
 import { ActividadService, Actividad } from '../../../core/actividades/actividad.service';
-
-interface PersonaMayor {
-  nombre: string;
-  edad: number;
-  estado: 'Al día' | 'Alerta activa';
-  proximaVisita: string;
-}
+import { AcompananteService, PersonaMayorAcompanada } from '../../../core/acompanantes/acompanante.service';
 
 interface Recordatorio {
   hora: string;
@@ -35,10 +29,16 @@ interface ContactoEmergencia {
   styleUrl: './acompanante.css'
 })
 export class AcompananteDashboard implements OnInit {
-  constructor(private actividadService: ActividadService) {}
+  constructor(
+    private actividadService: ActividadService,
+    private acompananteService: AcompananteService
+  ) {}
 
   ngOnInit(): void {
     this.actividadService.listar().subscribe((actividades) => this.actividades.set(actividades));
+    this.acompananteService.obtenerPersonasMayores().subscribe((personasMayores) =>
+      this.personasMayores.set(personasMayores)
+    );
   }
 
   protected readonly navItems: ShellNavItem[] = [
@@ -50,10 +50,7 @@ export class AcompananteDashboard implements OnInit {
     { icon: '👤', label: 'Mi perfil' }
   ];
 
-  protected readonly personasMayores: PersonaMayor[] = [
-    { nombre: 'Rosa Elvira Gómez', edad: 78, estado: 'Alerta activa', proximaVisita: 'Hoy · 4:00 p.m.' },
-    { nombre: 'Carlos Julio Méndez', edad: 82, estado: 'Al día', proximaVisita: 'Jue 13 ago · 10:00 a.m.' }
-  ];
+  protected readonly personasMayores = signal<PersonaMayorAcompanada[]>([]);
 
   protected readonly recordatorios: Recordatorio[] = [
     { hora: '10:00 a.m.', detalle: 'Losartán 50mg', persona: 'Carlos Julio Méndez' },

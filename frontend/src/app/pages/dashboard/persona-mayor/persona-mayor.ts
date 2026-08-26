@@ -4,6 +4,7 @@ import { DashboardShell, ShellNavItem } from '../../../shared/dashboard-shell/da
 import { AuthService } from '../../../core/auth/auth.service';
 import { ActividadService, Actividad } from '../../../core/actividades/actividad.service';
 import { GustoService, Gusto, CategoriaGusto } from '../../../core/gustos/gusto.service';
+import { AcompananteService, Acompanante } from '../../../core/acompanantes/acompanante.service';
 
 interface AccesoRapido {
   icon: string;
@@ -64,11 +65,15 @@ export class PersonaMayorDashboard implements OnInit {
   constructor(
     private authService: AuthService,
     private actividadService: ActividadService,
-    private gustoService: GustoService
+    private gustoService: GustoService,
+    private acompananteService: AcompananteService
   ) {}
 
   ngOnInit(): void {
     this.actividadService.listar().subscribe((actividades) => this.actividades.set(actividades));
+    this.acompananteService.obtenerAcompanantes().subscribe((acompanantes) =>
+      this.acompanante.set(acompanantes[0] ?? null)
+    );
 
     const idPersonaMayor = this.authService.getIdUsuario();
     if (idPersonaMayor === null) {
@@ -122,11 +127,7 @@ export class PersonaMayorDashboard implements OnInit {
     });
   }
 
-  protected readonly acompanante = {
-    nombre: 'Laura Peña',
-    rol: 'Tu acompañante',
-    telefono: '310 555 2233'
-  };
+  protected readonly acompanante = signal<Acompanante | null>(null);
 
   protected readonly accesos: AccesoRapido[] = [
     { icon: '👤', label: 'Mi información' },
