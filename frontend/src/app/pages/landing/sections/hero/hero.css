@@ -105,6 +105,18 @@
   height: 320px;
   border-radius: 50%;
   background: color-mix(in srgb, var(--gema-navy-light) 12%, var(--gema-cream));
+  overflow: hidden; /* Vital para que la imagen respete el círculo o contenedor */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Estilo para tu imagen dentro del círculo de fondo */
+.hero__bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ajusta la imagen para que llene el espacio */
+  opacity: 0.85; /* Opcional: un toque sutil para que combine con los elementos flotantes */
 }
 
 .hero__avatar {
@@ -117,6 +129,7 @@
   justify-content: center;
   font-size: 1.5rem;
   box-shadow: var(--shadow-card);
+  z-index: 3; /* Asegura que estén por encima de la imagen */
 }
 
 .hero__avatar--1 {
@@ -148,6 +161,7 @@
   border-radius: var(--radius-md);
   font-size: 0.8rem;
   white-space: nowrap;
+  z-index: 4; /* Asegura que las tarjetas estén flotando encima */
 }
 
 .float-card__icon {
@@ -274,3 +288,28 @@
     display: none;
   }
 }
+/* ---------- Animación de flotación ---------- */
+
+@keyframes floatAnimation {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px); /* Sube 8 píxeles suavemente */
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* Aplicamos la animación a las tarjetas flotantes */
+.float-card {
+  animation: floatAnimation 4s ease-in-out infinite;
+}
+
+/* Opcional: Desfasar el tiempo de cada tarjeta para que no se muevan todas al mismo ritmo exacto */
+.float-card--1 { animation-delay: 0s; }
+.float-card--2 { animation-delay: 1s; }
+.float-card--3 { animation-delay: 2s; }
+.float-card--4 { animation-delay: 1.5s; }
+.float-card--5 { animation-delay: 2.5s; }
