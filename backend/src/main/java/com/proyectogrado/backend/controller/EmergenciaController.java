@@ -83,7 +83,7 @@ public class EmergenciaController {
                         String mensaje =
                                 "🚨 ALERTA DE EMERGENCIA: "
                                 + nombrePersonaMayor
-                                + " ha activado una alerta desde MemoVida. "
+                                + " ha activado una alerta desde Gema. "
                                 + "Por favor, verifica que se encuentre bien.";
 
                         textBeeOtpService.enviarMensaje(
