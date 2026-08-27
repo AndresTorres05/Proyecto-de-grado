@@ -9,11 +9,11 @@ import { RouterLink } from '@angular/router';
 })
 export class Navbar {
   protected readonly navLinks = [
-    { label: 'Inicio', href: '#inicio' },
-    { label: 'Solución', href: '#solucion' },
-    { label: 'Beneficios', href: '#beneficios' },
-    { label: 'Analítica', href: '#analitica' },
-    { label: 'Nosotros', href: '#nosotros' },
+    { label: 'Inicio', href: '#hero' },
+    { label: 'El Reto', href: '#reto' },
+    { label: 'Quiénes Somos', href: '#quienes-somos' },
+    { label: 'Misión', href: '#mission' },
+    { label: 'Módulos', href: '#modules' },
     { label: 'Contacto', href: '#contacto' }
   ];
 }
