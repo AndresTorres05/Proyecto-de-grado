@@ -43,19 +43,7 @@
       </ul>
     </nav>
 
-    <div class="shell__proto">
-      <span class="shell__proto-label">Prototipo &middot; cambiar de vista</span>
-      <div class="shell__proto-links">
-        @for (rs of roleSwitcher; track rs.path) {
-          <a
-            [routerLink]="rs.path"
-            routerLinkActive="shell__proto-link--active"
-            class="shell__proto-link"
-            >{{ rs.label }}</a
-          >
-        }
-      </div>
-    </div>
+    
   </aside>
 
   <div class="shell__main">

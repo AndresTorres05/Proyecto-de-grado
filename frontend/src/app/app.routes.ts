@@ -1,58 +1,333 @@
 import { Routes } from '@angular/router';
+
 import { authGuard } from './core/auth/auth.guard';
 
 export const routes: Routes = [
+
+  // =========================
+  // PÁGINAS PÚBLICAS
+  // =========================
+
   {
     path: '',
-    loadComponent: () => import('./pages/landing/landing').then((m) => m.Landing)
+    loadComponent: () =>
+      import('./pages/landing/landing').then((m) => m.Landing)
   },
+
   {
     path: 'login',
-    loadComponent: () => import('./pages/login/login').then((m) => m.Login)
+    loadComponent: () =>
+      import('./pages/login/login').then((m) => m.Login)
   },
+
   {
     path: 'registro',
-    loadComponent: () => import('./pages/registro/registro').then((m) => m.Registro)
+    loadComponent: () =>
+      import('./pages/registro/registro').then((m) => m.Registro)
   },
+
+
+  // =========================
+  // PANEL ORGANIZACIÓN
+  // =========================
+
   {
     path: 'panel/organizacion',
     loadComponent: () =>
-      import('./pages/dashboard/organizacion/organizacion').then((m) => m.OrganizacionDashboard),
+      import('./shared/panel-shell-layout/panel-shell-layout')
+        .then((m) => m.PanelShellLayout),
+
     canActivate: [authGuard],
-    data: { rol: 'ORGANIZACION' }
+    data: { rol: 'ORGANIZACION' },
+
+    children: [
+
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/dashboard/organizacion/organizacion')
+            .then((m) => m.OrganizacionDashboard)
+      },
+
+      {
+        path: 'personas-mayores',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Personas mayores' }
+      },
+
+      {
+        path: 'acompanantes',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Acompañantes' }
+      },
+
+      {
+        path: 'voluntarios',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Voluntarios' }
+      },
+
+      {
+        path: 'actividades',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Actividades' }
+      },
+
+      {
+        path: 'medicamentos',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Medicamentos' }
+      },
+
+      {
+        path: 'donaciones',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Donaciones' }
+      },
+
+      {
+        path: 'alertas',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Alertas' }
+      },
+
+      {
+        path: 'analitica',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Analítica' }
+      },
+
+      {
+        path: 'mapa',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Mapa' }
+      },
+
+      {
+        path: 'administracion',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Administración' }
+      }
+
+    ]
   },
+
+
+  // =========================
+  // PANEL VOLUNTARIO
+  // =========================
+
   {
     path: 'panel/voluntario',
     loadComponent: () =>
-      import('./pages/dashboard/voluntario/voluntario').then((m) => m.VoluntarioDashboard),
+      import('./shared/panel-shell-layout/panel-shell-layout')
+        .then((m) => m.PanelShellLayout),
+
     canActivate: [authGuard],
-    data: { rol: 'VOLUNTARIO' }
+    data: { rol: 'VOLUNTARIO' },
+
+    children: [
+
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/dashboard/voluntario/voluntario')
+            .then((m) => m.VoluntarioDashboard)
+      },
+
+      {
+        path: 'actividades',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Mis actividades' }
+      },
+
+      {
+        path: 'disponibilidad',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Disponibilidad' }
+      },
+
+      {
+        path: 'alertas',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Alertas' }
+      },
+
+      {
+        path: 'personas',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Personas que acompaño' }
+      },
+
+      {
+        path: 'perfil',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Mi perfil' }
+      }
+
+    ]
   },
+
+
+  // =========================
+  // PANEL ACOMPAÑANTE
+  // =========================
+
   {
     path: 'panel/acompanante',
     loadComponent: () =>
-      import('./pages/dashboard/acompanante/acompanante').then((m) => m.AcompananteDashboard),
+      import('./shared/panel-shell-layout/panel-shell-layout')
+        .then((m) => m.PanelShellLayout),
+
     canActivate: [authGuard],
-    data: { rol: 'ACOMPANANTE' }
+    data: { rol: 'ACOMPANANTE' },
+
+    children: [
+
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/dashboard/acompanante/acompanante')
+            .then((m) => m.AcompananteDashboard)
+      },
+
+      {
+        path: 'personas-mayores',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Mis personas mayores' }
+      },
+
+      {
+        path: 'seguimiento',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Seguimiento' }
+      },
+
+      {
+        path: 'contactos-emergencia',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Contactos de emergencia' }
+      },
+
+      {
+        path: 'actividades',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Actividades' }
+      },
+
+      {
+        path: 'perfil',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Mi perfil' }
+      }
+
+    ]
   },
+
+
+  // =========================
+  // PANEL PERSONA MAYOR
+  // =========================
+
   {
     path: 'panel/persona-mayor',
+
     loadComponent: () =>
-      import('./pages/dashboard/persona-mayor/persona-mayor').then((m) => m.PersonaMayorDashboard),
+      import('./shared/panel-shell-layout/panel-shell-layout')
+        .then((m) => m.PanelShellLayout),
+
     canActivate: [authGuard],
-    data: { rol: 'PERSONA_MAYOR' }
-  },
-  {
-  path: 'panel/persona-mayor/intereses',
-  loadComponent: () =>
-    import('./pages/dashboard/persona-mayor/intereses/intereses')
-      .then(m => m.Intereses),
-  canActivate: [authGuard],
-  data: { rol: 'PERSONA_MAYOR' }
-},
-  {
-    path: 'panel/admin',
-    loadComponent: () => import('./pages/dashboard/admin/admin').then((m) => m.AdminDashboard),
-    canActivate: [authGuard]
+    data: { rol: 'PERSONA_MAYOR' },
+
+    children: [
+
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/dashboard/persona-mayor/persona-mayor')
+            .then((m) => m.PersonaMayorDashboard)
+      },
+
+      {
+        path: 'actividades',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Mis actividades' }
+      },
+
+      {
+        path: 'intereses',
+        loadComponent: () =>
+          import('./pages/dashboard/persona-mayor/intereses/intereses')
+            .then((m) => m.Intereses)
+      },
+
+      {
+        path: 'recordatorios',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Mis recordatorios' }
+      },
+
+      {
+        path: 'informacion',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Mi información' }
+      },
+
+      {
+        path: 'contactos',
+        loadComponent: () =>
+          import('./shared/en-construccion/en-construccion')
+            .then((m) => m.EnConstruccion),
+        data: { titulo: 'Mis contactos' }
+      }
+
+    ]
   }
+
 ];

@@ -23,7 +23,6 @@ public class Acompanante {
 
     public Acompanante(Usuario usuario, String parentesco) {
         this.usuario = usuario;
-        this.idUsuario = usuario.getIdUsuario();
         this.parentesco = parentesco;
     }
 
@@ -41,10 +40,6 @@ public class Acompanante {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
-
-        if (usuario != null) {
-            this.idUsuario = usuario.getIdUsuario();
-        }
     }
 
     public String getParentesco() {

@@ -28,11 +28,5 @@ export class DashboardShell {
   @Input() notifCount = 0;
   @Input() accessible = false;
 
-  protected readonly roleSwitcher = [
-    { label: 'Organización', path: '/panel/organizacion' },
-    { label: 'Voluntario', path: '/panel/voluntario' },
-    { label: 'Acompañante', path: '/panel/acompanante' },
-    { label: 'Persona mayor', path: '/panel/persona-mayor' },
-    { label: 'Admin', path: '/panel/admin' }
-  ];
+  
 }

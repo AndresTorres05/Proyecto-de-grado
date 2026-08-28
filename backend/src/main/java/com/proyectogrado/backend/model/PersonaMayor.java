@@ -30,7 +30,6 @@ public class PersonaMayor {
 
     public PersonaMayor(Usuario usuario) {
         this.usuario = usuario;
-        this.idUsuario = usuario.getIdUsuario();
     }
 
     public Integer getIdUsuario() {
@@ -47,10 +46,6 @@ public class PersonaMayor {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
-
-        if (usuario != null) {
-            this.idUsuario = usuario.getIdUsuario();
-        }
     }
 
     public LocalDate getFechaNacimiento() {

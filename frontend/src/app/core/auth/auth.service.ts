@@ -36,6 +36,7 @@ export interface LoginResponse {
   rol: string;
   mensaje: string;
   idUsuario: number;
+  nombreUsuario: string;
 }
 
 const RUTAS_POR_ROL: Record<string, string> = {
@@ -54,21 +55,13 @@ export class AuthService {
 
   login(request: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, request).pipe(
-      tap((response) => {
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('rol', response.rol);
-        localStorage.setItem('idUsuario', String(response.idUsuario));
-      })
+      tap((response) => this.guardarSesion(response))
     );
   }
 
   registro(request: RegistroRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/registro`, request).pipe(
-      tap((response) => {
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('rol', response.rol);
-        localStorage.setItem('idUsuario', String(response.idUsuario));
-      })
+      tap((response) => this.guardarSesion(response))
     );
   }
 
@@ -78,22 +71,21 @@ export class AuthService {
 
   loginOtp(request: OtpLoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/otp/login`, request).pipe(
-      tap((response) => {
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('rol', response.rol);
-        localStorage.setItem('idUsuario', String(response.idUsuario));
-      })
+      tap((response) => this.guardarSesion(response))
     );
   }
 
   registroOtp(request: OtpRegistroRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/otp/registro`, request).pipe(
-      tap((response) => {
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('rol', response.rol);
-        localStorage.setItem('idUsuario', String(response.idUsuario));
-      })
+      tap((response) => this.guardarSesion(response))
     );
+  }
+
+  private guardarSesion(response: LoginResponse): void {
+    localStorage.setItem('token', response.token);
+    localStorage.setItem('rol', response.rol);
+    localStorage.setItem('idUsuario', String(response.idUsuario));
+    localStorage.setItem('nombreUsuario', response.nombreUsuario);
   }
 
   redirigirSegunRol(rol: string): void {
@@ -105,6 +97,7 @@ export class AuthService {
     localStorage.removeItem('token');
     localStorage.removeItem('rol');
     localStorage.removeItem('idUsuario');
+    localStorage.removeItem('nombreUsuario');
     this.router.navigateByUrl('/');
   }
 
@@ -115,6 +108,10 @@ export class AuthService {
   getIdUsuario(): number | null {
     const idUsuario = localStorage.getItem('idUsuario');
     return idUsuario ? Number(idUsuario) : null;
+  }
+
+  getNombreUsuario(): string {
+    return localStorage.getItem('nombreUsuario') ?? 'Usuario';
   }
 
   estaAutenticado(): boolean {

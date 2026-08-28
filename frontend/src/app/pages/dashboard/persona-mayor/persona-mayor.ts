@@ -1,6 +1,5 @@
 import { Component, OnInit, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DashboardShell, ShellNavItem } from '../../../shared/dashboard-shell/dashboard-shell';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ActividadService, Actividad } from '../../../core/actividades/actividad.service';
 import { GustoService, Gusto, CategoriaGusto } from '../../../core/gustos/gusto.service';
@@ -20,23 +19,13 @@ interface CategoriaTab {
 
 @Component({
   selector: 'app-persona-mayor-dashboard',
-  imports: [DashboardShell, FormsModule],
+  imports: [FormsModule],
   templateUrl: './persona-mayor.html',
   styleUrl: './persona-mayor.css'
 })
 export class PersonaMayorDashboard implements OnInit {
-  protected readonly navItems: ShellNavItem[] = [
-  { icon: '🏠', label: 'Inicio', active: true },
-  { icon: '🏃', label: 'Mis actividades' },
-  {
-    icon: '❤️',
-    label: 'Mis intereses',
-    path: '/panel/persona-mayor/intereses'
-  },
-  { icon: '⏰', label: 'Mis recordatorios' },
-  { icon: '👤', label: 'Mi información' },
-  { icon: '☎️', label: 'Mis contactos' }
-];
+
+  protected readonly nombreUsuario: string;
 
   protected readonly recordatorio = {
     hora: '2:00 p.m.',
@@ -63,13 +52,26 @@ export class PersonaMayorDashboard implements OnInit {
     this.gustosDisponibles().filter((g) => g.categoria === this.categoriaActiva())
   );
 
+  protected readonly acompanante = signal<Acompanante | null>(null);
+  protected readonly mostrandoConfirmacionEmergencia = signal(false);
+  protected readonly enviandoEmergencia = signal(false);
+  protected readonly mensajeEmergencia = signal<string | null>(null);
+  protected readonly errorEmergencia = signal<string | null>(null);
+
+  protected readonly accesos: AccesoRapido[] = [
+    { icon: '👤', label: 'Mi información' },
+    { icon: '☎️', label: 'Mis contactos de emergencia' }
+  ];
+
   constructor(
     private authService: AuthService,
     private actividadService: ActividadService,
     private gustoService: GustoService,
     private acompananteService: AcompananteService,
     private emergenciaService: EmergenciaService
-  ) {}
+  ) {
+    this.nombreUsuario = this.authService.getNombreUsuario();
+  }
 
   ngOnInit(): void {
     this.actividadService.listar().subscribe((actividades) => this.actividades.set(actividades));
@@ -128,17 +130,6 @@ export class PersonaMayorDashboard implements OnInit {
       }
     });
   }
-
-  protected readonly acompanante = signal<Acompanante | null>(null);
-  protected readonly mostrandoConfirmacionEmergencia = signal(false);
-  protected readonly enviandoEmergencia = signal(false);
-  protected readonly mensajeEmergencia = signal<string | null>(null);
-  protected readonly errorEmergencia = signal<string | null>(null);
-
-  protected readonly accesos: AccesoRapido[] = [
-    { icon: '👤', label: 'Mi información' },
-    { icon: '☎️', label: 'Mis contactos de emergencia' }
-  ];
 
   activarConfirmacionEmergencia(): void {
     this.mostrandoConfirmacionEmergencia.set(true);

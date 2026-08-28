@@ -1,14 +1,7 @@
-<app-dashboard-shell
-  roleLabel="Acompañante"
-  roleAccent="var(--gema-orange)"
-  userName="Laura Peña"
-  userInitials="LP"
-  [navItems]="navItems"
-  [notifCount]="1"
->
+
   <div class="page-header">
     <div>
-      <h1>Hola, Laura 👋</h1>
+      <h1>Hola, {{ nombreUsuario }} 👋</h1>
       <p>Acompañante · martes, 11 de agosto de 2026</p>
     </div>
     <button type="button" class="btn btn-primary">+ Registrar visita / seguimiento</button>
@@ -100,4 +93,4 @@
       </div>
     </div>
   </section>
-</app-dashboard-shell>
+

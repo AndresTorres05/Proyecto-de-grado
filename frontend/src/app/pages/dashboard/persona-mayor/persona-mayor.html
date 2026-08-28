@@ -1,158 +1,148 @@
-<app-dashboard-shell
-  roleLabel="Persona mayor"
-  roleAccent="var(--gema-green)"
-  userName="Doña Rosa"
-  userInitials="R"
-  [navItems]="navItems"
-  [notifCount]="1"
-  [accessible]="true"
->
-  <div class="page-header">
-    <h1>¡Hola, Rosa! 😊</h1>
-    <p>Hoy es martes, 11 de agosto</p>
+<div class="page-header">
+  <h1>¡Hola, {{ nombreUsuario }}! 😊</h1>
+  <p>Hoy es martes, 11 de agosto</p>
+</div>
+
+<section class="reminder-card card">
+  <span class="reminder-card__tag">Recordatorio de hoy</span>
+  <div class="reminder-card__body">
+    <span class="reminder-card__icon" aria-hidden="true">💊</span>
+    <div>
+      <h2>{{ recordatorio.detalle }}</h2>
+      <p class="reminder-card__time">{{ recordatorio.hora }}</p>
+      <p>{{ recordatorio.nota }}</p>
+    </div>
   </div>
+  <button type="button" class="btn btn-primary reminder-card__btn">Ya lo tomé</button>
+</section>
 
-  <section class="reminder-card card">
-    <span class="reminder-card__tag">Recordatorio de hoy</span>
-    <div class="reminder-card__body">
-      <span class="reminder-card__icon" aria-hidden="true">💊</span>
-      <div>
-        <h2>{{ recordatorio.detalle }}</h2>
-        <p class="reminder-card__time">{{ recordatorio.hora }}</p>
-        <p>{{ recordatorio.nota }}</p>
-      </div>
-    </div>
-    <button type="button" class="btn btn-primary reminder-card__btn">Ya lo tomé</button>
-  </section>
-
-  <section class="section-block">
-    <h2 class="section-block__title">Mis próximas actividades</h2>
-    <div class="activities-grid">
-      @for (act of actividades(); track act.idActividad) {
-        <div class="activity-card card">
-          <span class="activity-card__icon" aria-hidden="true">🏃</span>
-          <div>
-            <h3>{{ act.nombre }}</h3>
-            <p>{{ act.fecha || 'Sin fecha' }}</p>
-            <p>{{ act.lugar || 'Sin lugar' }}</p>
-          </div>
+<section class="section-block">
+  <h2 class="section-block__title">Mis próximas actividades</h2>
+  <div class="activities-grid">
+    @for (act of actividades(); track act.idActividad) {
+      <div class="activity-card card">
+        <span class="activity-card__icon" aria-hidden="true">🏃</span>
+        <div>
+          <h3>{{ act.nombre }}</h3>
+          <p>{{ act.fecha || 'Sin fecha' }}</p>
+          <p>{{ act.lugar || 'Sin lugar' }}</p>
         </div>
-      } @empty {
-        <p>Aún no hay actividades disponibles.</p>
-      }
-    </div>
-  </section>
-
-  <section class="contacts-section section-block">
-    <h2 class="section-block__title">Mis contactos</h2>
-
-    @if (acompanante(); as ac) {
-      <div class="companion-card card">
-        <span class="companion-card__avatar" aria-hidden="true">🤝</span>
-
-        <div class="companion-card__info">
-          <p class="companion-card__label">Acompañante</p>
-          <h2>{{ ac.nombre }}</h2>
-          <p class="companion-card__phone">{{ ac.telefono }}</p>
-
-          @if (ac.parentesco) {
-            <p class="companion-card__relationship">
-              {{ ac.parentesco }}
-            </p>
-          }
-        </div>
-
-        <a
-          href="tel:{{ ac.telefono }}"
-          class="btn btn-gold companion-card__call"
-        >
-          📞 Llamar
-        </a>
       </div>
-    } @else {
-      <div class="empty-contacts card">
-        <span aria-hidden="true">👤</span>
-        <p>No tienes acompañantes registrados.</p>
-      </div>
+    } @empty {
+      <p>Aún no hay actividades disponibles.</p>
     }
+  </div>
+</section>
 
-    <div class="emergency-card card">
-      <div class="emergency-card__icon" aria-hidden="true">🚨</div>
+<section class="contacts-section section-block">
+  <h2 class="section-block__title">Mis contactos</h2>
 
-      <div class="emergency-card__content">
-        <h2>¿Necesitas ayuda?</h2>
-        <p>
-          Envía una alerta de emergencia a tus acompañantes.
-        </p>
-      </div>
+  @if (acompanante(); as ac) {
+    <div class="companion-card card">
+      <span class="companion-card__avatar" aria-hidden="true">🤝</span>
 
-      <button
-        type="button"
-        class="btn emergency-card__button"
-        (click)="activarConfirmacionEmergencia()"
-      >
-        🚨 Activar emergencia
-      </button>
-      @if (mostrandoConfirmacionEmergencia()) {
-      <div class="emergency-confirmation">
-        <div class="emergency-confirmation__icon" aria-hidden="true">
-          ⚠️
-        </div>
+      <div class="companion-card__info">
+        <p class="companion-card__label">Acompañante</p>
+        <h2>{{ ac.nombre }}</h2>
+        <p class="companion-card__phone">{{ ac.telefono }}</p>
 
-        <div class="emergency-confirmation__content">
-          <h3>¿Confirmar emergencia?</h3>
-
-          <p>
-            Se enviará una alerta a tus acompañantes para informarles
-            que necesitas ayuda.
+        @if (ac.parentesco) {
+          <p class="companion-card__relationship">
+            {{ ac.parentesco }}
           </p>
+        }
+      </div>
 
-          <div class="emergency-confirmation__actions">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              (click)="cancelarEmergencia()"
-              [disabled]="enviandoEmergencia()"
-            >
-              Cancelar
-            </button>
+      
+        href="tel:{{ ac.telefono }}"
+        class="btn btn-gold companion-card__call"
+      >
+        📞 Llamar
+      
+    </div>
+  } @else {
+    <div class="empty-contacts card">
+      <span aria-hidden="true">👤</span>
+      <p>No tienes acompañantes registrados.</p>
+    </div>
+  }
 
-            <button
-              type="button"
-              class="btn emergency-confirmation__confirm"
-              (click)="confirmarEmergencia()"
-              [disabled]="enviandoEmergencia()"
-            >
-              @if (enviandoEmergencia()) {
-                Enviando...
-              } @else {
-                Sí, enviar alerta
-              }
-            </button>
-          </div>
+  <div class="emergency-card card">
+    <div class="emergency-card__icon" aria-hidden="true">🚨</div>
+
+    <div class="emergency-card__content">
+      <h2>¿Necesitas ayuda?</h2>
+      <p>
+        Envía una alerta de emergencia a tus acompañantes.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="btn emergency-card__button"
+      (click)="activarConfirmacionEmergencia()"
+    >
+      🚨 Activar emergencia
+    </button>
+    @if (mostrandoConfirmacionEmergencia()) {
+    <div class="emergency-confirmation">
+      <div class="emergency-confirmation__icon" aria-hidden="true">
+        ⚠️
+      </div>
+
+      <div class="emergency-confirmation__content">
+        <h3>¿Confirmar emergencia?</h3>
+
+        <p>
+          Se enviará una alerta a tus acompañantes para informarles
+          que necesitas ayuda.
+        </p>
+
+        <div class="emergency-confirmation__actions">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="cancelarEmergencia()"
+            [disabled]="enviandoEmergencia()"
+          >
+            Cancelar
+          </button>
+
+          <button
+            type="button"
+            class="btn emergency-confirmation__confirm"
+            (click)="confirmarEmergencia()"
+            [disabled]="enviandoEmergencia()"
+          >
+            @if (enviandoEmergencia()) {
+              Enviando...
+            } @else {
+              Sí, enviar alerta
+            }
+          </button>
         </div>
       </div>
-    }
     </div>
-    @if (mensajeEmergencia(); as mensaje) {
-      <div class="emergency-success">
-        ✅ {{ mensaje }}
-      </div>
-    }
+  }
+  </div>
+  @if (mensajeEmergencia(); as mensaje) {
+    <div class="emergency-success">
+      ✅ {{ mensaje }}
+    </div>
+  }
 
-    @if (errorEmergencia(); as error) {
-      <div class="emergency-error">
-        ⚠️ {{ error }}
-      </div>
-    }
-  </section>
+  @if (errorEmergencia(); as error) {
+    <div class="emergency-error">
+      ⚠️ {{ error }}
+    </div>
+  }
+</section>
 
-  <section class="access-grid">
-    @for (a of accesos; track a.label) {
-      <button type="button" class="access-tile card">
-        <span aria-hidden="true">{{ a.icon }}</span>
-        {{ a.label }}
-      </button>
-    }
-  </section>
-</app-dashboard-shell>
+<section class="access-grid">
+  @for (a of accesos; track a.label) {
+    <button type="button" class="access-tile card">
+      <span aria-hidden="true">{{ a.icon }}</span>
+      {{ a.label }}
+    </button>
+  }
+</section>

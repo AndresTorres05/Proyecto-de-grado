@@ -1,115 +1,335 @@
-<app-dashboard-shell
-  roleLabel="Organización"
-  roleAccent="var(--gema-navy)"
-  userName="Fundación Entrenubes"
-  userInitials="FE"
-  [navItems]="navItems"
-  [notifCount]="12"
->
+
+
+  <!-- ===================================================== -->
+  <!-- ENCABEZADO -->
+  <!-- ===================================================== -->
+
   <div class="page-header">
+
     <div>
-      <h1>Hola, Fundación Entrenubes 👋</h1>
-      <p>Panel de administración · martes, 11 de agosto de 2026</p>
+      <h1>Hola, Fundación {{ nombreUsuario }} 👋</h1>
+
+      <p>
+        Panel de administración · 26 de agosto de 2026
+      </p>
     </div>
-    <span class="live-tag"><span class="live-tag__dot"></span> Datos en vivo</span>
+
+    <span class="live-tag">
+      <span class="live-tag__dot"></span>
+      Datos en vivo
+    </span>
+
   </div>
 
-  <section class="stats-grid" aria-label="Indicadores generales">
+
+  <!-- ===================================================== -->
+  <!-- ESTADÍSTICAS -->
+  <!-- ===================================================== -->
+
+  <section
+    class="stats-grid"
+    aria-label="Indicadores generales"
+  >
+
     @for (stat of stats; track stat.label) {
+
       <div class="stat-card card">
+
         <div class="stat-card__top">
-          <span class="stat-card__icon">{{ stat.icon }}</span>
-          <span class="stat-card__delta">{{ stat.delta }}</span>
+
+          <span class="stat-card__icon">
+            {{ stat.icon }}
+          </span>
+
+          <span class="stat-card__delta">
+            {{ stat.delta }}
+          </span>
+
         </div>
-        <div class="stat-card__value">{{ stat.value }}</div>
-        <div class="stat-card__label">{{ stat.label }}</div>
+
+        <div class="stat-card__value">
+          {{ stat.value }}
+        </div>
+
+        <div class="stat-card__label">
+          {{ stat.label }}
+        </div>
+
       </div>
+
     }
+
   </section>
 
+
+  <!-- ===================================================== -->
+  <!-- ALERTAS + ACCIONES RÁPIDAS -->
+  <!-- ===================================================== -->
+
   <section class="main-grid">
+
+    <!-- ALERTAS -->
+
     <div class="col col--wide">
+
       <div class="panel card">
+
         <div class="panel__header">
+
           <h2>Alertas prioritarias</h2>
-          <a href="#" class="panel__link">Ver todas &rarr;</a>
+
+          <a
+            routerLink="/panel/organizacion/alertas"
+            class="panel__link"
+          >
+            Ver todas →
+          </a>
+
         </div>
+
         <ul class="alert-list">
+
           @for (a of alertas; track a.nombre) {
+
             <li class="alert-item">
-              <span class="alert-item__tag" [class]="'alert-item__tag--' + a.prioridad.toLowerCase()">{{ a.prioridad }}</span>
+
+              <span
+                class="alert-item__tag"
+                [class]="'alert-item__tag--' + a.prioridad.toLowerCase()"
+              >
+                {{ a.prioridad }}
+              </span>
+
               <div class="alert-item__body">
-                <strong>{{ a.nombre }}</strong>
-                <p>{{ a.descripcion }}</p>
+
+                <strong>
+                  {{ a.nombre }}
+                </strong>
+
+                <p>
+                  {{ a.descripcion }}
+                </p>
+
               </div>
-              <span class="alert-item__time">{{ a.tiempo }}</span>
+
+              <span class="alert-item__time">
+                {{ a.tiempo }}
+              </span>
+
             </li>
+
           }
+
         </ul>
+
       </div>
+
     </div>
 
+
+    <!-- ACCIONES RÁPIDAS -->
+
     <div class="col">
+
       <div class="panel card">
+
         <div class="panel__header">
+
           <h2>Acciones rápidas</h2>
+
         </div>
+
         <div class="quick-actions">
+
           @for (accion of accionesRapidas; track accion.label) {
-            <button type="button" class="quick-action">
-              <span class="quick-action__icon">{{ accion.icon }}</span>
+
+            <button
+              type="button"
+              class="quick-action"
+            >
+
+              <span class="quick-action__icon">
+                {{ accion.icon }}
+              </span>
+
               {{ accion.label }}
+
             </button>
+
           }
+
         </div>
+
       </div>
+
     </div>
+
   </section>
 
+
+  <!-- ===================================================== -->
+  <!-- GRÁFICAS + ACTIVIDADES -->
+  <!-- ===================================================== -->
+
   <section class="main-grid">
+
+    <!-- GRÁFICAS -->
+
     <div class="col col--wide">
+
       <div class="panel card">
+
         <div class="panel__header">
+
           <h2>Decisiones basadas en datos</h2>
-          <span class="panel__range">Últimos 7 meses ▾</span>
+
+          <span class="panel__range">
+            Últimos 7 meses ▾
+          </span>
+
         </div>
+
+
         <div class="charts-row">
-          <div class="chart-block">
-            <h3>Crecimiento del programa</h3>
-            <svg viewBox="0 0 300 120" class="chart-svg" role="img" aria-label="Crecimiento del programa de enero a julio">
-              <polyline fill="none" stroke="var(--gema-navy)" stroke-width="2.5" points="10,100 60,90 110,75 160,60 210,45 260,25" />
-              <polyline fill="none" stroke="var(--gema-orange)" stroke-width="2.5" points="10,110 60,105 110,100 160,90 210,85 260,75" />
-              <polyline fill="none" stroke="var(--gema-gold)" stroke-width="2.5" points="10,115 60,112 110,110 160,108 210,105 260,100" />
-            </svg>
-            <div class="chart-legend">
-              <span><span class="dot" style="background: var(--gema-navy)"></span>Mayores</span>
-              <span><span class="dot" style="background: var(--gema-orange)"></span>Acompañantes</span>
-              <span><span class="dot" style="background: var(--gema-gold)"></span>Voluntarios</span>
-            </div>
-          </div>
+
+          <!-- CRECIMIENTO -->
 
           <div class="chart-block">
-            <h3>Categorías de atención</h3>
-            <div class="donut-row">
-              <div class="donut" role="img" aria-label="Distribución de categorías de atención"></div>
-              <ul class="donut-legend">
-                @for (l of donutLegend; track l.label) {
-                  <li><span class="dot" [style.background]="l.color"></span>{{ l.label }}</li>
-                }
-              </ul>
+
+            <h3>Crecimiento del programa</h3>
+
+            <svg
+              viewBox="0 0 300 120"
+              class="chart-svg"
+              role="img"
+              aria-label="Crecimiento del programa de enero a julio"
+            >
+
+              <polyline
+                fill="none"
+                stroke="var(--gema-navy)"
+                stroke-width="2.5"
+                points="10,100 60,90 110,75 160,60 210,45 260,25"
+              />
+
+              <polyline
+                fill="none"
+                stroke="var(--gema-orange)"
+                stroke-width="2.5"
+                points="10,110 60,105 110,100 160,90 210,85 260,75"
+              />
+
+              <polyline
+                fill="none"
+                stroke="var(--gema-gold)"
+                stroke-width="2.5"
+                points="10,115 60,112 110,110 160,108 210,105 260,100"
+              />
+
+            </svg>
+
+            <div class="chart-legend">
+
+              <span>
+                <span
+                  class="dot"
+                  style="background: var(--gema-navy)"
+                ></span>
+                Mayores
+              </span>
+
+              <span>
+                <span
+                  class="dot"
+                  style="background: var(--gema-orange)"
+                ></span>
+                Acompañantes
+              </span>
+
+              <span>
+                <span
+                  class="dot"
+                  style="background: var(--gema-gold)"
+                ></span>
+                Voluntarios
+              </span>
+
             </div>
+
           </div>
+
+
+          <!-- DONUT -->
+
+          <div class="chart-block">
+
+            <h3>Categorías de atención</h3>
+
+            <div class="donut-row">
+
+              <div
+                class="donut"
+                role="img"
+                aria-label="Distribución de categorías de atención"
+              ></div>
+
+              <ul class="donut-legend">
+
+                @for (l of donutLegend; track l.label) {
+
+                  <li>
+
+                    <span
+                      class="dot"
+                      [style.background]="l.color"
+                    ></span>
+
+                    {{ l.label }}
+
+                  </li>
+
+                }
+
+              </ul>
+
+            </div>
+
+          </div>
+
         </div>
+
       </div>
+
     </div>
 
+
+    <!-- ACTIVIDADES -->
+
     <div class="col">
+
       <div class="panel card">
+
         <div class="panel__header">
+
           <h2>Actividades</h2>
+
+          <a
+            routerLink="/panel/organizacion/actividades"
+            class="panel__link"
+          >
+            Ver todas →
+          </a>
+
         </div>
 
-        <form class="activity-form" (ngSubmit)="crearActividad()">
+
+        <!-- CREAR ACTIVIDAD -->
+
+        <form
+          class="activity-form"
+          (ngSubmit)="crearActividad()"
+        >
+
           <input
             type="text"
             name="nuevaActividadNombre"
@@ -118,8 +338,16 @@
             [(ngModel)]="nuevaActividad.nombre"
             required
           />
+
           <div class="activity-form__row">
-            <input type="date" name="nuevaActividadFecha" class="activity-input" [(ngModel)]="nuevaActividad.fecha" />
+
+            <input
+              type="date"
+              name="nuevaActividadFecha"
+              class="activity-input"
+              [(ngModel)]="nuevaActividad.fecha"
+            />
+
             <input
               type="text"
               name="nuevaActividadLugar"
@@ -127,7 +355,9 @@
               placeholder="Lugar"
               [(ngModel)]="nuevaActividad.lugar"
             />
+
           </div>
+
           <input
             type="text"
             name="nuevaActividadTipo"
@@ -135,108 +365,331 @@
             placeholder="Tipo (ej. salud, recreación)"
             [(ngModel)]="nuevaActividad.tipo"
           />
-          <button type="submit" class="btn btn-primary">Registrar actividad</button>
+
+          <button
+            type="submit"
+            class="btn btn-primary"
+          >
+            Registrar actividad
+          </button>
+
         </form>
 
+
+        <!-- ERROR -->
+
         @if (errorActividades()) {
-          <p class="activity-error">{{ errorActividades() }}</p>
+
+          <p class="activity-error">
+            {{ errorActividades() }}
+          </p>
+
         }
 
+
+        <!-- LISTADO -->
+
         <ul class="activity-list">
+
           @for (act of actividades(); track act.idActividad) {
+
             <li class="activity-item">
+
+              <!-- EDITANDO -->
+
               @if (actividadEditandoId === act.idActividad) {
+
                 <div class="activity-item__edit">
-                  <input type="text" name="actividadEditandoNombre" class="activity-input" [(ngModel)]="actividadEditando.nombre" />
-                  <input type="date" name="actividadEditandoFecha" class="activity-input" [(ngModel)]="actividadEditando.fecha" />
-                  <input type="text" name="actividadEditandoLugar" class="activity-input" placeholder="Lugar" [(ngModel)]="actividadEditando.lugar" />
-                  <input type="text" name="actividadEditandoTipo" class="activity-input" placeholder="Tipo" [(ngModel)]="actividadEditando.tipo" />
+
+                  <input
+                    type="text"
+                    name="actividadEditandoNombre"
+                    class="activity-input"
+                    [(ngModel)]="actividadEditando.nombre"
+                  />
+
+                  <input
+                    type="date"
+                    name="actividadEditandoFecha"
+                    class="activity-input"
+                    [(ngModel)]="actividadEditando.fecha"
+                  />
+
+                  <input
+                    type="text"
+                    name="actividadEditandoLugar"
+                    class="activity-input"
+                    placeholder="Lugar"
+                    [(ngModel)]="actividadEditando.lugar"
+                  />
+
+                  <input
+                    type="text"
+                    name="actividadEditandoTipo"
+                    class="activity-input"
+                    placeholder="Tipo"
+                    [(ngModel)]="actividadEditando.tipo"
+                  />
+
                   <div class="activity-item__actions">
-                    <button type="button" class="btn btn-primary" (click)="guardarActividad()">Guardar</button>
-                    <button type="button" class="btn btn-outline" (click)="cancelarEdicionActividad()">Cancelar</button>
+
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      (click)="guardarActividad()"
+                    >
+                      Guardar
+                    </button>
+
+                    <button
+                      type="button"
+                      class="btn btn-outline"
+                      (click)="cancelarEdicionActividad()"
+                    >
+                      Cancelar
+                    </button>
+
                   </div>
+
                 </div>
+
+
               } @else {
+
+                <!-- ACTIVIDAD NORMAL -->
+
                 <div>
-                  <strong>{{ act.nombre }}</strong>
-                  <p>{{ act.fecha || 'Sin fecha' }} · {{ act.lugar || 'Sin lugar' }}</p>
+
+                  <strong>
+                    {{ act.nombre }}
+                  </strong>
+
+                  <p>
+                    {{ act.fecha || 'Sin fecha' }}
+                    ·
+                    {{ act.lugar || 'Sin lugar' }}
+                  </p>
+
+                  @if (act.tipo) {
+
+                    <small>
+                      {{ act.tipo }}
+                    </small>
+
+                  }
+
                 </div>
+
+
                 <div class="activity-item__actions">
-                  <button type="button" class="btn btn-outline" (click)="editarActividad(act)">Editar</button>
-                  <button type="button" class="btn btn-outline activity-btn--danger" (click)="eliminarActividad(act)">
+
+                  <button
+                    type="button"
+                    class="btn btn-outline"
+                    (click)="editarActividad(act)"
+                  >
+                    Editar
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-outline activity-btn--danger"
+                    (click)="eliminarActividad(act)"
+                  >
                     Eliminar
                   </button>
+
                 </div>
+
               }
+
             </li>
+
+
           } @empty {
-            <li class="activity-empty">Aún no has registrado actividades.</li>
+
+            <li class="activity-empty">
+              Aún no has registrado actividades.
+            </li>
+
           }
+
         </ul>
+
       </div>
+
     </div>
+
   </section>
+
+
+  <!-- ===================================================== -->
+  <!-- INVENTARIO + DONACIONES -->
+  <!-- ===================================================== -->
 
   <section class="main-grid">
-    <div class="col">
-      <div class="panel card">
-        <div class="panel__header">
-          <h2>Inventario · alertas de stock</h2>
-          <a href="#" class="panel__link">Ver inventario &rarr;</a>
-        </div>
-        <ul class="mini-list">
-          @for (item of inventario; track item.nombre) {
-            <li>
-              <span class="mini-list__icon">💊</span>
-              <div>
-                <strong>{{ item.nombre }}</strong>
-                <p>{{ item.detalle }}</p>
-              </div>
-              <span class="mini-list__status">{{ item.estado }}</span>
-            </li>
-          }
-        </ul>
-      </div>
-    </div>
+
+    <!-- INVENTARIO -->
 
     <div class="col">
+
       <div class="panel card">
+
         <div class="panel__header">
-          <h2>Últimas donaciones</h2>
-          <a href="#" class="panel__link">Ver todas &rarr;</a>
+
+          <h2>Inventario · alertas de stock</h2>
+
+          <a
+            routerLink="/panel/organizacion/medicamentos"
+            class="panel__link"
+          >
+            Ver inventario →
+          </a>
+
         </div>
+
         <ul class="mini-list">
-          @for (d of donaciones; track d.donante) {
+
+          @for (item of inventario; track item.nombre) {
+
             <li>
-              <span class="mini-list__icon">💝</span>
+
+              <span class="mini-list__icon">
+                💊
+              </span>
+
               <div>
-                <strong>{{ d.donante }}</strong>
-                <p>{{ d.tipo }} · {{ d.fecha }}</p>
+
+                <strong>
+                  {{ item.nombre }}
+                </strong>
+
+                <p>
+                  {{ item.detalle }}
+                </p>
+
               </div>
-              <span class="mini-list__status mini-list__status--value">{{ d.valor }}</span>
+
+              <span class="mini-list__status">
+                {{ item.estado }}
+              </span>
+
             </li>
+
           }
+
         </ul>
+
       </div>
+
     </div>
+
+
+    <!-- DONACIONES -->
+
+    <div class="col">
+
+      <div class="panel card">
+
+        <div class="panel__header">
+
+          <h2>Últimas donaciones</h2>
+
+          <a
+            routerLink="/panel/organizacion/donaciones"
+            class="panel__link"
+          >
+            Ver todas →
+          </a>
+
+        </div>
+
+        <ul class="mini-list">
+
+          @for (d of donaciones; track d.donante) {
+
+            <li>
+
+              <span class="mini-list__icon">
+                💝
+              </span>
+
+              <div>
+
+                <strong>
+                  {{ d.donante }}
+                </strong>
+
+                <p>
+                  {{ d.tipo }} · {{ d.fecha }}
+                </p>
+
+              </div>
+
+              <span class="mini-list__status mini-list__status--value">
+                {{ d.valor }}
+              </span>
+
+            </li>
+
+          }
+
+        </ul>
+
+      </div>
+
+    </div>
+
   </section>
+
+
+  <!-- ===================================================== -->
+  <!-- BITÁCORA -->
+  <!-- ===================================================== -->
 
   <section class="main-grid main-grid--single">
+
     <div class="col">
+
       <div class="panel card">
+
         <div class="panel__header">
+
           <h2>Bitácora de actividad reciente</h2>
+
         </div>
+
         <ul class="log-list">
-          @for (b of bitacora; track b.tiempo + b.usuario) {
+
+          @for (
+            b of bitacora;
+            track b.tiempo + b.usuario
+          ) {
+
             <li>
+
               <span class="log-list__dot"></span>
-              <p><strong>{{ b.usuario }}</strong> {{ b.accion }}.</p>
-              <span class="log-list__time">{{ b.tiempo }}</span>
+
+              <p>
+                <strong>
+                  {{ b.usuario }}
+                </strong>
+
+                {{ b.accion }}.
+              </p>
+
+              <span class="log-list__time">
+                {{ b.tiempo }}
+              </span>
+
             </li>
+
           }
+
         </ul>
+
       </div>
+
     </div>
+
   </section>
-</app-dashboard-shell>

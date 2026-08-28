@@ -1,6 +1,25 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
+
+  const rutasPublicas = [
+    '/api/auth/login',
+    '/api/auth/registro',
+    '/api/auth/otp/enviar',
+    '/api/auth/otp/login',
+    '/api/auth/otp/registro'
+  ];
+
+  const esRutaPublica = rutasPublicas.some(ruta =>
+    req.url.includes(ruta)
+  );
+
+  // Estas rutas no necesitan token
+  if (esRutaPublica) {
+    return next(req);
+  }
+
+  // Para las demás peticiones sí enviamos el token
   const token = localStorage.getItem('token');
 
   if (!token) {
@@ -9,7 +28,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(
     req.clone({
-      setHeaders: { Authorization: `Bearer ${token}` }
+      setHeaders: {
+        Authorization: `Bearer ${token}`
+      }
     })
   );
-};
+};2

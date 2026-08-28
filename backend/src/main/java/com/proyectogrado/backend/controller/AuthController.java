@@ -78,7 +78,7 @@ public class AuthController {
         String token = jwtService.generarToken(usuario.getIdUsuario(), rolPrincipal);
 
         return ResponseEntity.ok(
-                new LoginResponse(token, rolPrincipal, "Inicio de sesión exitoso", usuario.getIdUsuario())
+                new LoginResponse(token, rolPrincipal, "Inicio de sesión exitoso", usuario.getIdUsuario(), usuario.getNombreUsuario())
         );
     }
 
@@ -124,7 +124,7 @@ if ("PERSONA_MAYOR".equals(rol.getNombre()) || "ACOMPANANTE".equals(rol.getNombr
         String token = jwtService.generarToken(usuario.getIdUsuario(), rol.getNombre());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                new LoginResponse(token, rol.getNombre(), "Cuenta creada exitosamente", usuario.getIdUsuario())
+                new LoginResponse(token, rol.getNombre(), "Cuenta creada exitosamente", usuario.getIdUsuario(), usuario.getNombreUsuario())
         );
     }
 

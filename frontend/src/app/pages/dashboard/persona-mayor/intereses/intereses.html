@@ -1,331 +1,143 @@
-<app-dashboard-shell
-  roleLabel="Persona mayor"
-  roleAccent="var(--gema-green)"
-  userName="Doña Rosa"
-  userInitials="R"
-  [navItems]="navItems"
-  [notifCount]="1"
-  [accessible]="true"
->
+<div class="intereses-page">
 
-  <div class="intereses-page">
+  <!-- ENCABEZADO -->
+  <section class="intereses-header">
+    <div>
+      <span class="intereses-header__eyebrow">Mi perfil</span>
+      <h1>Mis intereses</h1>
+      <p>Cuéntanos qué cosas te gustan, qué sabes hacer y cómo disfrutas tu tiempo libre.</p>
+    </div>
+  </section>
 
-    <!-- ENCABEZADO -->
-
-    <section class="intereses-header">
-
+  <!-- CARGANDO -->
+  @if (cargando()) {
+    <div class="estado-card">
+      <span class="estado-card__icon">⏳</span>
       <div>
-
-        <span class="intereses-header__eyebrow">
-          Mi perfil
-        </span>
-
-        <h1>
-          Mis intereses
-        </h1>
-
-        <p>
-          Cuéntanos qué cosas te gustan, qué sabes hacer
-          y cómo disfrutas tu tiempo libre.
-        </p>
-
+        <h2>Cargando tus intereses...</h2>
+        <p>Estamos preparando tus opciones.</p>
       </div>
+    </div>
+  }
 
-    </section>
+  @if (!cargando()) {
 
+    <!-- CATEGORÍAS -->
+    <section class="categorias-card">
+      <h2 class="categorias-title">¿Qué quieres contarnos sobre ti?</h2>
 
-    <!-- CARGANDO -->
-
-    @if (cargando()) {
-
-      <div class="estado-card">
-
-        <span class="estado-card__icon">
-          ⏳
-        </span>
-
-        <div>
-
-          <h2>
-            Cargando tus intereses...
-          </h2>
-
-          <p>
-            Estamos preparando tus opciones.
-          </p>
-
-        </div>
-
-      </div>
-
-    }
-
-
-    @if (!cargando()) {
-
-      <!-- CATEGORÍAS -->
-
-      <section class="categorias-card">
-
-        <h2 class="categorias-title">
-          ¿Qué quieres contarnos sobre ti?
-        </h2>
-
-        <div class="categorias-grid">
-
-          @for (
-            categoria of categorias;
-            track categoria.valor
-          ) {
-
-            <button
-              type="button"
-              class="categoria-card"
-              [class.categoria-card--activa]="
-                categoriaActiva() === categoria.valor
-              "
-              (click)="cambiarCategoria(categoria.valor)"
-            >
-
-              <span class="categoria-card__icon">
-                {{ categoria.icon }}
-              </span>
-
-              <span class="categoria-card__content">
-
-                <span class="categoria-card__title">
-                  {{ categoria.label }}
-                </span>
-
-                <span class="categoria-card__description">
-
-                  @if (categoria.valor === 'GUSTO') {
-                    Cosas que disfrutas y te encantan.
-                  }
-
-                  @if (categoria.valor === 'TALENTO') {
-                    Cosas que sabes hacer muy bien.
-                  }
-
-                  @if (categoria.valor === 'HOBBY') {
-                    Actividades que disfrutas hacer.
-                  }
-
-                </span>
-
-              </span>
-
-              <span
-                class="categoria-card__count"
-              >
-                {{ contarSeleccionados(categoria.valor) }}
-              </span>
-
-            </button>
-
-          }
-
-        </div>
-
-      </section>
-
-
-      <!-- OPCIONES -->
-
-      <section class="opciones-section">
-
-        <div class="opciones-header">
-
-          <div>
-
-            <span class="opciones-header__icon">
-
-              @if (categoriaActiva() === 'GUSTO') {
-                ❤️
-              }
-
-              @if (categoriaActiva() === 'TALENTO') {
-                ✨
-              }
-
-              @if (categoriaActiva() === 'HOBBY') {
-                🎯
-              }
-
-            </span>
-
-            <div>
-
-              <h2>
-
-                @if (categoriaActiva() === 'GUSTO') {
-                  ¿Qué te gusta?
-                }
-
-                @if (categoriaActiva() === 'TALENTO') {
-                  ¿Qué sabes hacer?
-                }
-
-                @if (categoriaActiva() === 'HOBBY') {
-                  ¿Qué haces en tu tiempo libre?
-                }
-
-              </h2>
-
-              <p>
-                Selecciona todas las opciones que quieras.
-              </p>
-
-            </div>
-
-          </div>
-
-          <span class="seleccion-counter">
-            {{ contarSeleccionados(categoriaActiva()) }}
-            seleccionados
-          </span>
-
-        </div>
-
-
-        <div class="opciones-grid">
-
-          @for (
-            gusto of gustosDeCategoriaActiva();
-            track gusto.idGusto;
-            let i = $index
-          ) {
-
-            <button
-              type="button"
-              class="opcion-card"
-              [class.opcion-card--seleccionada]="
-                estaSeleccionado(gusto.idGusto)
-              "
-              (click)="alternarGusto(gusto.idGusto)"
-              [attr.aria-pressed]="
-                estaSeleccionado(gusto.idGusto)
-              "
-            >
-
-              <span class="opcion-card__emoji">
-
-                {{ obtenerEmoji(gusto, i) }}
-
-              </span>
-
-              <span class="opcion-card__text">
-
-                <span class="opcion-card__name">
-                  {{ gusto.nombre }}
-                </span>
-
-              </span>
-
-              <span class="opcion-card__check">
-
-                @if (estaSeleccionado(gusto.idGusto)) {
-                  ✓
-                } @else {
-                  +
-                }
-
-              </span>
-
-            </button>
-
-          } @empty {
-
-            <div class="empty-card">
-
-              <span>
-                🌱
-              </span>
-
-              <h3>
-                Todavía no hay opciones
-              </h3>
-
-              <p>
-                Aún no se han registrado opciones
-                para esta categoría.
-              </p>
-
-            </div>
-
-          }
-
-        </div>
-
-
-        <!-- ERROR -->
-
-        @if (errorGustos()) {
-
-          <div class="error-message">
-
-            <span>⚠️</span>
-
-            {{ errorGustos() }}
-
-          </div>
-
-        }
-
-
-        <!-- GUARDAR -->
-
-        <div class="guardar-section">
-
-          <div class="guardar-info">
-
-            <span class="guardar-info__icon">
-              💚
-            </span>
-
-            <div>
-
-              <strong>
-                Tus intereses nos ayudan a conocerte mejor
-              </strong>
-
-              <p>
-                Puedes cambiarlos cuando quieras.
-              </p>
-
-            </div>
-
-          </div>
-
+      <div class="categorias-grid">
+        @for (categoria of categorias; track categoria.valor) {
           <button
             type="button"
-            class="guardar-button"
-            [disabled]="guardandoGustos()"
-            (click)="guardarGustos()"
+            class="categoria-card"
+            [class.categoria-card--activa]="categoriaActiva() === categoria.valor"
+            (click)="cambiarCategoria(categoria.valor)"
           >
+            <span class="categoria-card__icon">{{ categoria.icon }}</span>
 
-            @if (guardandoGustos()) {
+            <span class="categoria-card__content">
+              <span class="categoria-card__title">{{ categoria.label }}</span>
 
-              <span>
-                Guardando...
+              <span class="categoria-card__description">
+                @if (categoria.valor === 'GUSTO') { Cosas que disfrutas y te encantan. }
+                @if (categoria.valor === 'TALENTO') { Cosas que sabes hacer muy bien. }
+                @if (categoria.valor === 'HOBBY') { Actividades que disfrutas hacer. }
               </span>
+            </span>
 
-            } @else {
-
-              <span>
-                Guardar mis intereses
-              </span>
-
-            }
-
+            <span class="categoria-card__count">{{ contarSeleccionados(categoria.valor) }}</span>
           </button>
+        }
+      </div>
+    </section>
 
+    <!-- OPCIONES -->
+    <section class="opciones-section">
+      <div class="opciones-header">
+        <div>
+          <span class="opciones-header__icon">
+            @if (categoriaActiva() === 'GUSTO') { ❤️ }
+            @if (categoriaActiva() === 'TALENTO') { ✨ }
+            @if (categoriaActiva() === 'HOBBY') { 🎯 }
+          </span>
+
+          <div>
+            <h2>
+              @if (categoriaActiva() === 'GUSTO') { ¿Qué te gusta? }
+              @if (categoriaActiva() === 'TALENTO') { ¿Qué sabes hacer? }
+              @if (categoriaActiva() === 'HOBBY') { ¿Qué haces en tu tiempo libre? }
+            </h2>
+            <p>Selecciona todas las opciones que quieras.</p>
+          </div>
         </div>
 
-      </section>
+        <span class="seleccion-counter">
+          {{ contarSeleccionados(categoriaActiva()) }} seleccionados
+        </span>
+      </div>
 
-    }
+      <div class="opciones-grid">
+        @for (gusto of gustosDeCategoriaActiva(); track gusto.idGusto; let i = $index) {
+          <button
+            type="button"
+            class="opcion-card"
+            [class.opcion-card--seleccionada]="estaSeleccionado(gusto.idGusto)"
+            (click)="alternarGusto(gusto.idGusto)"
+            [attr.aria-pressed]="estaSeleccionado(gusto.idGusto)"
+          >
+            <span class="opcion-card__emoji">{{ obtenerEmoji(gusto, i) }}</span>
 
-  </div>
+            <span class="opcion-card__text">
+              <span class="opcion-card__name">{{ gusto.nombre }}</span>
+            </span>
 
-</app-dashboard-shell>
+            <span class="opcion-card__check">
+              @if (estaSeleccionado(gusto.idGusto)) { ✓ } @else { + }
+            </span>
+          </button>
+        } @empty {
+          <div class="empty-card">
+            <span>🌱</span>
+            <h3>Todavía no hay opciones</h3>
+            <p>Aún no se han registrado opciones para esta categoría.</p>
+          </div>
+        }
+      </div>
+
+      <!-- ERROR -->
+      @if (errorGustos()) {
+        <div class="error-message">
+          <span>⚠️</span>
+          {{ errorGustos() }}
+        </div>
+      }
+
+      <!-- GUARDAR -->
+      <div class="guardar-section">
+        <div class="guardar-info">
+          <span class="guardar-info__icon">💚</span>
+          <div>
+            <strong>Tus intereses nos ayudan a conocerte mejor</strong>
+            <p>Puedes cambiarlos cuando quieras.</p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="guardar-button"
+          [disabled]="guardandoGustos()"
+          (click)="guardarGustos()"
+        >
+          @if (guardandoGustos()) {
+            <span>Guardando...</span>
+          } @else {
+            <span>Guardar mis intereses</span>
+          }
+        </button>
+      </div>
+    </section>
+
+  }
+
+</div>
