@@ -72,7 +72,7 @@ export class Registro {
       next: () => {
         this.cargando.set(false);
         this.otpEnviado.set(true);
-        this.infoMensaje.set('Te enviamos un código por SMS. Revisa tu celular.');
+        this.infoMensaje.set('Código solicitado. Puede tardar unos segundos en llegar.');
       },
       error: () => {
         this.cargando.set(false);

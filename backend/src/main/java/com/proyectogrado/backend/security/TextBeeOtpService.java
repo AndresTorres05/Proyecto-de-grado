@@ -9,6 +9,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,9 @@ public class TextBeeOtpService {
 
     private final SecureRandom random = new SecureRandom();
     private final Map<String, CodigoOtp> codigosPendientes = new ConcurrentHashMap<>();
-    private final HttpClient httpClient = HttpClient.newHttpClient();
+    private final HttpClient httpClient = HttpClient.newBuilder()
+        .connectTimeout(Duration.ofSeconds(10))
+        .build();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public void enviarCodigo(String telefono) {
@@ -45,10 +48,14 @@ public class TextBeeOtpService {
                     .uri(URI.create("https://api.textbee.dev/api/v1/gateway/devices/" + deviceId + "/send-sms"))
                     .header("Content-Type", "application/json")
                     .header("x-api-key", apiKey)
+                    .timeout(Duration.ofSeconds(20))
                     .POST(HttpRequest.BodyPublishers.ofString(cuerpoJson))
                     .build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            System.out.println("TEXTBEE STATUS: " + response.statusCode());
+            System.out.println("TEXTBEE RESPONSE: " + response.body());
 
             if (response.statusCode() >= 300) {
                 throw new RuntimeException("TextBee respondió " + response.statusCode() + ": " + response.body());
