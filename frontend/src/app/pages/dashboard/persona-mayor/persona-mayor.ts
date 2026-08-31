@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ActividadService, Actividad } from '../../../core/actividades/actividad.service';
 import { GustoService, Gusto, CategoriaGusto } from '../../../core/gustos/gusto.service';
-import { AcompananteService, Acompanante } from '../../../core/acompanantes/acompanante.service';
 import { EmergenciaService } from '../../../core/emergencia/emergencia.service';
 
 interface AccesoRapido {
@@ -52,7 +51,6 @@ export class PersonaMayorDashboard implements OnInit {
     this.gustosDisponibles().filter((g) => g.categoria === this.categoriaActiva())
   );
 
-  protected readonly acompanante = signal<Acompanante | null>(null);
   protected readonly mostrandoConfirmacionEmergencia = signal(false);
   protected readonly enviandoEmergencia = signal(false);
   protected readonly mensajeEmergencia = signal<string | null>(null);
@@ -67,7 +65,6 @@ export class PersonaMayorDashboard implements OnInit {
     private authService: AuthService,
     private actividadService: ActividadService,
     private gustoService: GustoService,
-    private acompananteService: AcompananteService,
     private emergenciaService: EmergenciaService
   ) {
     this.nombreUsuario = this.authService.getNombreUsuario();
@@ -75,9 +72,6 @@ export class PersonaMayorDashboard implements OnInit {
 
   ngOnInit(): void {
     this.actividadService.listar().subscribe((actividades) => this.actividades.set(actividades));
-    this.acompananteService.obtenerAcompanantes().subscribe((acompanantes) =>
-      this.acompanante.set(acompanantes[0] ?? null)
-    );
 
     const idPersonaMayor = this.authService.getIdUsuario();
     if (idPersonaMayor === null) {

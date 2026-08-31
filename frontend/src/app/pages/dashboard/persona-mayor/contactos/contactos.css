@@ -1,0 +1,273 @@
+:host {
+  display: block;
+  font-size: 1.1rem;
+}
+
+/* ---------- Encabezado ---------- */
+
+.page-header {
+  margin-bottom: 28px;
+}
+
+.page-header h1 {
+  font-size: 2.1rem;
+  font-weight: 700;
+}
+
+.page-header p {
+  margin-top: 6px;
+  color: var(--gema-text-gray);
+  font-size: 1.1rem;
+}
+
+/* ---------- Secciones ---------- */
+
+.section-block {
+  margin-bottom: 32px;
+}
+
+.section-block__title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+/* ---------- Emergencia ---------- */
+
+.emergency-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+  border: 2px solid #d64545;
+  background: color-mix(in srgb, #d64545 7%, white);
+}
+
+.emergency-card__icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.8rem;
+  background: color-mix(in srgb, #d64545 15%, white);
+}
+
+.emergency-card__content {
+  flex: 1;
+}
+
+.emergency-card__content h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--gema-navy);
+}
+
+.emergency-card__content p {
+  margin-top: 4px;
+  font-size: 0.95rem;
+  color: var(--gema-text-gray);
+}
+
+.emergency-card__button {
+  background: #d64545;
+  color: var(--gema-white);
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 14px 22px;
+  white-space: nowrap;
+  border: none;
+}
+
+.emergency-card__button:hover {
+  background: #b83232;
+}
+
+/* ---------- Confirmación de emergencia ---------- */
+
+.emergency-confirmation {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: 20px;
+  padding: 20px;
+  border: 2px solid var(--gema-border);
+  border-radius: var(--radius-sm);
+  background: var(--gema-white);
+}
+
+.emergency-confirmation__icon {
+  font-size: 1.7rem;
+  flex-shrink: 0;
+}
+
+.emergency-confirmation__content {
+  flex: 1;
+}
+
+.emergency-confirmation__content h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--gema-navy);
+}
+
+.emergency-confirmation__content p {
+  margin-top: 6px;
+  color: var(--gema-text-gray);
+  font-size: 0.95rem;
+}
+
+.emergency-confirmation__actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.emergency-confirmation__confirm {
+  background: #d64545;
+  color: var(--gema-white);
+  font-weight: 700;
+  border: none;
+}
+
+.emergency-confirmation__confirm:hover {
+  background: #b83232;
+}
+
+/* ---------- Resultado de emergencia ---------- */
+
+.emergency-success,
+.emergency-error {
+  margin-top: 14px;
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.emergency-success {
+  background: color-mix(in srgb, var(--gema-green) 10%, white);
+  border: 1px solid var(--gema-green);
+  color: var(--gema-navy);
+}
+
+.emergency-error {
+  background: color-mix(in srgb, #d64545 10%, white);
+  border: 1px solid #d64545;
+  color: #9e2929;
+}
+
+/* ---------- Mis contactos ---------- */
+
+.contacts-section {
+  margin-bottom: 32px;
+}
+
+.companion-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 22px;
+}
+
+.companion-card__avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--gema-cream-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.companion-card__info {
+  flex: 1;
+}
+
+.companion-card__label {
+  font-size: 0.9rem;
+  color: var(--gema-text-gray);
+}
+
+.companion-card h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.companion-card__phone {
+  margin-top: 4px;
+  font-size: 1rem;
+  color: var(--gema-navy);
+  font-weight: 600;
+}
+
+.companion-card__relationship {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  color: var(--gema-text-gray);
+}
+
+.companion-card__call {
+  font-size: 1rem;
+  padding: 14px 22px;
+  white-space: nowrap;
+}
+
+/* ---------- Sin contactos ---------- */
+
+.empty-contacts {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 22px;
+  color: var(--gema-text-gray);
+}
+
+.empty-contacts span {
+  font-size: 1.7rem;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 600px) {
+
+  .emergency-card {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .emergency-card__icon {
+    margin: 0 auto;
+  }
+
+  .emergency-card__button {
+    width: 100%;
+  }
+
+  .emergency-confirmation {
+    flex-direction: column;
+  }
+
+  .emergency-confirmation__actions {
+    flex-direction: column;
+  }
+
+  .emergency-confirmation__actions button {
+    width: 100%;
+  }
+
+  .companion-card {
+    flex-wrap: wrap;
+  }
+
+  .companion-card__call {
+    width: 100%;
+  }
+}
