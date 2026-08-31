@@ -348,14 +348,13 @@ La solución fue desarrollada utilizando un enfoque ágil basado en:
 
 #  Autores
 
-|                Autor               |
 | :--------------------------------: |
 |    **Juan David Garrido Ramos**    |
 | **Katheryn Sofía Guasca Chavarro** |
 |   **Andrés Felipe Torres Monroy**  |
 |  **Juan Sebastián Vargas Cortés**  |
 
-### 🎓 Información Académica
+###Información Académica
 
 **Ingeniería de Sistemas**
 **Pontificia Universidad Javeriana**
