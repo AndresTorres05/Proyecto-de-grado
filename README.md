@@ -33,51 +33,106 @@ La solución consiste en una plataforma web orientada a apoyar la gestión de in
 
 # Estructura del Proyecto
 
+El proyecto está organizado en dos componentes principales: **Frontend** y **Backend**, junto con la configuración necesaria para la ejecución de la aplicación y la gestión de la base de datos.
+
 ```text
 Proyecto-de-grado/
 │
 ├── backend/
-│   └── src/main/java/com/proyectogrado/backend/
-│       ├── config/
-│       ├── controller/
-│       ├── dto/
-│       ├── model/
-│       ├── repository/
-│       ├── security/
-│       └── BackendApplication.java
+│   ├── src/
+│   ├── pom.xml
+│   └── ...
 │
 ├── frontend/
+│   ├── public/
+│   ├── src/
+│   ├── angular.json
+│   ├── package.json
+│   └── ...
 │
+├── docker-compose.yml
 └── README.md
 ```
 
-# Arquitectura Backend
+## Frontend
 
-### `config`
+El frontend corresponde a la interfaz web de la plataforma y está desarrollado utilizando **Angular** y **TypeScript**.
 
-Contiene las configuraciones generales de Spring Boot, CORS, Beans y demás configuraciones de la aplicación.
+```text
+frontend/
+│
+├── public/
+│
+├── src/
+│   ├── app/
+│   ├── index.html
+│   ├── main.ts
+│   └── styles.css
+│
+├── angular.json
+├── package.json
+├── package-lock.json
+├── tsconfig.json
+├── tsconfig.app.json
+└── tsconfig.spec.json
+```
 
-### `controller`
+## Backend
 
-Controladores REST encargados de exponer los endpoints de la API.
+El backend corresponde a la API REST de la plataforma y está desarrollado utilizando **Java 21 LTS** y **Spring Boot**.
 
-### `dto`
+```text
+backend/
+│
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   └── resources/
+│   │
+│   └── test/
+│
+├── pom.xml
+└── ...
+```
 
-Objetos de transferencia de datos utilizados para las solicitudes y respuestas del sistema.
+## Comunicación entre componentes
 
-### `model`
+La plataforma utiliza una arquitectura cliente-servidor, en la cual el **frontend se comunica con el backend mediante servicios REST**.
 
-Entidades del negocio y modelos persistidos en la base de datos.
+El backend procesa las solicitudes realizadas desde la aplicación web y gestiona la información almacenada en la base de datos **PostgreSQL**.
 
-### `repository`
+```text
+┌──────────────────────┐
+│       Usuario        │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│       Frontend       │
+│       Angular        │
+│     TypeScript       │
+└──────────┬───────────┘
+           │
+           │ HTTP / REST
+           ▼
+┌──────────────────────┐
+│       Backend        │
+│     Spring Boot      │
+│        Java 21       │
+└──────────┬───────────┘
+           │
+           │ JPA / SQL
+           ▼
+┌──────────────────────┐
+│      PostgreSQL      │
+│      Base de datos   │
+└──────────────────────┘
+```
 
-Interfaces JPA utilizadas para el acceso y gestión de los datos.
-
-### `security`
-
-Configuración relacionada con autenticación, autorización y manejo de JWT.
+Esta separación permite mantener independientes la **interfaz de usuario**, la **lógica de negocio** y la **persistencia de los datos**, facilitando el mantenimiento, escalabilidad y evolución de la plataforma.
 
 ---
+
 
 # Requisitos Previos
 
