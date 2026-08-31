@@ -343,21 +343,26 @@ La solución fue desarrollada utilizando un enfoque ágil basado en:
 * Scrum.
 * Kanban.
 * CRISP-DM para el componente de analítica de datos.
+  
+---
+
+#  Autores
+
+|                Autor               |
+| :--------------------------------: |
+|    **Juan David Garrido Ramos**    |
+| **Katheryn Sofía Guasca Chavarro** |
+|   **Andrés Felipe Torres Monroy**  |
+|  **Juan Sebastián Vargas Cortés**  |
+
+### 🎓 Información Académica
+
+**Ingeniería de Sistemas**
+**Pontificia Universidad Javeriana**
+📍 Bogotá D.C., Colombia
 
 ---
 
-# Autores
-
-**Juan David Garrido Ramos**
-**Katheryn Sofía Guasca Chavarro**
-**Andrés Felipe Torres Monroy**
-**Juan Sebastián Vargas Cortés**
-
-Programa de Ingeniería de Sistemas
-Pontificia Universidad Javeriana
-Bogotá D.C., Colombia
-
----
 
 # Proyecto Académico
 
