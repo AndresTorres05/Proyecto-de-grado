@@ -346,17 +346,21 @@ La solución fue desarrollada utilizando un enfoque ágil basado en:
   
 ---
 
-Autores
-Nombre
-Juan David Garrido Ramos
-Katheryn Sofía Guasca Chavarro
-Andrés Felipe Torres Monroy
-Juan Sebastián Vargas Cortés
-Información Académica
 
-Programa: Ingeniería de Sistemas
-Universidad: Pontificia Universidad Javeriana
-Ubicación: Bogotá D.C., Colombia
+# Autores
+
+|               Nombre               |
+| :--------------------------------: |
+|    **Juan David Garrido Ramos**    |
+| **Katheryn Sofía Guasca Chavarro** |
+|   **Andrés Felipe Torres Monroy**  |
+|  **Juan Sebastián Vargas Cortés**  |
+
+## Información Académica
+
+**Programa:** Ingeniería de Sistemas
+**Universidad:** Pontificia Universidad Javeriana
+**Ubicación:** Bogotá D.C., Colombia
 
 ---
 
