@@ -19,7 +19,7 @@ $card-bg: #ffffff;
 
     .tagline {
       background-color: rgba(91, 113, 138, 0.05);
-      color: var(--gema-navy, #5b718a);
+      color: var(--vita-navy, #5b718a);
       text-transform: uppercase;
       letter-spacing: 1px;
       font-size: 0.8rem;
@@ -32,7 +32,7 @@ $card-bg: #ffffff;
     }
 
     .main-title {
-      color: var(--gema-navy, #0e3b68);
+      color: var(--vita-navy, #0e3b68);
       font-size: 3rem;
       font-weight: 800;
       line-height: 1.1;
@@ -41,7 +41,7 @@ $card-bg: #ffffff;
     }
 
     .description-text {
-      color: var(--gema-text-gray, #666666);
+      color: var(--vita-text-gray, #666666);
       font-size: 1.15rem;
       max-width: 60ch;
       margin: 0 auto;
@@ -110,7 +110,7 @@ $card-bg: #ffffff;
   }
 
   .card-title {
-    color: var(--gema-navy, #0e3b68);
+    color: var(--vita-navy, #0e3b68);
     font-size: 1.25rem;
     font-weight: 700;
     margin: 0;
@@ -118,7 +118,7 @@ $card-bg: #ffffff;
   }
 
   .card-description {
-    color: var(--gema-text-gray, #666666);
+    color: var(--vita-text-gray, #666666);
     font-size: 0.95rem;
     line-height: 1.6;
     margin: 0;

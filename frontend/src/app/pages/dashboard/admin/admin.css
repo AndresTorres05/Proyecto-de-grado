@@ -13,7 +13,7 @@
 
 .page-header p {
   margin-top: 4px;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
   font-size: 0.9rem;
 }
 
@@ -42,17 +42,17 @@
 .admin-input {
   flex: 1;
   padding: 10px 14px;
-  border: 1px solid var(--gema-border);
+  border: 1px solid var(--vita-border);
   border-radius: var(--radius-sm);
   font-size: 0.9rem;
   font-family: inherit;
-  color: var(--gema-navy);
-  background: var(--gema-white);
+  color: var(--vita-navy);
+  background: var(--vita-white);
 }
 
 .admin-input:focus {
   outline: none;
-  border-color: var(--gema-orange);
+  border-color: var(--vita-orange);
 }
 
 .admin-input--inline {
@@ -82,13 +82,13 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 14px;
-  border: 1px solid var(--gema-border);
+  border: 1px solid var(--vita-border);
   border-radius: var(--radius-md);
 }
 
 .admin-list__label {
   font-weight: 600;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
   font-size: 0.9rem;
 }
 
@@ -111,11 +111,11 @@
 
 .admin-btn--danger:hover {
   background: #c23b3b;
-  color: var(--gema-white);
+  color: var(--vita-white);
 }
 
 .admin-list__empty {
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
   font-size: 0.85rem;
   padding: 12px 0;
 }

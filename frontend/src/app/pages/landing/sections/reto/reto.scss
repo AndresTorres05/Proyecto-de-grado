@@ -1,5 +1,5 @@
 .reto-section {
-  background-color: var(--gema-navy, #0c2b54); // Fondo azul oscuro institucional
+  background-color: var(--vita-navy, #0c2b54); // Fondo azul oscuro institucional
   color: #ffffff;
   padding: 6rem 1.5rem;
   font-family: 'Sora', sans-serif;
@@ -35,7 +35,7 @@
         padding: 0.4rem 1rem;
         border-radius: 50px;
         background: rgba(255, 255, 255, 0.08);
-        color: var(--gema-cream-soft, #f7efe5);
+        color: var(--vita-cream-soft, #f7efe5);
         font-size: 0.75rem;
         text-transform: uppercase;
         letter-spacing: 0.08em;
@@ -52,7 +52,7 @@
         color: #ffffff;
 
         .accent-gold {
-          color: var(--gema-gold, #f6c95e);
+          color: var(--vita-gold, #f6c95e);
         }
       }
 
@@ -167,8 +167,8 @@
 
       // Tarjeta final destacada (Solución)
       &.highlight-card {
-        background: var(--gema-gold, #f6c95e);
-        border-color: var(--gema-gold, #f6c95e);
+        background: var(--vita-gold, #f6c95e);
+        border-color: var(--vita-gold, #f6c95e);
         color: #1a1a1a;
 
         &:hover {

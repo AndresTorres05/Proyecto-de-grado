@@ -38,7 +38,7 @@
         <div class="stat-card__top">
 
           <span class="stat-card__icon">
-            {{ stat.icon }}
+            <app-icon [name]="stat.icon" />
           </span>
 
           <span class="stat-card__delta">
@@ -149,7 +149,7 @@
             >
 
               <span class="quick-action__icon">
-                {{ accion.icon }}
+                <app-icon [name]="accion.icon" />
               </span>
 
               {{ accion.label }}
@@ -207,21 +207,21 @@
 
               <polyline
                 fill="none"
-                stroke="var(--gema-navy)"
+                stroke="var(--vita-navy)"
                 stroke-width="2.5"
                 points="10,100 60,90 110,75 160,60 210,45 260,25"
               />
 
               <polyline
                 fill="none"
-                stroke="var(--gema-orange)"
+                stroke="var(--vita-orange)"
                 stroke-width="2.5"
                 points="10,110 60,105 110,100 160,90 210,85 260,75"
               />
 
               <polyline
                 fill="none"
-                stroke="var(--gema-gold)"
+                stroke="var(--vita-gold)"
                 stroke-width="2.5"
                 points="10,115 60,112 110,110 160,108 210,105 260,100"
               />
@@ -233,7 +233,7 @@
               <span>
                 <span
                   class="dot"
-                  style="background: var(--gema-navy)"
+                  style="background: var(--vita-navy)"
                 ></span>
                 Mayores
               </span>
@@ -241,7 +241,7 @@
               <span>
                 <span
                   class="dot"
-                  style="background: var(--gema-orange)"
+                  style="background: var(--vita-orange)"
                 ></span>
                 Acompañantes
               </span>
@@ -249,7 +249,7 @@
               <span>
                 <span
                   class="dot"
-                  style="background: var(--gema-gold)"
+                  style="background: var(--vita-gold)"
                 ></span>
                 Voluntarios
               </span>
@@ -555,7 +555,7 @@
             <li>
 
               <span class="mini-list__icon">
-                💊
+                <app-icon name="pill" />
               </span>
 
               <div>
@@ -611,7 +611,7 @@
             <li>
 
               <span class="mini-list__icon">
-                💝
+                <app-icon name="gift" />
               </span>
 
               <div>

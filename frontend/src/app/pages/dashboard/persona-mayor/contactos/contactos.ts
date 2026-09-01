@@ -4,11 +4,12 @@ import {
   Acompanante
 } from '../../../../core/acompanantes/acompanante.service';
 import { EmergenciaService } from '../../../../core/emergencia/emergencia.service';
+import { Icon } from '../../../../shared/icon/icon';
 
 @Component({
   selector: 'app-contactos',
   standalone: true,
-  imports: [],
+  imports: [Icon],
   templateUrl: './contactos.html',
   styleUrl: './contactos.css'
 })

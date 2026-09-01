@@ -30,7 +30,7 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
 
-  color: var(--gema-green);
+  color: var(--vita-green);
 
   margin-bottom: 8px;
 }
@@ -41,7 +41,7 @@
   font-size: 2.4rem;
   font-weight: 800;
 
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .intereses-header p {
@@ -52,7 +52,7 @@
   font-size: 1.05rem;
   line-height: 1.6;
 
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 
@@ -65,9 +65,9 @@
 
   margin-bottom: 28px;
 
-  background: var(--gema-white);
+  background: var(--vita-white);
 
-  border: 1px solid var(--gema-border);
+  border: 1px solid var(--vita-border);
 
   border-radius: var(--radius-lg);
 
@@ -80,7 +80,7 @@
   font-size: 1.35rem;
   font-weight: 700;
 
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .categorias-grid {
@@ -113,9 +113,9 @@
 
   border-radius: 18px;
 
-  background: var(--gema-cream-soft);
+  background: var(--vita-cream-soft);
 
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 
   cursor: pointer;
 
@@ -131,19 +131,19 @@
 .categoria-card:hover {
   transform: translateY(-2px);
 
-  border-color: var(--gema-green);
+  border-color: var(--vita-green);
 
   box-shadow:
     0 6px 18px rgba(0, 0, 0, 0.07);
 }
 
 .categoria-card--activa {
-  border-color: var(--gema-green);
+  border-color: var(--vita-green);
 
   background:
     color-mix(
       in srgb,
-      var(--gema-green) 10%,
+      var(--vita-green) 10%,
       white
     );
 
@@ -151,7 +151,7 @@
     0 5px 16px
     color-mix(
       in srgb,
-      var(--gema-green) 15%,
+      var(--vita-green) 15%,
       transparent
     );
 }
@@ -169,7 +169,7 @@
 
   border-radius: 14px;
 
-  background: var(--gema-white);
+  background: var(--vita-white);
 
   font-size: 1.7rem;
 }
@@ -194,7 +194,7 @@
 
   line-height: 1.4;
 
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 .categoria-card__count {
@@ -210,7 +210,7 @@
 
   border-radius: 50px;
 
-  background: var(--gema-border);
+  background: var(--vita-border);
 
   font-size: 0.8rem;
   font-weight: 700;
@@ -218,9 +218,9 @@
 
 .categoria-card--activa
 .categoria-card__count {
-  background: var(--gema-green);
+  background: var(--vita-green);
 
-  color: var(--gema-white);
+  color: var(--vita-white);
 }
 
 
@@ -231,9 +231,9 @@
 .opciones-section {
   padding: 28px;
 
-  background: var(--gema-white);
+  background: var(--vita-white);
 
-  border: 1px solid var(--gema-border);
+  border: 1px solid var(--vita-border);
 
   border-radius: var(--radius-lg);
 
@@ -271,7 +271,7 @@
 
   border-radius: 15px;
 
-  background: var(--gema-cream-soft);
+  background: var(--vita-cream-soft);
 
   font-size: 1.6rem;
 }
@@ -282,7 +282,7 @@
   font-size: 1.4rem;
   font-weight: 750;
 
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .opciones-header p {
@@ -290,7 +290,7 @@
 
   font-size: 0.9rem;
 
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 .seleccion-counter {
@@ -301,11 +301,11 @@
   background:
     color-mix(
       in srgb,
-      var(--gema-green) 10%,
+      var(--vita-green) 10%,
       white
     );
 
-  color: var(--gema-green);
+  color: var(--vita-green);
 
   font-size: 0.85rem;
   font-weight: 700;
@@ -343,13 +343,13 @@
 
   padding: 15px;
 
-  border: 2px solid var(--gema-border);
+  border: 2px solid var(--vita-border);
 
   border-radius: 16px;
 
-  background: var(--gema-white);
+  background: var(--vita-white);
 
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 
   cursor: pointer;
 
@@ -365,19 +365,19 @@
 .opcion-card:hover {
   transform: translateY(-2px);
 
-  border-color: var(--gema-green);
+  border-color: var(--vita-green);
 
   box-shadow:
     0 5px 15px rgba(0, 0, 0, 0.06);
 }
 
 .opcion-card--seleccionada {
-  border-color: var(--gema-green);
+  border-color: var(--vita-green);
 
   background:
     color-mix(
       in srgb,
-      var(--gema-green) 9%,
+      var(--vita-green) 9%,
       white
     );
 
@@ -385,7 +385,7 @@
     0 4px 14px
     color-mix(
       in srgb,
-      var(--gema-green) 12%,
+      var(--vita-green) 12%,
       transparent
     );
 }
@@ -408,7 +408,7 @@
 
   border-radius: 14px;
 
-  background: var(--gema-cream-soft);
+  background: var(--vita-cream-soft);
 
   font-size: 1.55rem;
 
@@ -423,7 +423,7 @@
 
 .opcion-card--seleccionada
 .opcion-card__emoji {
-  background: var(--gema-white);
+  background: var(--vita-white);
 }
 
 
@@ -465,11 +465,11 @@
 
   flex-shrink: 0;
 
-  border: 2px solid var(--gema-border);
+  border: 2px solid var(--vita-border);
 
   border-radius: 50%;
 
-  color: var(--gema-text-gray-light);
+  color: var(--vita-text-gray-light);
 
   font-size: 0.85rem;
   font-weight: 800;
@@ -482,11 +482,11 @@
 
 .opcion-card--seleccionada
 .opcion-card__check {
-  border-color: var(--gema-green);
+  border-color: var(--vita-green);
 
-  background: var(--gema-green);
+  background: var(--vita-green);
 
-  color: var(--gema-white);
+  color: var(--vita-white);
 }
 
 
@@ -536,7 +536,7 @@
 
   padding-top: 24px;
 
-  border-top: 1px solid var(--gema-border);
+  border-top: 1px solid var(--vita-border);
 }
 
 .guardar-info {
@@ -561,7 +561,7 @@
   background:
     color-mix(
       in srgb,
-      var(--gema-green) 10%,
+      var(--vita-green) 10%,
       white
     );
 
@@ -573,7 +573,7 @@
 
   font-size: 0.9rem;
 
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .guardar-info p {
@@ -581,7 +581,7 @@
 
   font-size: 0.8rem;
 
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 
@@ -596,9 +596,9 @@
 
   border-radius: var(--radius-sm);
 
-  background: var(--gema-green);
+  background: var(--vita-green);
 
-  color: var(--gema-white);
+  color: var(--vita-white);
 
   font-size: 0.95rem;
 
@@ -619,7 +619,7 @@
     0 5px 14px
     color-mix(
       in srgb,
-      var(--gema-green) 25%,
+      var(--vita-green) 25%,
       transparent
     );
 }
@@ -648,9 +648,9 @@
 
   padding: 50px 25px;
 
-  background: var(--gema-white);
+  background: var(--vita-white);
 
-  border: 1px solid var(--gema-border);
+  border: 1px solid var(--vita-border);
 
   border-radius: var(--radius-lg);
 }
@@ -665,14 +665,14 @@
 .empty-card h3 {
   margin: 0;
 
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .estado-card p,
 .empty-card p {
   margin-top: 7px;
 
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 .empty-card {

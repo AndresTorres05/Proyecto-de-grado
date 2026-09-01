@@ -16,7 +16,7 @@
 
 .page-header p {
   margin-top: 6px;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
   font-size: 1.1rem;
 }
 
@@ -52,6 +52,7 @@
   justify-content: center;
   flex-shrink: 0;
   font-size: 1.8rem;
+  color: #d64545;
   background: color-mix(in srgb, #d64545 15%, white);
 }
 
@@ -62,18 +63,18 @@
 .emergency-card__content h2 {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .emergency-card__content p {
   margin-top: 4px;
   font-size: 0.95rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 .emergency-card__button {
   background: #d64545;
-  color: var(--gema-white);
+  color: var(--vita-white);
   font-size: 1rem;
   font-weight: 700;
   padding: 14px 22px;
@@ -93,9 +94,9 @@
   gap: 16px;
   margin-top: 20px;
   padding: 20px;
-  border: 2px solid var(--gema-border);
+  border: 2px solid var(--vita-border);
   border-radius: var(--radius-sm);
-  background: var(--gema-white);
+  background: var(--vita-white);
 }
 
 .emergency-confirmation__icon {
@@ -110,12 +111,12 @@
 .emergency-confirmation__content h3 {
   font-size: 1.15rem;
   font-weight: 700;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .emergency-confirmation__content p {
   margin-top: 6px;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
   font-size: 0.95rem;
 }
 
@@ -128,7 +129,7 @@
 
 .emergency-confirmation__confirm {
   background: #d64545;
-  color: var(--gema-white);
+  color: var(--vita-white);
   font-weight: 700;
   border: none;
 }
@@ -149,9 +150,9 @@
 }
 
 .emergency-success {
-  background: color-mix(in srgb, var(--gema-green) 10%, white);
-  border: 1px solid var(--gema-green);
-  color: var(--gema-navy);
+  background: color-mix(in srgb, var(--vita-green) 10%, white);
+  border: 1px solid var(--vita-green);
+  color: var(--vita-navy);
 }
 
 .emergency-error {
@@ -177,11 +178,12 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: var(--gema-cream-soft);
+  background: var(--vita-cream-soft);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.6rem;
+  color: var(--vita-navy);
   flex-shrink: 0;
 }
 
@@ -191,7 +193,7 @@
 
 .companion-card__label {
   font-size: 0.9rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 .companion-card h2 {
@@ -203,14 +205,14 @@
 .companion-card__phone {
   margin-top: 4px;
   font-size: 1rem;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
   font-weight: 600;
 }
 
 .companion-card__relationship {
   margin-top: 4px;
   font-size: 0.9rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 .companion-card__call {
@@ -226,7 +228,7 @@
   align-items: center;
   gap: 14px;
   padding: 22px;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 .empty-contacts span {

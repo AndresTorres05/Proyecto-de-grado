@@ -7,6 +7,7 @@ import {
   Gusto,
   CategoriaGusto
 } from '../../../../core/gustos/gusto.service';
+import { Icon } from '../../../../shared/icon/icon';
 
 interface CategoriaTab {
   valor: CategoriaGusto;
@@ -17,16 +18,16 @@ interface CategoriaTab {
 @Component({
   selector: 'app-intereses',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, Icon],
   templateUrl: './intereses.html',
   styleUrl: './intereses.css'
 })
 export class Intereses implements OnInit {
 
   protected readonly categorias: CategoriaTab[] = [
-    { valor: 'GUSTO', label: 'Gustos', icon: '❤️' },
-    { valor: 'TALENTO', label: 'Talentos', icon: '✨' },
-    { valor: 'HOBBY', label: 'Hobbies', icon: '🎯' }
+    { valor: 'GUSTO', label: 'Gustos', icon: 'heart' },
+    { valor: 'TALENTO', label: 'Talentos', icon: 'sparkles' },
+    { valor: 'HOBBY', label: 'Hobbies', icon: 'target' }
   ];
 
   protected readonly categoriaActiva = signal<CategoriaGusto>('GUSTO');

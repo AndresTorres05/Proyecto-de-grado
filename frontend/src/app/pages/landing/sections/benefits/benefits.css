@@ -36,7 +36,7 @@
 
 .mini-dashboard__label {
   font-size: 0.8rem;
-  color: var(--gema-text-gray-light);
+  color: var(--vita-text-gray-light);
 }
 
 .mini-dashboard__chart {
@@ -64,10 +64,10 @@
   flex-shrink: 0;
   border-radius: 50%;
   background: conic-gradient(
-    var(--gema-navy) 0% 40%,
-    var(--gema-orange) 40% 65%,
-    var(--gema-gold) 65% 85%,
-    var(--gema-navy-light) 85% 100%
+    var(--vita-navy) 0% 40%,
+    var(--vita-orange) 40% 65%,
+    var(--vita-gold) 65% 85%,
+    var(--vita-navy-light) 85% 100%
   );
 }
 
@@ -85,7 +85,7 @@
   align-items: center;
   gap: 8px;
   font-size: 0.85rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 .mini-dashboard__dot {
@@ -107,22 +107,22 @@
 .benefits-text__bar {
   width: 3px;
   height: 16px;
-  background: var(--gema-orange);
+  background: var(--vita-orange);
 }
 
 .benefits-text h3 {
-  color: var(--gema-navy);
+  color: var(--vita-navy);
   font-weight: 700;
   font-size: 1.5rem;
   margin-bottom: 12px;
 }
 
 .benefits-text p {
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 .benefits-text__link {
-  color: var(--gema-navy);
+  color: var(--vita-navy);
   font-weight: 600;
   margin-top: 16px;
   display: inline-block;

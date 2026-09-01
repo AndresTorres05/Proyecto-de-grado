@@ -1,5 +1,6 @@
 import { Component, OnInit, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Icon } from '../../../shared/icon/icon';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ActividadService, Actividad } from '../../../core/actividades/actividad.service';
 import { GustoService, Gusto, CategoriaGusto } from '../../../core/gustos/gusto.service';
@@ -20,7 +21,7 @@ interface CategoriaTab {
 
 @Component({
   selector: 'app-persona-mayor-dashboard',
-  imports: [FormsModule],
+  imports: [FormsModule, Icon],
   templateUrl: './persona-mayor.html',
   styleUrl: './persona-mayor.css'
 })
@@ -46,9 +47,9 @@ export class PersonaMayorDashboard implements OnInit {
   protected readonly actividades = signal<Actividad[]>([]);
 
   protected readonly categorias: CategoriaTab[] = [
-    { valor: 'GUSTO', label: 'Gustos', icon: '❤️' },
-    { valor: 'TALENTO', label: 'Talentos', icon: '✨' },
-    { valor: 'HOBBY', label: 'Hobbies', icon: '🎯' }
+    { valor: 'GUSTO', label: 'Gustos', icon: 'heart' },
+    { valor: 'TALENTO', label: 'Talentos', icon: 'sparkles' },
+    { valor: 'HOBBY', label: 'Hobbies', icon: 'target' }
   ];
 
   protected readonly categoriaActiva = signal<CategoriaGusto>('GUSTO');
@@ -69,8 +70,8 @@ export class PersonaMayorDashboard implements OnInit {
   protected readonly errorEmergencia = signal<string | null>(null);
 
   protected readonly accesos: AccesoRapido[] = [
-    { icon: '👤', label: 'Mi información' },
-    { icon: '☎️', label: 'Mis contactos de emergencia' }
+    { icon: 'user', label: 'Mi información' },
+    { icon: 'phone', label: 'Mis contactos de emergencia' }
   ];
 
   constructor(

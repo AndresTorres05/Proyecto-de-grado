@@ -8,15 +8,15 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  background: var(--gema-cream-soft);
+  background: var(--vita-cream-soft);
 }
 
 .login-card {
   width: 100%;
   max-width: 400px;
-  background: var(--gema-white);
-  border: 1px solid var(--gema-border);
-  border-top: 3px solid var(--gema-orange);
+  background: var(--vita-white);
+  border: 1px solid var(--vita-border);
+  border-top: 3px solid var(--vita-orange);
   border-radius: var(--radius-md);
   padding: 32px;
 }
@@ -39,7 +39,7 @@
   font-family: var(--font-heading);
   font-weight: 800;
   font-size: 1.1rem;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 /* ---------- Cabecera ---------- */
@@ -49,7 +49,7 @@
   margin-bottom: 20px;
   font-size: 0.82rem;
   font-weight: 600;
-  color: var(--gema-navy-light);
+  color: var(--vita-navy-light);
 }
 
 .login-back:hover {
@@ -60,12 +60,12 @@
   font-family: var(--font-heading);
   font-size: 1.75rem;
   font-weight: 700;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .login-subtitle {
   margin-top: 4px;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
   font-size: 0.9rem;
 }
 
@@ -80,7 +80,7 @@
 .login-label {
   font-size: 0.82rem;
   font-weight: 700;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
   margin-bottom: 6px;
   margin-top: 16px;
 }
@@ -91,18 +91,18 @@
 
 .login-input {
   padding: 12px 14px;
-  border: 1px solid var(--gema-border);
+  border: 1px solid var(--vita-border);
   border-radius: var(--radius-sm);
   font-size: 0.95rem;
   font-family: inherit;
-  color: var(--gema-navy);
-  background: var(--gema-white);
+  color: var(--vita-navy);
+  background: var(--vita-white);
   transition: border-color 0.2s ease;
 }
 
 .login-input:focus {
   outline: none;
-  border-color: var(--gema-orange);
+  border-color: var(--vita-orange);
 }
 
 .login-error {
@@ -132,7 +132,7 @@
   gap: 6px;
   margin-top: 16px;
   padding: 4px;
-  background: var(--gema-cream-soft);
+  background: var(--vita-cream-soft);
   border-radius: var(--radius-pill);
 }
 
@@ -144,14 +144,14 @@
   border-radius: var(--radius-pill);
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease;
 }
 
 .login-tab--active {
-  background: var(--gema-white);
-  color: var(--gema-navy);
+  background: var(--vita-white);
+  color: var(--vita-navy);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
@@ -165,11 +165,11 @@
   display: flex;
   align-items: center;
   padding: 0 12px;
-  border: 1px solid var(--gema-border);
+  border: 1px solid var(--vita-border);
   border-radius: var(--radius-sm);
   font-weight: 600;
-  color: var(--gema-navy);
-  background: var(--gema-cream-soft);
+  color: var(--vita-navy);
+  background: var(--vita-cream-soft);
 }
 
 .login-input--phone {
@@ -177,8 +177,8 @@
 }
 
 .login-info {
-  color: var(--gema-navy);
-  background: color-mix(in srgb, var(--gema-navy-light) 12%, white);
+  color: var(--vita-navy);
+  background: color-mix(in srgb, var(--vita-navy-light) 12%, white);
   border-radius: var(--radius-sm);
   padding: 10px 12px;
   font-size: 0.85rem;
@@ -190,10 +190,10 @@
   text-align: center;
   margin-top: 20px;
   font-size: 0.85rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 .login-footer a {
-  color: var(--gema-orange);
+  color: var(--vita-orange);
   font-weight: 600;
 }

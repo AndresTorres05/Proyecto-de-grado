@@ -1,31 +1,41 @@
 /* You can add global styles to this file, and also import other style files */
 
 :root {
-  /* GEMA — paleta de marca (aproximada del mockup, ajustable) */
-  --gema-cream: #fbf2e1;
-  --gema-cream-soft: #fdf8ef;
-  --gema-navy: #1d3d6e;
-  --gema-navy-light: #2f5fa8;
-  --gema-navy-dark: #142a4f;
-  --gema-navy-darker: #0e1e38;
-  --gema-orange: #e67d4e;
-  --gema-orange-soft: #f3a97c;
-  --gema-gold: #f0c55e;
-  --gema-green: #3fa66b;
+  /* VITA+ — paleta de marca (Opción 4: "Vita Tecnológica Amigable") */
+  --vita-principal: #12355b; /* Principal */
+  --vita-secundario: #2ec4b6; /* Secundario */
+  --vita-complemento: #b8a9e8; /* Complemento */
+  --vita-acento: #ffd166; /* Acento */
+  --vita-fondo: #ffffff; /* Fondo */
 
-  --gema-text: #1d3d6e;
-  --gema-text-gray: #66707f;
-  --gema-text-gray-light: #98a2b3;
-  --gema-border: #e9e1d2;
-  --gema-white: #ffffff;
+  /* Alias semánticos: mapean la paleta anterior a la nueva.
+     Se conservan los nombres para no reescribir cada componente. */
+  --vita-navy: var(--vita-principal);
+  --vita-navy-light: #26588c; /* principal aclarado */
+  --vita-navy-dark: #0e2a48; /* principal oscurecido */
+  --vita-navy-darker: #0a2038; /* principal más oscuro */
+  --vita-orange: var(--vita-secundario); /* antiguo acento cálido → secundario */
+  --vita-orange-soft: #8fe0d8;
+  --vita-gold: var(--vita-acento);
+  --vita-green: var(--vita-secundario); /* estados positivos → teal */
+  --vita-teal: var(--vita-secundario);
+  --vita-lavender: var(--vita-complemento);
+
+  --vita-cream: #f5f8fc; /* fondo con leve tinte para alternar secciones */
+  --vita-cream-soft: #fafcfe;
+  --vita-text: var(--vita-principal);
+  --vita-text-gray: #586576;
+  --vita-text-gray-light: #93a0b0;
+  --vita-border: #e3e9f1;
+  --vita-white: #ffffff;
 
   --radius-sm: 10px;
   --radius-md: 16px;
   --radius-lg: 24px;
   --radius-pill: 999px;
 
-  --shadow-card: 0 10px 30px rgba(20, 41, 77, 0.08);
-  --shadow-card-lg: 0 20px 45px rgba(20, 41, 77, 0.12);
+  --shadow-card: 0 10px 30px rgba(18, 53, 91, 0.08);
+  --shadow-card-lg: 0 20px 45px rgba(18, 53, 91, 0.12);
 
   --font-body:
     'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
@@ -47,8 +57,8 @@ html {
 body {
   margin: 0;
   font-family: var(--font-body);
-  color: var(--gema-text-gray);
-  background: var(--gema-cream);
+  color: var(--vita-text-gray);
+  background: var(--vita-cream);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -58,7 +68,7 @@ h2,
 h3,
 h4 {
   font-family: var(--font-heading);
-  color: var(--gema-navy);
+  color: var(--vita-navy);
   margin: 0;
 }
 
@@ -96,27 +106,27 @@ button {
 }
 
 .section--light {
-  background: var(--gema-cream);
+  background: var(--vita-cream);
 }
 
 .section--white {
-  background: var(--gema-white);
+  background: var(--vita-white);
 }
 
 .section--dark {
-  background: var(--gema-navy-dark);
-  color: var(--gema-cream-soft);
+  background: var(--vita-navy-dark);
+  color: var(--vita-cream-soft);
 }
 
 .section--dark h1,
 .section--dark h2,
 .section--dark h3,
 .section--dark h4 {
-  color: var(--gema-white);
+  color: var(--vita-white);
 }
 
 .section--darker {
-  background: var(--gema-navy-darker);
+  background: var(--vita-navy-darker);
 }
 
 .eyebrow {
@@ -127,7 +137,7 @@ button {
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.08em;
-  color: var(--gema-text-gray-light);
+  color: var(--vita-text-gray-light);
 }
 
 .section-header {
@@ -166,28 +176,28 @@ button {
 }
 
 .btn-primary {
-  background: var(--gema-navy);
-  color: var(--gema-white);
+  background: var(--vita-navy);
+  color: var(--vita-white);
 }
 
 .btn-primary:hover {
-  background: var(--gema-navy-light);
+  background: var(--vita-navy-light);
 }
 
 .btn-outline {
   background: transparent;
-  border-color: var(--gema-navy);
-  color: var(--gema-navy);
+  border-color: var(--vita-navy);
+  color: var(--vita-navy);
 }
 
 .btn-outline:hover {
-  background: var(--gema-navy);
-  color: var(--gema-white);
+  background: var(--vita-navy);
+  color: var(--vita-white);
 }
 
 .btn-gold {
-  background: var(--gema-gold);
-  color: var(--gema-navy-darker);
+  background: var(--vita-gold);
+  color: var(--vita-navy-darker);
 }
 
 .btn-gold:hover {
@@ -197,7 +207,7 @@ button {
 .btn-outline-light {
   background: transparent;
   border-color: rgba(255, 255, 255, 0.5);
-  color: var(--gema-white);
+  color: var(--vita-white);
 }
 
 .btn-outline-light:hover {
@@ -205,7 +215,7 @@ button {
 }
 
 .card {
-  background: var(--gema-white);
+  background: var(--vita-white);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
 }

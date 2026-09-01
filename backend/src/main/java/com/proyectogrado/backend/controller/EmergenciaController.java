@@ -67,7 +67,7 @@ public class EmergenciaController {
                 String mensaje =
                         "🚨 ALERTA DE EMERGENCIA: "
                         + nombrePersonaMayor
-                        + " ha activado una alerta desde Gema. "
+                        + " ha activado una alerta desde VITA+. "
                         + "Por favor, verifica que se encuentre bien.";
 
                 int enviadosAcompanantes = 0;

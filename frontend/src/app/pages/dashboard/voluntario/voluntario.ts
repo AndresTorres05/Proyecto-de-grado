@@ -1,6 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 
 import { DashboardShell } from '../../../shared/dashboard-shell/dashboard-shell';
+import { Icon } from '../../../shared/icon/icon';
 
 import {
   ActividadService,
@@ -30,7 +31,7 @@ interface AlertaConsulta {
 
 @Component({
   selector: 'app-voluntario-dashboard',
-  imports: [DashboardShell],
+  imports: [DashboardShell, Icon],
   templateUrl: './voluntario.html',
   styleUrl: './voluntario.css'
 })
@@ -77,17 +78,17 @@ export class VoluntarioDashboard implements OnInit {
 
   protected readonly stats: StatCard[] = [
     {
-      icon: '🏃',
+      icon: 'activity',
       value: '8',
       label: 'Actividades este mes'
     },
     {
-      icon: '⏱️',
+      icon: 'clock',
       value: '24h',
       label: 'Horas de acompañamiento'
     },
     {
-      icon: '🧓',
+      icon: 'users',
       value: '15',
       label: 'Personas mayores apoyadas'
     }

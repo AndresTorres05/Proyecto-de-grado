@@ -3,6 +3,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { DashboardShell } from '../../../shared/dashboard-shell/dashboard-shell';
+import { Icon } from '../../../shared/icon/icon';
 
 import {
   ActividadService,
@@ -54,7 +55,7 @@ interface Bitacora {
 
 @Component({
   selector: 'app-organizacion-dashboard',
-  imports: [DashboardShell, FormsModule],
+  imports: [DashboardShell, FormsModule, Icon],
   templateUrl: './organizacion.html',
   styleUrl: './organizacion.css'
 })
@@ -80,25 +81,25 @@ export class OrganizacionDashboard implements OnInit {
 
   protected readonly stats: StatCard[] = [
     {
-      icon: '🧓',
+      icon: 'user',
       value: '2,210',
       delta: '+12%',
       label: 'Personas mayores registradas'
     },
     {
-      icon: '🤝',
+      icon: 'users',
       value: '740',
       delta: '+8%',
       label: 'Acompañantes activos'
     },
     {
-      icon: '⭐',
+      icon: 'star',
       value: '460',
       delta: '+15%',
       label: 'Voluntarios en programa'
     },
     {
-      icon: '🔔',
+      icon: 'bell',
       value: '12',
       delta: '3 urgentes',
       label: 'Alertas activas'
@@ -146,19 +147,19 @@ export class OrganizacionDashboard implements OnInit {
 
   protected readonly accionesRapidas: AccionRapida[] = [
     {
-      icon: '🧓',
+      icon: 'user',
       label: 'Registrar persona mayor'
     },
     {
-      icon: '🏃',
+      icon: 'activity',
       label: 'Registrar actividad'
     },
     {
-      icon: '💝',
+      icon: 'gift',
       label: 'Registrar donación'
     },
     {
-      icon: '📋',
+      icon: 'clipboard',
       label: 'Generar reporte'
     }
   ];
@@ -422,19 +423,19 @@ export class OrganizacionDashboard implements OnInit {
 
   protected readonly donutLegend = [
     {
-      color: 'var(--gema-navy)',
+      color: 'var(--vita-navy)',
       label: 'Movilidad 40%'
     },
     {
-      color: 'var(--gema-navy-light)',
+      color: 'var(--vita-navy-light)',
       label: 'Salud mental 25%'
     },
     {
-      color: 'var(--gema-orange)',
+      color: 'var(--vita-orange)',
       label: 'Salud física 20%'
     },
     {
-      color: 'var(--gema-gold)',
+      color: 'var(--vita-gold)',
       label: 'Otros 15%'
     }
   ];

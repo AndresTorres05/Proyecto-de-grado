@@ -11,10 +11,10 @@
     @for (p of personasMayores(); track p.idUsuario) {
       <div class="elder-card card">
         <div class="elder-card__top">
-          <span class="elder-card__avatar">🧓</span>
+          <span class="elder-card__avatar"><app-icon name="user" /></span>
         </div>
         <h3>{{ p.nombre }}</h3>
-        <a href="tel:{{ p.telefono }}" class="elder-card__link">📞 {{ p.telefono }}</a>
+        <a href="tel:{{ p.telefono }}" class="elder-card__link"><app-icon name="phone" /> {{ p.telefono }}</a>
       </div>
     } @empty {
       <p>Aún no tienes personas mayores asignadas.</p>
@@ -70,7 +70,7 @@
                 <strong>{{ c.nombre }}</strong>
                 <p>{{ c.parentesco }} de {{ c.persona }}</p>
               </div>
-              <a href="tel:{{ c.telefono }}" class="contact-list__call" [attr.aria-label]="'Llamar a ' + c.nombre">📞</a>
+              <a href="tel:{{ c.telefono }}" class="contact-list__call" [attr.aria-label]="'Llamar a ' + c.nombre"><app-icon name="phone" /></a>
             </li>
           }
         </ul>

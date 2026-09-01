@@ -37,7 +37,7 @@ export class PanelShellLayout {
     const config = PANEL_CONFIG[rol];
 
     this.roleLabel = config?.roleLabel ?? '';
-    this.roleAccent = config?.roleAccent ?? 'var(--gema-navy)';
+    this.roleAccent = config?.roleAccent ?? 'var(--vita-navy)';
     this.navItems = config?.navItems ?? [];
   }
 }

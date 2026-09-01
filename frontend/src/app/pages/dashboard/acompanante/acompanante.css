@@ -18,7 +18,7 @@
 
 .page-header p {
   margin-top: 4px;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
   font-size: 0.9rem;
 }
 
@@ -33,7 +33,7 @@
 
 .elder-card {
   padding: 22px;
-  border-top: 3px solid var(--gema-orange);
+  border-top: 3px solid var(--vita-orange);
 }
 
 .elder-card__top {
@@ -47,11 +47,12 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: var(--gema-cream-soft);
+  background: var(--vita-cream-soft);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.3rem;
+  color: var(--vita-navy);
 }
 
 .elder-card__status {
@@ -59,8 +60,8 @@
   font-weight: 700;
   padding: 4px 10px;
   border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--gema-green) 15%, white);
-  color: var(--gema-green);
+  background: color-mix(in srgb, var(--vita-green) 15%, white);
+  color: var(--vita-green);
 }
 
 .elder-card__status--alert {
@@ -75,13 +76,13 @@
 
 .elder-card p {
   font-size: 0.85rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
   margin-top: 4px;
 }
 
 .elder-card__visit {
   font-weight: 600;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .elder-card__link {
@@ -89,7 +90,7 @@
   margin-top: 14px;
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--gema-orange);
+  color: var(--vita-orange);
 }
 
 /* ---------- Layout ---------- */
@@ -136,27 +137,27 @@
   align-items: center;
   gap: 14px;
   padding: 12px;
-  border: 1px solid var(--gema-border);
+  border: 1px solid var(--vita-border);
   border-radius: var(--radius-md);
 }
 
 .reminder-list__time {
   font-family: var(--font-heading);
   font-weight: 700;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
   font-size: 0.85rem;
   white-space: nowrap;
 }
 
 .reminder-list strong {
   font-size: 0.88rem;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .reminder-list p {
   margin-top: 2px;
   font-size: 0.78rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 /* ---------- Alertas ---------- */
@@ -178,13 +179,13 @@
 
 .alert-list-simple strong {
   font-size: 0.85rem;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .alert-list-simple p {
   margin-top: 2px;
   font-size: 0.78rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 .alert-item__tag {
@@ -202,13 +203,13 @@
 }
 
 .alert-item__tag--media {
-  background: color-mix(in srgb, var(--gema-orange) 18%, white);
-  color: var(--gema-orange);
+  background: color-mix(in srgb, var(--vita-orange) 18%, white);
+  color: var(--vita-orange);
 }
 
 .alert-item__tag--baja {
-  background: color-mix(in srgb, var(--gema-gold) 25%, white);
-  color: color-mix(in srgb, var(--gema-gold) 60%, var(--gema-navy));
+  background: color-mix(in srgb, var(--vita-gold) 25%, white);
+  color: color-mix(in srgb, var(--vita-gold) 60%, var(--vita-navy));
 }
 
 /* ---------- Contactos ---------- */
@@ -228,26 +229,28 @@
   justify-content: space-between;
   gap: 12px;
   padding: 12px;
-  border: 1px solid var(--gema-border);
+  border: 1px solid var(--vita-border);
   border-radius: var(--radius-md);
 }
 
 .contact-list strong {
   font-size: 0.88rem;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .contact-list p {
   margin-top: 2px;
   font-size: 0.78rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 .contact-list__call {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--gema-green) 15%, white);
+  background: color-mix(in srgb, var(--vita-green) 15%, white);
+  color: var(--vita-green);
+  font-size: 1.05rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -267,19 +270,19 @@
 
 .mini-activity-list li {
   padding: 12px;
-  border: 1px solid var(--gema-border);
+  border: 1px solid var(--vita-border);
   border-radius: var(--radius-md);
 }
 
 .mini-activity-list strong {
   font-size: 0.88rem;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .mini-activity-list p {
   margin-top: 2px;
   font-size: 0.78rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 /* ---------- Responsive ---------- */

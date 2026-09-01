@@ -12,7 +12,7 @@
 }
 
 .accent-gold {
-  color: var(--gema-gold);
+  color: var(--vita-gold);
 }
 
 .cta__lead {
@@ -49,7 +49,7 @@
 .cta__stat-number {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--gema-white);
+  color: var(--vita-white);
 }
 
 .cta__stat-label {

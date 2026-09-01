@@ -15,14 +15,14 @@
 }
 
 .module-card h3 {
-  color: var(--gema-navy);
+  color: var(--vita-navy);
   font-weight: 700;
   font-size: 1.05rem;
   margin-bottom: 6px;
 }
 
 .module-card p {
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
   font-size: 0.85rem;
 }
 
@@ -30,8 +30,8 @@
   position: absolute;
   top: 16px;
   right: 16px;
-  background: color-mix(in srgb, var(--gema-navy-light) 15%, white);
-  color: var(--gema-navy-light);
+  background: color-mix(in srgb, var(--vita-navy-light) 15%, white);
+  color: var(--vita-navy-light);
   font-size: 0.65rem;
   font-weight: 700;
   padding: 4px 10px;

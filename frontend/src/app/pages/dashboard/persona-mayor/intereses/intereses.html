@@ -12,7 +12,7 @@
   <!-- CARGANDO -->
   @if (cargando()) {
     <div class="estado-card">
-      <span class="estado-card__icon">⏳</span>
+      <span class="estado-card__icon"><app-icon name="hourglass" /></span>
       <div>
         <h2>Cargando tus intereses...</h2>
         <p>Estamos preparando tus opciones.</p>
@@ -34,7 +34,7 @@
             [class.categoria-card--activa]="categoriaActiva() === categoria.valor"
             (click)="cambiarCategoria(categoria.valor)"
           >
-            <span class="categoria-card__icon">{{ categoria.icon }}</span>
+            <span class="categoria-card__icon"><app-icon [name]="categoria.icon" /></span>
 
             <span class="categoria-card__content">
               <span class="categoria-card__title">{{ categoria.label }}</span>
@@ -57,9 +57,9 @@
       <div class="opciones-header">
         <div>
           <span class="opciones-header__icon">
-            @if (categoriaActiva() === 'GUSTO') { ❤️ }
-            @if (categoriaActiva() === 'TALENTO') { ✨ }
-            @if (categoriaActiva() === 'HOBBY') { 🎯 }
+            @if (categoriaActiva() === 'GUSTO') { <app-icon name="heart" /> }
+            @if (categoriaActiva() === 'TALENTO') { <app-icon name="sparkles" /> }
+            @if (categoriaActiva() === 'HOBBY') { <app-icon name="target" /> }
           </span>
 
           <div>
@@ -98,7 +98,7 @@
           </button>
         } @empty {
           <div class="empty-card">
-            <span>🌱</span>
+            <span><app-icon name="sprout" /></span>
             <h3>Todavía no hay opciones</h3>
             <p>Aún no se han registrado opciones para esta categoría.</p>
           </div>
@@ -108,7 +108,7 @@
       <!-- ERROR -->
       @if (errorGustos()) {
         <div class="error-message">
-          <span>⚠️</span>
+          <span><app-icon name="alert-circle" /></span>
           {{ errorGustos() }}
         </div>
       }
@@ -116,7 +116,7 @@
       <!-- GUARDAR -->
       <div class="guardar-section">
         <div class="guardar-info">
-          <span class="guardar-info__icon">💚</span>
+          <span class="guardar-info__icon"><app-icon name="heart" /></span>
           <div>
             <strong>Tus intereses nos ayudan a conocerte mejor</strong>
             <p>Puedes cambiarlos cuando quieras.</p>

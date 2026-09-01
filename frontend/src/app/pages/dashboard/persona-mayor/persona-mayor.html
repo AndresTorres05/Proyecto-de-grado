@@ -9,7 +9,7 @@
       {{ estaVencido(medicamento) ? 'Te toca ahora' : 'Tu próximo medicamento' }}
     </span>
     <div class="reminder-card__body">
-      <span class="reminder-card__icon" aria-hidden="true">💊</span>
+      <span class="reminder-card__icon" aria-hidden="true"><app-icon name="pill" /></span>
       <div>
         <h2>{{ medicamento.nombre }}</h2>
         <p class="reminder-card__time">
@@ -33,7 +33,7 @@
   <section class="reminder-card card">
     <span class="reminder-card__tag">Medicamentos</span>
     <div class="reminder-card__body">
-      <span class="reminder-card__icon" aria-hidden="true">💊</span>
+      <span class="reminder-card__icon" aria-hidden="true"><app-icon name="pill" /></span>
       <div>
         <h2>No tienes medicamentos registrados</h2>
         <p>Agrégalos desde "Mis recordatorios" para recibir avisos.</p>
@@ -47,7 +47,7 @@
   <div class="activities-grid">
     @for (act of actividades(); track act.idActividad) {
       <div class="activity-card card">
-        <span class="activity-card__icon" aria-hidden="true">🏃</span>
+        <span class="activity-card__icon" aria-hidden="true"><app-icon name="activity" /></span>
         <div>
           <h3>{{ act.nombre }}</h3>
           <p>{{ act.fecha || 'Sin fecha' }}</p>
@@ -62,7 +62,7 @@
 
 <section class="emergency-section section-block">
   <div class="emergency-card card">
-    <div class="emergency-card__icon" aria-hidden="true">🚨</div>
+    <div class="emergency-card__icon" aria-hidden="true"><app-icon name="alert-triangle" /></div>
 
     <div class="emergency-card__content">
       <h2>¿Necesitas ayuda?</h2>
@@ -76,13 +76,13 @@
       class="btn emergency-card__button"
       (click)="activarConfirmacionEmergencia()"
     >
-      🚨 Activar emergencia
+      <app-icon name="alert-triangle" /> Activar emergencia
     </button>
 
     @if (mostrandoConfirmacionEmergencia()) {
       <div class="emergency-confirmation">
         <div class="emergency-confirmation__icon" aria-hidden="true">
-          ⚠️
+          <app-icon name="alert-triangle" />
         </div>
 
         <div class="emergency-confirmation__content">
@@ -123,13 +123,13 @@
 
   @if (mensajeEmergencia(); as mensaje) {
     <div class="emergency-success">
-      ✅ {{ mensaje }}
+      <app-icon name="check-circle" /> {{ mensaje }}
     </div>
   }
 
   @if (errorEmergencia(); as error) {
     <div class="emergency-error">
-      ⚠️ {{ error }}
+      <app-icon name="alert-circle" /> {{ error }}
     </div>
   }
 </section>
@@ -137,7 +137,7 @@
 <section class="access-grid">
   @for (a of accesos; track a.label) {
     <button type="button" class="access-tile card">
-      <span aria-hidden="true">{{ a.icon }}</span>
+      <span aria-hidden="true"><app-icon [name]="a.icon" /></span>
       {{ a.label }}
     </button>
   }

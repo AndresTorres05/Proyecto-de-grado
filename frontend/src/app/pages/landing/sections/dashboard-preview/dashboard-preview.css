@@ -8,8 +8,8 @@
 /* Header */
 
 .dashboard-card__header {
-  background: var(--gema-navy);
-  color: var(--gema-white);
+  background: var(--vita-navy);
+  color: var(--vita-white);
   padding: 14px 24px;
   display: flex;
   align-items: center;
@@ -36,7 +36,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--gema-green);
+  background: var(--vita-green);
 }
 
 /* Tabs */
@@ -48,7 +48,7 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 8px;
-  border-bottom: 1px solid var(--gema-border);
+  border-bottom: 1px solid var(--vita-border);
 }
 
 .dashboard-tabs__list {
@@ -62,20 +62,20 @@
   padding: 6px 16px;
   border-radius: var(--radius-pill);
   font-size: 0.85rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 .dashboard-tabs__item--active {
-  background: var(--gema-navy);
-  color: var(--gema-white);
+  background: var(--vita-navy);
+  color: var(--vita-white);
 }
 
 .dashboard-tabs__range {
-  border: 1px solid var(--gema-border);
+  border: 1px solid var(--vita-border);
   border-radius: var(--radius-sm);
   padding: 6px 12px;
   font-size: 0.85rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 /* Stats grid */
@@ -88,8 +88,8 @@
 }
 
 .dashboard-stats__card {
-  background: var(--gema-cream-soft);
-  border: 1px solid var(--gema-border);
+  background: var(--vita-cream-soft);
+  border: 1px solid var(--vita-border);
   border-radius: var(--radius-md);
   padding: 16px;
 }
@@ -105,8 +105,8 @@
 }
 
 .dashboard-stats__delta {
-  background: color-mix(in srgb, var(--gema-green) 15%, white);
-  color: var(--gema-green);
+  background: color-mix(in srgb, var(--vita-green) 15%, white);
+  color: var(--vita-green);
   font-size: 0.7rem;
   font-weight: 700;
   padding: 2px 8px;
@@ -117,13 +117,13 @@
   font-family: var(--font-heading);
   font-weight: 800;
   font-size: 1.5rem;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
   margin-top: 10px;
 }
 
 .dashboard-stats__label {
   font-size: 0.8rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
   margin-top: 4px;
 }
 
@@ -137,14 +137,14 @@
 }
 
 .chart-panel {
-  border: 1px solid var(--gema-border);
+  border: 1px solid var(--vita-border);
   border-radius: var(--radius-md);
   padding: 16px;
 }
 
 .chart-panel__subtitle {
   font-size: 0.8rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
   margin-top: 4px;
 }
 
@@ -153,7 +153,7 @@
   gap: 16px;
   flex-wrap: wrap;
   font-size: 0.75rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
   margin-top: 8px;
 }
 
@@ -183,10 +183,10 @@
   border-radius: 50%;
   flex-shrink: 0;
   background: conic-gradient(
-    var(--gema-navy) 0% 40%,
-    var(--gema-navy-light) 40% 65%,
-    var(--gema-orange) 65% 85%,
-    var(--gema-gold) 85% 100%
+    var(--vita-navy) 0% 40%,
+    var(--vita-navy-light) 40% 65%,
+    var(--vita-orange) 65% 85%,
+    var(--vita-gold) 85% 100%
   );
 }
 
@@ -198,7 +198,7 @@
   flex-direction: column;
   gap: 8px;
   font-size: 0.85rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 .donut-legend__item {

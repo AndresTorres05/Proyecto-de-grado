@@ -13,7 +13,7 @@
   <div class="emergency-card card">
 
     <div class="emergency-card__icon" aria-hidden="true">
-      🚨
+      <app-icon name="alert-triangle" />
     </div>
 
     <div class="emergency-card__content">
@@ -29,7 +29,7 @@
       class="btn emergency-card__button"
       (click)="activarConfirmacionEmergencia()"
     >
-      🚨 Activar emergencia
+      <app-icon name="alert-triangle" /> Activar emergencia
     </button>
 
     @if (mostrandoConfirmacionEmergencia()) {
@@ -40,7 +40,7 @@
           class="emergency-confirmation__icon"
           aria-hidden="true"
         >
-          ⚠️
+          <app-icon name="alert-triangle" />
         </div>
 
         <div class="emergency-confirmation__content">
@@ -89,7 +89,7 @@
   @if (mensajeEmergencia(); as mensaje) {
 
     <div class="emergency-success">
-      ✅ {{ mensaje }}
+      <app-icon name="check-circle" /> {{ mensaje }}
     </div>
 
   }
@@ -97,7 +97,7 @@
   @if (errorEmergencia(); as error) {
 
     <div class="emergency-error">
-      ⚠️ {{ error }}
+      <app-icon name="alert-circle" /> {{ error }}
     </div>
 
   }
@@ -112,7 +112,7 @@
 <section class="contacts-section section-block">
 
   <h2 class="section-block__title">
-    👥 Mis contactos
+    <app-icon name="users" /> Mis contactos
   </h2>
 
   @if (acompanante(); as ac) {
@@ -123,7 +123,7 @@
         class="companion-card__avatar"
         aria-hidden="true"
       >
-        🤝
+        <app-icon name="users" />
       </span>
 
       <div class="companion-card__info">
@@ -137,7 +137,7 @@
         </h2>
 
         <p class="companion-card__phone">
-          📞 {{ ac.telefono }}
+          <app-icon name="phone" /> {{ ac.telefono }}
         </p>
 
         @if (ac.parentesco) {
@@ -152,7 +152,7 @@
         [href]="'tel:' + ac.telefono"
         class="btn btn-gold companion-card__call"
       >
-        📞 Llamar
+        <app-icon name="phone" /> Llamar
       </a>
 
     </div>
@@ -162,7 +162,7 @@
     <div class="empty-contacts card">
 
       <span aria-hidden="true">
-        👤
+        <app-icon name="user" />
       </span>
 
       <p>

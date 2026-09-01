@@ -9,12 +9,12 @@
 .page-header h1 {
   font-size: 1.75rem;
   font-weight: 700;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .page-header p {
   margin-top: 4px;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
   font-size: 0.9rem;
 }
 
@@ -23,7 +23,7 @@
   align-items: center;
   gap: 14px;
   padding: 20px;
-  border: 1px solid var(--gema-border);
+  border: 1px solid var(--vita-border);
   border-radius: var(--radius-md);
   margin-bottom: 20px;
 }
@@ -60,7 +60,7 @@
 .section-block__title {
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .medicamentos-grid {
@@ -71,7 +71,7 @@
 
 .medicamento-card {
   padding: 20px;
-  border-top: 3px solid var(--gema-orange);
+  border-top: 3px solid var(--vita-orange);
 }
 
 .medicamento-card__top {
@@ -88,20 +88,20 @@
 .medicamento-card__hora {
   font-family: var(--font-heading);
   font-weight: 700;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
   font-size: 0.9rem;
 }
 
 .medicamento-card h3 {
   font-size: 1.05rem;
   font-weight: 700;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .medicamento-card p {
   margin-top: 4px;
   font-size: 0.85rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 .medicamento-card__frecuencia {
@@ -133,9 +133,9 @@
   align-items: center;
   text-align: center;
   padding: 40px 20px;
-  border: 1px dashed var(--gema-border);
+  border: 1px dashed var(--vita-border);
   border-radius: var(--radius-md);
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 .empty-card span {
@@ -144,7 +144,7 @@
 }
 
 .empty-card h3 {
-  color: var(--gema-navy);
+  color: var(--vita-navy);
   margin-bottom: 4px;
 }
 
@@ -172,7 +172,7 @@
 .modal-card h2 {
   font-size: 1.3rem;
   font-weight: 700;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
   margin-bottom: 16px;
 }
 
@@ -180,7 +180,7 @@
   display: block;
   font-size: 0.82rem;
   font-weight: 700;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
   margin-bottom: 6px;
   margin-top: 14px;
 }
@@ -192,16 +192,16 @@
 .form-input {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid var(--gema-border);
+  border: 1px solid var(--vita-border);
   border-radius: var(--radius-sm);
   font-size: 0.9rem;
   font-family: inherit;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .form-input:focus {
   outline: none;
-  border-color: var(--gema-orange);
+  border-color: var(--vita-orange);
 }
 
 .modal-card__acciones {
@@ -223,8 +223,8 @@
   font-weight: 700;
   padding: 4px 10px;
   border-radius: var(--radius-pill);
-  background: var(--gema-cream-soft);
-  color: var(--gema-navy);
+  background: var(--vita-cream-soft);
+  color: var(--vita-navy);
   white-space: nowrap;
 }
 

@@ -9,58 +9,58 @@ export interface PanelConfig {
 export const PANEL_CONFIG: Record<string, PanelConfig> = {
   PERSONA_MAYOR: {
     roleLabel: 'Persona mayor',
-    roleAccent: 'var(--gema-green)',
+    roleAccent: 'var(--vita-green)',
     navItems: [
-      { icon: '🏠', label: 'Inicio', path: '/panel/persona-mayor' },
-      { icon: '🏃', label: 'Mis actividades', path: '/panel/persona-mayor/actividades' },
-      { icon: '❤️', label: 'Mis intereses', path: '/panel/persona-mayor/intereses' },
-      { icon: '⏰', label: 'Mis recordatorios', path: '/panel/persona-mayor/recordatorios' },
-      { icon: '👤', label: 'Mi información', path: '/panel/persona-mayor/informacion' },
-      { icon: '☎️', label: 'Mis contactos', path: '/panel/persona-mayor/contactos' }
+      { icon: 'home', label: 'Inicio', path: '/panel/persona-mayor' },
+      { icon: 'activity', label: 'Mis actividades', path: '/panel/persona-mayor/actividades' },
+      { icon: 'heart', label: 'Mis intereses', path: '/panel/persona-mayor/intereses' },
+      { icon: 'clock', label: 'Mis recordatorios', path: '/panel/persona-mayor/recordatorios' },
+      { icon: 'user', label: 'Mi información', path: '/panel/persona-mayor/informacion' },
+      { icon: 'phone', label: 'Mis contactos', path: '/panel/persona-mayor/contactos' }
     ]
   },
 
   ORGANIZACION: {
     roleLabel: 'Organización',
-    roleAccent: 'var(--gema-navy)',
+    roleAccent: 'var(--vita-navy)',
     navItems: [
-      { icon: '🏠', label: 'Inicio', path: '/panel/organizacion' },
-      { icon: '🧓', label: 'Personas mayores', path: '/panel/organizacion/personas-mayores' },
-      { icon: '🤝', label: 'Acompañantes', path: '/panel/organizacion/acompanantes' },
-      { icon: '⭐', label: 'Voluntarios', path: '/panel/organizacion/voluntarios' },
-      { icon: '🏃', label: 'Actividades', path: '/panel/organizacion/actividades' },
-      { icon: '💊', label: 'Medicamentos', path: '/panel/organizacion/medicamentos' },
-      { icon: '💝', label: 'Donaciones', path: '/panel/organizacion/donaciones' },
-      { icon: '🔔', label: 'Alertas', path: '/panel/organizacion/alertas' },
-      { icon: '📊', label: 'Analítica', path: '/panel/organizacion/analitica' },
-      { icon: '🗺️', label: 'Mapa', path: '/panel/organizacion/mapa' },
-      { icon: '⚙️', label: 'Administración', path: '/panel/organizacion/administracion' }
+      { icon: 'home', label: 'Inicio', path: '/panel/organizacion' },
+      { icon: 'user', label: 'Personas mayores', path: '/panel/organizacion/personas-mayores' },
+      { icon: 'users', label: 'Acompañantes', path: '/panel/organizacion/acompanantes' },
+      { icon: 'star', label: 'Voluntarios', path: '/panel/organizacion/voluntarios' },
+      { icon: 'activity', label: 'Actividades', path: '/panel/organizacion/actividades' },
+      { icon: 'pill', label: 'Medicamentos', path: '/panel/organizacion/medicamentos' },
+      { icon: 'gift', label: 'Donaciones', path: '/panel/organizacion/donaciones' },
+      { icon: 'bell', label: 'Alertas', path: '/panel/organizacion/alertas' },
+      { icon: 'bar-chart', label: 'Analítica', path: '/panel/organizacion/analitica' },
+      { icon: 'map', label: 'Mapa', path: '/panel/organizacion/mapa' },
+      { icon: 'settings', label: 'Administración', path: '/panel/organizacion/administracion' }
     ]
   },
 
   ACOMPANANTE: {
     roleLabel: 'Acompañante',
-    roleAccent: 'var(--gema-orange)',
+    roleAccent: 'var(--vita-complemento)',
     navItems: [
-      { icon: '🏠', label: 'Inicio', path: '/panel/acompanante' },
-      { icon: '🧓', label: 'Mis personas mayores', path: '/panel/acompanante/personas-mayores' },
-      { icon: '📋', label: 'Seguimiento', path: '/panel/acompanante/seguimiento' },
-      { icon: '☎️', label: 'Contactos de emergencia', path: '/panel/acompanante/contactos-emergencia' },
-      { icon: '🏃', label: 'Actividades', path: '/panel/acompanante/actividades' },
-      { icon: '👤', label: 'Mi perfil', path: '/panel/acompanante/perfil' }
+      { icon: 'home', label: 'Inicio', path: '/panel/acompanante' },
+      { icon: 'users', label: 'Mis personas mayores', path: '/panel/acompanante/personas-mayores' },
+      { icon: 'clipboard', label: 'Seguimiento', path: '/panel/acompanante/seguimiento' },
+      { icon: 'phone', label: 'Contactos de emergencia', path: '/panel/acompanante/contactos-emergencia' },
+      { icon: 'activity', label: 'Actividades', path: '/panel/acompanante/actividades' },
+      { icon: 'user', label: 'Mi perfil', path: '/panel/acompanante/perfil' }
     ]
   },
 
   VOLUNTARIO: {
     roleLabel: 'Voluntario',
-    roleAccent: 'var(--gema-gold)',
+    roleAccent: 'var(--vita-gold)',
     navItems: [
-      { icon: '🏠', label: 'Inicio', path: '/panel/voluntario' },
-      { icon: '🏃', label: 'Mis actividades', path: '/panel/voluntario/actividades' },
-      { icon: '🗓️', label: 'Disponibilidad', path: '/panel/voluntario/disponibilidad' },
-      { icon: '🔔', label: 'Alertas', path: '/panel/voluntario/alertas' },
-      { icon: '🧓', label: 'Personas que acompaño', path: '/panel/voluntario/personas' },
-      { icon: '👤', label: 'Mi perfil', path: '/panel/voluntario/perfil' }
+      { icon: 'home', label: 'Inicio', path: '/panel/voluntario' },
+      { icon: 'activity', label: 'Mis actividades', path: '/panel/voluntario/actividades' },
+      { icon: 'calendar', label: 'Disponibilidad', path: '/panel/voluntario/disponibilidad' },
+      { icon: 'bell', label: 'Alertas', path: '/panel/voluntario/alertas' },
+      { icon: 'users', label: 'Personas que acompaño', path: '/panel/voluntario/personas' },
+      { icon: 'user', label: 'Mi perfil', path: '/panel/voluntario/perfil' }
     ]
   }
 };

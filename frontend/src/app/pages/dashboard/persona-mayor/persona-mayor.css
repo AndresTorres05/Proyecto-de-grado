@@ -14,7 +14,7 @@
 
 .page-header p {
   margin-top: 6px;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
   font-size: 1.1rem;
 }
 
@@ -23,8 +23,8 @@
 .reminder-card {
   padding: 28px;
   margin-bottom: 32px;
-  border: 2px solid var(--gema-green);
-  background: color-mix(in srgb, var(--gema-green) 8%, white);
+  border: 2px solid var(--vita-green);
+  background: color-mix(in srgb, var(--vita-green) 8%, white);
 }
 
 .reminder-card__tag {
@@ -33,7 +33,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: color-mix(in srgb, var(--gema-green) 60%, var(--gema-navy));
+  color: color-mix(in srgb, var(--vita-green) 60%, var(--vita-navy));
   margin-bottom: 16px;
 }
 
@@ -45,6 +45,7 @@
 
 .reminder-card__icon {
   font-size: 2.75rem;
+  color: color-mix(in srgb, var(--vita-green) 60%, var(--vita-navy));
   flex-shrink: 0;
 }
 
@@ -56,14 +57,14 @@
 .reminder-card__time {
   font-family: var(--font-heading);
   font-weight: 700;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
   font-size: 1.2rem;
   margin-top: 4px;
 }
 
 .reminder-card__body p {
   font-size: 1rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
   margin-top: 4px;
 }
 
@@ -101,6 +102,7 @@
 
 .activity-card__icon {
   font-size: 2.25rem;
+  color: var(--vita-navy);
   flex-shrink: 0;
 }
 
@@ -112,7 +114,7 @@
 .activity-card p {
   margin-top: 3px;
   font-size: 0.95rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 /* ---------- Intereses (gustos / talentos / hobbies) ---------- */
@@ -137,12 +139,12 @@
   align-items: center;
   gap: 10px;
   padding: 14px 16px;
-  border: 2px solid var(--gema-border);
+  border: 2px solid var(--vita-border);
   border-radius: var(--radius-sm);
-  background: var(--gema-white);
+  background: var(--vita-white);
   font-size: 1rem;
   font-weight: 600;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
   cursor: pointer;
   text-align: left;
   transition: border-color 0.2s ease, background 0.2s ease;
@@ -156,8 +158,8 @@
   min-width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: var(--gema-border);
-  color: var(--gema-navy);
+  background: var(--vita-border);
+  color: var(--vita-navy);
   font-size: 0.8rem;
   display: inline-flex;
   align-items: center;
@@ -165,13 +167,13 @@
 }
 
 .intereses-tab--activo {
-  border-color: var(--gema-green);
-  background: color-mix(in srgb, var(--gema-green) 10%, white);
+  border-color: var(--vita-green);
+  background: color-mix(in srgb, var(--vita-green) 10%, white);
 }
 
 .intereses-tab--activo .intereses-tab__count {
-  background: var(--gema-green);
-  color: var(--gema-white);
+  background: var(--vita-green);
+  color: var(--vita-white);
 }
 
 .intereses-panel {
@@ -191,12 +193,12 @@
   align-items: center;
   gap: 10px;
   padding: 16px 18px;
-  border: 2px solid var(--gema-border);
+  border: 2px solid var(--vita-border);
   border-radius: var(--radius-sm);
-  background: var(--gema-white);
+  background: var(--vita-white);
   font-size: 1rem;
   font-weight: 600;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
   cursor: pointer;
   text-align: left;
   transition: border-color 0.2s ease, background 0.2s ease;
@@ -206,7 +208,7 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  border: 2px solid var(--gema-border);
+  border: 2px solid var(--vita-border);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -217,14 +219,14 @@
 }
 
 .opcion-card--activo {
-  border-color: var(--gema-green);
-  background: color-mix(in srgb, var(--gema-green) 10%, white);
+  border-color: var(--vita-green);
+  background: color-mix(in srgb, var(--vita-green) 10%, white);
 }
 
 .opcion-card--activo .opcion-card__check {
-  border-color: var(--gema-green);
-  background: var(--gema-green);
-  color: var(--gema-white);
+  border-color: var(--vita-green);
+  background: var(--vita-green);
+  color: var(--vita-white);
 }
 
 .gustos-error {
@@ -268,7 +270,7 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: var(--gema-cream-soft);
+  background: var(--vita-cream-soft);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -282,7 +284,7 @@
 
 .companion-card__label {
   font-size: 0.9rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 .companion-card h2 {
@@ -312,8 +314,8 @@
   padding: 22px;
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--gema-navy);
-  border: 1px solid var(--gema-border);
+  color: var(--vita-navy);
+  border: 1px solid var(--vita-border);
   text-align: left;
 }
 
@@ -322,7 +324,7 @@
 }
 
 .access-tile:hover {
-  border-color: var(--gema-green);
+  border-color: var(--vita-green);
 }
 
 /* ---------- Responsive ---------- */
@@ -347,14 +349,14 @@
 .companion-card__phone {
   margin-top: 4px;
   font-size: 1rem;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
   font-weight: 600;
 }
 
 .companion-card__relationship {
   margin-top: 4px;
   font-size: 0.9rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 /* ---------- Sin contactos ---------- */
@@ -365,7 +367,7 @@
   gap: 14px;
   padding: 22px;
   margin-bottom: 18px;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 .empty-contacts span {
@@ -392,6 +394,7 @@
   justify-content: center;
   flex-shrink: 0;
   font-size: 1.8rem;
+  color: #d64545;
   background: color-mix(in srgb, #d64545 15%, white);
 }
 
@@ -402,18 +405,18 @@
 .emergency-card__content h2 {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .emergency-card__content p {
   margin-top: 4px;
   font-size: 0.95rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 .emergency-card__button {
   background: #d64545;
-  color: var(--gema-white);
+  color: var(--vita-white);
   font-size: 1rem;
   font-weight: 700;
   padding: 14px 22px;
@@ -446,9 +449,9 @@
     gap: 16px;
     margin-top: 20px;
     padding: 20px;
-    border: 2px solid var(--gema-border);
+    border: 2px solid var(--vita-border);
     border-radius: var(--radius-sm);
-    background: var(--gema-white);
+    background: var(--vita-white);
   }
 
   .emergency-confirmation__icon {
@@ -463,12 +466,12 @@
   .emergency-confirmation__content h3 {
     font-size: 1.15rem;
     font-weight: 700;
-    color: var(--gema-navy);
+    color: var(--vita-navy);
   }
 
   .emergency-confirmation__content p {
     margin-top: 6px;
-    color: var(--gema-text-gray);
+    color: var(--vita-text-gray);
     font-size: 0.95rem;
   }
 
@@ -481,7 +484,7 @@
 
   .emergency-confirmation__confirm {
     background: #d64545;
-    color: var(--gema-white);
+    color: var(--vita-white);
     font-weight: 700;
   }
 
@@ -501,9 +504,9 @@
   }
 
   .emergency-success {
-    background: color-mix(in srgb, var(--gema-green) 10%, white);
-    border: 1px solid var(--gema-green);
-    color: var(--gema-navy);
+    background: color-mix(in srgb, var(--vita-green) 10%, white);
+    border: 1px solid var(--vita-green);
+    color: var(--vita-navy);
   }
 
   .emergency-error {

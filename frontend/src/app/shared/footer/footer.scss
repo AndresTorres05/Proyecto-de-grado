@@ -34,7 +34,14 @@
 
     .logo-mark {
       height: 36px;
+      width: 36px;
       object-fit: contain;
+      /* El footer va sobre navy muy oscuro: se pone un chip claro
+         para que la parte azul del logo no se pierda contra el fondo. */
+      padding: 6px;
+      border-radius: 12px;
+      background: var(--vita-white);
+      box-sizing: content-box;
     }
 
     .footer-brand-title {
@@ -144,7 +151,7 @@
   transition: border-color 0.2s ease;
 
   &:focus-within {
-    border-color: var(--gema-gold, #f6c95e);
+    border-color: var(--vita-gold, #f6c95e);
   }
 
   .newsletter-input {
@@ -164,8 +171,8 @@
     width: 34px;
     height: 34px;
     border-radius: 50%;
-    background: var(--gema-gold, #f6c95e);
-    color: var(--gema-navy-darker, #0c2b54);
+    background: var(--vita-gold, #f6c95e);
+    color: var(--vita-navy-darker, #0c2b54);
     border: none;
     display: flex;
     align-items: center;

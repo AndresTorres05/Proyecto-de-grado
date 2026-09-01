@@ -9,7 +9,7 @@
   <section class="stats-grid" aria-label="Mis indicadores">
     @for (stat of stats; track stat.label) {
       <div class="stat-card card">
-        <span class="stat-card__icon">{{ stat.icon }}</span>
+        <span class="stat-card__icon"><app-icon [name]="stat.icon" /></span>
         <div class="stat-card__value">{{ stat.value }}</div>
         <div class="stat-card__label">{{ stat.label }}</div>
       </div>

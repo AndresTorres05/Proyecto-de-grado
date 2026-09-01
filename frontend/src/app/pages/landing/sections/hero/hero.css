@@ -12,18 +12,18 @@
   align-items: center;
   gap: 8px;
   padding: 6px 16px;
-  background: var(--gema-white);
-  border: 1px solid var(--gema-border);
+  background: var(--vita-white);
+  border: 1px solid var(--vita-border);
   border-radius: var(--radius-pill);
   font-size: 0.8rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
 }
 
 .hero__badge-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--gema-orange);
+  background: var(--vita-orange);
   flex-shrink: 0;
 }
 
@@ -35,11 +35,11 @@
 }
 
 .hero__title .accent {
-  color: var(--gema-orange);
+  color: var(--vita-orange);
 }
 
 .hero__description {
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
   font-size: 1.05rem;
   max-width: 480px;
 }
@@ -58,7 +58,7 @@
   margin: 0;
   margin-top: 48px;
   padding-top: 32px;
-  border-top: 1px solid var(--gema-border);
+  border-top: 1px solid var(--vita-border);
 }
 
 .hero__stat {
@@ -66,7 +66,7 @@
 }
 
 .hero__stat:not(:last-child) {
-  border-right: 1px solid var(--gema-border);
+  border-right: 1px solid var(--vita-border);
   padding-right: 32px;
 }
 
@@ -74,13 +74,13 @@
   font-family: var(--font-heading);
   font-size: 1.75rem;
   font-weight: 700;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .hero__stat-label {
   margin: 4px 0 0;
   font-size: 0.85rem;
-  color: var(--gema-text-gray-light);
+  color: var(--vita-text-gray-light);
 }
 
 /* ---------- Columna de ilustración ---------- */
@@ -104,7 +104,7 @@
   width: 320px;
   height: 320px;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--gema-navy-light) 12%, var(--gema-cream));
+  background: color-mix(in srgb, var(--vita-navy-light) 12%, var(--vita-cream));
   overflow: hidden; /* Vital para que la imagen respete el círculo o contenedor */
   display: flex;
   align-items: center;
@@ -135,19 +135,19 @@
 .hero__avatar--1 {
   top: 30%;
   left: 25%;
-  background: var(--gema-navy);
+  background: var(--vita-navy);
 }
 
 .hero__avatar--2 {
   top: 55%;
   left: 55%;
-  background: var(--gema-orange);
+  background: var(--vita-orange);
 }
 
 .hero__avatar--3 {
   top: 25%;
   left: 60%;
-  background: var(--gema-orange);
+  background: var(--vita-orange);
 }
 
 .float-card {
@@ -156,7 +156,7 @@
   align-items: center;
   gap: 10px;
   padding: 10px 14px;
-  background: var(--gema-white);
+  background: var(--vita-white);
   box-shadow: var(--shadow-card);
   border-radius: var(--radius-md);
   font-size: 0.8rem;
@@ -176,17 +176,17 @@
 }
 
 .float-card__label {
-  color: var(--gema-text-gray-light);
+  color: var(--vita-text-gray-light);
   font-size: 0.7rem;
 }
 
 .float-card__value {
   font-weight: 700;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .float-card__value--accent {
-  color: var(--gema-orange);
+  color: var(--vita-orange);
 }
 
 .float-card--1 {
@@ -227,24 +227,24 @@
   border-radius: var(--radius-pill);
   font-size: 0.7rem;
   font-weight: 600;
-  color: var(--gema-white);
+  color: var(--vita-white);
 }
 
 .pill-institution {
-  background: var(--gema-text-gray-light);
+  background: var(--vita-text-gray-light);
 }
 
 .pill-elder {
-  background: var(--gema-navy);
+  background: var(--vita-navy);
 }
 
 .pill-companion {
-  background: var(--gema-orange);
+  background: var(--vita-orange);
 }
 
 .pill-volunteer {
-  background: var(--gema-gold);
-  color: var(--gema-navy-darker);
+  background: var(--vita-gold);
+  color: var(--vita-navy-darker);
 }
 
 /* ---------- Responsive ---------- */

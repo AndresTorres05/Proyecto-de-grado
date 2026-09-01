@@ -10,7 +10,7 @@
   padding: 6px 16px;
   border-radius: var(--radius-pill);
   background: rgba(255, 255, 255, 0.08);
-  color: var(--gema-cream-soft);
+  color: var(--vita-cream-soft);
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -23,7 +23,7 @@
 }
 
 .accent-gold {
-  color: var(--gema-gold);
+  color: var(--vita-gold);
 }
 
 .mission-text {
@@ -49,7 +49,7 @@
 }
 
 .mission-card h3 {
-  color: var(--gema-white);
+  color: var(--vita-white);
   font-weight: 700;
   margin-bottom: 8px;
 }

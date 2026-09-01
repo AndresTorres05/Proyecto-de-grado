@@ -12,8 +12,8 @@ import { GustoService, Gusto } from '../../../core/gustos/gusto.service';
 })
 export class AdminDashboard implements OnInit {
   protected readonly navItems: ShellNavItem[] = [
-    { icon: '🏷️', label: 'Tipos de usuario', active: true },
-    { icon: '❤️', label: 'Gustos' }
+    { icon: 'tag', label: 'Tipos de usuario', active: true },
+    { icon: 'heart', label: 'Gustos' }
   ];
 
   protected readonly roles = signal<Rol[]>([]);

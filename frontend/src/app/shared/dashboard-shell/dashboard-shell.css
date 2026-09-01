@@ -6,7 +6,7 @@
   display: grid;
   grid-template-columns: 260px 1fr;
   min-height: 100vh;
-  background: var(--gema-cream);
+  background: var(--vita-cream);
 }
 
 /* ---------- Sidebar ---------- */
@@ -17,8 +17,8 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--gema-white);
-  border-right: 1px solid var(--gema-border);
+  background: var(--vita-white);
+  border-right: 1px solid var(--vita-border);
   padding: 24px 16px;
 }
 
@@ -27,7 +27,7 @@
   align-items: center;
   gap: 12px;
   padding: 4px 8px 24px;
-  border-bottom: 1px solid var(--gema-border);
+  border-bottom: 1px solid var(--vita-border);
   margin-bottom: 20px;
 }
 
@@ -41,12 +41,12 @@
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: 1.15rem;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .shell__brand-tagline {
   font-size: 0.7rem;
-  color: var(--gema-text-gray-light);
+  color: var(--vita-text-gray-light);
 }
 
 .shell__nav {
@@ -71,20 +71,20 @@
   border-radius: var(--radius-sm);
   font-weight: 500;
   font-size: 0.9rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
   transition:
     background 0.2s ease,
     color 0.2s ease;
 }
 
 .shell__nav-link:hover {
-  background: var(--gema-cream-soft);
-  color: var(--gema-navy);
+  background: var(--vita-cream-soft);
+  color: var(--vita-navy);
 }
 
 .shell__nav-link--active {
   background: color-mix(in srgb, var(--role-accent) 12%, white);
-  color: var(--gema-navy);
+  color: var(--vita-navy);
   font-weight: 700;
 }
 
@@ -96,7 +96,7 @@
 }
 
 .shell__proto {
-  border-top: 1px solid var(--gema-border);
+  border-top: 1px solid var(--vita-border);
   padding-top: 16px;
   margin-top: 16px;
 }
@@ -107,7 +107,7 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 700;
-  color: var(--gema-text-gray-light);
+  color: var(--vita-text-gray-light);
   margin-bottom: 10px;
 }
 
@@ -119,18 +119,18 @@
 
 .shell__proto-link {
   font-size: 0.8rem;
-  color: var(--gema-text-gray);
+  color: var(--vita-text-gray);
   padding: 6px 10px;
   border-radius: var(--radius-sm);
 }
 
 .shell__proto-link:hover {
-  background: var(--gema-cream-soft);
+  background: var(--vita-cream-soft);
 }
 
 .shell__proto-link--active {
-  background: var(--gema-navy);
-  color: var(--gema-white);
+  background: var(--vita-navy);
+  color: var(--vita-white);
   font-weight: 600;
 }
 
@@ -150,8 +150,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 32px;
-  background: var(--gema-cream);
-  border-bottom: 1px solid var(--gema-border);
+  background: var(--vita-cream);
+  border-bottom: 1px solid var(--vita-border);
 }
 
 .shell__role-pill {
@@ -161,7 +161,7 @@
   border-radius: var(--radius-pill);
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--gema-white);
+  color: var(--vita-white);
   background: var(--role-accent);
 }
 
@@ -179,8 +179,8 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: var(--gema-white);
-  border: 1px solid var(--gema-border);
+  background: var(--vita-white);
+  border: 1px solid var(--vita-border);
   font-size: 1rem;
 }
 
@@ -192,8 +192,8 @@
   height: 18px;
   padding: 0 4px;
   border-radius: var(--radius-pill);
-  background: var(--gema-orange);
-  color: var(--gema-white);
+  background: var(--vita-orange);
+  color: var(--vita-white);
   font-size: 0.65rem;
   font-weight: 700;
   display: flex;
@@ -212,7 +212,7 @@
   height: 36px;
   border-radius: 50%;
   background: var(--role-accent);
-  color: var(--gema-white);
+  color: var(--vita-white);
   font-weight: 700;
   font-size: 0.8rem;
   display: flex;
@@ -224,7 +224,7 @@
 .shell__user-name {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--gema-navy);
+  color: var(--vita-navy);
 }
 
 .shell__logout {
@@ -234,15 +234,15 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  color: var(--gema-text-gray-light);
+  color: var(--vita-text-gray-light);
   transition:
     background 0.2s ease,
     color 0.2s ease;
 }
 
 .shell__logout:hover {
-  background: var(--gema-white);
-  color: var(--gema-orange);
+  background: var(--vita-white);
+  color: var(--vita-orange);
 }
 
 .shell__content {
@@ -303,7 +303,7 @@
 
   .shell__brand {
     border-bottom: none;
-    border-right: 1px solid var(--gema-border);
+    border-right: 1px solid var(--vita-border);
     padding: 0 16px 0 0;
     margin: 0 16px 0 0;
   }

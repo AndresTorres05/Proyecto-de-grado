@@ -1,9 +1,9 @@
 <div class="shell">
   <aside class="shell__sidebar">
     <a class="shell__brand" routerLink="/">
-      <img src="logo.png" alt="Logo GEMA" class="logo-mark" />
+      <img src="logo.png" alt="Logo VITA+" class="logo-mark" />
       <span class="shell__brand-text">
-        <span class="shell__brand-name">GEMA</span>
+        <span class="shell__brand-name">VITA+</span>
         <span class="shell__brand-tagline">Panel principal</span>
       </span>
     </a>
@@ -20,7 +20,7 @@
         class="shell__nav-link"
       >
         <span class="shell__nav-icon" aria-hidden="true">
-          {{ item.icon }}
+          <app-icon [name]="item.icon" />
         </span>
 
         <span>{{ item.label }}</span>
@@ -32,7 +32,7 @@
         [class.shell__nav-link--active]="item.active"
       >
         <span class="shell__nav-icon" aria-hidden="true">
-          {{ item.icon }}
+          <app-icon [name]="item.icon" />
         </span>
 
         <span>{{ item.label }}</span>
@@ -54,7 +54,7 @@
 
       <div class="shell__topbar-right">
         <button class="shell__icon-btn" type="button" aria-label="Notificaciones">
-          <span aria-hidden="true">🔔</span>
+          <span aria-hidden="true"><app-icon name="bell" /></span>
           @if (notifCount > 0) {
             <span class="shell__badge">{{ notifCount }}</span>
           }
@@ -66,7 +66,7 @@
         </div>
 
         <a href="#" class="shell__logout" title="Cerrar sesión (prototipo, aún no implementado)">
-          <span aria-hidden="true">⏻</span>
+          <span aria-hidden="true"><app-icon name="power" /></span>
         </a>
       </div>
     </header>
