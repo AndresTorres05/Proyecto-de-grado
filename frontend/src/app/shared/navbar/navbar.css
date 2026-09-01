@@ -84,3 +84,62 @@
     display: none;
   }
 }
+
+/* ============================= */
+/* USUARIO AUTENTICADO */
+/* ============================= */
+
+.navbar__user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar__user-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--gema-navy);
+  color: white;
+
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+
+  cursor: default;
+}
+
+.navbar__logout {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 50%;
+
+  background: transparent;
+  color: var(--gema-navy);
+
+  font-size: 1.4rem;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.navbar__logout:hover {
+  background: var(--gema-border);
+  color: var(--gema-orange);
+  transform: scale(1.08);
+}
