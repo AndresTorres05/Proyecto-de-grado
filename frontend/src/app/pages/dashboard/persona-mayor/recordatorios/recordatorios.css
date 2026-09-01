@@ -1,0 +1,241 @@
+:host {
+  display: block;
+}
+
+.page-header {
+  margin-bottom: 28px;
+}
+
+.page-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--gema-navy);
+}
+
+.page-header p {
+  margin-top: 4px;
+  color: var(--gema-text-gray);
+  font-size: 0.9rem;
+}
+
+.estado-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid var(--gema-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+}
+
+.estado-card__icon {
+  font-size: 1.5rem;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #c23b3b;
+  background: color-mix(in srgb, #d64545 12%, white);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+
+.section-block {
+  margin-bottom: 24px;
+}
+
+.section-block__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.section-block__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gema-navy);
+}
+
+.medicamentos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+
+.medicamento-card {
+  padding: 20px;
+  border-top: 3px solid var(--gema-orange);
+}
+
+.medicamento-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.medicamento-card__icon {
+  font-size: 1.4rem;
+}
+
+.medicamento-card__hora {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--gema-navy);
+  font-size: 0.9rem;
+}
+
+.medicamento-card h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--gema-navy);
+}
+
+.medicamento-card p {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: var(--gema-text-gray);
+}
+
+.medicamento-card__frecuencia {
+  font-style: italic;
+}
+
+.medicamento-card__acciones {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.medicamento-card__acciones .btn {
+  flex: 1;
+  font-size: 0.82rem;
+  padding: 8px 0;
+}
+
+.btn-danger {
+  background: color-mix(in srgb, #d64545 12%, white);
+  color: #c23b3b;
+  border: 1px solid color-mix(in srgb, #d64545 30%, white);
+}
+
+.empty-card {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px;
+  border: 1px dashed var(--gema-border);
+  border-radius: var(--radius-md);
+  color: var(--gema-text-gray);
+}
+
+.empty-card span {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.empty-card h3 {
+  color: var(--gema-navy);
+  margin-bottom: 4px;
+}
+
+/* ---------- Modal ---------- */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 28px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-card h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--gema-navy);
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--gema-navy);
+  margin-bottom: 6px;
+  margin-top: 14px;
+}
+
+.form-label:first-of-type {
+  margin-top: 0;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--gema-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--gema-navy);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--gema-orange);
+}
+
+.modal-card__acciones {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.modal-card__acciones .btn {
+  flex: 1;
+}
+
+.medicamento-card--vencido {
+  border-top-color: #d64545;
+}
+
+.medicamento-card__badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--gema-cream-soft);
+  color: var(--gema-navy);
+  white-space: nowrap;
+}
+
+.medicamento-card__badge--vencido {
+  background: color-mix(in srgb, #d64545 15%, white);
+  color: #c23b3b;
+}
+
+.medicamento-card__confirmar {
+  width: 100%;
+  margin-top: 14px;
+  font-size: 0.85rem;
+  padding: 9px 0;
+}

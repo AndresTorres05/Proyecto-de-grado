@@ -1,0 +1,118 @@
+<div class="page-header">
+  <h1>Mis recordatorios</h1>
+  <p>Administra tus medicamentos y cada cuánto te avisamos que los tomes.</p>
+</div>
+
+@if (cargando()) {
+  <div class="estado-card">
+    <span class="estado-card__icon">⏳</span>
+    <div>
+      <h2>Cargando tus medicamentos...</h2>
+    </div>
+  </div>
+}
+
+@if (error()) {
+  <div class="error-message">
+    <span>⚠️</span>
+    {{ error() }}
+  </div>
+}
+
+@if (!cargando()) {
+
+  <section class="section-block">
+    <div class="section-block__header">
+      <h2 class="section-block__title">Tus medicamentos</h2>
+      <button type="button" class="btn btn-primary" (click)="abrirFormularioNuevo()">
+        + Agregar medicamento
+      </button>
+    </div>
+
+    <div class="medicamentos-grid">
+      @for (medicamento of medicamentos(); track medicamento.idMedicamento) {
+        <div class="medicamento-card card" [class.medicamento-card--vencido]="estaVencido(medicamento)">
+          <div class="medicamento-card__top">
+            <span class="medicamento-card__icon" aria-hidden="true">💊</span>
+            @if (estaVencido(medicamento)) {
+              <span class="medicamento-card__badge medicamento-card__badge--vencido">Toca ahora</span>
+            } @else {
+              <span class="medicamento-card__badge">Próxima: {{ formatearProximaToma(medicamento) }}</span>
+            }
+          </div>
+
+          <h3>{{ medicamento.nombre }}</h3>
+          <p>{{ medicamento.dosis }}</p>
+          <p class="medicamento-card__frecuencia">Cada {{ medicamento.intervaloHoras }} horas</p>
+
+          <button
+            type="button"
+            class="btn btn-primary medicamento-card__confirmar"
+            [disabled]="confirmandoId() === medicamento.idMedicamento"
+            (click)="confirmarToma(medicamento)"
+          >
+            {{ confirmandoId() === medicamento.idMedicamento ? 'Confirmando...' : '✓ Ya la tomé' }}
+          </button>
+
+          <div class="medicamento-card__acciones">
+            <button type="button" class="btn btn-secondary" (click)="abrirFormularioEditar(medicamento)">
+              Editar
+            </button>
+            <button type="button" class="btn btn-danger" (click)="eliminar(medicamento)">
+              Eliminar
+            </button>
+          </div>
+        </div>
+      } @empty {
+        <div class="empty-card">
+          <span>💊</span>
+          <h3>Aún no tienes medicamentos registrados</h3>
+          <p>Agrega uno para empezar a recibir recordatorios por SMS.</p>
+        </div>
+      }
+    </div>
+  </section>
+
+}
+
+@if (mostrandoFormulario()) {
+  <div class="modal-backdrop" (click)="cancelarFormulario()">
+    <div class="modal-card card" (click)="$event.stopPropagation()">
+      <h2>{{ idEditando() ? 'Editar medicamento' : 'Nuevo medicamento' }}</h2>
+
+      <label class="form-label" for="nombre">Nombre del medicamento</label>
+      <input id="nombre" name="nombre" type="text" class="form-input" [(ngModel)]="nombre" placeholder="Ej. Losartán" />
+
+      <label class="form-label" for="dosis">Dosis</label>
+      <input id="dosis" name="dosis" type="text" class="form-input" [(ngModel)]="dosis" placeholder="Ej. 50mg" />
+
+      <label class="form-label" for="intervaloHoras">Cada cuántas horas</label>
+      <input id="intervaloHoras" name="intervaloHoras" type="number" min="1" class="form-input" [(ngModel)]="intervaloHoras" placeholder="Ej. 8" />
+
+      <label class="form-label" for="frecuencia">Descripción (opcional)</label>
+      <input id="frecuencia" name="frecuencia" type="text" class="form-input" [(ngModel)]="frecuencia" placeholder="Ej. Después de cada comida" />
+
+      <label class="form-label" for="hora">Hora de la primera toma</label>
+      <input id="hora" name="hora" type="time" class="form-input" [(ngModel)]="hora" />
+
+      <label class="form-label" for="fechaInicio">Fecha de inicio (opcional)</label>
+      <input id="fechaInicio" name="fechaInicio" type="date" class="form-input" [(ngModel)]="fechaInicio" />
+
+      <label class="form-label" for="fechaFin">Fecha de fin (opcional, déjalo vacío si es indefinido)</label>
+      <input id="fechaFin" name="fechaFin" type="date" class="form-input" [(ngModel)]="fechaFin" />
+
+      @if (errorFormulario()) {
+        <p class="error-message">⚠️ {{ errorFormulario() }}</p>
+      }
+
+      <div class="modal-card__acciones">
+        <button type="button" class="btn btn-secondary" (click)="cancelarFormulario()" [disabled]="guardando()">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" (click)="guardar()" [disabled]="guardando()">
+          {{ guardando() ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

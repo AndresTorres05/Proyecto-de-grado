@@ -3,18 +3,44 @@
   <p>Hoy es martes, 11 de agosto</p>
 </div>
 
-<section class="reminder-card card">
-  <span class="reminder-card__tag">Recordatorio de hoy</span>
-  <div class="reminder-card__body">
-    <span class="reminder-card__icon" aria-hidden="true">💊</span>
-    <div>
-      <h2>{{ recordatorio.detalle }}</h2>
-      <p class="reminder-card__time">{{ recordatorio.hora }}</p>
-      <p>{{ recordatorio.nota }}</p>
+@if (!cargandoMedicamentos() && proximoMedicamento(); as medicamento) {
+  <section class="reminder-card card">
+    <span class="reminder-card__tag">
+      {{ estaVencido(medicamento) ? 'Te toca ahora' : 'Tu próximo medicamento' }}
+    </span>
+    <div class="reminder-card__body">
+      <span class="reminder-card__icon" aria-hidden="true">💊</span>
+      <div>
+        <h2>{{ medicamento.nombre }}</h2>
+        <p class="reminder-card__time">
+          {{ estaVencido(medicamento) ? 'Ya es hora' : formatearProximaToma(medicamento) }}
+        </p>
+        @if (medicamento.dosis) {
+          <p>{{ medicamento.dosis }}</p>
+        }
+      </div>
     </div>
-  </div>
-  <button type="button" class="btn btn-primary reminder-card__btn">Ya lo tomé</button>
-</section>
+    <button
+      type="button"
+      class="btn btn-primary reminder-card__btn"
+      [disabled]="confirmandoToma()"
+      (click)="confirmarTomaProximoMedicamento()"
+    >
+      {{ confirmandoToma() ? 'Confirmando...' : 'Ya lo tomé' }}
+    </button>
+  </section>
+} @else if (!cargandoMedicamentos()) {
+  <section class="reminder-card card">
+    <span class="reminder-card__tag">Medicamentos</span>
+    <div class="reminder-card__body">
+      <span class="reminder-card__icon" aria-hidden="true">💊</span>
+      <div>
+        <h2>No tienes medicamentos registrados</h2>
+        <p>Agrégalos desde "Mis recordatorios" para recibir avisos.</p>
+      </div>
+    </div>
+  </section>
+}
 
 <section class="section-block">
   <h2 class="section-block__title">Mis próximas actividades</h2>

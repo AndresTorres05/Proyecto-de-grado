@@ -304,12 +304,10 @@ export const routes: Routes = [
       },
 
       {
-        path: 'recordatorios',
-        loadComponent: () =>
-          import('./shared/en-construccion/en-construccion')
-            .then((m) => m.EnConstruccion),
-        data: { titulo: 'Mis recordatorios' }
-      },
+  path: 'recordatorios',
+  loadComponent: () =>
+    import('./pages/dashboard/persona-mayor/recordatorios/recordatorios').then((m) => m.Recordatorios)
+},
 
       {
         path: 'informacion',

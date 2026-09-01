@@ -3,7 +3,9 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ActividadService, Actividad } from '../../../core/actividades/actividad.service';
 import { GustoService, Gusto, CategoriaGusto } from '../../../core/gustos/gusto.service';
+import { AcompananteService, Acompanante } from '../../../core/acompanantes/acompanante.service';
 import { EmergenciaService } from '../../../core/emergencia/emergencia.service';
+import { MedicamentoService, Medicamento } from '../../../core/medicamentos/medicamento.service';
 
 interface AccesoRapido {
   icon: string;
@@ -26,11 +28,20 @@ export class PersonaMayorDashboard implements OnInit {
 
   protected readonly nombreUsuario: string;
 
-  protected readonly recordatorio = {
-    hora: '2:00 p.m.',
-    detalle: 'Tomar Losartán 50mg',
-    nota: 'Con un vaso de agua, después de almorzar.'
-  };
+  protected readonly medicamentos = signal<Medicamento[]>([]);
+  protected readonly cargandoMedicamentos = signal(true);
+  protected readonly confirmandoToma = signal(false);
+
+  protected readonly proximoMedicamento = computed(() => {
+    const lista = this.medicamentos();
+    if (lista.length === 0) {
+      return null;
+    }
+
+    return [...lista].sort(
+      (a, b) => new Date(a.proximaToma).getTime() - new Date(b.proximaToma).getTime()
+    )[0];
+  });
 
   protected readonly actividades = signal<Actividad[]>([]);
 
@@ -51,6 +62,7 @@ export class PersonaMayorDashboard implements OnInit {
     this.gustosDisponibles().filter((g) => g.categoria === this.categoriaActiva())
   );
 
+  protected readonly acompanante = signal<Acompanante | null>(null);
   protected readonly mostrandoConfirmacionEmergencia = signal(false);
   protected readonly enviandoEmergencia = signal(false);
   protected readonly mensajeEmergencia = signal<string | null>(null);
@@ -65,13 +77,19 @@ export class PersonaMayorDashboard implements OnInit {
     private authService: AuthService,
     private actividadService: ActividadService,
     private gustoService: GustoService,
-    private emergenciaService: EmergenciaService
+    private acompananteService: AcompananteService,
+    private emergenciaService: EmergenciaService,
+    private medicamentoService: MedicamentoService
   ) {
     this.nombreUsuario = this.authService.getNombreUsuario();
   }
 
   ngOnInit(): void {
     this.actividadService.listar().subscribe((actividades) => this.actividades.set(actividades));
+    this.acompananteService.obtenerAcompanantes().subscribe((acompanantes) =>
+      this.acompanante.set(acompanantes[0] ?? null)
+    );
+    this.cargarMedicamentos();
 
     const idPersonaMayor = this.authService.getIdUsuario();
     if (idPersonaMayor === null) {
@@ -82,6 +100,48 @@ export class PersonaMayorDashboard implements OnInit {
     this.gustoService.listarAsignados(idPersonaMayor).subscribe((gustos) =>
       this.gustosSeleccionados.set(new Set(gustos.map((g) => g.idGusto)))
     );
+  }
+
+  private cargarMedicamentos(): void {
+    this.cargandoMedicamentos.set(true);
+
+    this.medicamentoService.listar().subscribe({
+      next: (medicamentos) => {
+        this.medicamentos.set(medicamentos);
+        this.cargandoMedicamentos.set(false);
+      },
+      error: () => {
+        this.cargandoMedicamentos.set(false);
+      }
+    });
+  }
+
+  estaVencido(medicamento: Medicamento): boolean {
+    return new Date(medicamento.proximaToma).getTime() <= Date.now();
+  }
+
+  formatearProximaToma(medicamento: Medicamento): string {
+    const fecha = new Date(medicamento.proximaToma);
+    return fecha.toLocaleString('es-CO', { dateStyle: 'short', timeStyle: 'short' });
+  }
+
+  confirmarTomaProximoMedicamento(): void {
+    const medicamento = this.proximoMedicamento();
+    if (!medicamento) {
+      return;
+    }
+
+    this.confirmandoToma.set(true);
+
+    this.medicamentoService.confirmarToma(medicamento.idMedicamento).subscribe({
+      next: () => {
+        this.confirmandoToma.set(false);
+        this.cargarMedicamentos();
+      },
+      error: () => {
+        this.confirmandoToma.set(false);
+      }
+    });
   }
 
   cambiarCategoria(categoria: CategoriaGusto): void {
