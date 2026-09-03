@@ -17,6 +17,9 @@ import { AuthService } from '../../../core/auth/auth.service';
 
 import { PANEL_CONFIG } from '../../../shared/panel-config/panel-config';
 
+import { DatePipe, registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es-CO';
+
 interface Recordatorio {
   hora: string;
   detalle: string;
@@ -38,7 +41,7 @@ interface ContactoEmergencia {
 
 @Component({
   selector: 'app-acompanante-dashboard',
-  imports: [DashboardShell, Icon],
+  imports: [DashboardShell, Icon, DatePipe],
   templateUrl: './acompanante.html',
   styleUrl: './acompanante.css'
 })
@@ -51,6 +54,8 @@ export class AcompananteDashboard implements OnInit {
   protected readonly panelConfig = PANEL_CONFIG['ACOMPANANTE'];
 
   protected readonly navItems = this.panelConfig.navItems;
+
+  protected readonly fechaActual = new Date();
 
   // =========================================================
   // USUARIO

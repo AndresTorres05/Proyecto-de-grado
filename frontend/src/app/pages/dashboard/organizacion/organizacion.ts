@@ -15,6 +15,9 @@ import { AuthService } from '../../../core/auth/auth.service';
 
 import { PANEL_CONFIG } from '../../../shared/panel-config/panel-config';
 
+import { DatePipe, registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es-CO';
+
 interface StatCard {
   icon: string;
   value: string;
@@ -55,7 +58,7 @@ interface Bitacora {
 
 @Component({
   selector: 'app-organizacion-dashboard',
-  imports: [DashboardShell, FormsModule, Icon],
+  imports: [DashboardShell, FormsModule, Icon, DatePipe],
   templateUrl: './organizacion.html',
   styleUrl: './organizacion.css'
 })
@@ -68,6 +71,8 @@ export class OrganizacionDashboard implements OnInit {
   protected readonly panelConfig = PANEL_CONFIG['ORGANIZACION'];
 
   protected readonly navItems = this.panelConfig.navItems;
+
+  protected readonly fechaActual = new Date();
 
   // =========================================================
   // USUARIO

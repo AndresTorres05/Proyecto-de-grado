@@ -1,6 +1,6 @@
 <div class="page-header">
   <h1>¡Hola, {{ nombreUsuario }}! 😊</h1>
-  <p>Hoy es martes, 11 de agosto</p>
+  <p>Hoy es {{ fechaActual | date:'EEEE, d' }} de {{ fechaActual | date:'MMMM' }}</p>
 </div>
 
 @if (!cargandoMedicamentos() && proximoMedicamento(); as medicamento) {

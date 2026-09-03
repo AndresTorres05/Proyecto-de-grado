@@ -7,6 +7,10 @@ import { GustoService, Gusto, CategoriaGusto } from '../../../core/gustos/gusto.
 import { AcompananteService, Acompanante } from '../../../core/acompanantes/acompanante.service';
 import { EmergenciaService } from '../../../core/emergencia/emergencia.service';
 import { MedicamentoService, Medicamento } from '../../../core/medicamentos/medicamento.service';
+import { DatePipe, registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es-CO';
+
+registerLocaleData(localeEs);
 
 interface AccesoRapido {
   icon: string;
@@ -21,13 +25,14 @@ interface CategoriaTab {
 
 @Component({
   selector: 'app-persona-mayor-dashboard',
-  imports: [FormsModule, Icon],
+  imports: [FormsModule, Icon, DatePipe],
   templateUrl: './persona-mayor.html',
-  styleUrl: './persona-mayor.css'
+  styleUrl: './persona-mayor.css',
 })
 export class PersonaMayorDashboard implements OnInit {
 
   protected readonly nombreUsuario: string;
+  protected readonly fechaActual = new Date();
 
   protected readonly medicamentos = signal<Medicamento[]>([]);
   protected readonly cargandoMedicamentos = signal(true);

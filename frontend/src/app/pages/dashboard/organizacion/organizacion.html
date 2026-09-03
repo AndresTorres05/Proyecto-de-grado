@@ -7,11 +7,8 @@
   <div class="page-header">
 
     <div>
-      <h1>Hola, Fundación {{ nombreUsuario }} 👋</h1>
-
-      <p>
-        Panel de administración · 26 de agosto de 2026
-      </p>
+      <h1>Hola, {{ nombreUsuario }} 👋</h1>
+      <p>Hoy es {{ fechaActual | date:'EEEE, d' }} de {{ fechaActual | date:'MMMM' }}</p>
     </div>
 
     <span class="live-tag">

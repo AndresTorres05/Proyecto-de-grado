@@ -12,6 +12,11 @@ import { AuthService } from '../../../core/auth/auth.service';
 
 import { PANEL_CONFIG } from '../../../shared/panel-config/panel-config';
 
+import { DatePipe, registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es-CO';
+
+registerLocaleData(localeEs);
+
 interface StatCard {
   icon: string;
   value: string;
@@ -31,7 +36,7 @@ interface AlertaConsulta {
 
 @Component({
   selector: 'app-voluntario-dashboard',
-  imports: [DashboardShell, Icon],
+  imports: [DashboardShell, Icon, DatePipe],
   templateUrl: './voluntario.html',
   styleUrl: './voluntario.css'
 })
@@ -44,6 +49,8 @@ export class VoluntarioDashboard implements OnInit {
   protected readonly panelConfig = PANEL_CONFIG['VOLUNTARIO'];
 
   protected readonly navItems = this.panelConfig.navItems;
+
+  protected readonly fechaActual = new Date();
 
   // =========================================================
   // USUARIO
