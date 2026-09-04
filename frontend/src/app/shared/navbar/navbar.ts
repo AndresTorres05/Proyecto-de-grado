@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 import { Icon } from '../icon/icon';
@@ -21,8 +21,11 @@ export class Navbar {
   ];
 
   protected readonly autenticado;
+  protected menuUsuarioAbierto = false;
 
-  constructor(protected authService: AuthService) {
+  constructor(
+    protected authService: AuthService
+  ) {
     this.autenticado = this.authService.estaAutenticadoSignal();
   }
 
@@ -42,6 +45,30 @@ export class Navbar {
 
     if (rol) {
       this.authService.redirigirSegunRol(rol);
+    }
+  }
+
+  toggleMenuUsuario(): void {
+    this.menuUsuarioAbierto = !this.menuUsuarioAbierto;
+    console.log('Menú:', this.menuUsuarioAbierto);
+  }
+
+  irAMiInformacion(): void {
+    this.menuUsuarioAbierto = false;
+
+    const rol = this.authService.getRol();
+
+    if (rol) {
+      this.authService.redirigirSegunRol(rol);
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  cerrarMenuAlHacerClickAfuera(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+
+    if (!target.closest('.navbar__user')) {
+      this.menuUsuarioAbierto = false;
     }
   }
 

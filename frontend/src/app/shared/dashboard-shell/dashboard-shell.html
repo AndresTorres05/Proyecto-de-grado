@@ -61,9 +61,38 @@
         </button>
 
         <div class="shell__user">
-          <span class="shell__avatar">{{ userInitials }}</span>
-          <span class="shell__user-name">{{ userName }}</span>
-        </div>
+
+          <button
+            type="button"
+            class="shell__user-button"
+            (click)="toggleMenuUsuario()"
+            [attr.aria-expanded]="menuUsuarioAbierto"
+          >
+            <span class="shell__avatar">{{ userInitials }}</span>
+            <span class="shell__user-name">{{ userName }}</span>
+          </button>
+
+          @if (menuUsuarioAbierto) {
+            <div class="shell__user-menu">
+
+              <button
+                type="button"
+                (click)="irAMiInformacion()"
+              >
+                Mi información
+              </button>
+
+              <button
+                type="button"
+                (click)="cerrarSesion()"
+              >
+                Cerrar sesión
+              </button>
+
+            </div>
+        }
+
+      </div>
 
         <a href="#" class="shell__logout" title="Cerrar sesión (prototipo, aún no implementado)">
           <span aria-hidden="true"><app-icon name="power" /></span>

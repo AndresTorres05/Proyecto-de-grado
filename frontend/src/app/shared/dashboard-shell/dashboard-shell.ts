@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../core/auth/auth.service';
 import { Icon } from '../icon/icon';
 
 export interface ShellNavItem {
@@ -30,5 +31,22 @@ export class DashboardShell {
   @Input() notifCount = 0;
   @Input() accessible = false;
 
-  
+  menuUsuarioAbierto = false;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  toggleMenuUsuario(): void {
+    this.menuUsuarioAbierto = !this.menuUsuarioAbierto;
+  }
+
+  cerrarSesion(): void {
+    this.authService.logout();
+  }
+
+  irAMiInformacion(): void {
+    this.menuUsuarioAbierto = false;
+  }
 }

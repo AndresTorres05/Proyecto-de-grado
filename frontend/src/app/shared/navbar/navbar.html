@@ -61,28 +61,38 @@
 
         <div class="navbar__user">
 
-          <!-- Inicial del usuario -->
+  <!-- Inicial del usuario -->
+  <button
+    type="button"
+    class="navbar__user-avatar"
+    (click)="toggleMenuUsuario()"
+    [title]="nombreUsuario"
+    [attr.aria-expanded]="menuUsuarioAbierto"
+  >
+    {{ inicialUsuario }}
+  </button>
+
+  @if (menuUsuarioAbierto) {
+    <div class="navbar__user-menu">
+
           <button
             type="button"
-            class="navbar__user-avatar"
-            (click)="irAlDashboard()"
-            [title]="'Ir al dashboard de ' + nombreUsuario"
+            (click)="irAMiInformacion()"
           >
-            {{ inicialUsuario }}
+            Página principal
           </button>
 
-          <!-- Cerrar sesión -->
           <button
             type="button"
-            class="navbar__logout"
             (click)="cerrarSesion()"
-            aria-label="Cerrar sesión"
-            title="Cerrar sesión"
           >
-            <app-icon name="power" />
+            Cerrar sesión
           </button>
 
         </div>
+      }
+
+    </div>
 
       }
 

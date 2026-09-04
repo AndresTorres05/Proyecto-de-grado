@@ -202,6 +202,7 @@
 }
 
 .shell__user {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -225,6 +226,67 @@
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--vita-navy);
+}
+
+.shell__user-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 0;
+  border: none;
+  background: transparent;
+
+  cursor: pointer;
+}
+
+.shell__user-button:hover .shell__user-name {
+  color: var(--vita-orange);
+}
+
+.shell__user-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+
+  min-width: 190px;
+
+  background: var(--vita-white);
+  border: 1px solid var(--vita-border);
+  border-radius: 12px;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+  overflow: hidden;
+  z-index: 100;
+}
+
+.shell__user-menu button {
+  width: 100%;
+  padding: 12px 16px;
+
+  border: none;
+  background: transparent;
+
+  text-align: left;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--vita-navy);
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.shell__user-menu button:hover {
+  background: var(--vita-cream-soft);
+  color: var(--vita-orange);
+}
+
+.shell__user-menu button + button {
+  border-top: 1px solid var(--vita-border);
 }
 
 .shell__logout {
