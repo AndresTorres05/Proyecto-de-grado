@@ -20,13 +20,13 @@
 
   </div>
 
-@if (cargando) {
+@if (cargando) {   
 
 
 <div class="informacion__loading">
   <p>Cargando tu información...</p>
 </div>
-
+  
 } @else {
 
 
@@ -179,6 +179,7 @@
         <button
           type="button"
           class="informacion__save-button"
+          (click)="guardarCambios()"
         >
           Guardar cambios
         </button>

@@ -26,4 +26,12 @@ export class PersonaMayorService {
       `${this.apiUrl}/informacion`
     );
   }
+  actualizarInformacion(
+    informacion: PersonaMayorResponse
+  ): Observable<PersonaMayorResponse> {
+    return this.http.put<PersonaMayorResponse>(
+      `${this.apiUrl}/informacion`,
+      informacion
+    );
+  }
 }

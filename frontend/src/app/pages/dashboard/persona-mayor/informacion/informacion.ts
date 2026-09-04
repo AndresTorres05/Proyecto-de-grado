@@ -36,12 +36,30 @@ export class Informacion implements OnInit {
         this.informacion = data;
         this.cargando = false;
 
+        console.log('¿CARGANDO?:', this.cargando);
+
         console.log('INFORMACION EN COMPONENTE:', this.informacion);
         console.log('CARGANDO EN COMPONENTE:', this.cargando);
       },
       error: (error) => {
         console.error('Error al cargar la información:', error);
         this.cargando = false;
+      }
+    });
+  }
+  guardarCambios(): void {
+    if (!this.informacion) {
+      return;
+    }
+
+    this.personaMayorService.actualizarInformacion(this.informacion).subscribe({
+      next: (data) => {
+        this.informacion = data;
+        this.editando = false;
+        console.log('Información actualizada correctamente:', data);
+      },
+      error: (error) => {
+        console.error('Error al actualizar la información:', error);
       }
     });
   }
