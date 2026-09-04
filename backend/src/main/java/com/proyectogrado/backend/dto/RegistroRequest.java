@@ -7,6 +7,13 @@ public class RegistroRequest {
     private String contrasena;
     private String rol;
 
+    // Solo para ORGANIZACION
+    private String direccion;
+    private String telefono;
+
+    // Solo para VOLUNTARIO
+    private String disponibilidad;
+
     public RegistroRequest() {
     }
 
@@ -40,5 +47,29 @@ public class RegistroRequest {
 
     public void setRol(String rol) {
         this.rol = rol;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getDisponibilidad() {
+        return disponibilidad;
+    }
+
+    public void setDisponibilidad(String disponibilidad) {
+        this.disponibilidad = disponibilidad;
     }
 }

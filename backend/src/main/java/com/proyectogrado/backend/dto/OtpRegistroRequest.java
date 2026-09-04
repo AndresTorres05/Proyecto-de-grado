@@ -6,7 +6,14 @@ public class OtpRegistroRequest {
     private String codigo;
     private String nombreUsuario;
     private String rol;
-    private String parentesco;
+
+    // Solo para ACOMPANANTE
+    //private String parentesco;
+
+    // Solo para PERSONA_MAYOR
+    private String fechaNacimiento; // formato "yyyy-MM-dd"
+    private String genero;
+    private String direccion;
 
     public OtpRegistroRequest() {
     }
@@ -43,11 +50,35 @@ public class OtpRegistroRequest {
         this.rol = rol;
     }
 
-    public String getParentesco() {
+    /*public String getParentesco() {
         return parentesco;
     }
 
     public void setParentesco(String parentesco) {
         this.parentesco = parentesco;
+    }*/
+
+    public String getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(String fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public String getGenero() {
+        return genero;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 }

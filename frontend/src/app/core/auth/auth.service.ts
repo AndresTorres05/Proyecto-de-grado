@@ -13,6 +13,9 @@ export interface RegistroRequest {
   correo: string;
   contrasena: string;
   rol: string;
+  direccion?: string;
+  telefono?: string;
+  disponibilidad?: string;
 }
 
 export interface EnviarOtpRequest {
@@ -29,6 +32,10 @@ export interface OtpRegistroRequest {
   codigo: string;
   nombreUsuario: string;
   rol: string;
+  //parentesco?: string;
+  fechaNacimiento?: string;
+  genero?: string;
+  direccion?: string;
 }
 
 export interface LoginResponse {

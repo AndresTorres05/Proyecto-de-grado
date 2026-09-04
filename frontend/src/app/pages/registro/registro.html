@@ -37,6 +37,7 @@
         }
       </select>
 
+      <!-- ORGANIZACIÓN Y VOLUNTARIO: correo + contraseña -->
       @if (rol && !esRegistroPorTelefono) {
         <label class="login-label" for="correo">Correo</label>
         <input
@@ -62,6 +63,43 @@
         />
       }
 
+      <!-- Solo ORGANIZACIÓN -->
+      @if (rol === 'ORGANIZACION') {
+        <label class="login-label" for="direccionOrganizacion">Dirección</label>
+        <input
+          id="direccionOrganizacion"
+          name="direccionOrganizacion"
+          type="text"
+          class="login-input"
+          [(ngModel)]="direccionOrganizacion"
+          placeholder="Dirección de la organización"
+        />
+
+        <label class="login-label" for="telefonoOrganizacion">Teléfono de contacto</label>
+        <input
+          id="telefonoOrganizacion"
+          name="telefonoOrganizacion"
+          type="tel"
+          class="login-input"
+          [(ngModel)]="telefonoOrganizacion"
+          placeholder="Teléfono de la organización"
+        />
+      }
+
+      <!-- Solo VOLUNTARIO -->
+      @if (rol === 'VOLUNTARIO') {
+        <label class="login-label" for="disponibilidad">Disponibilidad</label>
+        <input
+          id="disponibilidad"
+          name="disponibilidad"
+          type="text"
+          class="login-input"
+          [(ngModel)]="disponibilidad"
+          placeholder="Ej. Fines de semana, tardes entre semana"
+        />
+      }
+
+      <!-- PERSONA MAYOR Y ACOMPAÑANTE: teléfono + OTP -->
       @if (rol && esRegistroPorTelefono) {
         <label class="login-label" for="telefono">Número de celular</label>
         <div class="login-phone-row">
@@ -77,6 +115,43 @@
             [disabled]="otpEnviado()"
           />
         </div>
+
+       
+
+        <!-- Solo PERSONA MAYOR -->
+        @if (rol === 'PERSONA_MAYOR') {
+          <label class="login-label" for="fechaNacimiento">Fecha de nacimiento</label>
+          <input
+            id="fechaNacimiento"
+            name="fechaNacimiento"
+            type="date"
+            class="login-input"
+            [(ngModel)]="fechaNacimiento"
+          />
+
+          <label class="login-label" for="genero">Género</label>
+          <select
+            id="genero"
+            name="genero"
+            class="login-input"
+            [(ngModel)]="genero"
+          >
+            <option value="" disabled selected>Selecciona una opción</option>
+            @for (opcion of generos; track opcion.valor) {
+              <option [value]="opcion.valor">{{ opcion.etiqueta }}</option>
+            }
+          </select>
+
+          <label class="login-label" for="direccionPersonaMayor">Dirección</label>
+          <input
+            id="direccionPersonaMayor"
+            name="direccionPersonaMayor"
+            type="text"
+            class="login-input"
+            [(ngModel)]="direccionPersonaMayor"
+            placeholder="Tu dirección"
+          />
+        }
 
         @if (!otpEnviado()) {
           <button type="button" class="btn btn-primary login-submit" [disabled]="cargando()" (click)="enviarCodigo()">

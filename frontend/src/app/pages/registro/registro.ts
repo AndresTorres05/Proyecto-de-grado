@@ -20,16 +20,37 @@ export class Registro {
   correo = '';
   contrasena = '';
 
+  // Solo Organización
+  direccionOrganizacion = '';
+  telefonoOrganizacion = '';
+
+  // Solo Voluntario
+  disponibilidad = '';
+
   // Campos para teléfono/OTP (Persona mayor, Acompañante)
   telefonoLocal = '';
   codigo = '';
   otpEnviado = signal(false);
+
+  // Solo Acompañante
+  //parentesco = '';
+
+  // Solo Persona mayor
+  fechaNacimiento = '';
+  genero = '';
+  direccionPersonaMayor = '';
 
   roles = [
     { valor: 'ORGANIZACION', etiqueta: 'Organización' },
     { valor: 'VOLUNTARIO', etiqueta: 'Voluntario' },
     { valor: 'ACOMPANANTE', etiqueta: 'Acompañante' },
     { valor: 'PERSONA_MAYOR', etiqueta: 'Persona mayor' }
+  ];
+
+  generos = [
+    { valor: 'FEMENINO', etiqueta: 'Femenino' },
+    { valor: 'MASCULINO', etiqueta: 'Masculino' },
+    { valor: 'OTRO', etiqueta: 'Otro' }
   ];
 
   private readonly ROLES_POR_TELEFONO = ['PERSONA_MAYOR', 'ACOMPANANTE'];
@@ -45,12 +66,10 @@ export class Registro {
   }
 
   get telefonoCompleto(): string {
-    // Asumimos Colombia (+57). Ajusta el prefijo si tu público es de otro país.
     return `+57${this.telefonoLocal.replace(/\D/g, '')}`;
   }
 
   onCambioRol(): void {
-    // Si cambian de rol, reiniciamos el estado del flujo OTP
     this.otpEnviado.set(false);
     this.codigo = '';
     this.errorMensaje.set(null);
@@ -98,7 +117,10 @@ export class Registro {
       nombreUsuario: this.nombreUsuario,
       correo: this.correo,
       contrasena: this.contrasena,
-      rol: this.rol
+      rol: this.rol,
+      direccion: this.rol === 'ORGANIZACION' ? this.direccionOrganizacion : undefined,
+      telefono: this.rol === 'ORGANIZACION' ? this.telefonoOrganizacion : undefined,
+      disponibilidad: this.rol === 'VOLUNTARIO' ? this.disponibilidad : undefined
     }).subscribe({
       next: (response) => {
         this.cargando.set(false);
@@ -129,7 +151,11 @@ export class Registro {
       telefono: this.telefonoCompleto,
       codigo: this.codigo,
       nombreUsuario: this.nombreUsuario,
-      rol: this.rol
+      rol: this.rol,
+      //parentesco: this.rol === 'ACOMPANANTE' ? this.parentesco : undefined,
+      fechaNacimiento: this.rol === 'PERSONA_MAYOR' ? this.fechaNacimiento : undefined,
+      genero: this.rol === 'PERSONA_MAYOR' ? this.genero : undefined,
+      direccion: this.rol === 'PERSONA_MAYOR' ? this.direccionPersonaMayor : undefined
     }).subscribe({
       next: (response) => {
         this.cargando.set(false);

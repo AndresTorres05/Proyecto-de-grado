@@ -281,20 +281,23 @@ public class OtpController {
         // 7. Crear registro específico según el rol
         // -----------------------------------------------------
 
-        if ("PERSONA_MAYOR".equals(rol.getNombre())) {
+       if ("PERSONA_MAYOR".equals(rol.getNombre())) {
 
     PersonaMayor personaMayor = new PersonaMayor(usuario);
 
-personaMayorRepository.save(personaMayor);
+    if (request.getFechaNacimiento() != null && !request.getFechaNacimiento().isBlank()) {
+        personaMayor.setFechaNacimiento(java.time.LocalDate.parse(request.getFechaNacimiento()));
+    }
+    personaMayor.setGenero(request.getGenero());
+    personaMayor.setDireccion(request.getDireccion());
+
+    personaMayorRepository.save(personaMayor);
 
 } else if ("ACOMPANANTE".equals(rol.getNombre())) {
 
-    Acompanante acompanante = new Acompanante(
-        usuario,
-        request.getParentesco()
-);
+    Acompanante acompanante = new Acompanante(usuario, null);
 
-acompananteRepository.save(acompanante);
+    acompananteRepository.save(acompanante);
 }
 
         // -----------------------------------------------------

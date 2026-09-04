@@ -8,11 +8,13 @@ import com.proyectogrado.backend.model.PersonaMayor;
 import com.proyectogrado.backend.model.Rol;
 import com.proyectogrado.backend.model.Usuario;
 import com.proyectogrado.backend.model.UsuarioRol;
+import com.proyectogrado.backend.model.Voluntario;
 import com.proyectogrado.backend.repository.OrganizacionRepository;
 import com.proyectogrado.backend.repository.PersonaMayorRepository;
 import com.proyectogrado.backend.repository.RolRepository;
 import com.proyectogrado.backend.repository.UsuarioRepository;
 import com.proyectogrado.backend.repository.UsuarioRolRepository;
+import com.proyectogrado.backend.repository.VoluntarioRepository;
 import com.proyectogrado.backend.security.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +37,7 @@ public class AuthController {
     private final UsuarioRolRepository usuarioRolRepository;
     private final OrganizacionRepository organizacionRepository;
     private final PersonaMayorRepository personaMayorRepository;
+    private final VoluntarioRepository voluntarioRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
@@ -44,6 +47,7 @@ public class AuthController {
                            UsuarioRolRepository usuarioRolRepository,
                            OrganizacionRepository organizacionRepository,
                            PersonaMayorRepository personaMayorRepository,
+                           VoluntarioRepository voluntarioRepository,
                            JwtService jwtService,
                            PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
@@ -52,6 +56,7 @@ public class AuthController {
         this.usuarioRolRepository = usuarioRolRepository;
         this.organizacionRepository = organizacionRepository;
         this.personaMayorRepository = personaMayorRepository;
+        this.voluntarioRepository = voluntarioRepository;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -91,15 +96,15 @@ public class AuthController {
         }
 
         Rol rol = rolRepository.findByNombre(request.getRol()).orElse(null);
-if (rol == null) {
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(new LoginResponse(null, null, "Rol inválido"));
-}
+        if (rol == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new LoginResponse(null, null, "Rol inválido"));
+        }
 
-if ("PERSONA_MAYOR".equals(rol.getNombre()) || "ACOMPANANTE".equals(rol.getNombre())) {
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(new LoginResponse(null, null, "Este rol se registra por teléfono, no por correo"));
-}
+        if ("PERSONA_MAYOR".equals(rol.getNombre()) || "ACOMPANANTE".equals(rol.getNombre())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new LoginResponse(null, null, "Este rol se registra por teléfono, no por correo"));
+        }
 
         Usuario usuario = new Usuario();
         usuario.setNombreUsuario(request.getNombreUsuario());
@@ -113,12 +118,14 @@ if ("PERSONA_MAYOR".equals(rol.getNombre()) || "ACOMPANANTE".equals(rol.getNombr
             Organizacion organizacion = new Organizacion();
             organizacion.setNombre(usuario.getNombreUsuario());
             organizacion.setCorreo(usuario.getCorreo());
+            organizacion.setDireccion(request.getDireccion());
+            organizacion.setTelefono(request.getTelefono());
             organizacion = organizacionRepository.save(organizacion);
 
             usuario.setIdOrganizacion(organizacion.getIdOrganizacion());
             usuario = usuarioRepository.save(usuario);
-        } else if ("PERSONA_MAYOR".equals(rol.getNombre())) {
-            personaMayorRepository.save(new PersonaMayor(usuario));
+        } else if ("VOLUNTARIO".equals(rol.getNombre())) {
+            voluntarioRepository.save(new Voluntario(usuario, request.getDisponibilidad()));
         }
 
         String token = jwtService.generarToken(usuario.getIdUsuario(), rol.getNombre());
