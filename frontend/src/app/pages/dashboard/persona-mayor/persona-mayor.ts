@@ -74,10 +74,10 @@ export class PersonaMayorDashboard implements OnInit {
   protected readonly mensajeEmergencia = signal<string | null>(null);
   protected readonly errorEmergencia = signal<string | null>(null);
 
-  protected readonly accesos: AccesoRapido[] = [
+  /*protected readonly accesos: AccesoRapido[] = [
     { icon: 'user', label: 'Mi información' },
     { icon: 'phone', label: 'Mis contactos de emergencia' }
-  ];
+  ];*/
 
   constructor(
     private authService: AuthService,
