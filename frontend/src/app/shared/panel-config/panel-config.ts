@@ -15,8 +15,8 @@ export const PANEL_CONFIG: Record<string, PanelConfig> = {
       { icon: 'activity', label: 'Mis actividades', path: '/panel/persona-mayor/actividades' },
       { icon: 'heart', label: 'Mis intereses', path: '/panel/persona-mayor/intereses' },
       { icon: 'clock', label: 'Mis recordatorios', path: '/panel/persona-mayor/recordatorios' },
-      { icon: 'user', label: 'Mi información', path: '/panel/persona-mayor/informacion' },
-      { icon: 'phone', label: 'Mis contactos', path: '/panel/persona-mayor/contactos' }
+      { icon: 'phone', label: 'Mis contactos', path: '/panel/persona-mayor/contactos' },
+      { icon: 'user', label: 'Mi información', path: '/panel/persona-mayor/informacion' }      
     ]
   },
 

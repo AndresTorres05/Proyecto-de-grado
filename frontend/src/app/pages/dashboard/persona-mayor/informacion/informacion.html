@@ -1,0 +1,196 @@
+<div class="informacion">
+
+  <div class="informacion__header">
+    <div>
+      <h1>Mi información</h1>
+      <p>Consulta y administra tus datos personales.</p>
+    </div>
+
+
+@if (!cargando) {
+  <button
+    type="button"
+    class="informacion__edit-button"
+    (click)="editando = !editando"
+  >
+    {{ editando ? 'Cancelar' : 'Editar información' }}
+  </button>
+}
+
+
+  </div>
+
+@if (cargando) {
+
+
+<div class="informacion__loading">
+  <p>Cargando tu información...</p>
+</div>
+
+} @else {
+
+
+<div class="informacion__card">
+
+  <div class="informacion__section">
+
+    <h2>Datos personales</h2>
+
+    <div class="informacion__grid">
+
+      <div class="informacion__field">
+        <label>Nombre</label>
+        <p>{{ informacion?.nombre }}</p>
+      </div>
+
+      <div class="informacion__field">
+        <label>Correo electrónico</label>
+        <p>{{ informacion?.correo || 'No registrado' }}</p>
+      </div>
+
+      <div class="informacion__field">
+        <label>Teléfono</label>
+        <p>{{ informacion?.telefono || 'No registrado' }}</p>
+      </div>
+
+      <div class="informacion__field">
+        <label>Fecha de nacimiento</label>
+        <p>{{ informacion?.fechaNacimiento || 'No registrada' }}</p>
+      </div>
+
+      <div class="informacion__field">
+        <label>Género</label>
+        <p>{{ informacion?.genero || 'No registrado' }}</p>
+      </div>
+
+      <div class="informacion__field">
+        <label>Dirección</label>
+        <p>{{ informacion?.direccion || 'No registrada' }}</p>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  @if (editando) {
+
+    <div class="informacion__section informacion__section--edit">
+
+      <h2>Editar información</h2>
+
+      <div class="informacion__grid">
+
+  <!-- NUEVO: NOMBRE -->
+  <div class="informacion__field">
+    <label for="nombre">Nombre</label>
+
+    <input
+      id="nombre"
+      type="text"
+      [(ngModel)]="informacion!.nombre"
+      placeholder="Ingresa tu nombre"
+    />
+  </div>
+
+
+  <!-- NUEVO: CORREO -->
+  <div class="informacion__field">
+    <label for="correo">Correo electrónico</label>
+
+    <input
+      id="correo"
+      type="email"
+      [(ngModel)]="informacion!.correo"
+      placeholder="Ingresa tu correo"
+    />
+  </div>
+
+
+  <!-- NUEVO: TELÉFONO -->
+  <div class="informacion__field">
+    <label for="telefono">Teléfono</label>
+
+    <input
+      id="telefono"
+      type="tel"
+      [(ngModel)]="informacion!.telefono"
+      placeholder="Ingresa tu teléfono"
+    />
+  </div>
+
+
+  <!-- YA EXISTÍA: FECHA DE NACIMIENTO -->
+  <div class="informacion__field">
+    <label for="fechaNacimiento">
+      Fecha de nacimiento
+    </label>
+
+    <input
+      id="fechaNacimiento"
+      type="date"
+      [(ngModel)]="informacion!.fechaNacimiento"
+    />
+  </div>
+
+
+  <!-- YA EXISTÍA: GÉNERO -->
+  <div class="informacion__field">
+    <label for="genero">
+      Género
+    </label>
+
+    <input
+      id="genero"
+      type="text"
+      [(ngModel)]="informacion!.genero"
+      placeholder="Ingresa tu género"
+    />
+  </div>
+
+
+  <!-- YA EXISTÍA: DIRECCIÓN -->
+  <div class="informacion__field">
+    <label for="direccion">
+      Dirección
+    </label>
+
+    <input
+      id="direccion"
+      type="text"
+      [(ngModel)]="informacion!.direccion"
+      placeholder="Ingresa tu dirección"
+    />
+  </div>
+
+</div>
+
+
+      <div class="informacion__actions">
+
+        <button
+          type="button"
+          class="informacion__cancel-button"
+          (click)="editando = false"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="informacion__save-button"
+        >
+          Guardar cambios
+        </button>
+
+      </div>
+
+    </div>
+
+  }
+
+</div>
+
+}
+
+</div>

@@ -44,7 +44,11 @@ public class AcompananteController {
                 .map(personaMayor -> new PersonaMayorResponse(
                         personaMayor.getIdUsuario(),
                         personaMayor.getUsuario().getNombreUsuario(),
-                        personaMayor.getUsuario().getTelefono()
+                        personaMayor.getUsuario().getTelefono(),
+                        personaMayor.getUsuario().getCorreo(),
+                        personaMayor.getFechaNacimiento(),
+                        personaMayor.getGenero(),
+                        personaMayor.getDireccion()
                 ))
                 .toList();
 
