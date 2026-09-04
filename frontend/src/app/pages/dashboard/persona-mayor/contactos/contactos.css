@@ -167,6 +167,46 @@
   margin-bottom: 32px;
 }
 
+.contacts-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.contacts-section__header .section-block__title {
+  margin-bottom: 0;
+}
+
+.add-companion-button {
+  padding: 11px 18px;
+  border: none;
+  border-radius: 10px;
+  background: var(--vita-orange);
+  color: var(--vita-white);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.add-companion-button:hover,
+.add-companion-button:focus,
+.add-companion-button:active {
+  background: var(--vita-orange) !important;
+  color: var(--vita-white) !important;
+  transform: translateY(-1px);
+}
+
 .companion-card {
   display: flex;
   align-items: center;
@@ -271,5 +311,15 @@
 
   .companion-card__call {
     width: 100%;
+  }
+
+  .contacts-section__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .add-companion-button {
+    width: 100%;
+    justify-content: center;
   }
 }

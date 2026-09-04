@@ -111,9 +111,18 @@
 
 <section class="contacts-section section-block">
 
-  <h2 class="section-block__title">
-    <app-icon name="users" /> Mis contactos
-  </h2>
+  <div class="contacts-section__header">
+    <h2 class="section-block__title">
+      <app-icon name="users" /> Mis contactos
+    </h2>
+
+    <button
+      type="button"
+      class="add-companion-button"
+    > 
+      Añadir acompañante
+    </button>
+  </div>
 
   @if (acompanante(); as ac) {
 

@@ -34,28 +34,31 @@ BOTÓN EDITAR
 ========================= */
 
 .informacion__edit-button {
-padding: 11px 18px;
+    padding: 11px 18px;
 
-border: none;
-border-radius: 10px;
+    border: none;
+    border-radius: 10px;
 
-background: var(--vita-orange);
-color: var(--vita-white);
+    background: var(--vita-orange);
+    color: var(--vita-white);
 
-font-family: inherit;
-font-size: 0.95rem;
-font-weight: 600;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
 
-cursor: pointer;
+    cursor: pointer;
 
-transition:
-background-color 0.2s ease,
-transform 0.2s ease;
+    transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 
-.informacion__edit-button:hover {
-background: var(--vita-orange-dark);
-transform: translateY(-1px);
+.informacion__edit-button:hover,
+.informacion__edit-button:focus,
+.informacion__edit-button:active {
+  background: var(--vita-orange) !important;
+  color: var(--vita-white) !important;
+  transform: translateY(-1px);
 }
 
 /* =========================
