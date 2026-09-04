@@ -11,9 +11,9 @@ export class Footer {
 
   protected readonly redesSociales = [
     { texto: 'GH', etiqueta: 'GitHub Repository', url: 'https://github.com/JuanDGarridoR/Proyecto-de-grado.git' },
-    { texto: 'in', etiqueta: 'LinkedIn', url: '#' },
+    /*{ texto: 'in', etiqueta: 'LinkedIn', url: '#' },
     { texto: 'f', etiqueta: 'Facebook', url: '#' },
-    { texto: '▶', etiqueta: 'YouTube', url: '#' }
+    { texto: '▶', etiqueta: 'YouTube', url: '#' }*/
   ];
 
   protected readonly enlacesPlataforma = [

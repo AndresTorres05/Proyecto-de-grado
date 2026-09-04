@@ -2,7 +2,7 @@
   display: block;
   // Aumenta el primer valor (por ejemplo de 80px a 120px) para darle más distancia con el borde superior
   padding-top: 20px; 
-  padding-bottom: 40px;
+  padding-bottom: 0;
 }
 .footer-wrapper {
   max-width: 1200px;
@@ -14,7 +14,7 @@
   grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
   gap: 40px;
   align-items: start;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 
   @media (max-width: 960px) {
     grid-template-columns: repeat(2, 1fr);
@@ -53,7 +53,7 @@
   }
 
   .footer-description {
-    color: rgba(255, 255, 255, 0.65);
+    color: rgba(255, 255, 255, 0.80);
     font-size: 0.9rem;
     line-height: 1.6;
     margin-bottom: 24px;
@@ -84,7 +84,7 @@
   gap: 12px;
 
   a {
-    color: rgba(255, 255, 255, 0.65);
+    color: rgba(255, 255, 255, 0.80);
     font-size: 0.9rem;
     text-decoration: none;
     transition: color 0.2s ease, transform 0.2s ease;
@@ -125,7 +125,7 @@
     margin-bottom: 24px;
 
     .contact-link, .contact-text {
-      color: rgba(255, 255, 255, 0.65);
+      color: rgba(255, 255, 255, 0.80);
       font-size: 0.9rem;
       text-decoration: none;
       transition: color 0.2s ease;
@@ -190,8 +190,9 @@
 // Barra de Alianzas Institucionales Innovadora
 .footer-partners-bar {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 30px;
+  padding-top: 20px;
   margin-top: 10px;
+  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -200,21 +201,23 @@
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.80);
     font-weight: 600;
   }
 
   .partners-logos {
     display: flex;
     align-items: center;
-    gap: 32px;
+    justify-content: center; // Centra los logos
+    gap: 45px;
     flex-wrap: wrap;
+    width: 100%;
 
     .inst-logo {
-      height: 38px;
+    height: 70px; // Logos un poco más grandes
       object-fit: contain;
       transition: opacity 0.2s ease;
-      opacity: 0.85;
+      opacity: 0.70;
 
       &:hover {
         opacity: 1;
@@ -236,10 +239,11 @@
 .footer-bottom {
   margin-top: 40px;
   padding-top: 20px;
+  padding-bottom: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.04);
   text-align: center;
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.80);
 }
 footer.section--darker {
   padding-top: 30px !important; // Sube este valor a 80px, 100px o lo que necesites para separarlo del borde
@@ -254,7 +258,7 @@ footer.section--darker {
   align-items: center;
   justify-content: center;
   color: #ffffff;
-  font-size: 0.85ns;
+  font-size: 0.85rem;
   text-decoration: none;
   transition: all 0.2s ease;
   overflow: hidden; // Asegura que la imagen no se salga del círculo
@@ -269,5 +273,22 @@ footer.section--darker {
     width: 20px;
     height: 20px;
     object-fit: contain;
+    filter: grayscale(1) brightness(0) invert(1);
   }
+
 }
+
+  .repository-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .footer-repository-text {
+      color: rgba(255, 255, 255, 0.80);
+      font-size: 0.9rem;
+      font-family: inherit;
+      font-weight: 400;
+      line-height: 1.5;
+      margin: 0;
+    }
+  }
