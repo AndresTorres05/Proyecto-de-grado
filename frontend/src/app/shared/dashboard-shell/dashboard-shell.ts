@@ -48,5 +48,6 @@ export class DashboardShell {
 
   irAMiInformacion(): void {
     this.menuUsuarioAbierto = false;
+    this.router.navigateByUrl('/panel/persona-mayor/informacion');
   }
 }
