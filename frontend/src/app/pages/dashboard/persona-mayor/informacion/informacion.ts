@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   PersonaMayorService,
@@ -12,15 +12,13 @@ import {
   styleUrl: './informacion.css'
 })
 export class Informacion implements OnInit {
-
   informacion: PersonaMayorResponse | null = null;
-
   cargando = true;
-
   editando = false;
 
   constructor(
-    private personaMayorService: PersonaMayorService
+    private personaMayorService: PersonaMayorService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -28,39 +26,33 @@ export class Informacion implements OnInit {
   }
 
   cargarInformacion(): void {
+    this.informacion = null;
+    this.cargando = true;
+
     this.personaMayorService.obtenerInformacion().subscribe({
       next: (data) => {
-        console.log('DATA COMPLETA:', data);
-        console.log('NOMBRE:', data.nombre);
-
         this.informacion = data;
         this.cargando = false;
-
-        console.log('¿CARGANDO?:', this.cargando);
-
-        console.log('INFORMACION EN COMPONENTE:', this.informacion);
-        console.log('CARGANDO EN COMPONENTE:', this.cargando);
+        this.cdr.detectChanges();   // <-- fuerza el repintado
       },
       error: (error) => {
         console.error('Error al cargar la información:', error);
         this.cargando = false;
+        this.cdr.detectChanges();   // <-- también aquí
       }
     });
   }
+
   guardarCambios(): void {
-    if (!this.informacion) {
-      return;
-    }
+    if (!this.informacion) return;
 
     this.personaMayorService.actualizarInformacion(this.informacion).subscribe({
       next: (data) => {
         this.informacion = data;
         this.editando = false;
-        console.log('Información actualizada correctamente:', data);
+        this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.error('Error al actualizar la información:', error);
-      }
+      error: (error) => console.error('Error al actualizar la información:', error)
     });
   }
 }
