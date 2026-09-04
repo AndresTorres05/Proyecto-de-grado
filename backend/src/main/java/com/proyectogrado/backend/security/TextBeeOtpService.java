@@ -70,24 +70,25 @@ public class TextBeeOtpService {
 
     public void enviarMensaje(String telefono, String mensaje) {
 
-        try {
-            String cuerpoJson = objectMapper.writeValueAsString(
-                    Map.of(
-                            "recipients", List.of(telefono),
-                            "message", mensaje
-                    )
-            );
+    try {
+        String cuerpoJson = objectMapper.writeValueAsString(
+                Map.of(
+                        "recipients", List.of(telefono),
+                        "message", mensaje
+                )
+        );
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(
-                            "https://api.textbee.dev/api/v1/gateway/devices/"
-                                    + deviceId
-                                    + "/send-sms"
-                    ))
-                    .header("Content-Type", "application/json")
-                    .header("x-api-key", apiKey)
-                    .POST(HttpRequest.BodyPublishers.ofString(cuerpoJson))
-                    .build();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(
+                        "https://api.textbee.dev/api/v1/gateway/devices/"
+                                + deviceId
+                                + "/send-sms"
+                ))
+                .header("Content-Type", "application/json")
+                .header("x-api-key", apiKey)
+                .timeout(Duration.ofSeconds(20))
+                .POST(HttpRequest.BodyPublishers.ofString(cuerpoJson))
+                .build();
 
             HttpResponse<String> response = httpClient.send(
                     request,
