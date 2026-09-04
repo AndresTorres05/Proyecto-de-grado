@@ -1,4 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
   AcompananteService,
   Acompanante
@@ -9,7 +10,7 @@ import { Icon } from '../../../../shared/icon/icon';
 @Component({
   selector: 'app-contactos',
   standalone: true,
-  imports: [Icon],
+  imports: [Icon, FormsModule],
   templateUrl: './contactos.html',
   styleUrl: './contactos.css'
 })
@@ -21,6 +22,16 @@ export class Contactos implements OnInit {
   protected readonly enviandoEmergencia = signal(false);
   protected readonly mensajeEmergencia = signal<string | null>(null);
   protected readonly errorEmergencia = signal<string | null>(null);
+
+  protected readonly mostrandoFormularioAcompanante = signal(false);
+
+  protected nombreAcompanante = '';
+  protected telefonoAcompanante = '';
+  protected parentescoAcompanante = '';
+
+  protected readonly agregandoAcompanante = signal(false);
+  protected readonly errorAcompanante = signal<string | null>(null);
+  protected readonly mensajeAcompanante = signal<string | null>(null);
 
   constructor(
     private acompananteService: AcompananteService,
@@ -37,6 +48,77 @@ export class Contactos implements OnInit {
       }
     });
   }
+
+  mostrarFormularioAcompanante(): void {
+    this.mostrandoFormularioAcompanante.set(true);
+    this.errorAcompanante.set(null);
+    this.mensajeAcompanante.set(null);
+  }
+
+  cancelarFormularioAcompanante(): void {
+    this.mostrandoFormularioAcompanante.set(false);
+
+    this.nombreAcompanante = '';
+    this.telefonoAcompanante = '';
+    this.parentescoAcompanante = '';
+
+    this.errorAcompanante.set(null);
+}
+
+agregarAcompanante(): void {
+
+  this.errorAcompanante.set(null);
+  this.mensajeAcompanante.set(null);
+
+  if (
+    !this.nombreAcompanante.trim() ||
+    !this.telefonoAcompanante.trim() ||
+    !this.parentescoAcompanante.trim()
+  ) {
+    this.errorAcompanante.set(
+      'Por favor completa todos los campos.'
+    );
+    return;
+  }
+
+  this.agregandoAcompanante.set(true);
+
+  this.acompananteService.agregarAcompanante({
+    nombreUsuario: this.nombreAcompanante.trim(),
+    telefono: this.telefonoAcompanante.trim(),
+    parentesco: this.parentescoAcompanante.trim()
+  }).subscribe({
+    next: (respuesta) => {
+
+      this.agregandoAcompanante.set(false);
+      this.mostrandoFormularioAcompanante.set(false);
+
+      this.mensajeAcompanante.set(respuesta);
+
+      this.nombreAcompanante = '';
+      this.telefonoAcompanante = '';
+      this.parentescoAcompanante = '';
+
+      // Actualizar la tarjeta del acompañante
+      this.acompananteService.obtenerAcompanantes().subscribe({
+        next: (acompanantes) => {
+          this.acompanante.set(acompanantes[0] ?? null);
+        }
+      });
+    },
+
+    error: (error) => {
+
+      this.agregandoAcompanante.set(false);
+
+      const mensaje =
+        error?.error ||
+        'No se pudo agregar el acompañante.';
+
+      this.errorAcompanante.set(mensaje);
+    }
+  });
+}
 
   activarConfirmacionEmergencia(): void {
     this.mostrandoConfirmacionEmergencia.set(true);

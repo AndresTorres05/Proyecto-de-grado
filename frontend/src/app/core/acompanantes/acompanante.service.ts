@@ -29,4 +29,16 @@ export class AcompananteService {
   obtenerPersonasMayores(): Observable<PersonaMayorAcompanada[]> {
     return this.http.get<PersonaMayorAcompanada[]>(`${this.apiUrl}/acompanante/personas-mayores`);
   }
+
+  agregarAcompanante(datos: {
+    nombreUsuario: string;
+    telefono: string;
+    parentesco: string;
+  }): Observable<string> {
+    return this.http.post(
+      `${this.apiUrl}/persona-mayor/acompanantes`,
+      datos,
+      { responseType: 'text' }
+    );
+  }
 }

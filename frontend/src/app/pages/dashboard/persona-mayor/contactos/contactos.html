@@ -119,10 +119,85 @@
     <button
       type="button"
       class="add-companion-button"
-    > 
+      (click)="mostrarFormularioAcompanante()"
+    >
       Añadir acompañante
     </button>
   </div>
+
+  @if (mostrandoFormularioAcompanante()) {
+
+  <div class="add-companion-form card">
+
+    <h3>Agregar acompañante</h3>
+
+    <div class="form-group">
+      <label for="nombreAcompanante">
+        Nombre
+      </label>
+
+      <input
+        id="nombreAcompanante"
+        type="text"
+        [(ngModel)]="nombreAcompanante"
+        placeholder="Nombre completo"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="telefonoAcompanante">
+        Teléfono
+      </label>
+
+      <input
+        id="telefonoAcompanante"
+        type="tel"
+        [(ngModel)]="telefonoAcompanante"
+        placeholder="Número de teléfono"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="parentescoAcompanante">
+        Parentesco
+      </label>
+
+      <input
+        id="parentescoAcompanante"
+        type="text"
+        [(ngModel)]="parentescoAcompanante"
+        placeholder="Ej. Hijo, hija, hermano..."
+      />
+    </div>
+
+    <div class="add-companion-form__actions">
+
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="cancelarFormularioAcompanante()"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-gold"
+        (click)="agregarAcompanante()"
+        [disabled]="agregandoAcompanante()"
+      >
+      @if (agregandoAcompanante()) {
+        Guardando...
+      } @else {
+        Agregar acompañante
+      }
+      </button>
+
+    </div>
+
+  </div>
+
+}
 
   @if (acompanante(); as ac) {
 
