@@ -207,6 +207,12 @@
   transform: translateY(-1px);
 }
 
+.companions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .companion-card {
   display: flex;
   align-items: center;
