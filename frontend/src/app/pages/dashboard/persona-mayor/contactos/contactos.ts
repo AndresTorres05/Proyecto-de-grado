@@ -16,7 +16,7 @@ import { Icon } from '../../../../shared/icon/icon';
 })
 export class Contactos implements OnInit {
 
-  protected readonly acompanante = signal<Acompanante | null>(null);
+  protected readonly acompanantes = signal<Acompanante[]>([]);
 
   protected readonly mostrandoConfirmacionEmergencia = signal(false);
   protected readonly enviandoEmergencia = signal(false);
@@ -40,10 +40,10 @@ export class Contactos implements OnInit {
   ngOnInit(): void {
     this.acompananteService.obtenerAcompanantes().subscribe({
       next: (acompanantes) => {
-        this.acompanante.set(acompanantes[0] ?? null);
+        this.acompanantes.set(acompanantes);
       },
       error: () => {
-        this.acompanante.set(null);
+        this.acompanantes.set([]);
       }
     });
   }
@@ -80,10 +80,12 @@ agregarAcompanante(): void {
 
   this.agregandoAcompanante.set(true);
 
-  this.acompananteService.agregarAcompanante({
-    telefono: this.telefonoAcompanante.trim(),
-    parentesco: this.parentescoAcompanante.trim(),
-  }).subscribe({
+  const telefono = this.telefonoAcompanante.replace(/^\+57/, '');
+
+this.acompananteService.agregarAcompanante({
+  telefono: telefono,
+  parentesco: this.parentescoAcompanante
+}).subscribe({
     next: (respuesta) => {
 
       this.agregandoAcompanante.set(false);
@@ -97,7 +99,7 @@ agregarAcompanante(): void {
       // Actualizar la tarjeta del acompañante
       this.acompananteService.obtenerAcompanantes().subscribe({
         next: (acompanantes) => {
-          this.acompanante.set(acompanantes[0] ?? null);
+          this.acompanantes.set(acompanantes);
         }
       });
     },

@@ -15,6 +15,12 @@ export interface PersonaMayorAcompanada {
   telefono: string;
 }
 
+export interface SolicitudAcompanamiento {
+  idUsuario: number;
+  nombre: string;
+  telefono: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AcompananteService {
 
@@ -40,4 +46,27 @@ export class AcompananteService {
       { responseType: 'text' }
     );
   }
+
+obtenerSolicitudes(): Observable<SolicitudAcompanamiento[]> {
+  return this.http.get<SolicitudAcompanamiento[]>(
+    `${this.apiUrl}/acompanante/personas-mayores/solicitudes`
+  );
+}
+
+aceptarSolicitud(idPersonaMayor: number): Observable<string> {
+  return this.http.put(
+    `${this.apiUrl}/acompanante/personas-mayores/solicitudes/${idPersonaMayor}/aceptar`,
+    {},
+    { responseType: 'text' }
+  );
+}
+
+rechazarSolicitud(idPersonaMayor: number): Observable<string> {
+  return this.http.put(
+    `${this.apiUrl}/acompanante/personas-mayores/solicitudes/${idPersonaMayor}/rechazar`,
+    {},
+    { responseType: 'text' }
+  );
+}
+
 }

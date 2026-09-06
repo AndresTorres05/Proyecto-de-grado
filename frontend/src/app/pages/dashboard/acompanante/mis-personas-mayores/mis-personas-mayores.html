@@ -1,0 +1,175 @@
+<div class="mis-personas">
+
+  <div class="mis-personas__header">
+    <div>
+      <h1>Mis personas mayores</h1>
+      <p>
+        Administra las personas mayores que te han solicitado acompañamiento.
+      </p>
+    </div>
+  </div>
+
+  @if (mensaje) {
+    <div class="mis-personas__message mis-personas__message--success">
+      {{ mensaje }}
+    </div>
+  }
+
+  @if (error) {
+    <div class="mis-personas__message mis-personas__message--error">
+      {{ error }}
+    </div>
+  }
+
+  @if (solicitudes.length > 0) {
+
+    <section class="mis-personas__section">
+
+      <div class="mis-personas__section-header">
+        <div>
+          <h2>Solicitudes pendientes</h2>
+          <p>
+            Estas personas mayores están esperando tu confirmación.
+          </p>
+        </div>
+
+        <span class="mis-personas__badge">
+          {{ solicitudes.length }}
+        </span>
+      </div>
+
+      <div class="mis-personas__requests">
+
+        @for (solicitud of solicitudes; track solicitud.idUsuario) {
+
+          <div class="mis-personas__request">
+
+            <div class="mis-personas__request-info">
+
+              <div class="mis-personas__avatar">
+                {{ solicitud.nombre.charAt(0).toUpperCase() }}
+              </div>
+
+              <div>
+                <h3>{{ solicitud.nombre }}</h3>
+
+                <p>
+                  <strong>Teléfono:</strong>
+                  {{ solicitud.telefono }}
+                </p>
+
+                <span class="mis-personas__pending">
+                  Solicitud pendiente
+                </span>
+              </div>
+
+            </div>
+
+            <div class="mis-personas__actions">
+
+              <button
+                type="button"
+                class="mis-personas__reject-button"
+                (click)="rechazarSolicitud(solicitud.idUsuario)"
+              >
+                Rechazar
+              </button>
+
+              <button
+                type="button"
+                class="mis-personas__accept-button"
+                (click)="aceptarSolicitud(solicitud.idUsuario)"
+              >
+                Aceptar
+              </button>
+
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+    </section>
+
+  }
+
+  <section class="mis-personas__section">
+
+    <div class="mis-personas__section-header">
+      <div>
+        <h2>Personas mayores asociadas</h2>
+        <p>
+          Personas mayores cuyo acompañamiento ya aceptaste.
+        </p>
+      </div>
+    </div>
+
+    @if (cargando) {
+
+      <div class="mis-personas__loading">
+        <p>Cargando información...</p>
+      </div>
+
+    } @else if (personasMayores.length === 0) {
+
+      <div class="mis-personas__empty">
+        <div class="mis-personas__empty-icon">
+          👥
+        </div>
+
+        <h3>No tienes personas mayores asociadas</h3>
+
+        <p>
+          Cuando aceptes una solicitud de acompañamiento,
+          aparecerá aquí.
+        </p>
+      </div>
+
+    } @else {
+
+      <div class="mis-personas__grid">
+
+        @for (persona of personasMayores; track persona.idUsuario) {
+
+          <div class="mis-personas__card">
+
+            <div class="mis-personas__card-top">
+
+              <div class="mis-personas__avatar">
+                {{ persona.nombre.charAt(0).toUpperCase() }}
+              </div>
+
+              <div>
+                <h3>{{ persona.nombre }}</h3>
+                <span>Persona mayor</span>
+              </div>
+
+            </div>
+
+            <div class="mis-personas__card-info">
+
+              <div>
+                <span>Teléfono</span>
+                <p>{{ persona.telefono }}</p>
+              </div>
+
+            </div>
+
+            <div class="mis-personas__status">
+              <span></span>
+              Acompañamiento activo
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+    }
+
+  </section>
+
+</div>

@@ -56,6 +56,8 @@ public class PersonaMayorAcompananteController {
                         "ACEPTADA"
                 );
 
+        System.out.println("RELACIONES ENCONTRADAS: " + relaciones.size());
+
         List<AcompananteResponse> respuesta = relaciones.stream()
                 .map(PersonaMayorAcompanante::getAcompanante)
                 .map(acompanante -> new AcompananteResponse(
@@ -78,6 +80,7 @@ public ResponseEntity<?> agregarAcompanante(
 
     Integer idPersonaMayor =
             jwtService.extraerIdUsuario(token);
+            System.out.println("ID PERSONA MAYOR: " + idPersonaMayor);
 
     PersonaMayor personaMayor =
             personaMayorRepository.findById(idPersonaMayor)

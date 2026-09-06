@@ -224,9 +224,8 @@ export const routes: Routes = [
       {
         path: 'personas-mayores',
         loadComponent: () =>
-          import('./shared/en-construccion/en-construccion')
-            .then((m) => m.EnConstruccion),
-        data: { titulo: 'Mis personas mayores' }
+          import('./pages/dashboard/acompanante/mis-personas-mayores/mis-personas-mayores')
+            .then((m) => m.MisPersonasMayores)
       },
 
       {

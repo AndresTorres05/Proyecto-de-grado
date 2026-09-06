@@ -188,106 +188,168 @@
 
   @if (mostrandoFormularioAcompanante()) {
 
-  <div class="add-companion-form card">
+    <div class="add-companion-overlay">
 
-    <h3>Agregar acompañante</h3>
-
-    
-
-    <div class="form-group">
-      <label for="telefonoAcompanante">
-        Teléfono
-      </label>
-
-      <input
-        id="telefonoAcompanante"
-        type="tel"
-        [(ngModel)]="telefonoAcompanante"
-        placeholder="Número de teléfono"
-      />
-    </div>
-
-    <div class="form-group">
-      <label for="parentescoAcompanante">
-        Parentesco
-      </label>
-
-      <input
-        id="parentescoAcompanante"
-        type="text"
-        [(ngModel)]="parentescoAcompanante"
-        placeholder="Ej. Hijo, hija, hermano..."
-      />
-    </div>
-
-    <div class="add-companion-form__actions">
-
-      <button
-        type="button"
-        class="btn btn-secondary"
-        (click)="cancelarFormularioAcompanante()"
+      <div
+        class="add-companion-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="addCompanionTitle"
       >
-        Cancelar
-      </button>
 
-      <button
-        type="button"
-        class="btn btn-gold"
-        (click)="agregarAcompanante()"
-        [disabled]="agregandoAcompanante()"
-      >
-      @if (agregandoAcompanante()) {
-        Guardando...
-      } @else {
-        Agregar acompañante
-      }
-      </button>
+        <div class="add-companion-modal__header">
 
-    </div>
+          <h2 id="addCompanionTitle">
+            Añadir acompañante
+          </h2>
 
-  </div>
+          <button
+            type="button"
+            class="add-companion-modal__close"
+            (click)="cancelarFormularioAcompanante()"
+            aria-label="Cerrar"
+          >
+            ×
+          </button>
 
-}
+        </div>
 
-  @if (acompanante(); as ac) {
-
-    <div class="companion-card card">
-
-      <span
-        class="companion-card__avatar"
-        aria-hidden="true"
-      >
-        <app-icon name="users" />
-      </span>
-
-      <div class="companion-card__info">
-
-        <p class="companion-card__label">
-          Acompañante
+        <p class="add-companion-modal__description">
+          Ingresa los datos del acompañante que deseas agregar.
+          Se enviará una solicitud que deberá ser aceptada por el acompañante.
         </p>
 
-        <h2>
-          {{ ac.nombre }}
-        </h2>
+        <div class="add-companion-modal__form-group">
 
-        <p class="companion-card__phone">
-          <app-icon name="phone" /> {{ ac.telefono }}
-        </p>
+          <label for="telefonoAcompanante">
+            Teléfono del acompañante
+          </label>
 
-        @if (ac.parentesco) {
-          <p class="companion-card__relationship">
-            {{ ac.parentesco }}
-          </p>
+          <input
+            id="telefonoAcompanante"
+            type="tel"
+            [(ngModel)]="telefonoAcompanante"
+            placeholder="Ej. 3001234567"
+          />
+
+        </div>
+
+        <div class="add-companion-modal__form-group">
+
+          <label for="parentescoAcompanante">
+            Parentesco
+          </label>
+
+          <input
+            id="parentescoAcompanante"
+            type="text"
+            [(ngModel)]="parentescoAcompanante"
+            placeholder="Ej. Hijo, hija, hermano..."
+          />
+
+        </div>
+
+        @if (errorAcompanante(); as error) {
+
+          <div class="add-companion-modal__error">
+            <app-icon name="alert-circle" />
+            {{ error }}
+          </div>
+
         }
+
+        <div class="add-companion-modal__actions">
+
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="cancelarFormularioAcompanante()"
+            [disabled]="agregandoAcompanante()"
+          >
+            Cancelar
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-gold"
+            (click)="agregarAcompanante()"
+            [disabled]="agregandoAcompanante()"
+          >
+            @if (agregandoAcompanante()) {
+              Enviando...
+            } @else {
+              Enviar solicitud
+            }
+          </button>
+
+        </div>
 
       </div>
 
-      <a
-        [href]="'tel:' + ac.telefono"
-        class="btn btn-gold companion-card__call"
-      >
-        <app-icon name="phone" /> Llamar
-      </a>
+    </div>
+
+  }
+
+  @if (mensajeAcompanante(); as mensaje) {
+
+    <div class="emergency-success">
+      <app-icon name="check-circle" />
+      {{ mensaje }}
+    </div>
+
+  }
+
+  @if (acompanantes().length > 0) {
+
+    <div class="companions-list">
+
+      @for (ac of acompanantes(); track ac.idUsuario) {
+
+        <div class="companion-card card">
+
+          <span
+            class="companion-card__avatar"
+            aria-hidden="true"
+          >
+            <app-icon name="users" />
+          </span>
+
+          <div class="companion-card__info">
+
+            <p class="companion-card__label">
+              Acompañante
+            </p>
+
+            <h2>
+              {{ ac.nombre }}
+            </h2>
+
+            <p class="companion-card__phone">
+              <app-icon name="phone" />
+              {{ ac.telefono }}
+            </p>
+
+            @if (ac.parentesco) {
+
+              <p class="companion-card__relationship">
+                {{ ac.parentesco }}
+              </p>
+
+            }
+
+          </div>
+
+          <a
+            [href]="'tel:' + ac.telefono"
+            class="btn btn-gold companion-card__call"
+          >
+            <app-icon name="phone" />
+            Llamar
+          </a>
+
+        </div>
+
+      }
 
     </div>
 
