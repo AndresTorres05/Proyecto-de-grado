@@ -15,6 +15,7 @@ export class Informacion implements OnInit {
   informacion: PersonaMayorResponse | null = null;
   cargando = true;
   editando = false;
+  mostrandoConfirmacion = false;
 
   constructor(
     private personaMayorService: PersonaMayorService,
@@ -43,16 +44,33 @@ export class Informacion implements OnInit {
     });
   }
 
-  guardarCambios(): void {
-    if (!this.informacion) return;
+guardarCambios(): void {
+  if (!this.informacion) return;
 
-    this.personaMayorService.actualizarInformacion(this.informacion).subscribe({
-      next: (data) => {
-        this.informacion = data;
-        this.editando = false;
-        this.cdr.detectChanges();
-      },
-      error: (error) => console.error('Error al actualizar la información:', error)
-    });
-  }
+  this.mostrandoConfirmacion = true;
+}
+
+confirmarGuardado(): void {
+  if (!this.informacion) return;
+
+  this.personaMayorService.actualizarInformacion(this.informacion).subscribe({
+    next: (data) => {
+      this.informacion = data;
+      this.editando = false;
+      this.mostrandoConfirmacion = false;
+      this.cdr.detectChanges();
+    },
+    error: (error) => {
+      console.error('Error al actualizar la información:', error);
+      this.mostrandoConfirmacion = false;
+    }
+  });
+}
+
+cancelarGuardado(): void {
+  this.mostrandoConfirmacion = false;
+}
+cancelarEdicion(): void {
+  this.editando = false;
+}
 }

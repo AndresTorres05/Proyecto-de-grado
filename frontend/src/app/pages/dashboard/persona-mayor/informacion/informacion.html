@@ -1,188 +1,71 @@
 <div class="informacion">
 
   <div class="informacion__header">
+
     <div>
       <h1>Mi información</h1>
       <p>Consulta y administra tus datos personales.</p>
     </div>
 
-
-@if (!cargando) {
-  <button
-    type="button"
-    class="informacion__edit-button"
-    (click)="editando = !editando"
-  >
-    {{ editando ? 'Cancelar' : 'Editar información' }}
-  </button>
-}
-
+    @if (!cargando) {
+      <button
+        type="button"
+        class="informacion__edit-button"
+        (click)="editando = !editando"
+      >
+        {{ editando ? 'Cancelar' : 'Editar información' }}
+      </button>
+    }
 
   </div>
 
-@if (cargando) {   
+  @if (cargando) {
 
-
-<div class="informacion__loading">
-  <p>Cargando tu información...</p>
-</div>
-  
-} @else {
-
-
-<div class="informacion__card">
-
-  <div class="informacion__section">
-
-    <h2>Datos personales</h2>
-
-    <div class="informacion__grid">
-
-      <div class="informacion__field">
-        <label>Nombre</label>
-        <p>{{ informacion?.nombre }}</p>
-      </div>
-
-      <div class="informacion__field">
-        <label>Correo electrónico</label>
-        <p>{{ informacion?.correo || 'No registrado' }}</p>
-      </div>
-
-      <div class="informacion__field">
-        <label>Teléfono</label>
-        <p>{{ informacion?.telefono || 'No registrado' }}</p>
-      </div>
-
-      <div class="informacion__field">
-        <label>Fecha de nacimiento</label>
-        <p>{{ informacion?.fechaNacimiento || 'No registrada' }}</p>
-      </div>
-
-      <div class="informacion__field">
-        <label>Género</label>
-        <p>{{ informacion?.genero || 'No registrado' }}</p>
-      </div>
-
-      <div class="informacion__field">
-        <label>Dirección</label>
-        <p>{{ informacion?.direccion || 'No registrada' }}</p>
-      </div>
-
+    <div class="informacion__loading">
+      <p>Cargando tu información...</p>
     </div>
 
-  </div>
+  } @else {
 
+    <div class="informacion__card">
 
-  @if (editando) {
+      <div class="informacion__section">
 
-    <div class="informacion__section informacion__section--edit">
+        <h2>Datos personales</h2>
 
-      <h2>Editar información</h2>
+        <div class="informacion__grid">
 
-      <div class="informacion__grid">
+          <div class="informacion__field">
+            <label>Nombre</label>
+            <p>{{ informacion?.nombre }}</p>
+          </div>
 
-  <!-- NUEVO: NOMBRE -->
-  <div class="informacion__field">
-    <label for="nombre">Nombre</label>
+          <div class="informacion__field">
+            <label>Correo electrónico</label>
+            <p>{{ informacion?.correo || 'No registrado' }}</p>
+          </div>
 
-    <input
-      id="nombre"
-      type="text"
-      [(ngModel)]="informacion!.nombre"
-      placeholder="Ingresa tu nombre"
-    />
-  </div>
+          <div class="informacion__field">
+            <label>Teléfono</label>
+            <p>{{ informacion?.telefono || 'No registrado' }}</p>
+          </div>
 
+          <div class="informacion__field">
+            <label>Fecha de nacimiento</label>
+            <p>{{ informacion?.fechaNacimiento || 'No registrada' }}</p>
+          </div>
 
-  <!-- NUEVO: CORREO -->
-  <div class="informacion__field">
-    <label for="correo">Correo electrónico</label>
+          <div class="informacion__field">
+            <label>Género</label>
+            <p>{{ informacion?.genero || 'No registrado' }}</p>
+          </div>
 
-    <input
-      id="correo"
-      type="email"
-      [(ngModel)]="informacion!.correo"
-      placeholder="Ingresa tu correo"
-    />
-  </div>
+          <div class="informacion__field">
+            <label>Dirección</label>
+            <p>{{ informacion?.direccion || 'No registrada' }}</p>
+          </div>
 
-
-  <!-- NUEVO: TELÉFONO -->
-  <div class="informacion__field">
-    <label for="telefono">Teléfono</label>
-
-    <input
-      id="telefono"
-      type="tel"
-      [(ngModel)]="informacion!.telefono"
-      placeholder="Ingresa tu teléfono"
-    />
-  </div>
-
-
-  <!-- YA EXISTÍA: FECHA DE NACIMIENTO -->
-  <div class="informacion__field">
-    <label for="fechaNacimiento">
-      Fecha de nacimiento
-    </label>
-
-    <input
-      id="fechaNacimiento"
-      type="date"
-      [(ngModel)]="informacion!.fechaNacimiento"
-    />
-  </div>
-
-
-  <!-- YA EXISTÍA: GÉNERO -->
-  <div class="informacion__field">
-    <label for="genero">
-      Género
-    </label>
-
-    <input
-      id="genero"
-      type="text"
-      [(ngModel)]="informacion!.genero"
-      placeholder="Ingresa tu género"
-    />
-  </div>
-
-
-  <!-- YA EXISTÍA: DIRECCIÓN -->
-  <div class="informacion__field">
-    <label for="direccion">
-      Dirección
-    </label>
-
-    <input
-      id="direccion"
-      type="text"
-      [(ngModel)]="informacion!.direccion"
-      placeholder="Ingresa tu dirección"
-    />
-  </div>
-
-</div>
-
-
-      <div class="informacion__actions">
-
-        <button
-          type="button"
-          class="informacion__cancel-button"
-          (click)="editando = false"
-        >
-          Cancelar
-        </button>
-
-        <button
-          type="button"
-          class="informacion__save-button"
-          (click)="guardarCambios()"
-        >
-          Guardar cambios
-        </button>
+        </div>
 
       </div>
 
@@ -190,8 +73,243 @@
 
   }
 
-</div>
+  <!-- =========================
+       MODAL EDITAR INFORMACIÓN
+       ========================= -->
 
-}
+  @if (editando) {
+
+    <div class="informacion__edit-overlay">
+
+      <div
+        class="informacion__edit-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="editarInformacionTitle"
+      >
+
+        <div class="informacion__edit-modal-header">
+
+          <h2 id="editarInformacionTitle">
+            Editar información
+          </h2>
+
+          <button
+            type="button"
+            class="informacion__edit-modal-close"
+            (click)="cancelarEdicion()"
+            aria-label="Cerrar"
+          >
+            ×
+          </button>
+
+        </div>
+
+        <p class="informacion__edit-modal-description">
+          Actualiza tus datos personales.
+        </p>
+
+        <div class="informacion__grid">
+
+          <!-- NOMBRE -->
+
+          <div class="informacion__field">
+
+            <label for="nombre">
+              Nombre
+            </label>
+
+            <input
+              id="nombre"
+              type="text"
+              [(ngModel)]="informacion!.nombre"
+              placeholder="Ingresa tu nombre"
+            />
+
+          </div>
+
+
+          <!-- CORREO -->
+
+          <div class="informacion__field">
+
+            <label for="correo">
+              Correo electrónico
+            </label>
+
+            <input
+              id="correo"
+              type="email"
+              [(ngModel)]="informacion!.correo"
+              placeholder="Ingresa tu correo"
+            />
+
+          </div>
+
+
+          <!-- TELÉFONO NO EDITABLE -->
+
+          <div class="informacion__field">
+
+            <label>
+              Teléfono
+            </label>
+
+            <p>
+              {{ informacion?.telefono || 'No registrado' }}
+            </p>
+
+          </div>
+
+
+          <!-- FECHA DE NACIMIENTO -->
+
+          <div class="informacion__field">
+
+            <label for="fechaNacimiento">
+              Fecha de nacimiento
+            </label>
+
+            <input
+              id="fechaNacimiento"
+              type="date"
+              [(ngModel)]="informacion!.fechaNacimiento"
+            />
+
+          </div>
+
+
+          <!-- GÉNERO -->
+
+          <div class="informacion__field">
+
+            <label for="genero">
+              Género
+            </label>
+
+            <select
+              id="genero"
+              [(ngModel)]="informacion!.genero"
+            >
+
+              <option value="">
+                Selecciona una opción
+              </option>
+
+              <option value="Masculino">
+                Masculino
+              </option>
+
+              <option value="Femenino">
+                Femenino
+              </option>
+
+              <option value="Otro">
+                Otro
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- DIRECCIÓN -->
+
+          <div class="informacion__field">
+
+            <label for="direccion">
+              Dirección
+            </label>
+
+            <input
+              id="direccion"
+              type="text"
+              [(ngModel)]="informacion!.direccion"
+              placeholder="Ingresa tu dirección"
+            />
+
+          </div>
+
+        </div>
+
+
+        <!-- ACCIONES -->
+
+        <div class="informacion__actions">
+
+          <button
+            type="button"
+            class="informacion__cancel-button"
+            (click)="cancelarEdicion()"
+          >
+            Cancelar
+          </button>
+
+          <button
+            type="button"
+            class="informacion__save-button"
+            (click)="guardarCambios()"
+          >
+            Guardar cambios
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+
+  <!-- =========================
+       MODAL CONFIRMACIÓN
+       ========================= -->
+
+  @if (mostrandoConfirmacion) {
+
+    <div class="informacion__confirm-overlay">
+
+      <div
+        class="informacion__confirm-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirmarGuardadoTitle"
+      >
+
+        <h2 id="confirmarGuardadoTitle">
+          Confirmar cambios
+        </h2>
+
+        <p>
+          ¿Estás seguro de que deseas guardar los cambios realizados
+          en tu información?
+        </p>
+
+        <div class="informacion__confirm-actions">
+
+          <button
+            type="button"
+            class="informacion__cancel-button"
+            (click)="cancelarGuardado()"
+          >
+            Cancelar
+          </button>
+
+          <button
+            type="button"
+            class="informacion__save-button"
+            (click)="confirmarGuardado()"
+          >
+            Confirmar
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
 
 </div>
