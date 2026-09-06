@@ -32,57 +32,118 @@
       <app-icon name="alert-triangle" /> Activar emergencia
     </button>
 
-    @if (mostrandoConfirmacionEmergencia()) {
+@if (mostrandoFormularioAcompanante()) {
 
-      <div class="emergency-confirmation">
+  <div class="add-companion-overlay">
 
-        <div
-          class="emergency-confirmation__icon"
-          aria-hidden="true"
+    <div
+      class="add-companion-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="addCompanionTitle"
+    >
+
+      <div class="add-companion-modal__header">
+
+        <h2 id="addCompanionTitle">
+          Añadir acompañante
+        </h2>
+
+        <button
+          type="button"
+          class="add-companion-modal__close"
+          (click)="cancelarFormularioAcompanante()"
+          aria-label="Cerrar"
         >
-          <app-icon name="alert-triangle" />
-        </div>
-
-        <div class="emergency-confirmation__content">
-
-          <h3>¿Confirmar emergencia?</h3>
-
-          <p>
-            Se enviará una alerta a tus acompañantes para informarles
-            que necesitas ayuda.
-          </p>
-
-          <div class="emergency-confirmation__actions">
-
-            <button
-              type="button"
-              class="btn btn-secondary"
-              (click)="cancelarEmergencia()"
-              [disabled]="enviandoEmergencia()"
-            >
-              Cancelar
-            </button>
-
-            <button
-              type="button"
-              class="btn emergency-confirmation__confirm"
-              (click)="confirmarEmergencia()"
-              [disabled]="enviandoEmergencia()"
-            >
-              @if (enviandoEmergencia()) {
-                Enviando...
-              } @else {
-                Sí, enviar alerta
-              }
-            </button>
-
-          </div>
-
-        </div>
+          ×
+        </button>
 
       </div>
 
-    }
+      <p class="add-companion-modal__description">
+        Ingresa los datos del acompañante que deseas agregar.
+        Se enviará una solicitud que deberá ser aceptada por el acompañante.
+      </p>
+
+      <div class="add-companion-modal__form-group">
+
+        <label for="telefonoAcompanante">
+          Teléfono del acompañante
+        </label>
+
+        <input
+          id="telefonoAcompanante"
+          type="tel"
+          [(ngModel)]="telefonoAcompanante"
+          placeholder="Ej. +573001234567"
+        />
+
+      </div>
+
+      <div class="add-companion-modal__form-group">
+
+        <label for="parentescoAcompanante">
+          Parentesco
+        </label>
+
+        <input
+          id="parentescoAcompanante"
+          type="text"
+          [(ngModel)]="parentescoAcompanante"
+          placeholder="Ej. Hijo, hija, hermano..."
+        />
+
+      </div>
+
+      @if (errorAcompanante(); as error) {
+
+        <div class="add-companion-modal__error">
+          <app-icon name="alert-circle" />
+          {{ error }}
+        </div>
+
+      }
+
+      @if (mensajeAcompanante(); as mensaje) {
+
+        <div class="add-companion-modal__success">
+          <app-icon name="check-circle" />
+          {{ mensaje }}
+        </div>
+
+      }
+
+      <div class="add-companion-modal__actions">
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="cancelarFormularioAcompanante()"
+          [disabled]="agregandoAcompanante()"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-gold"
+          (click)="agregarAcompanante()"
+          [disabled]="agregandoAcompanante()"
+        >
+          @if (agregandoAcompanante()) {
+            Enviando...
+          } @else {
+            Enviar solicitud
+          }
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+}
 
   </div>
 
@@ -131,18 +192,7 @@
 
     <h3>Agregar acompañante</h3>
 
-    <div class="form-group">
-      <label for="nombreAcompanante">
-        Nombre
-      </label>
-
-      <input
-        id="nombreAcompanante"
-        type="text"
-        [(ngModel)]="nombreAcompanante"
-        placeholder="Nombre completo"
-      />
-    </div>
+    
 
     <div class="form-group">
       <label for="telefonoAcompanante">

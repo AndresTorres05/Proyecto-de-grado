@@ -51,8 +51,9 @@ public class PersonaMayorAcompananteController {
                 jwtService.extraerIdUsuario(token);
 
         List<PersonaMayorAcompanante> relaciones =
-                relacionRepository.findById_IdPersonaMayor(
-                        idPersonaMayor
+                relacionRepository.findById_IdPersonaMayorAndEstado(
+                        idPersonaMayor,
+                        "ACEPTADA"
                 );
 
         List<AcompananteResponse> respuesta = relaciones.stream()
@@ -67,81 +68,100 @@ public class PersonaMayorAcompananteController {
 
         return ResponseEntity.ok(respuesta);
     }
-    @PostMapping
-        public ResponseEntity<?> agregarAcompanante(
-                @RequestHeader("Authorization") String authorizationHeader,
-                @RequestBody AgregarAcompananteRequest request
-        ) {
+   @PostMapping
+public ResponseEntity<?> agregarAcompanante(
+        @RequestHeader("Authorization") String authorizationHeader,
+        @RequestBody AgregarAcompananteRequest request
+) {
 
-        String token = authorizationHeader.substring(7);
+    String token = authorizationHeader.substring(7);
 
-        Integer idPersonaMayor =
-                jwtService.extraerIdUsuario(token);
+    Integer idPersonaMayor =
+            jwtService.extraerIdUsuario(token);
 
-        PersonaMayor personaMayor =
-                personaMayorRepository.findById(idPersonaMayor)
-                        .orElseThrow(() ->
-                                new RuntimeException(
-                                        "No se encontró la persona mayor"
-                                )
-                        );
+    PersonaMayor personaMayor =
+            personaMayorRepository.findById(idPersonaMayor)
+                    .orElseThrow(() ->
+                            new RuntimeException(
+                                    "No se encontró la persona mayor"
+                            )
+                    );
 
-        Usuario usuario =
-                usuarioRepository.findByTelefono(request.getTelefono())
-                        .orElse(null);
+    Usuario usuario =
+            usuarioRepository.findByTelefono(request.getTelefono())
+                    .orElse(null);
 
-        Acompanante acompanante;
+    // El teléfono no está registrado
+    if (usuario == null) {
+        return ResponseEntity.badRequest()
+                .body("No existe un usuario registrado con ese teléfono");
+    }
 
-        if (usuario == null) {
+    // Verificar que el usuario esté registrado como acompañante
+    Acompanante acompanante =
+            acompananteRepository.findById(
+                    usuario.getIdUsuario()
+            ).orElse(null);
 
-                usuario = new Usuario();
+    if (acompanante == null) {
+        return ResponseEntity.badRequest()
+                .body("El usuario existe, pero no está registrado como acompañante");
+    }
 
-                usuario.setNombreUsuario(
-                        request.getNombreUsuario()
-                );
+    // Verificar si ya existe una relación entre ambos
+    PersonaMayorAcompanante relacionExistente =
+            relacionRepository.findById(
+                    new com.proyectogrado.backend.model.PersonaMayorAcompananteId(
+                            idPersonaMayor,
+                            acompanante.getIdUsuario()
+                    )
+            ).orElse(null);
 
-                usuario.setTelefono(
-                        request.getTelefono()
-                );
+    if (relacionExistente != null) {
 
-                usuario = usuarioRepository.saveAndFlush(usuario);
-
-                acompanante = new Acompanante(
-                        usuario,
-                        request.getParentesco()
-                );
-
-                acompananteRepository.saveAndFlush(acompanante);
-
-        } else {
-
-                acompanante =
-                        acompananteRepository.findById(
-                                usuario.getIdUsuario()
-                        ).orElse(null);
-
-                if (acompanante == null) {
-                return ResponseEntity.badRequest()
-                        .body("El usuario existe pero no es un acompañante");
-                }
-
-                acompanante.setParentesco(
-                        request.getParentesco()
-                );
-
-                acompananteRepository.saveAndFlush(acompanante);
+        if ("ACEPTADA".equals(relacionExistente.getEstado())) {
+            return ResponseEntity.badRequest()
+                    .body("Este acompañante ya está registrado");
         }
 
-        PersonaMayorAcompanante relacion =
-                new PersonaMayorAcompanante(
-                        personaMayor,
-                        acompanante
-                );
+        if ("PENDIENTE".equals(relacionExistente.getEstado())) {
+            return ResponseEntity.badRequest()
+                    .body("Ya existe una solicitud pendiente para este acompañante");
+        }
 
-        relacionRepository.saveAndFlush(relacion);
+        // Si anteriormente fue rechazada, permitimos enviar una nueva solicitud
+        relacionExistente.setEstado("PENDIENTE");
+
+        acompanante.setParentesco(
+                request.getParentesco()
+        );
+
+        acompananteRepository.saveAndFlush(acompanante);
+        relacionRepository.saveAndFlush(relacionExistente);
 
         return ResponseEntity.ok(
-                "Acompañante agregado correctamente"
+                "Solicitud de acompañamiento enviada correctamente"
         );
-        }
+    }
+
+    // Crear una nueva solicitud pendiente
+    PersonaMayorAcompanante relacion =
+            new PersonaMayorAcompanante(
+                    personaMayor,
+                    acompanante
+            );
+
+    relacion.setEstado("PENDIENTE");
+
+    acompanante.setParentesco(
+            request.getParentesco()
+    );
+
+    acompananteRepository.saveAndFlush(acompanante);
+    relacionRepository.saveAndFlush(relacion);
+
+    return ResponseEntity.ok(
+            "Solicitud de acompañamiento enviada correctamente"
+    );
+}
 }

@@ -2,19 +2,11 @@ package com.proyectogrado.backend.dto;
 
 public class AgregarAcompananteRequest {
 
-    private String nombreUsuario;
+    
     private String telefono;
     private String parentesco;
 
     public AgregarAcompananteRequest() {
-    }
-
-    public String getNombreUsuario() {
-        return nombreUsuario;
-    }
-
-    public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
     }
 
     public String getTelefono() {

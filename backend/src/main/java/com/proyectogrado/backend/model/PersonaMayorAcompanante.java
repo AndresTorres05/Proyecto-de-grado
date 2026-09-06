@@ -14,6 +14,9 @@ public class PersonaMayorAcompanante {
     @JoinColumn(name = "id_persona_mayor")
     private PersonaMayor personaMayor;
 
+    @Column(name = "estado", nullable = false)
+    private String estado = "ACEPTADA";
+
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("idAcompanante")
     @JoinColumn(name = "id_acompanante")
@@ -49,6 +52,14 @@ public class PersonaMayorAcompanante {
 
     public void setPersonaMayor(PersonaMayor personaMayor) {
         this.personaMayor = personaMayor;
+    }
+
+    public String getEstado() {
+    return estado;
+}
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     public Acompanante getAcompanante() {

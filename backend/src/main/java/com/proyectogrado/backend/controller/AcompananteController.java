@@ -54,4 +54,35 @@ public class AcompananteController {
 
         return ResponseEntity.ok(respuesta);
     }
+    @GetMapping("/solicitudes")
+public ResponseEntity<List<PersonaMayorResponse>> obtenerSolicitudesPendientes(
+        @RequestHeader("Authorization") String authorizationHeader
+) {
+
+    String token = authorizationHeader.substring(7);
+
+    Integer idAcompanante =
+            jwtService.extraerIdUsuario(token);
+
+    List<PersonaMayorAcompanante> relaciones =
+            relacionRepository.findById_IdAcompananteAndEstado(
+                    idAcompanante,
+                    "PENDIENTE"
+            );
+
+    List<PersonaMayorResponse> respuesta = relaciones.stream()
+            .map(PersonaMayorAcompanante::getPersonaMayor)
+            .map(personaMayor -> new PersonaMayorResponse(
+                    personaMayor.getIdUsuario(),
+                    personaMayor.getUsuario().getNombreUsuario(),
+                    personaMayor.getUsuario().getTelefono(),
+                    personaMayor.getUsuario().getCorreo(),
+                    personaMayor.getFechaNacimiento(),
+                    personaMayor.getGenero(),
+                    personaMayor.getDireccion()
+            ))
+            .toList();
+
+    return ResponseEntity.ok(respuesta);
+}
 }

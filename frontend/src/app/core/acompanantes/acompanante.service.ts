@@ -31,7 +31,6 @@ export class AcompananteService {
   }
 
   agregarAcompanante(datos: {
-    nombreUsuario: string;
     telefono: string;
     parentesco: string;
   }): Observable<string> {

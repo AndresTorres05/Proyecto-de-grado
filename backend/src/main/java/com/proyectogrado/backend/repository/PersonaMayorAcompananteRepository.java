@@ -15,5 +15,17 @@ public interface PersonaMayorAcompananteRepository
         findById_IdPersonaMayor(Integer idPersonaMayor);
 
         List<PersonaMayorAcompanante>
+        findById_IdPersonaMayorAndEstado(
+                Integer idPersonaMayor,
+                String estado
+        );
+
+        List<PersonaMayorAcompanante>
         findById_IdAcompanante(Integer idAcompanante);
+
+        List<PersonaMayorAcompanante>
+        findById_IdAcompananteAndEstado(
+                Integer idAcompanante,
+                String estado
+        );
 }

@@ -25,7 +25,6 @@ export class Contactos implements OnInit {
 
   protected readonly mostrandoFormularioAcompanante = signal(false);
 
-  protected nombreAcompanante = '';
   protected telefonoAcompanante = '';
   protected parentescoAcompanante = '';
 
@@ -58,7 +57,6 @@ export class Contactos implements OnInit {
   cancelarFormularioAcompanante(): void {
     this.mostrandoFormularioAcompanante.set(false);
 
-    this.nombreAcompanante = '';
     this.telefonoAcompanante = '';
     this.parentescoAcompanante = '';
 
@@ -71,7 +69,6 @@ agregarAcompanante(): void {
   this.mensajeAcompanante.set(null);
 
   if (
-    !this.nombreAcompanante.trim() ||
     !this.telefonoAcompanante.trim() ||
     !this.parentescoAcompanante.trim()
   ) {
@@ -84,9 +81,8 @@ agregarAcompanante(): void {
   this.agregandoAcompanante.set(true);
 
   this.acompananteService.agregarAcompanante({
-    nombreUsuario: this.nombreAcompanante.trim(),
     telefono: this.telefonoAcompanante.trim(),
-    parentesco: this.parentescoAcompanante.trim()
+    parentesco: this.parentescoAcompanante.trim(),
   }).subscribe({
     next: (respuesta) => {
 
@@ -95,7 +91,6 @@ agregarAcompanante(): void {
 
       this.mensajeAcompanante.set(respuesta);
 
-      this.nombreAcompanante = '';
       this.telefonoAcompanante = '';
       this.parentescoAcompanante = '';
 
