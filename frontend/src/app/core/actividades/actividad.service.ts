@@ -11,6 +11,15 @@ export interface Actividad {
   tipo: string | null;
 }
 
+export interface ActividadDisponible {
+  idActividad: number;
+  nombre: string;
+  fecha: string | null;
+  lugar: string | null;
+  tipo: string | null;
+  inscrito: boolean;
+}
+
 export interface ActividadRequest {
   nombre: string;
   fecha: string | null;
@@ -31,6 +40,18 @@ export class ActividadService {
 
   listarMias(): Observable<Actividad[]> {
     return this.http.get<Actividad[]>(`${this.apiUrl}/mias`);
+  }
+
+  listarDisponibles(): Observable<ActividadDisponible[]> {
+    return this.http.get<ActividadDisponible[]>(`${this.apiUrl}/disponibles`);
+  }
+
+  inscribirse(id: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${id}/inscribirse`, {});
+  }
+
+  cancelarInscripcion(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}/inscribirse`);
   }
 
   crear(request: ActividadRequest): Observable<Actividad> {

@@ -1,0 +1,67 @@
+<div class="page-header">
+  <h1>Mis actividades</h1>
+  <p>Explora las actividades disponibles y apúntate a las que te interesen.</p>
+</div>
+
+@if (cargando()) {
+  <div class="estado-card">
+    <span class="estado-card__icon">⏳</span>
+    <div>
+      <h2>Cargando actividades...</h2>
+    </div>
+  </div>
+}
+
+@if (error()) {
+  <div class="error-message">
+    <span>⚠️</span>
+    {{ error() }}
+  </div>
+}
+
+@if (!cargando()) {
+  <div class="actividades-grid">
+    @for (actividad of actividades(); track actividad.idActividad) {
+      <div class="actividad-card card" [class.actividad-card--inscrito]="actividad.inscrito">
+        <div class="actividad-card__top">
+          <span class="actividad-card__icon" aria-hidden="true">🏃</span>
+          @if (actividad.inscrito) {
+            <span class="actividad-card__badge actividad-card__badge--inscrito">Inscrito</span>
+          } @else if (actividad.tipo) {
+            <span class="actividad-card__badge">{{ actividad.tipo }}</span>
+          }
+        </div>
+
+        <h3>{{ actividad.nombre }}</h3>
+        <p>{{ actividad.fecha || 'Sin fecha definida' }}</p>
+        <p>{{ actividad.lugar || 'Sin lugar definido' }}</p>
+
+        @if (actividad.inscrito) {
+          <button
+            type="button"
+            class="btn btn-secondary actividad-card__accion"
+            [disabled]="procesandoId() === actividad.idActividad"
+            (click)="cancelarInscripcion(actividad)"
+          >
+            {{ procesandoId() === actividad.idActividad ? 'Cancelando...' : 'Cancelar inscripción' }}
+          </button>
+        } @else {
+          <button
+            type="button"
+            class="btn btn-primary actividad-card__accion"
+            [disabled]="procesandoId() === actividad.idActividad"
+            (click)="inscribirse(actividad)"
+          >
+            {{ procesandoId() === actividad.idActividad ? 'Inscribiendo...' : 'Inscribirme' }}
+          </button>
+        }
+      </div>
+    } @empty {
+      <div class="empty-card">
+        <span>🏃</span>
+        <h3>Aún no hay actividades disponibles</h3>
+        <p>Cuando una organización publique una actividad, la verás aquí.</p>
+      </div>
+    }
+  </div>
+}

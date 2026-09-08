@@ -15,6 +15,53 @@ interface CategoriaTab {
   icon: string;
 }
 
+// Mapeo exacto: nombre del gusto tal como está en la base de datos -> ícono.
+// Si en el futuro agregas un gusto nuevo que no esté aquí, se usa el ícono
+// por defecto de su categoría (ver iconoPorDefecto).
+const NOMBRE_A_ICONO: Record<string, string> = {
+  // GUSTO
+  'Leer': 'book',
+  'Escuchar música': 'music',
+  'Ver televisión o películas': 'film',
+  'Cocinar': 'chef-hat',
+  'Pasear al aire libre': 'sun',
+  'Fotografía': 'camera',
+  'Viajar': 'plane',
+  'Compartir con mascotas': 'paw',
+  'Ver deportes': 'activity',
+  'Conversar con amigos': 'message-circle',
+
+  // TALENTO
+  'Tocar un instrumento': 'guitar',
+  'Cantar': 'mic',
+  'Pintar o dibujar': 'palette',
+  'Escribir': 'pen',
+  'Manualidades y artesanías': 'scissors',
+  'Costura o tejido': 'yarn',
+  'Baile': 'dance',
+  'Carpintería': 'hammer',
+  'Repostería': 'cake',
+  'Actuación o teatro': 'drama',
+
+  // HOBBY
+  'Ejercicio físico': 'dumbbell',
+  'Caminar': 'footprints',
+  'Yoga o estiramiento': 'stretch',
+  'Jardinería': 'sprout',
+  'Pesca': 'fish',
+  'Juegos de mesa': 'dice',
+  'Rompecabezas': 'puzzle',
+  'Ciclismo': 'bike',
+  'Natación': 'swim',
+  'Voluntariado': 'users'
+};
+
+const ICONO_POR_DEFECTO: Record<CategoriaGusto, string> = {
+  GUSTO: 'heart',
+  TALENTO: 'sparkles',
+  HOBBY: 'target'
+};
+
 @Component({
   selector: 'app-intereses',
   standalone: true,
@@ -27,7 +74,7 @@ export class Intereses implements OnInit {
   protected readonly categorias: CategoriaTab[] = [
     { valor: 'GUSTO', label: 'Gustos', icon: 'heart' },
     { valor: 'TALENTO', label: 'Talentos', icon: 'sparkles' },
-    { valor: 'HOBBY', label: 'Hobbies', icon: 'target' }
+    { valor: 'HOBBY', label: 'Pasatiempos', icon: 'target' }
   ];
 
   protected readonly categoriaActiva = signal<CategoriaGusto>('GUSTO');
@@ -139,47 +186,12 @@ export class Intereses implements OnInit {
   }
 
   /**
-   * Devuelve un emoji diferente dependiendo
-   * del tipo y del nombre del interés.
-   *
-   * Si posteriormente agregamos nuevos intereses
-   * desde la base de datos, también tendrán un emoji.
+   * Devuelve el nombre del ícono (para <app-icon [name]="...">) que
+   * corresponde a este gusto, según su nombre exacto en la base de datos.
+   * Si el nombre no está mapeado (por ejemplo un gusto nuevo agregado
+   * directamente en la BD), cae al ícono por defecto de su categoría.
    */
-  obtenerEmoji(gusto: Gusto, indice: number): string {
-    const nombre = gusto.nombre.toLowerCase();
-
-    if (gusto.categoria === 'GUSTO') {
-      if (nombre.includes('música') || nombre.includes('musica')) return '🎵';
-      if (nombre.includes('cine') || nombre.includes('película') || nombre.includes('pelicula')) return '🎬';
-      if (nombre.includes('comida') || nombre.includes('cocina') || nombre.includes('gastronom')) return '🍲';
-      if (nombre.includes('viaje') || nombre.includes('viajar')) return '✈️';
-      if (nombre.includes('naturaleza')) return '🌳';
-      if (nombre.includes('animales') || nombre.includes('mascota')) return '🐶';
-      if (nombre.includes('arte')) return '🎨';
-      if (nombre.includes('baile') || nombre.includes('danza')) return '💃';
-      if (nombre.includes('lectura') || nombre.includes('libro')) return '📚';
-      if (nombre.includes('jardín') || nombre.includes('jardin')) return '🌷';
-
-      const emojisGustos = ['❤️', '🎵', '🎬', '🍲', '✈️', '🌳', '🐶', '🎨', '💃', '📚', '🌷', '☕'];
-      return emojisGustos[indice % emojisGustos.length];
-    }
-
-    if (gusto.categoria === 'TALENTO') {
-      if (nombre.includes('cocina') || nombre.includes('cocinar')) return '👨‍🍳';
-      if (nombre.includes('cantar') || nombre.includes('canto')) return '🎤';
-      if (nombre.includes('pintar') || nombre.includes('pintura')) return '🖌️';
-      if (nombre.includes('dibujar') || nombre.includes('dibujo')) return '✏️';
-      if (nombre.includes('escribir') || nombre.includes('escritura')) return '✍️';
-      if (nombre.includes('bailar') || nombre.includes('danza')) return '💃';
-      if (nombre.includes('fotografía') || nombre.includes('fotografia')) return '📷';
-      if (nombre.includes('jardinería') || nombre.includes('jardineria')) return '🌱';
-      if (nombre.includes('manualidad')) return '🧶';
-
-      const emojisTalentos = ['🎤', '🎨', '✍️', '👨‍🍳', '📷', '🌱', '🧶', '🎹', '🎭', '🔨'];
-      return emojisTalentos[indice % emojisTalentos.length];
-    }
-
-    const emojisHobbies = ['📖', '♟️', '🎮', '🧩', '🚶', '🚲', '🌿', '🧘', '⚽', '🎣', '🧶', '🎸', '🃏', '🏊', '📺'];
-    return emojisHobbies[indice % emojisHobbies.length];
+  obtenerIcono(gusto: Gusto): string {
+    return NOMBRE_A_ICONO[gusto.nombre] ?? ICONO_POR_DEFECTO[gusto.categoria];
   }
 }

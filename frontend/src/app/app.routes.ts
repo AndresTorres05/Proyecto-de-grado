@@ -288,12 +288,10 @@ export const routes: Routes = [
       },
 
       {
-        path: 'actividades',
-        loadComponent: () =>
-          import('./shared/en-construccion/en-construccion')
-            .then((m) => m.EnConstruccion),
-        data: { titulo: 'Mis actividades' }
-      },
+  path: 'actividades',
+  loadComponent: () =>
+    import('./pages/dashboard/persona-mayor/actividades/actividades').then((m) => m.Actividades)
+},
 
       {
         path: 'intereses',

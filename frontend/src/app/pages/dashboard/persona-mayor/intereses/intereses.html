@@ -86,7 +86,7 @@
             (click)="alternarGusto(gusto.idGusto)"
             [attr.aria-pressed]="estaSeleccionado(gusto.idGusto)"
           >
-            <span class="opcion-card__emoji">{{ obtenerEmoji(gusto, i) }}</span>
+            <span class="opcion-card__emoji"><app-icon [name]="obtenerIcono(gusto)" /></span>
 
             <span class="opcion-card__text">
               <span class="opcion-card__name">{{ gusto.nombre }}</span>
