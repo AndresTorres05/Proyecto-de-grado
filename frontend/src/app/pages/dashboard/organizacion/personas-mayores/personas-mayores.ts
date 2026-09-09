@@ -182,4 +182,35 @@ export class PersonasMayores implements OnInit {
 
       });
   }
+  cancelarAsociacion(persona: PersonaMayorOrganizacion): void {
+
+  const confirmar = window.confirm(
+    `¿Estás seguro de cancelar la asociación con ${persona.nombre}?`
+  );
+
+  if (!confirmar) {
+    return;
+  }
+
+  this.mensaje.set(null);
+  this.error.set(null);
+
+  this.organizacionService
+    .cancelarAsociacionPersonaMayor(persona.idUsuario)
+    .subscribe({
+      next: (respuesta) => {
+        this.mensaje.set(respuesta);
+        this.cargarPersonasMayores();
+      },
+      error: (error) => {
+        console.error('Error al cancelar la asociación:', error);
+
+        const mensaje =
+          error?.error ||
+          'No se pudo cancelar la asociación.';
+
+        this.error.set(mensaje);
+      }
+    });
+}
 }

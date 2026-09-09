@@ -103,6 +103,77 @@ public class PersonaMayorOrganizacionController {
         }
     }
 
+    // =========================================================
+// ORGANIZACIÓN
+// CANCELAR ASOCIACIÓN CON PERSONA MAYOR
+// =========================================================
+
+@DeleteMapping("/api/organizacion/personas-mayores/{idPersonaMayor}")
+public ResponseEntity<?> cancelarAsociacionPersonaMayor(
+        @PathVariable Integer idPersonaMayor
+) {
+
+    try {
+
+        Usuario usuario = obtenerUsuarioAutenticado();
+
+        if (usuario == null) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("Usuario no autenticado");
+        }
+
+        Integer idOrganizacion = usuario.getIdOrganizacion();
+
+        if (idOrganizacion == null) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("El usuario no tiene una organización asociada");
+        }
+
+        // =====================================================
+        // BUSCAR LA RELACIÓN
+        // =====================================================
+
+        PersonaMayorOrganizacionId idRelacion =
+                new PersonaMayorOrganizacionId(
+                        idPersonaMayor,
+                        idOrganizacion
+                );
+
+        PersonaMayorOrganizacion relacion =
+                relacionRepository
+                        .findById(idRelacion)
+                        .orElse(null);
+
+        if (relacion == null) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("No existe una asociación con esta persona mayor");
+        }
+
+        // =====================================================
+        // ELIMINAR SOLO LA RELACIÓN
+        // NO SE ELIMINA NINGÚN PERFIL
+        // =====================================================
+
+        relacionRepository.delete(relacion);
+        relacionRepository.flush();
+
+        return ResponseEntity.ok(
+                "Asociación cancelada correctamente"
+        );
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error al cancelar la asociación");
+    }
+}
+
 
     // =========================================================
     // ORGANIZACIÓN
@@ -310,12 +381,13 @@ public class PersonaMayorOrganizacionController {
                                                 .findById(idOrganizacion)
                                                 .orElse(null);
 
+                                List<Usuario> usuariosOrganizacion =
+                                        usuarioRepository.findByIdOrganizacion(idOrganizacion);
+
                                 Usuario usuarioOrganizacion =
-                                        usuarioRepository
-                                                .findByIdOrganizacion(
-                                                        idOrganizacion
-                                                )
-                                                .orElse(null);
+                                        usuariosOrganizacion.isEmpty()
+                                                ? null
+                                                : usuariosOrganizacion.get(0);
 
                                 return new OrganizacionSolicitudResponse(
                                         idOrganizacion,
@@ -392,12 +464,13 @@ public ResponseEntity<?> obtenerOrganizacionesPersonaMayor() {
                                             .findById(idOrganizacion)
                                             .orElse(null);
 
-                            Usuario usuarioOrganizacion =
-                                    usuarioRepository
-                                            .findByIdOrganizacion(
-                                                    idOrganizacion
-                                            )
-                                            .orElse(null);
+                        List<Usuario> usuariosOrganizacion =
+                                usuarioRepository.findByIdOrganizacion(idOrganizacion);
+
+                        Usuario usuarioOrganizacion =
+                                usuariosOrganizacion.isEmpty()
+                                        ? null
+                                        : usuariosOrganizacion.get(0);
 
                             return new OrganizacionSolicitudResponse(
                                     idOrganizacion,

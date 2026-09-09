@@ -4,6 +4,8 @@ import com.proyectogrado.backend.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
+import java.util.List;
+
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
@@ -15,5 +17,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     boolean existsByTelefono(String telefono);
 
-    Optional<Usuario> findByIdOrganizacion(Integer idOrganizacion);
+    List<Usuario> findByIdOrganizacion(Integer idOrganizacion);
 }

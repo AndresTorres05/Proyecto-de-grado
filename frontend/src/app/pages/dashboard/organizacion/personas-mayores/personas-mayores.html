@@ -200,15 +200,24 @@
                ESTADO
                ================================================= -->
 
-          <div class="person-status">
+          <div class="person-card__actions">
 
-            <span class="person-status__dot"></span>
+  <div class="person-status">
+    <span class="person-status__dot"></span>
+    <span>Asociación activa</span>
+  </div>
 
-            <span>
-              Asociación activa
-            </span>
+  <button
+    type="button"
+    class="remove-association-button"
+    (click)="cancelarAsociacion(persona)"
+    title="Cancelar asociación"
+    aria-label="Cancelar asociación"
+  >
+    <app-icon name="x" />
+  </button>
 
-          </div>
+</div>
 
         </div>
 

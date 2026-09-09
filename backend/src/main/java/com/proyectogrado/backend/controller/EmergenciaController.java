@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 import com.proyectogrado.backend.model.PersonaMayorOrganizacion;
 import com.proyectogrado.backend.repository.PersonaMayorOrganizacionRepository;
+import com.proyectogrado.backend.model.Usuario;
 
 import java.util.List;
 
@@ -106,10 +107,12 @@ public class EmergenciaController {
                         Integer idOrganizacion =
                                 relacion.getOrganizacion().getIdOrganizacion();
 
-                        String telefono = usuarioRepository
-                                .findByIdOrganizacion(idOrganizacion)
-                                .map(usuario -> usuario.getTelefono())
-                                .orElse(null);
+                List<com.proyectogrado.backend.model.Usuario> usuariosOrganizacion =
+                        usuarioRepository.findByIdOrganizacion(idOrganizacion);
+
+                String telefono = usuariosOrganizacion.isEmpty()
+                        ? null
+                        : usuariosOrganizacion.get(0).getTelefono();
 
                         if (telefono == null || telefono.isBlank()) {
                                 continue;

@@ -60,6 +60,14 @@ asociarPersonaMayor(telefono: string): Observable<string> {
     { responseType: 'text' }
   );
 }
+
+cancelarAsociacionPersonaMayor(idPersonaMayor: number): Observable<string> {
+  return this.http.delete(
+    `${this.apiUrl}/personas-mayores/${idPersonaMayor}`,
+    { responseType: 'text' }
+  );
+}
+
 obtenerSolicitudesOrganizaciones(): Observable<OrganizacionSolicitud[]> {
   return this.http.get<OrganizacionSolicitud[]>(
     'http://localhost:8080/api/persona-mayor/organizaciones/solicitudes'
