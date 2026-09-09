@@ -80,7 +80,16 @@ agregarAcompanante(): void {
 
   this.agregandoAcompanante.set(true);
 
-  const telefono = this.telefonoAcompanante.replace(/^\+57/, '');
+  const telefonoIngresado = this.telefonoAcompanante.trim();
+
+if (!/^\d{10}$/.test(telefonoIngresado)) {
+  this.errorAcompanante.set(
+    'Ingresa un número de teléfono válido de 10 dígitos.'
+  );
+  return;
+}
+
+const telefono = '+57' + telefonoIngresado;
 
 this.acompananteService.agregarAcompanante({
   telefono: telefono,
