@@ -19,6 +19,9 @@ public class PersonaMayorOrganizacion {
     @JoinColumn(name = "id_organizacion")
     private Organizacion organizacion;
 
+    @Column(name = "estado", nullable = false)
+    private String estado = "PENDIENTE";
+
     public PersonaMayorOrganizacion() {
     }
 
@@ -57,5 +60,12 @@ public class PersonaMayorOrganizacion {
 
     public void setOrganizacion(Organizacion organizacion) {
         this.organizacion = organizacion;
+    }
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }

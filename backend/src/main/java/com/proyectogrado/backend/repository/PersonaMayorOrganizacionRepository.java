@@ -16,4 +16,16 @@ public interface PersonaMayorOrganizacionRepository
 
     List<PersonaMayorOrganizacion>
     findById_IdOrganizacion(Integer idOrganizacion);
+
+    List<PersonaMayorOrganizacion>
+    findById_IdPersonaMayorAndEstado(
+            Integer idPersonaMayor,
+            String estado
+    );
+
+    List<PersonaMayorOrganizacion>
+    findById_IdOrganizacionAndEstado(
+            Integer idOrganizacion,
+            String estado
+    );
 }

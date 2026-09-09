@@ -57,6 +57,7 @@ public DaoAuthenticationProvider authenticationProvider() {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/persona-mayor/**").authenticated()
+                        .requestMatchers("/api/organizacion/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())

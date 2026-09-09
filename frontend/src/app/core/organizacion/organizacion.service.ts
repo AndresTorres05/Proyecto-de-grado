@@ -10,6 +10,20 @@ export interface OrganizacionResponse {
   correo: string;
 }
 
+export interface PersonaMayorOrganizacion {
+  idUsuario: number;
+  nombre: string;
+  telefono: string;
+}
+
+export interface OrganizacionSolicitud {
+  idOrganizacion: number;
+  nombre: string;
+  telefono: string;
+  correo: string;
+  direccion: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -33,4 +47,43 @@ export class OrganizacionService {
       informacion
     );
   }
+  obtenerPersonasMayores(): Observable<PersonaMayorOrganizacion[]> {
+  return this.http.get<PersonaMayorOrganizacion[]>(
+    `${this.apiUrl}/personas-mayores`
+  );
+}
+
+asociarPersonaMayor(telefono: string): Observable<string> {
+  return this.http.post(
+    `${this.apiUrl}/personas-mayores`,
+    { telefono },
+    { responseType: 'text' }
+  );
+}
+obtenerSolicitudesOrganizaciones(): Observable<OrganizacionSolicitud[]> {
+  return this.http.get<OrganizacionSolicitud[]>(
+    'http://localhost:8080/api/persona-mayor/organizaciones/solicitudes'
+  );
+}
+
+aceptarSolicitudOrganizacion(idOrganizacion: number): Observable<string> {
+  return this.http.put(
+    `http://localhost:8080/api/persona-mayor/organizaciones/solicitudes/${idOrganizacion}/aceptar`,
+    {},
+    { responseType: 'text' }
+  );
+}
+
+rechazarSolicitudOrganizacion(idOrganizacion: number): Observable<string> {
+  return this.http.put(
+    `http://localhost:8080/api/persona-mayor/organizaciones/solicitudes/${idOrganizacion}/rechazar`,
+    {},
+    { responseType: 'text' }
+  );
+}
+obtenerOrganizaciones(): Observable<OrganizacionSolicitud[]> {
+  return this.http.get<OrganizacionSolicitud[]>(
+    'http://localhost:8080/api/persona-mayor/organizaciones'
+  );
+}
 }

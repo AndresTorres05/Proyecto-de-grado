@@ -52,8 +52,8 @@ export const routes: Routes = [
       {
         path: 'personas-mayores',
         loadComponent: () =>
-          import('./shared/en-construccion/en-construccion')
-            .then((m) => m.EnConstruccion),
+          import('./pages/dashboard/organizacion/personas-mayores/personas-mayores')
+            .then((m) => m.PersonasMayores),
         data: { titulo: 'Personas mayores' }
       },
 
@@ -317,7 +317,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/dashboard/persona-mayor/contactos/contactos')
             .then((m) => m.Contactos)
-      }
+      },
+      {
+  path: 'organizaciones',
+  loadComponent: () =>
+    import('./pages/dashboard/persona-mayor/organizaciones/organizaciones')
+      .then((m) => m.Organizaciones)
+}
     ]
   }
 

@@ -1,0 +1,379 @@
+:host {
+  display: block;
+  font-size: 1.1rem;
+}
+
+
+/* ---------- Encabezado ---------- */
+
+.page-header {
+  margin-bottom: 28px;
+}
+
+.page-header h1 {
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--vita-navy);
+}
+
+.page-header p {
+  margin-top: 6px;
+  color: var(--vita-text-gray);
+  font-size: 1.1rem;
+}
+
+
+/* ---------- Mensajes ---------- */
+
+.message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 20px;
+  padding: 13px 17px;
+
+  border-radius: var(--radius-sm);
+
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.message--success {
+  border: 1px solid var(--vita-green);
+
+  background: color-mix(
+    in srgb,
+    var(--vita-green) 10%,
+    white
+  );
+
+  color: var(--vita-navy);
+}
+
+.message--error {
+  border: 1px solid #d64545;
+
+  background: color-mix(
+    in srgb,
+    #d64545 10%,
+    white
+  );
+
+  color: #9e2929;
+}
+
+
+/* ---------- Secciones ---------- */
+
+.section {
+  margin-bottom: 34px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 20px;
+}
+
+.section-header h2 {
+  color: var(--vita-navy);
+
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.section-header p {
+  margin-top: 5px;
+
+  color: var(--vita-text-gray);
+
+  font-size: 0.95rem;
+}
+
+
+/* ---------- Contador solicitudes ---------- */
+
+.request-count {
+  flex-shrink: 0;
+
+  padding: 8px 13px;
+
+  border-radius: 20px;
+
+  background: var(--vita-cream-soft);
+
+  color: var(--vita-navy);
+
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+
+/* ---------- Grid ---------- */
+
+.organizations-grid {
+  display: grid;
+
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(280px, 1fr)
+  );
+
+  gap: 18px;
+}
+
+
+/* ---------- Solicitudes ---------- */
+
+.requests-list {
+  display: grid;
+
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(320px, 1fr)
+  );
+
+  gap: 18px;
+}
+
+
+/* ---------- Tarjeta ---------- */
+
+.organization-card {
+  padding: 22px;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.organization-card:hover {
+  transform: translateY(-2px);
+}
+
+
+/* ---------- Parte superior ---------- */
+
+.organization-card__top {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+}
+
+.organization-card__icon {
+  width: 56px;
+  height: 56px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: var(--vita-cream-soft);
+  color: var(--vita-navy);
+
+  font-size: 1.4rem;
+}
+
+.organization-card__title span {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: var(--vita-text-gray);
+
+  font-size: 0.85rem;
+}
+
+.organization-card__title h3 {
+  margin: 0;
+
+  color: var(--vita-navy);
+
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+
+/* ---------- Información ---------- */
+
+.organization-card__info {
+  display: flex;
+  flex-direction: column;
+
+  gap: 15px;
+
+  margin-top: 20px;
+
+  padding-top: 16px;
+
+  border-top: 1px solid var(--vita-border);
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 10px;
+}
+
+.info-item > app-icon {
+  flex-shrink: 0;
+
+  margin-top: 2px;
+
+  color: var(--vita-text-gray);
+}
+
+.info-item span {
+  display: block;
+
+  color: var(--vita-text-gray);
+
+  font-size: 0.82rem;
+}
+
+.info-item p {
+  margin-top: 3px;
+
+  color: var(--vita-navy);
+
+  font-size: 0.92rem;
+  font-weight: 600;
+
+  word-break: break-word;
+}
+
+
+/* ---------- Estado ---------- */
+
+.organization-card__status {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 18px;
+
+  color: var(--vita-green);
+
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.organization-card__status span {
+  width: 8px;
+  height: 8px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: var(--vita-green);
+}
+
+
+/* ---------- Acciones ---------- */
+
+.organization-card__actions {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  margin-top: 22px;
+}
+
+.organization-card__actions button {
+  min-width: 110px;
+}
+
+
+/* ---------- Estado vacío ---------- */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 50px 24px;
+
+  text-align: center;
+}
+
+.empty-state__icon {
+  width: 64px;
+  height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 16px;
+
+  border-radius: 50%;
+
+  background: var(--vita-cream-soft);
+  color: var(--vita-navy);
+
+  font-size: 1.7rem;
+}
+
+.empty-state h3 {
+  color: var(--vita-navy);
+
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.empty-state p {
+  max-width: 500px;
+
+  margin-top: 7px;
+
+  color: var(--vita-text-gray);
+
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 600px) {
+
+  .section-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .request-count {
+    align-self: flex-start;
+  }
+
+  .organizations-grid,
+  .requests-list {
+    grid-template-columns: 1fr;
+  }
+
+  .organization-card {
+    padding: 20px;
+  }
+
+  .organization-card__actions {
+    flex-direction: column-reverse;
+  }
+
+  .organization-card__actions button {
+    width: 100%;
+  }
+}

@@ -1,0 +1,278 @@
+<div class="page-header">
+
+  <div>
+    <h1>Personas mayores</h1>
+
+    <p>
+      Administra las personas mayores asociadas a tu organización.
+    </p>
+  </div>
+
+</div>
+
+
+<!-- =========================
+     MENSAJES
+     ========================= -->
+
+@if (mensaje(); as mensajeActual) {
+
+  <div class="message message--success">
+
+    <app-icon name="check-circle" />
+
+    {{ mensajeActual }}
+
+  </div>
+
+}
+
+@if (error(); as errorActual) {
+
+  <div class="message message--error">
+
+    <app-icon name="alert-circle" />
+
+    {{ errorActual }}
+
+  </div>
+
+}
+
+
+<!-- =========================
+     PERSONAS MAYORES
+     ========================= -->
+
+<section class="people-section">
+
+  <div class="section-header">
+
+    <div>
+
+      <h2>
+        Personas mayores asociadas
+      </h2>
+
+      <p>
+        Aquí puedes consultar las personas mayores
+        que pertenecen a tu organización.
+      </p>
+
+    </div>
+
+    <button
+      type="button"
+      class="add-button"
+      (click)="mostrarFormulario()"
+    >
+
+      <app-icon name="user-plus" />
+
+      Asociar persona mayor
+
+    </button>
+
+  </div>
+
+
+  @if (personasMayores().length === 0) {
+
+    <div class="empty-state card">
+
+      <div class="empty-state__icon">
+
+        <app-icon name="users" />
+
+      </div>
+
+      <h3>
+        No tienes personas mayores asociadas
+      </h3>
+
+      <p>
+        Cuando una persona mayor acepte tu solicitud,
+        aparecerá aquí.
+      </p>
+
+    </div>
+
+  } @else {
+
+    <div class="people-grid">
+
+      @for (
+        persona of personasMayores();
+        track persona.idUsuario
+      ) {
+
+        <div class="person-card card">
+
+          <div class="person-card__top">
+
+            <div class="person-card__avatar">
+
+              {{ persona.nombre.charAt(0).toUpperCase() }}
+
+            </div>
+
+            <div>
+
+              <span>
+                Persona mayor
+              </span>
+
+              <h3>
+                {{ persona.nombre }}
+              </h3>
+
+            </div>
+
+          </div>
+
+
+          <div class="person-card__info">
+
+            <div>
+
+              <span>
+                Teléfono
+              </span>
+
+              <p>
+                {{ persona.telefono }}
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="person-card__status">
+
+            <span></span>
+
+            Asociación activa
+
+          </div>
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+</section>
+
+
+<!-- =========================
+     MODAL
+     ========================= -->
+
+@if (mostrandoFormulario()) {
+
+  <div class="modal-overlay">
+
+    <div
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modalTitle"
+    >
+
+      <div class="modal__header">
+
+        <h2 id="modalTitle">
+          Asociar persona mayor
+        </h2>
+
+        <button
+          type="button"
+          class="modal__close"
+          (click)="cancelarFormulario()"
+          aria-label="Cerrar"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <p class="modal__description">
+
+        Ingresa el número de teléfono de la persona mayor
+        que deseas asociar. Se enviará una solicitud que
+        deberá ser aceptada por la persona.
+
+      </p>
+
+
+      <div class="form-group">
+
+        <label for="telefonoPersonaMayor">
+          Teléfono de la persona mayor
+        </label>
+
+        <input
+          id="telefonoPersonaMayor"
+          type="tel"
+          [(ngModel)]="telefono"
+          placeholder="Ej. 3001234567"
+        />
+
+      </div>
+
+
+      @if (error(); as errorActual) {
+
+        <div class="modal__error">
+
+          <app-icon name="alert-circle" />
+
+          {{ errorActual }}
+
+        </div>
+
+      }
+
+
+      <div class="modal__actions">
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="cancelarFormulario()"
+          [disabled]="agregandoPersonaMayor()"
+        >
+          Cancelar
+        </button>
+
+
+        <button
+          type="button"
+          class="btn btn-gold"
+          (click)="asociarPersonaMayor()"
+          [disabled]="agregandoPersonaMayor()"
+        >
+
+          @if (agregandoPersonaMayor()) {
+
+            Enviando...
+
+          } @else {
+
+            Enviar solicitud
+
+          }
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+}
