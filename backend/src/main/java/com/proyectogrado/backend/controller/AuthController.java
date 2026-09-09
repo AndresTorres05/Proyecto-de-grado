@@ -115,14 +115,15 @@ public class AuthController {
         usuarioRolRepository.save(new UsuarioRol(usuario, rol));
 
         if ("ORGANIZACION".equals(rol.getNombre())) {
+
             Organizacion organizacion = new Organizacion();
-            organizacion.setNombre(usuario.getNombreUsuario());
-            organizacion.setCorreo(usuario.getCorreo());
+
             organizacion.setDireccion(request.getDireccion());
-            organizacion.setTelefono(request.getTelefono());
+
             organizacion = organizacionRepository.save(organizacion);
 
             usuario.setIdOrganizacion(organizacion.getIdOrganizacion());
+
             usuario = usuarioRepository.save(usuario);
         } else if ("VOLUNTARIO".equals(rol.getNombre())) {
             voluntarioRepository.save(new Voluntario(usuario, request.getDisponibilidad()));

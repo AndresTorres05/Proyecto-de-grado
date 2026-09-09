@@ -103,7 +103,13 @@ public class EmergenciaController {
 
                 for (PersonaMayorOrganizacion relacion : organizaciones) {
 
-                        String telefono = relacion.getOrganizacion().getTelefono();
+                        Integer idOrganizacion =
+                                relacion.getOrganizacion().getIdOrganizacion();
+
+                        String telefono = usuarioRepository
+                                .findByIdOrganizacion(idOrganizacion)
+                                .map(usuario -> usuario.getTelefono())
+                                .orElse(null);
 
                         if (telefono == null || telefono.isBlank()) {
                                 continue;

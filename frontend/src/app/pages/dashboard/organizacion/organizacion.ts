@@ -12,6 +12,7 @@ import {
 } from '../../../core/actividades/actividad.service';
 
 import { AuthService } from '../../../core/auth/auth.service';
+import { OrganizacionService } from '../../../core/organizacion/organizacion.service';
 
 import { PANEL_CONFIG } from '../../../shared/panel-config/panel-config';
 
@@ -78,7 +79,7 @@ export class OrganizacionDashboard implements OnInit {
   // USUARIO
   // =========================================================
 
-  protected readonly nombreUsuario: string;
+  protected readonly nombreUsuario = signal('');
 
   // =========================================================
   // ESTADÍSTICAS
@@ -197,24 +198,51 @@ export class OrganizacionDashboard implements OnInit {
   // CONSTRUCTOR
   // =========================================================
 
-  constructor(
-    private actividadService: ActividadService,
-    private authService: AuthService
-  ) {
-    this.nombreUsuario = this.authService.getNombreUsuario();
-  }
+constructor(
+  private actividadService: ActividadService,
+  private authService: AuthService,
+  private organizacionService: OrganizacionService
+) {
+  this.nombreUsuario.set(this.authService.getNombreUsuario());
+}
 
   // =========================================================
   // INICIALIZACIÓN
   // =========================================================
 
-  ngOnInit(): void {
-    this.cargarActividades();
-  }
+ngOnInit(): void {
+  this.cargarActividades();
+  this.cargarInformacionOrganizacion();
+}
+
+
+private cargarInformacionOrganizacion(): void {
+
+  this.organizacionService.obtenerInformacion().subscribe({
+
+    next: (data) => {
+
+      console.log('NOMBRE DESDE BACKEND:', data.nombre);
+
+      this.nombreUsuario.set(data.nombre);
+
+      console.log('NOMBRE EN DASHBOARD:', this.nombreUsuario);
+    },
+
+    error: (error) => {
+      console.error(
+        'Error al cargar la información de la organización:',
+        error
+      );
+    }
+
+  });
+}
 
   // =========================================================
   // CARGAR ACTIVIDADES
   // =========================================================
+
 
   private cargarActividades(): void {
     this.actividadService.listarMias().subscribe({

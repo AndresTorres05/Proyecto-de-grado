@@ -62,7 +62,15 @@ public class OrganizacionController {
                         .body("Organización no encontrada");
             }
 
-            return ResponseEntity.ok(organizacion);
+            return ResponseEntity.ok(
+                    new OrganizacionInformacionResponse(
+                            organizacion.getIdOrganizacion(),
+                            usuario.getNombreUsuario(),
+                            usuario.getCorreo(),
+                            usuario.getTelefono(),
+                            organizacion.getDireccion()
+                    )
+            );
 
         } catch (Exception e) {
 
@@ -81,7 +89,7 @@ public class OrganizacionController {
 
     @PutMapping("/informacion")
     public ResponseEntity<?> actualizarInformacion(
-            @RequestBody Organizacion datosActualizados
+            @RequestBody OrganizacionInformacionRequest datosActualizados
     ) {
 
         try {
@@ -112,17 +120,41 @@ public class OrganizacionController {
                         .body("Organización no encontrada");
             }
 
-            // Actualizamos únicamente los campos permitidos
 
-            organizacion.setNombre(datosActualizados.getNombre());
-            organizacion.setCorreo(datosActualizados.getCorreo());
-            organizacion.setTelefono(datosActualizados.getTelefono());
-            organizacion.setDireccion(datosActualizados.getDireccion());
+            // ==========================================
+            // ACTUALIZAR DATOS GENERALES DEL USUARIO
+            // ==========================================
+
+            usuario.setNombreUsuario(datosActualizados.nombre());
+            usuario.setCorreo(datosActualizados.correo());
+            usuario.setTelefono(datosActualizados.telefono());
+
+            usuarioRepository.save(usuario);
+
+
+            // ==========================================
+            // ACTUALIZAR DATOS PROPIOS DE LA ORGANIZACIÓN
+            // ==========================================
+
+            organizacion.setDireccion(datosActualizados.direccion());
 
             Organizacion organizacionGuardada =
                     organizacionRepository.save(organizacion);
 
-            return ResponseEntity.ok(organizacionGuardada);
+
+            // ==========================================
+            // RESPUESTA
+            // ==========================================
+
+            return ResponseEntity.ok(
+                    new OrganizacionInformacionResponse(
+                            organizacionGuardada.getIdOrganizacion(),
+                            usuario.getNombreUsuario(),
+                            usuario.getCorreo(),
+                            usuario.getTelefono(),
+                            organizacionGuardada.getDireccion()
+                    )
+            );
 
         } catch (Exception e) {
 
@@ -152,8 +184,7 @@ public class OrganizacionController {
             return null;
         }
 
-        String identificador =
-                authentication.getName();
+        String identificador = authentication.getName();
 
         return usuarioRepository
                 .findByCorreo(identificador)
@@ -162,4 +193,29 @@ public class OrganizacionController {
                 )
                 .orElse(null);
     }
+
+
+    // ==========================================
+    // DTO PARA MOSTRAR INFORMACIÓN
+    // ==========================================
+
+    public record OrganizacionInformacionResponse(
+            Integer idOrganizacion,
+            String nombre,
+            String correo,
+            String telefono,
+            String direccion
+    ) {}
+
+
+    // ==========================================
+    // DTO PARA ACTUALIZAR INFORMACIÓN
+    // ==========================================
+
+    public record OrganizacionInformacionRequest(
+            String nombre,
+            String correo,
+            String telefono,
+            String direccion
+    ) {}
 }
