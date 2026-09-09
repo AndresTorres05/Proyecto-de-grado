@@ -1,42 +1,69 @@
 :host {
   display: block;
-  font-size: 1.1rem;
-}
 
+  font-size: 1.05rem;
 
-/* ---------- Encabezado ---------- */
-
-.page-header {
-  margin-bottom: 28px;
-}
-
-.page-header h1 {
-  font-size: 2.1rem;
-  font-weight: 700;
   color: var(--vita-navy);
 }
 
+
+/* =========================================================
+   ENCABEZADO
+   ========================================================= */
+
+.page-header {
+  margin-bottom: 30px;
+}
+
+.page-header h1 {
+  margin: 0;
+
+  color: var(--vita-navy);
+
+  font-size: 2.1rem;
+  font-weight: 700;
+
+  line-height: 1.2;
+}
+
 .page-header p {
-  margin-top: 6px;
+  margin: 8px 0 0;
+
   color: var(--vita-text-gray);
-  font-size: 1.1rem;
+
+  font-size: 1.05rem;
+  line-height: 1.5;
 }
 
 
-/* ---------- Mensajes ---------- */
+/* =========================================================
+   MENSAJES
+   ========================================================= */
 
 .message {
   display: flex;
   align-items: center;
-  gap: 10px;
 
-  margin-bottom: 20px;
-  padding: 13px 17px;
+  gap: 12px;
 
-  border-radius: var(--radius-sm);
+  margin-bottom: 22px;
+
+  padding: 14px 18px;
+
+  border-radius: 14px;
 
   font-size: 0.95rem;
   font-weight: 600;
+}
+
+.message__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  font-size: 1.2rem;
 }
 
 .message--success {
@@ -64,13 +91,11 @@
 }
 
 
-/* ---------- Secciones ---------- */
+/* =========================================================
+   TÍTULOS DE SECCIÓN
+   ========================================================= */
 
-.section {
-  margin-bottom: 34px;
-}
-
-.section-header {
+.section-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -80,28 +105,36 @@
   margin-bottom: 20px;
 }
 
-.section-header h2 {
+.section-title h2 {
+  margin: 0;
+
   color: var(--vita-navy);
 
-  font-size: 1.35rem;
+  font-size: 1.4rem;
   font-weight: 700;
 }
 
-.section-header p {
-  margin-top: 5px;
+.section-title p {
+  margin: 5px 0 0;
 
   color: var(--vita-text-gray);
 
   font-size: 0.95rem;
 }
 
+.section-title--organizations {
+  margin-bottom: 18px;
+}
 
-/* ---------- Contador solicitudes ---------- */
+
+/* =========================================================
+   CONTADOR DE SOLICITUDES
+   ========================================================= */
 
 .request-count {
   flex-shrink: 0;
 
-  padding: 8px 13px;
+  padding: 8px 14px;
 
   border-radius: 20px;
 
@@ -109,66 +142,40 @@
 
   color: var(--vita-navy);
 
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 700;
 }
 
 
-/* ---------- Grid ---------- */
+/* =========================================================
+   NO HAY SOLICITUDES
+   ========================================================= */
 
-.organizations-grid {
-  display: grid;
-
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(280px, 1fr)
-  );
-
-  gap: 18px;
-}
-
-
-/* ---------- Solicitudes ---------- */
-
-.requests-list {
-  display: grid;
-
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(320px, 1fr)
-  );
-
-  gap: 18px;
-}
-
-
-/* ---------- Tarjeta ---------- */
-
-.organization-card {
-  padding: 22px;
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.organization-card:hover {
-  transform: translateY(-2px);
-}
-
-
-/* ---------- Parte superior ---------- */
-
-.organization-card__top {
+.no-pending {
   display: flex;
   align-items: center;
 
-  gap: 14px;
+  gap: 16px;
+
+  width: 100%;
+
+  margin-bottom: 48px;
+
+  padding: 16px 24px;
+
+  border: 1px solid rgba(32, 170, 165, 0.18);
+
+  border-radius: 16px;
+
+  background: rgba(255, 255, 255, 0.8);
+
+  box-shadow:
+    0 6px 20px rgba(20, 46, 78, 0.05);
 }
 
-.organization-card__icon {
-  width: 56px;
-  height: 56px;
+.no-pending__icon {
+  width: 42px;
+  height: 42px;
 
   display: flex;
   align-items: center;
@@ -178,101 +185,459 @@
 
   border-radius: 50%;
 
-  background: var(--vita-cream-soft);
-  color: var(--vita-navy);
+  background: rgba(45, 197, 191, 0.13);
 
-  font-size: 1.4rem;
+  color: var(--vita-green);
+
+  font-size: 1.35rem;
 }
 
-.organization-card__title span {
+.no-pending__content {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.no-pending__content strong {
+  color: var(--vita-navy);
+
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.no-pending__content span {
+  color: var(--vita-text-gray);
+
+  font-size: 0.88rem;
+}
+
+
+/* =========================================================
+   SOLICITUDES
+   ========================================================= */
+
+.requests-section {
+  margin-bottom: 42px;
+}
+
+.requests-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 16px;
+}
+
+
+/* ---------- Tarjeta de solicitud ---------- */
+
+.request-card {
+  display: grid;
+
+  grid-template-columns:
+    minmax(230px, 1fr)
+    minmax(360px, 1.5fr)
+    auto;
+
+  align-items: center;
+
+  gap: 26px;
+
+  padding: 22px 26px;
+
+  border-radius: 18px;
+
+  background: white;
+
+  box-shadow:
+    0 7px 22px rgba(20, 46, 78, 0.07);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.request-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 28px rgba(20, 46, 78, 0.10);
+}
+
+
+/* ---------- Organización ---------- */
+
+.request-card__organization {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  min-width: 0;
+}
+
+
+/* ---------- Iconos ---------- */
+
+.organization-icon {
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 15px;
+
+  background: #edf5fc;
+
+  color: var(--vita-navy);
+
+  font-size: 1.65rem;
+}
+
+.organization-icon--request {
+  background: #f2f7fc;
+}
+
+
+/* ---------- Nombre ---------- */
+
+.eyebrow {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: var(--vita-text-gray);
+
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.request-card__organization h3,
+.organization-card__name h3 {
+  margin: 0;
+
+  color: var(--vita-navy);
+
+  font-size: 1.12rem;
+  font-weight: 700;
+}
+
+
+/* ---------- Información solicitud ---------- */
+
+.request-card__info {
+  display: flex;
+  align-items: center;
+
+  gap: 24px;
+
+  min-width: 0;
+}
+
+.request-card__info .info-item {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 9px;
+
+  min-width: 0;
+}
+
+.request-card__info .info-item > app-icon {
+  margin-top: 2px;
+
+  flex-shrink: 0;
+
+  color: var(--vita-text-gray);
+
+  font-size: 1rem;
+}
+
+.info-item span {
   display: block;
 
   margin-bottom: 3px;
 
   color: var(--vita-text-gray);
 
-  font-size: 0.85rem;
+  font-size: 0.78rem;
 }
 
-.organization-card__title h3 {
-  margin: 0;
+.info-item strong {
+  display: block;
 
   color: var(--vita-navy);
 
-  font-size: 1.15rem;
-  font-weight: 700;
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  overflow-wrap: anywhere;
 }
 
 
-/* ---------- Información ---------- */
+/* ---------- Acciones solicitud ---------- */
 
-.organization-card__info {
+.request-card__actions {
   display: flex;
   flex-direction: column;
 
-  gap: 15px;
+  gap: 9px;
 
-  margin-top: 20px;
-
-  padding-top: 16px;
-
-  border-top: 1px solid var(--vita-border);
+  min-width: 125px;
 }
 
-.info-item {
+.request-card__actions button {
+  width: 100%;
+}
+
+
+/* =========================================================
+   BOTONES
+   ========================================================= */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  min-height: 40px;
+
+  padding: 9px 15px;
+
+  border: none;
+  border-radius: 10px;
+
+  font-family: inherit;
+
+  font-size: 0.88rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  border: 1px solid var(--vita-border);
+
+  background: white;
+
+  color: var(--vita-navy);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #f7f9fb;
+}
+
+.btn-gold {
+  background: var(--vita-cream-soft);
+
+  color: var(--vita-navy);
+}
+
+.btn-gold:hover:not(:disabled) {
+  box-shadow:
+    0 4px 12px rgba(20, 46, 78, 0.10);
+}
+
+
+/* =========================================================
+   ORGANIZACIONES ASOCIADAS
+   ========================================================= */
+
+.organizations-section {
+  width: 100%;
+}
+
+.organizations-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+
+  width: 100%;
+}
+
+
+/* ---------- Tarjeta horizontal ---------- */
+
+.organization-card {
+  display: grid;
+
+  grid-template-columns:
+    minmax(250px, 1.25fr)
+    1px
+    minmax(180px, 1fr)
+    minmax(170px, 1fr)
+    minmax(260px, 1.3fr)
+    1px
+    auto;
+
+  align-items: center;
+
+  gap: 24px;
+
+  width: 100%;
+
+  min-height: 150px;
+
+  padding: 24px 28px;
+
+  border-radius: 20px;
+
+  background: white;
+
+  box-shadow:
+    0 8px 26px rgba(20, 46, 78, 0.07);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.organization-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 12px 32px rgba(20, 46, 78, 0.10);
+}
+
+
+/* ---------- Identidad ---------- */
+
+.organization-card__identity {
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+  min-width: 0;
+}
+
+.organization-card__name {
+  min-width: 0;
+}
+
+.organization-card__name h3 {
+  font-size: 1.2rem;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* ---------- Separadores ---------- */
+
+.organization-card__divider {
+  width: 1px;
+  height: 76px;
+
+  background: var(--vita-border);
+}
+
+.organization-card__divider--status {
+  height: 58px;
+}
+
+
+/* ---------- Detalles ---------- */
+
+.organization-card__detail {
   display: flex;
   align-items: flex-start;
 
-  gap: 10px;
+  gap: 11px;
+
+  min-width: 0;
 }
 
-.info-item > app-icon {
+.organization-card__detail > app-icon {
   flex-shrink: 0;
 
   margin-top: 2px;
 
-  color: var(--vita-text-gray);
+  color: var(--vita-navy);
+
+  font-size: 1.25rem;
 }
 
-.info-item span {
+.organization-card__detail > div {
+  min-width: 0;
+}
+
+.organization-card__detail span {
   display: block;
 
+  margin-bottom: 5px;
+
   color: var(--vita-text-gray);
 
-  font-size: 0.82rem;
+  font-size: 0.8rem;
 }
 
-.info-item p {
-  margin-top: 3px;
+.organization-card__detail strong {
+  display: block;
 
   color: var(--vita-navy);
 
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   font-weight: 600;
 
-  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 
-/* ---------- Estado ---------- */
+/* =========================================================
+   ESTADO DE ASOCIACIÓN
+   ========================================================= */
 
-.organization-card__status {
-  display: flex;
+.organization-status {
+  display: inline-flex;
   align-items: center;
 
-  gap: 8px;
+  justify-content: center;
 
-  margin-top: 18px;
+  gap: 9px;
+
+  min-width: 165px;
+
+  padding: 12px 18px;
+
+  border-radius: 25px;
+
+  background: rgba(45, 197, 191, 0.10);
 
   color: var(--vita-green);
 
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.86rem;
+  font-weight: 700;
+
+  white-space: nowrap;
 }
 
-.organization-card__status span {
-  width: 8px;
-  height: 8px;
+.organization-status__dot {
+  width: 9px;
+  height: 9px;
 
   flex-shrink: 0;
 
@@ -282,98 +647,261 @@
 }
 
 
-/* ---------- Acciones ---------- */
-
-.organization-card__actions {
-  display: flex;
-  justify-content: flex-end;
-
-  gap: 10px;
-
-  margin-top: 22px;
-}
-
-.organization-card__actions button {
-  min-width: 110px;
-}
-
-
-/* ---------- Estado vacío ---------- */
+/* =========================================================
+   ESTADO VACÍO
+   ========================================================= */
 
 .empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 
-  padding: 50px 24px;
+  min-height: 250px;
+
+  padding: 40px 24px;
+
+  border-radius: 18px;
+
+  background: white;
 
   text-align: center;
+
+  box-shadow:
+    0 7px 22px rgba(20, 46, 78, 0.06);
 }
 
 .empty-state__icon {
-  width: 64px;
-  height: 64px;
+  width: 60px;
+  height: 60px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 
-  border-radius: 50%;
+  border-radius: 16px;
 
-  background: var(--vita-cream-soft);
+  background: #edf5fc;
+
   color: var(--vita-navy);
 
   font-size: 1.7rem;
 }
 
 .empty-state h3 {
+  margin: 0;
+
   color: var(--vita-navy);
 
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 700;
 }
 
 .empty-state p {
   max-width: 500px;
 
-  margin-top: 7px;
+  margin: 7px 0 0;
 
   color: var(--vita-text-gray);
 
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   line-height: 1.5;
 }
 
 
-/* ---------- Responsive ---------- */
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
-@media (max-width: 600px) {
-
-  .section-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .request-count {
-    align-self: flex-start;
-  }
-
-  .organizations-grid,
-  .requests-list {
-    grid-template-columns: 1fr;
-  }
+@media (max-width: 1200px) {
 
   .organization-card {
+    grid-template-columns:
+      minmax(220px, 1.2fr)
+      1px
+      minmax(150px, 1fr)
+      minmax(150px, 1fr)
+      minmax(210px, 1.2fr)
+      1px
+      auto;
+
+    gap: 16px;
+
+    padding: 22px;
+  }
+
+  .request-card {
+    grid-template-columns:
+      minmax(210px, 1fr)
+      minmax(300px, 1.5fr)
+      auto;
+
+    gap: 18px;
+  }
+
+  .request-card__info {
+    gap: 15px;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 950px) {
+
+  .organization-card {
+    grid-template-columns:
+      minmax(230px, 1fr)
+      minmax(180px, 1fr)
+      minmax(180px, 1fr);
+
+    gap: 20px;
+  }
+
+  .organization-card__divider {
+    display: none;
+  }
+
+  .organization-status {
+    justify-self: start;
+  }
+
+  .request-card {
+    grid-template-columns: 1fr auto;
+
+    grid-template-areas:
+      "organization actions"
+      "info actions";
+  }
+
+  .request-card__organization {
+    grid-area: organization;
+  }
+
+  .request-card__info {
+    grid-area: info;
+  }
+
+  .request-card__actions {
+    grid-area: actions;
+  }
+
+}
+
+
+/* =========================================================
+   MÓVIL
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+  .page-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .page-header p {
+    font-size: 0.95rem;
+  }
+
+  .section-title {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 10px;
+  }
+
+  .no-pending {
+    padding: 14px 16px;
+
+    margin-bottom: 36px;
+  }
+
+  .no-pending__content span {
+    font-size: 0.82rem;
+  }
+
+  .request-card {
+    display: flex;
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 20px;
+
     padding: 20px;
   }
 
-  .organization-card__actions {
-    flex-direction: column-reverse;
+  .request-card__info {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 14px;
   }
 
-  .organization-card__actions button {
+  .request-card__actions {
+    flex-direction: row;
+
     width: 100%;
   }
+
+  .request-card__actions button {
+    flex: 1;
+  }
+
+  .organization-card {
+    display: flex;
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 18px;
+
+    min-height: 0;
+
+    padding: 22px;
+  }
+
+  .organization-card__divider {
+    display: block;
+
+    width: 100%;
+    height: 1px;
+  }
+
+  .organization-card__detail {
+    width: 100%;
+  }
+
+  .organization-status {
+    align-self: flex-start;
+  }
+
+}
+
+
+/* =========================================================
+   MÓVIL PEQUEÑO
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+  .page-header h1 {
+    font-size: 1.65rem;
+  }
+
+  .organization-card__name h3 {
+    white-space: normal;
+  }
+
+  .request-card__actions {
+    flex-direction: column;
+  }
+
 }

@@ -46,6 +46,7 @@ export class Organizaciones implements OnInit {
       next: (organizaciones) => {
         this.organizaciones.set(organizaciones);
       },
+
       error: (error) => {
         console.error(
           'Error al cargar organizaciones:',
@@ -58,24 +59,45 @@ export class Organizaciones implements OnInit {
   }
 
   cargarSolicitudes(): void {
-    this.organizacionService.obtenerSolicitudesOrganizaciones().subscribe({
-      next: (solicitudes) => {
-        this.solicitudes.set(solicitudes);
-      },
-      error: (error) => {
-        console.error(
-          'Error al cargar solicitudes:',
-          error
-        );
+    this.organizacionService
+      .obtenerSolicitudesOrganizaciones()
+      .subscribe({
 
-        this.solicitudes.set([]);
-      }
-    });
+        next: (solicitudes) => {
+          this.solicitudes.set(solicitudes);
+        },
+
+        error: (error) => {
+          console.error(
+            'Error al cargar solicitudes:',
+            error
+          );
+
+          this.solicitudes.set([]);
+        }
+
+      });
   }
 
   aceptarSolicitud(
     idOrganizacion: number
   ): void {
+
+    const organizacion = this.solicitudes().find(
+      (item) => item.idOrganizacion === idOrganizacion
+    );
+
+    if (!organizacion) {
+      return;
+    }
+
+    const confirmar = window.confirm(
+      `¿Estás seguro de que deseas aceptar la solicitud de ${organizacion.nombre}?`
+    );
+
+    if (!confirmar) {
+      return;
+    }
 
     this.mensaje.set(null);
     this.error.set(null);
@@ -85,29 +107,48 @@ export class Organizaciones implements OnInit {
     this.organizacionService
       .aceptarSolicitudOrganizacion(idOrganizacion)
       .subscribe({
-next: (respuesta) => {
 
-  console.log('Solicitud aceptada:', respuesta);
+        next: (respuesta) => {
 
-  this.procesandoSolicitud.set(null);
+          console.log(
+            'Solicitud aceptada:',
+            respuesta
+          );
 
-  this.mensaje.set(respuesta);
+          this.procesandoSolicitud.set(null);
 
-  this.cargarSolicitudes();
+          this.mensaje.set(respuesta);
 
-  this.organizacionService.obtenerOrganizaciones().subscribe({
-    next: (organizaciones) => {
-      console.log('Organizaciones aceptadas:', organizaciones);
-      this.organizaciones.set(organizaciones);
-    },
-    error: (error) => {
-      console.error(
-        'Error al cargar organizaciones aceptadas:',
-        error
-      );
-    }
-  });
-},
+          // Actualizar solicitudes pendientes
+          this.cargarSolicitudes();
+
+          // Actualizar organizaciones aceptadas
+          this.organizacionService
+            .obtenerOrganizaciones()
+            .subscribe({
+
+              next: (organizaciones) => {
+
+                console.log(
+                  'Organizaciones aceptadas:',
+                  organizaciones
+                );
+
+                this.organizaciones.set(
+                  organizaciones
+                );
+              },
+
+              error: (error) => {
+
+                console.error(
+                  'Error al cargar organizaciones aceptadas:',
+                  error
+                );
+              }
+
+            });
+        },
 
         error: (error) => {
 
@@ -119,12 +160,29 @@ next: (respuesta) => {
 
           this.error.set(mensaje);
         }
+
       });
   }
 
   rechazarSolicitud(
     idOrganizacion: number
   ): void {
+
+    const organizacion = this.solicitudes().find(
+      (item) => item.idOrganizacion === idOrganizacion
+    );
+
+    if (!organizacion) {
+      return;
+    }
+
+    const confirmar = window.confirm(
+      `¿Estás seguro de que deseas rechazar la solicitud de ${organizacion.nombre}?`
+    );
+
+    if (!confirmar) {
+      return;
+    }
 
     this.mensaje.set(null);
     this.error.set(null);
@@ -134,12 +192,14 @@ next: (respuesta) => {
     this.organizacionService
       .rechazarSolicitudOrganizacion(idOrganizacion)
       .subscribe({
+
         next: (respuesta) => {
 
           this.procesandoSolicitud.set(null);
 
           this.mensaje.set(respuesta);
 
+          // Actualizar solicitudes pendientes
           this.cargarSolicitudes();
         },
 
@@ -153,6 +213,7 @@ next: (respuesta) => {
 
           this.error.set(mensaje);
         }
+
       });
   }
 }
