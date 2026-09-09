@@ -1,0 +1,328 @@
+<div class="informacion">
+
+  <!-- =========================
+       ENCABEZADO
+       ========================= -->
+
+  <div class="informacion__header">
+
+    <div>
+      <h1>Información de la organización</h1>
+      <p>Consulta y administra los datos de tu organización.</p>
+    </div>
+
+    @if (!cargando) {
+
+      <button
+        type="button"
+        class="informacion__edit-button"
+        (click)="editando = !editando"
+      >
+        {{ editando ? 'Cancelar' : 'Editar información' }}
+      </button>
+
+    }
+
+  </div>
+
+
+  <!-- =========================
+       CARGANDO
+       ========================= -->
+
+  @if (cargando) {
+
+    <div class="informacion__loading">
+
+      <p>
+        Cargando información de la organización...
+      </p>
+
+    </div>
+
+  } @else {
+
+    <!-- =========================
+         INFORMACIÓN
+         ========================= -->
+
+    <div class="informacion__card">
+
+      <div class="informacion__section">
+
+        <h2>Datos de la organización</h2>
+
+        <div class="informacion__grid">
+
+          <!-- NOMBRE -->
+
+          <div class="informacion__field">
+
+            <label>
+              Nombre
+            </label>
+
+            <p>
+              {{ informacion?.nombre || 'No registrado' }}
+            </p>
+
+          </div>
+
+
+          <!-- CORREO -->
+
+          <div class="informacion__field">
+
+            <label>
+              Correo electrónico
+            </label>
+
+            <p>
+              {{ informacion?.correo || 'No registrado' }}
+            </p>
+
+          </div>
+
+
+          <!-- TELÉFONO -->
+
+          <div class="informacion__field">
+
+            <label>
+              Teléfono
+            </label>
+
+            <p>
+              {{ informacion?.telefono || 'No registrado' }}
+            </p>
+
+          </div>
+
+
+          <!-- DIRECCIÓN -->
+
+          <div class="informacion__field">
+
+            <label>
+              Dirección
+            </label>
+
+            <p>
+              {{ informacion?.direccion || 'No registrada' }}
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+
+  <!-- =========================
+       MODAL EDITAR
+       ========================= -->
+
+  @if (editando && informacion) {
+
+    <div class="informacion__edit-overlay">
+
+      <div
+        class="informacion__edit-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="editarInformacionTitle"
+      >
+
+        <!-- HEADER -->
+
+        <div class="informacion__edit-modal-header">
+
+          <h2 id="editarInformacionTitle">
+            Editar información
+          </h2>
+
+          <button
+            type="button"
+            class="informacion__edit-modal-close"
+            (click)="cancelarEdicion()"
+            aria-label="Cerrar"
+          >
+            ×
+          </button>
+
+        </div>
+
+
+        <p class="informacion__edit-modal-description">
+          Actualiza los datos de tu organización.
+        </p>
+
+
+        <!-- =========================
+             CAMPOS
+             ========================= -->
+
+        <div class="informacion__grid">
+
+
+          <!-- NOMBRE -->
+
+          <div class="informacion__field">
+
+            <label for="nombre">
+              Nombre
+            </label>
+
+            <input
+              id="nombre"
+              type="text"
+              [(ngModel)]="informacion.nombre"
+              placeholder="Ingresa el nombre de la organización"
+            />
+
+          </div>
+
+
+          <!-- CORREO -->
+
+          <div class="informacion__field">
+
+            <label for="correo">
+              Correo electrónico
+            </label>
+
+            <input
+              id="correo"
+              type="email"
+              [(ngModel)]="informacion.correo"
+              placeholder="Ingresa el correo electrónico"
+            />
+
+          </div>
+
+
+          <!-- TELÉFONO -->
+
+          <div class="informacion__field">
+
+            <label for="telefono">
+              Teléfono
+            </label>
+
+            <input
+              id="telefono"
+              type="tel"
+              [(ngModel)]="informacion.telefono"
+              placeholder="Ingresa el teléfono"
+            />
+
+          </div>
+
+
+          <!-- DIRECCIÓN -->
+
+          <div class="informacion__field">
+
+            <label for="direccion">
+              Dirección
+            </label>
+
+            <input
+              id="direccion"
+              type="text"
+              [(ngModel)]="informacion.direccion"
+              placeholder="Ingresa la dirección"
+            />
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             ACCIONES
+             ========================= -->
+
+        <div class="informacion__actions">
+
+          <button
+            type="button"
+            class="informacion__cancel-button"
+            (click)="cancelarEdicion()"
+          >
+            Cancelar
+          </button>
+
+          <button
+            type="button"
+            class="informacion__save-button"
+            (click)="guardarCambios()"
+          >
+            Guardar cambios
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+
+  <!-- =========================
+       MODAL CONFIRMACIÓN
+       ========================= -->
+
+  @if (mostrandoConfirmacion) {
+
+    <div class="informacion__confirm-overlay">
+
+      <div
+        class="informacion__confirm-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirmarGuardadoTitle"
+      >
+
+        <h2 id="confirmarGuardadoTitle">
+          Confirmar cambios
+        </h2>
+
+        <p>
+          ¿Estás seguro de que deseas guardar los cambios realizados
+          en la información de tu organización?
+        </p>
+
+
+        <div class="informacion__confirm-actions">
+
+          <button
+            type="button"
+            class="informacion__cancel-button"
+            (click)="cancelarGuardado()"
+          >
+            Cancelar
+          </button>
+
+          <button
+            type="button"
+            class="informacion__save-button"
+            (click)="confirmarGuardado()"
+          >
+            Confirmar
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+</div>

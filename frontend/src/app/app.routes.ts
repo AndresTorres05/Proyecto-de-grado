@@ -124,8 +124,8 @@ export const routes: Routes = [
       {
         path: 'administracion',
         loadComponent: () =>
-          import('./shared/en-construccion/en-construccion')
-            .then((m) => m.EnConstruccion),
+          import('./pages/dashboard/organizacion/administracion/administracion')
+            .then((m) => m.Administracion),
         data: { titulo: 'Administración' }
       }
 
