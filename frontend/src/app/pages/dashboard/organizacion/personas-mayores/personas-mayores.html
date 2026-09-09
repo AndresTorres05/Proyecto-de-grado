@@ -40,45 +40,63 @@
 }
 
 
-<!-- =========================
-     PERSONAS MAYORES
-     ========================= -->
+<!-- =========================================================
+     PERSONAS MAYORES ASOCIADAS
+     ========================================================= -->
 
 <section class="people-section">
 
-  <div class="section-header">
+  <div class="section-title">
 
     <div>
 
-      <h2>
-        Personas mayores asociadas
-      </h2>
+      <h2>Personas mayores asociadas</h2>
 
       <p>
-        Aquí puedes consultar las personas mayores
-        que pertenecen a tu organización.
+        Consulta las personas mayores que pertenecen
+        a tu organización.
       </p>
 
     </div>
 
-    <button
-      type="button"
-      class="add-button"
-      (click)="mostrarFormulario()"
-    >
+    <div class="people-section__actions">
 
-      <app-icon name="user-plus" />
+      <div class="people-count">
 
-      Asociar persona mayor
+        {{ personasMayores().length }}
 
-    </button>
+        {{
+          personasMayores().length === 1
+            ? 'persona asociada'
+            : 'personas asociadas'
+        }}
+
+      </div>
+
+      <button
+        type="button"
+        class="add-button"
+        (click)="mostrarFormulario()"
+      >
+
+        <app-icon name="users" />
+
+        Asociar persona mayor
+
+      </button>
+
+    </div>
 
   </div>
 
 
+  <!-- =======================================================
+       ESTADO VACÍO
+       ======================================================= -->
+
   @if (personasMayores().length === 0) {
 
-    <div class="empty-state card">
+    <div class="empty-state">
 
       <div class="empty-state__icon">
 
@@ -91,34 +109,44 @@
       </h3>
 
       <p>
-        Cuando una persona mayor acepte tu solicitud,
-        aparecerá aquí.
+        Cuando una persona mayor acepte tu solicitud
+        de asociación, aparecerá aquí.
       </p>
 
     </div>
 
   } @else {
 
-    <div class="people-grid">
+
+    <!-- =====================================================
+         LISTA DE PERSONAS
+         ===================================================== -->
+
+    <div class="people-list">
 
       @for (
         persona of personasMayores();
         track persona.idUsuario
       ) {
 
-        <div class="person-card card">
+        <div class="person-card">
 
-          <div class="person-card__top">
 
-            <div class="person-card__avatar">
+          <!-- =================================================
+               IDENTIDAD
+               ================================================= -->
 
-              {{ persona.nombre.charAt(0).toUpperCase() }}
+          <div class="person-card__identity">
+
+            <div class="person-icon">
+
+              <app-icon name="user" />
 
             </div>
 
-            <div>
+            <div class="person-card__name">
 
-              <span>
+              <span class="eyebrow">
                 Persona mayor
               </span>
 
@@ -131,7 +159,20 @@
           </div>
 
 
-          <div class="person-card__info">
+          <!-- =================================================
+               SEPARADOR
+               ================================================= -->
+
+          <div class="person-card__divider"></div>
+
+
+          <!-- =================================================
+               TELÉFONO
+               ================================================= -->
+
+          <div class="person-card__detail">
+
+            <app-icon name="phone" />
 
             <div>
 
@@ -139,20 +180,33 @@
                 Teléfono
               </span>
 
-              <p>
+              <strong>
                 {{ persona.telefono }}
-              </p>
+              </strong>
 
             </div>
 
           </div>
 
 
-          <div class="person-card__status">
+          <!-- =================================================
+               SEPARADOR
+               ================================================= -->
 
-            <span></span>
+          <div class="person-card__divider person-card__divider--status"></div>
 
-            Asociación activa
+
+          <!-- =================================================
+               ESTADO
+               ================================================= -->
+
+          <div class="person-status">
+
+            <span class="person-status__dot"></span>
+
+            <span>
+              Asociación activa
+            </span>
 
           </div>
 

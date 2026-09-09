@@ -63,13 +63,20 @@
 }
 
 
-/* ---------- Sección de personas mayores ---------- */
+/* =========================================================
+   PERSONAS MAYORES
+   ========================================================= */
 
 .people-section {
-  margin-bottom: 32px;
+  width: 100%;
 }
 
-.section-header {
+
+/* =========================================================
+   TÍTULO DE SECCIÓN
+   ========================================================= */
+
+.section-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -79,15 +86,17 @@
   margin-bottom: 20px;
 }
 
-.section-header h2 {
+.section-title h2 {
+  margin: 0;
+
   color: var(--vita-navy);
 
-  font-size: 1.35rem;
+  font-size: 1.4rem;
   font-weight: 700;
 }
 
-.section-header p {
-  margin-top: 5px;
+.section-title p {
+  margin: 5px 0 0;
 
   color: var(--vita-text-gray);
 
@@ -95,64 +104,138 @@
 }
 
 
-/* ---------- Botón asociar ---------- */
+/* =========================================================
+   ACCIONES DE LA SECCIÓN
+   ========================================================= */
+
+.people-section__actions {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   CONTADOR
+   ========================================================= */
+
+.people-count {
+  padding: 8px 14px;
+
+  border-radius: 20px;
+
+  background: var(--vita-cream-soft);
+
+  color: var(--vita-navy);
+
+  font-size: 0.85rem;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   BOTÓN ASOCIAR
+   ========================================================= */
 
 .add-button {
-  padding: 11px 18px;
-
-  border: none;
-  border-radius: 10px;
-
-  background: var(--vita-orange);
-  color: var(--vita-white);
-
-  font-family: inherit;
-  font-size: 0.95rem;
-  font-weight: 600;
-
-  cursor: pointer;
-
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 
   gap: 8px;
 
-  white-space: nowrap;
+  min-height: 40px;
+
+  padding: 9px 15px;
+
+  border: none;
+  border-radius: 10px;
+
+  /* Verde Vita+ */
+  background: var(--vita-green);
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 0.88rem;
+  font-weight: 700;
+
+  cursor: pointer;
 
   transition:
-    background-color 0.2s ease,
-    transform 0.2s ease;
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
 }
 
-.add-button:hover,
-.add-button:focus,
-.add-button:active {
-  background: var(--vita-orange) !important;
-  color: var(--vita-white) !important;
-
+.add-button:hover {
   transform: translateY(-1px);
+
+  background: #27694d;
+
+  box-shadow:
+    0 4px 12px rgba(20, 46, 78, 0.10);
+}
+
+.add-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 
-/* ---------- Grid de personas ---------- */
+/* =========================================================
+   LISTA
+   ========================================================= */
 
-.people-grid {
-  display: grid;
-
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(280px, 1fr)
-  );
+.people-list {
+  display: flex;
+  flex-direction: column;
 
   gap: 18px;
+
+  width: 100%;
 }
 
 
-/* ---------- Tarjeta persona mayor ---------- */
+/* =========================================================
+   TARJETA PERSONA MAYOR
+   ========================================================= */
 
 .person-card {
-  padding: 22px;
+  display: grid;
+
+  grid-template-columns:
+    minmax(250px, 1.35fr)
+    1px
+    minmax(200px, 1fr)
+    1px
+    minmax(180px, auto);
+
+  align-items: center;
+
+  gap: 24px;
+
+  width: 100%;
+
+  min-height: 150px;
+
+  box-sizing: border-box;
+
+  padding: 24px 28px;
+
+  border-radius: 20px;
+
+  background: white;
+
+  box-shadow:
+    0 8px 26px rgba(20, 46, 78, 0.07);
 
   transition:
     transform 0.2s ease,
@@ -161,21 +244,50 @@
 
 .person-card:hover {
   transform: translateY(-2px);
+
+  box-shadow:
+    0 12px 32px rgba(20, 46, 78, 0.10);
 }
 
 
-/* ---------- Información superior ---------- */
+/* =========================================================
+   IDENTIDAD
+   ========================================================= */
 
-.person-card__top {
+.person-card__identity {
   display: flex;
   align-items: center;
 
-  gap: 14px;
+  gap: 16px;
+
+  min-width: 0;
 }
 
-.person-card__avatar {
-  width: 56px;
-  height: 56px;
+.person-card__name {
+  min-width: 0;
+}
+
+.person-card__name h3 {
+  margin: 0;
+
+  color: var(--vita-navy);
+
+  font-size: 1.2rem;
+  font-weight: 700;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   ICONO PERSONA
+   ========================================================= */
+
+.person-icon {
+  width: 58px;
+  height: 58px;
 
   display: flex;
   align-items: center;
@@ -183,82 +295,127 @@
 
   flex-shrink: 0;
 
-  border-radius: 50%;
+  border-radius: 15px;
 
-  background: var(--vita-cream-soft);
+  background: #edf5fc;
+
   color: var(--vita-navy);
 
-  font-size: 1.35rem;
-  font-weight: 700;
+  font-size: 1.65rem;
 }
 
-.person-card__top span {
+
+/* =========================================================
+   ETIQUETA SUPERIOR
+   ========================================================= */
+
+.eyebrow {
   display: block;
 
-  margin-bottom: 3px;
+  margin-bottom: 4px;
 
   color: var(--vita-text-gray);
 
-  font-size: 0.85rem;
-}
-
-.person-card__top h3 {
-  margin: 0;
-
-  color: var(--vita-navy);
-
-  font-size: 1.15rem;
-  font-weight: 700;
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 
 
-/* ---------- Información de contacto ---------- */
+/* =========================================================
+   SEPARADORES
+   ========================================================= */
 
-.person-card__info {
-  margin-top: 20px;
+.person-card__divider {
+  width: 1px;
+  height: 76px;
 
-  padding-top: 16px;
-
-  border-top: 1px solid var(--vita-border);
+  background: var(--vita-border);
 }
 
-.person-card__info span {
-  display: block;
-
-  color: var(--vita-text-gray);
-
-  font-size: 0.85rem;
-}
-
-.person-card__info p {
-  margin-top: 4px;
-
-  color: var(--vita-navy);
-
-  font-size: 0.95rem;
-  font-weight: 600;
+.person-card__divider--status {
+  height: 58px;
 }
 
 
-/* ---------- Estado de asociación ---------- */
+/* =========================================================
+   DETALLES
+   ========================================================= */
 
-.person-card__status {
+.person-card__detail {
   display: flex;
+  align-items: flex-start;
+
+  gap: 11px;
+
+  min-width: 0;
+}
+
+.person-card__detail > app-icon {
+  flex-shrink: 0;
+
+  margin-top: 2px;
+
+  color: var(--vita-navy);
+
+  font-size: 1.25rem;
+}
+
+.person-card__detail > div {
+  min-width: 0;
+}
+
+.person-card__detail span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: var(--vita-text-gray);
+
+  font-size: 0.8rem;
+}
+
+.person-card__detail strong {
+  display: block;
+
+  color: var(--vita-navy);
+
+  font-size: 0.88rem;
+  font-weight: 600;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   ESTADO DE ASOCIACIÓN
+   ========================================================= */
+
+.person-status {
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
 
-  gap: 8px;
+  gap: 9px;
 
-  margin-top: 18px;
+  min-width: 165px;
+
+  padding: 12px 18px;
+
+  border-radius: 25px;
+
+  background: rgba(45, 197, 191, 0.10);
 
   color: var(--vita-green);
 
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.86rem;
+  font-weight: 700;
+
+  white-space: nowrap;
 }
 
-.person-card__status span {
-  width: 8px;
-  height: 8px;
+.person-status__dot {
+  width: 9px;
+  height: 9px;
 
   flex-shrink: 0;
 
@@ -268,51 +425,67 @@
 }
 
 
-/* ---------- Estado vacío ---------- */
+/* =========================================================
+   ESTADO VACÍO
+   ========================================================= */
 
 .empty-state {
   display: flex;
   flex-direction: column;
-  align-items: center;
 
-  padding: 50px 24px;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 250px;
+
+  padding: 40px 24px;
+
+  border-radius: 18px;
+
+  background: white;
 
   text-align: center;
+
+  box-shadow:
+    0 7px 22px rgba(20, 46, 78, 0.06);
 }
 
 .empty-state__icon {
-  width: 64px;
-  height: 64px;
+  width: 60px;
+  height: 60px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 
-  border-radius: 50%;
+  border-radius: 16px;
 
-  background: var(--vita-cream-soft);
+  background: #edf5fc;
+
   color: var(--vita-navy);
 
   font-size: 1.7rem;
 }
 
 .empty-state h3 {
+  margin: 0;
+
   color: var(--vita-navy);
 
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 700;
 }
 
 .empty-state p {
   max-width: 500px;
 
-  margin-top: 7px;
+  margin: 7px 0 0;
 
   color: var(--vita-text-gray);
 
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   line-height: 1.5;
 }
 
@@ -351,6 +524,129 @@
   border-radius: 16px;
 
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+  .person-card {
+    grid-template-columns:
+      minmax(220px, 1.2fr)
+      1px
+      minmax(160px, 1fr)
+      1px
+      auto;
+
+    gap: 16px;
+
+    padding: 22px;
+  }
+
+}
+
+
+@media (max-width: 850px) {
+
+  .person-card {
+    grid-template-columns:
+      minmax(220px, 1fr)
+      minmax(180px, 1fr)
+      auto;
+
+    gap: 20px;
+  }
+
+  .person-card__divider {
+    display: none;
+  }
+
+  .person-status {
+    justify-self: start;
+  }
+
+}
+
+
+@media (max-width: 650px) {
+
+  .section-title {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 14px;
+  }
+
+  .people-section__actions {
+    width: 100%;
+  }
+
+  .people-count {
+    flex: 1;
+
+    text-align: center;
+  }
+
+  .add-button {
+    flex: 1;
+  }
+
+  .person-card {
+    display: flex;
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 18px;
+
+    min-height: 0;
+
+    padding: 22px;
+  }
+
+  .person-card__divider {
+    display: block;
+
+    width: 100%;
+    height: 1px;
+  }
+
+  .person-card__detail {
+    width: 100%;
+  }
+
+  .person-status {
+    align-self: flex-start;
+  }
+
+}
+
+
+@media (max-width: 420px) {
+
+  .section-title h2 {
+    font-size: 1.25rem;
+  }
+
+  .people-section__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .people-count,
+  .add-button {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .person-card__name h3 {
+    white-space: normal;
+  }
+
 }
 
 
