@@ -59,7 +59,7 @@ export class AuthService {
   private readonly apiUrl = 'http://localhost:8080/api/auth';
 
   private readonly autenticadoSignal = signal(
-    !!localStorage.getItem('token')
+    !!sessionStorage.getItem('token')
   );
 
   constructor(
@@ -113,10 +113,10 @@ export class AuthService {
   }
 
   private guardarSesion(response: LoginResponse): void {
-    localStorage.setItem('token', response.token);
-    localStorage.setItem('rol', response.rol);
-    localStorage.setItem('idUsuario', String(response.idUsuario));
-    localStorage.setItem('nombreUsuario', response.nombreUsuario);
+    sessionStorage.setItem('token', response.token);
+    sessionStorage.setItem('rol', response.rol);
+    sessionStorage.setItem('idUsuario', String(response.idUsuario));
+    sessionStorage.setItem('nombreUsuario', response.nombreUsuario);
 
     // Avisar a toda la aplicación que hay una sesión
     this.autenticadoSignal.set(true);
@@ -128,10 +128,10 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('rol');
-    localStorage.removeItem('idUsuario');
-    localStorage.removeItem('nombreUsuario');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('rol');
+    sessionStorage.removeItem('idUsuario');
+    sessionStorage.removeItem('nombreUsuario');
 
     // Avisar a toda la aplicación que la sesión terminó
     this.autenticadoSignal.set(false);
@@ -140,20 +140,20 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return sessionStorage.getItem('token');
   }
 
   getIdUsuario(): number | null {
-    const idUsuario = localStorage.getItem('idUsuario');
+    const idUsuario = sessionStorage.getItem('idUsuario');
     return idUsuario ? Number(idUsuario) : null;
   }
 
   getNombreUsuario(): string {
-    return localStorage.getItem('nombreUsuario') ?? 'Usuario';
+    return sessionStorage.getItem('nombreUsuario') ?? 'Usuario';
   }
 
   getRol(): string | null {
-    return localStorage.getItem('rol');
+    return sessionStorage.getItem('rol');
   }
 
   estaAutenticado(): boolean {

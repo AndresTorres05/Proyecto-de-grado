@@ -11,7 +11,7 @@ export const authGuard: CanActivateFn = (route) => {
   }
 
   const rolRequerido = route.data['rol'] as string | undefined;
-  const rolUsuario = localStorage.getItem('rol');
+  const rolUsuario = sessionStorage.getItem('rol');
 
   if (rolRequerido && rolUsuario !== rolRequerido) {
     // Está logueado, pero con otro rol: lo mandamos a SU panel correcto, no al que pidió
