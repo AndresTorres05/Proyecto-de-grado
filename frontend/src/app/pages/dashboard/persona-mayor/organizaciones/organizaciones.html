@@ -192,7 +192,7 @@
 
             <button
               type="button"
-              class="btn btn-secondary"
+              class="btn btn-reject"
               (click)="rechazarSolicitud(organizacion.idOrganizacion)"
               [disabled]="
                 procesandoSolicitud() === organizacion.idOrganizacion
@@ -216,7 +216,7 @@
 
             <button
               type="button"
-              class="btn btn-gold"
+              class="btn btn-accept"
               (click)="aceptarSolicitud(organizacion.idOrganizacion)"
               [disabled]="
                 procesandoSolicitud() === organizacion.idOrganizacion
@@ -473,3 +473,137 @@
   }
 
 </section>
+
+<!-- =========================================================
+     MODAL DE CONFIRMACIÓN
+     ========================================================= -->
+
+@if (modalAbierto()) {
+
+  <div
+    class="modal-overlay"
+    (click)="cerrarModal()"
+  >
+
+    <div
+      class="modal-confirmation"
+      (click)="$event.stopPropagation()"
+    >
+
+      <div
+        class="modal-confirmation__icon"
+        [class.modal-confirmation__icon--danger]="
+          accionPendiente() === 'rechazar' ||
+          accionPendiente() === 'cancelar'
+        "
+      >
+
+        @if (accionPendiente() === 'aceptar') {
+
+          <app-icon name="check" />
+
+        } @else {
+
+          <app-icon name="alert-circle" />
+
+        }
+
+      </div>
+
+      <div class="modal-confirmation__content">
+
+        @if (accionPendiente() === 'aceptar') {
+
+          <h2>Aceptar solicitud</h2>
+
+          <p>
+            ¿Estás seguro de que deseas aceptar la solicitud
+            de asociación de
+            <strong>
+              {{ organizacionSeleccionada()?.nombre }}
+            </strong>?
+          </p>
+
+        } @else if (accionPendiente() === 'rechazar') {
+
+          <h2>Rechazar solicitud</h2>
+
+          <p>
+            ¿Estás seguro de que deseas rechazar la solicitud
+            de asociación de
+            <strong>
+              {{ organizacionSeleccionada()?.nombre }}
+            </strong>?
+          </p>
+
+        } @else {
+
+          <h2>Cancelar asociación</h2>
+
+          <p>
+            ¿Estás seguro de que deseas cancelar la asociación
+            con
+            <strong>
+              {{ organizacionSeleccionada()?.nombre }}
+            </strong>?
+          </p>
+
+          <span class="modal-confirmation__warning">
+            La organización dejará de aparecer entre tus
+            organizaciones asociadas.
+          </span>
+
+        }
+
+      </div>
+
+      <div class="modal-confirmation__actions">
+
+        <button
+          type="button"
+          class="modal-button modal-button--secondary"
+          (click)="cerrarModal()"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="modal-button"
+          [class.modal-button--success]="
+            accionPendiente() === 'aceptar'
+          "
+          [class.modal-button--danger]="
+            accionPendiente() === 'rechazar' ||
+            accionPendiente() === 'cancelar'
+          "
+          (click)="confirmarAccion()"
+        >
+
+          @if (accionPendiente() === 'aceptar') {
+
+            <app-icon name="check" />
+
+            Aceptar
+
+          } @else if (accionPendiente() === 'rechazar') {
+
+            Rechazar
+
+          } @else {
+
+            <app-icon name="x" />
+
+            Desvincular
+
+          }
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+}
