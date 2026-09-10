@@ -435,20 +435,34 @@
 
           <!-- Separador -->
 
-          <div class="organization-card__divider organization-card__divider--status"></div>
+<div class="organization-card__divider organization-card__divider--status"></div>
 
 
-          <!-- Estado -->
+<!-- Estado y acciones -->
 
-          <div class="organization-status">
+<div class="organization-card__actions">
 
-            <span class="organization-status__dot"></span>
+  <div class="organization-status">
 
-            <span>
-              Asociación activa
-            </span>
+    <span class="organization-status__dot"></span>
 
-          </div>
+    <span>
+      Asociación activa
+    </span>
+
+  </div>
+
+  <button
+    type="button"
+    class="remove-association-button"
+    (click)="cancelarAsociacion(organizacion)"
+    title="Cancelar asociación"
+    aria-label="Cancelar asociación"
+  >
+    <app-icon name="x" />
+  </button>
+
+</div>
 
         </div>
 

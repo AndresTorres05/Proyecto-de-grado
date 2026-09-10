@@ -660,6 +660,78 @@ public ResponseEntity<?> obtenerOrganizacionesPersonaMayor() {
 
 
     // =========================================================
+// PERSONA MAYOR
+// CANCELAR ASOCIACIÓN CON ORGANIZACIÓN
+// =========================================================
+
+@DeleteMapping("/api/persona-mayor/organizaciones/{idOrganizacion}")
+public ResponseEntity<?> cancelarAsociacionOrganizacion(
+        @PathVariable Integer idOrganizacion
+) {
+
+    try {
+
+        Usuario usuario = obtenerUsuarioAutenticado();
+
+        if (usuario == null) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("Usuario no autenticado");
+        }
+
+        Integer idPersonaMayor =
+                usuario.getIdUsuario();
+
+        PersonaMayorOrganizacionId idRelacion =
+                new PersonaMayorOrganizacionId(
+                        idPersonaMayor,
+                        idOrganizacion
+                );
+
+        PersonaMayorOrganizacion relacion =
+                relacionRepository
+                        .findById(idRelacion)
+                        .orElse(null);
+
+        if (relacion == null) {
+
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(
+                            "No existe una asociación con esta organización"
+                    );
+        }
+
+        if (!"ACEPTADA".equals(relacion.getEstado())) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(
+                            "La asociación no está activa"
+                    );
+        }
+
+        relacionRepository.delete(relacion);
+        relacionRepository.flush();
+
+        return ResponseEntity.ok(
+                "Asociación cancelada correctamente"
+        );
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(
+                        "Error al cancelar la asociación"
+                );
+    }
+}
+
+
+    // =========================================================
     // OBTENER USUARIO AUTENTICADO
     // =========================================================
 

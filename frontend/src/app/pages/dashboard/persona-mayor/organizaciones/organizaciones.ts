@@ -216,4 +216,49 @@ export class Organizaciones implements OnInit {
 
       });
   }
+cancelarAsociacion(
+  organizacion: OrganizacionSolicitud
+): void {
+
+  const confirmar = window.confirm(
+    `¿Estás seguro de que deseas cancelar la asociación con ${organizacion.nombre}?`
+  );
+
+  if (!confirmar) {
+    return;
+  }
+
+  this.mensaje.set(null);
+  this.error.set(null);
+
+  this.organizacionService
+    .cancelarAsociacionOrganizacion(
+      organizacion.idOrganizacion
+    )
+    .subscribe({
+
+      next: (respuesta) => {
+
+        this.mensaje.set(respuesta);
+
+        this.cargarOrganizaciones();
+      },
+
+      error: (error) => {
+
+        console.error(
+          'Error al cancelar la asociación:',
+          error
+        );
+
+        const mensaje =
+          error?.error ||
+          'No se pudo cancelar la asociación.';
+
+        this.error.set(mensaje);
+      }
+
+    });
+}
+
 }
