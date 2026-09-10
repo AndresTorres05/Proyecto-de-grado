@@ -4,6 +4,7 @@ import com.proyectogrado.backend.dto.PersonaMayorResponse;
 import com.proyectogrado.backend.model.PersonaMayorAcompanante;
 import com.proyectogrado.backend.repository.PersonaMayorAcompananteRepository;
 import com.proyectogrado.backend.security.JwtService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,11 @@ public class AcompananteController {
         this.jwtService = jwtService;
     }
 
+
+    // =========================================================
+    // PERSONAS MAYORES ACEPTADAS
+    // =========================================================
+
     @GetMapping
     public ResponseEntity<List<PersonaMayorResponse>> obtenerPersonasMayores(
             @RequestHeader("Authorization") String authorizationHeader
@@ -40,117 +46,212 @@ public class AcompananteController {
                         "ACEPTADA"
                 );
 
-        List<PersonaMayorResponse> respuesta = relaciones.stream()
-                .map(PersonaMayorAcompanante::getPersonaMayor)
-                .map(personaMayor -> new PersonaMayorResponse(
-                        personaMayor.getIdUsuario(),
-                        personaMayor.getUsuario().getNombreUsuario(),
-                        personaMayor.getUsuario().getTelefono(),
-                        personaMayor.getUsuario().getCorreo(),
-                        personaMayor.getFechaNacimiento(),
-                        personaMayor.getGenero(),
-                        personaMayor.getDireccion()
-                ))
-                .toList();
+
+        List<PersonaMayorResponse> respuesta =
+                relaciones.stream()
+
+                        .map(PersonaMayorAcompanante::getPersonaMayor)
+
+                        .map(personaMayor -> {
+
+                            boolean tieneContrasena =
+                                    personaMayor.getUsuario()
+                                            .getContrasenaHash() != null
+                                    &&
+                                    !personaMayor.getUsuario()
+                                            .getContrasenaHash()
+                                            .isBlank();
+
+                            return new PersonaMayorResponse(
+                                    personaMayor.getIdUsuario(),
+                                    personaMayor.getUsuario()
+                                            .getNombreUsuario(),
+                                    personaMayor.getUsuario()
+                                            .getTelefono(),
+                                    personaMayor.getUsuario()
+                                            .getCorreo(),
+                                    personaMayor.getFechaNacimiento(),
+                                    personaMayor.getGenero(),
+                                    personaMayor.getDireccion(),
+                                    tieneContrasena
+                            );
+                        })
+
+                        .toList();
 
         return ResponseEntity.ok(respuesta);
     }
+
+
+    // =========================================================
+    // SOLICITUDES PENDIENTES
+    // =========================================================
+
     @GetMapping("/solicitudes")
-public ResponseEntity<List<PersonaMayorResponse>> obtenerSolicitudesPendientes(
-        @RequestHeader("Authorization") String authorizationHeader
-) {
+    public ResponseEntity<List<PersonaMayorResponse>> obtenerSolicitudesPendientes(
+            @RequestHeader("Authorization") String authorizationHeader
+    ) {
 
-    String token = authorizationHeader.substring(7);
+        String token = authorizationHeader.substring(7);
 
-    Integer idAcompanante =
-            jwtService.extraerIdUsuario(token);
+        Integer idAcompanante =
+                jwtService.extraerIdUsuario(token);
 
-    List<PersonaMayorAcompanante> relaciones =
-            relacionRepository.findById_IdAcompananteAndEstado(
-                    idAcompanante,
-                    "PENDIENTE"
-            );
+        List<PersonaMayorAcompanante> relaciones =
+                relacionRepository.findById_IdAcompananteAndEstado(
+                        idAcompanante,
+                        "PENDIENTE"
+                );
 
-    List<PersonaMayorResponse> respuesta = relaciones.stream()
-            .map(PersonaMayorAcompanante::getPersonaMayor)
-            .map(personaMayor -> new PersonaMayorResponse(
-                    personaMayor.getIdUsuario(),
-                    personaMayor.getUsuario().getNombreUsuario(),
-                    personaMayor.getUsuario().getTelefono(),
-                    personaMayor.getUsuario().getCorreo(),
-                    personaMayor.getFechaNacimiento(),
-                    personaMayor.getGenero(),
-                    personaMayor.getDireccion()
-            ))
-            .toList();
 
-    return ResponseEntity.ok(respuesta);
-}
-@PutMapping("/solicitudes/{idPersonaMayor}/aceptar")
-public ResponseEntity<String> aceptarSolicitud(
-        @RequestHeader("Authorization") String authorizationHeader,
-        @PathVariable Integer idPersonaMayor
-) {
+        List<PersonaMayorResponse> respuesta =
+                relaciones.stream()
 
-    String token = authorizationHeader.substring(7);
+                        .map(PersonaMayorAcompanante::getPersonaMayor)
 
-    Integer idAcompanante =
-            jwtService.extraerIdUsuario(token);
+                        .map(personaMayor -> {
 
-    List<PersonaMayorAcompanante> relaciones =
-            relacionRepository.findById_IdAcompanante(idAcompanante);
+                            boolean tieneContrasena =
+                                    personaMayor.getUsuario()
+                                            .getContrasenaHash() != null
+                                    &&
+                                    !personaMayor.getUsuario()
+                                            .getContrasenaHash()
+                                            .isBlank();
 
-    PersonaMayorAcompanante relacion = relaciones.stream()
-            .filter(r -> r.getPersonaMayor().getIdUsuario().equals(idPersonaMayor))
-            .findFirst()
-            .orElse(null);
+                            return new PersonaMayorResponse(
+                                    personaMayor.getIdUsuario(),
+                                    personaMayor.getUsuario()
+                                            .getNombreUsuario(),
+                                    personaMayor.getUsuario()
+                                            .getTelefono(),
+                                    personaMayor.getUsuario()
+                                            .getCorreo(),
+                                    personaMayor.getFechaNacimiento(),
+                                    personaMayor.getGenero(),
+                                    personaMayor.getDireccion(),
+                                    tieneContrasena
+                            );
+                        })
 
-    if (relacion == null) {
-        return ResponseEntity.notFound().build();
+                        .toList();
+
+        return ResponseEntity.ok(respuesta);
     }
 
-    if (!"PENDIENTE".equals(relacion.getEstado())) {
-        return ResponseEntity.badRequest()
-                .body("Esta solicitud ya fue procesada");
+
+    // =========================================================
+    // ACEPTAR SOLICITUD
+    // =========================================================
+
+    @PutMapping("/solicitudes/{idPersonaMayor}/aceptar")
+    public ResponseEntity<String> aceptarSolicitud(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @PathVariable Integer idPersonaMayor
+    ) {
+
+        String token = authorizationHeader.substring(7);
+
+        Integer idAcompanante =
+                jwtService.extraerIdUsuario(token);
+
+        List<PersonaMayorAcompanante> relaciones =
+                relacionRepository.findById_IdAcompanante(
+                        idAcompanante
+                );
+
+
+        PersonaMayorAcompanante relacion =
+                relaciones.stream()
+
+                        .filter(r ->
+                                r.getPersonaMayor()
+                                        .getIdUsuario()
+                                        .equals(idPersonaMayor)
+                        )
+
+                        .findFirst()
+
+                        .orElse(null);
+
+
+        if (relacion == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+
+        if (!"PENDIENTE".equals(relacion.getEstado())) {
+
+            return ResponseEntity.badRequest()
+                    .body("Esta solicitud ya fue procesada");
+        }
+
+
+        relacion.setEstado("ACEPTADA");
+
+        relacionRepository.save(relacion);
+
+
+        return ResponseEntity.ok(
+                "Solicitud de acompañamiento aceptada"
+        );
     }
 
-    relacion.setEstado("ACEPTADA");
-    relacionRepository.save(relacion);
 
-    return ResponseEntity.ok("Solicitud de acompañamiento aceptada");
-}
-@PutMapping("/solicitudes/{idPersonaMayor}/rechazar")
-public ResponseEntity<String> rechazarSolicitud(
-        @RequestHeader("Authorization") String authorizationHeader,
-        @PathVariable Integer idPersonaMayor
-) {
+    // =========================================================
+    // RECHAZAR SOLICITUD
+    // =========================================================
 
-    String token = authorizationHeader.substring(7);
+    @PutMapping("/solicitudes/{idPersonaMayor}/rechazar")
+    public ResponseEntity<String> rechazarSolicitud(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @PathVariable Integer idPersonaMayor
+    ) {
 
-    Integer idAcompanante =
-            jwtService.extraerIdUsuario(token);
+        String token = authorizationHeader.substring(7);
 
-    List<PersonaMayorAcompanante> relaciones =
-            relacionRepository.findById_IdAcompanante(idAcompanante);
+        Integer idAcompanante =
+                jwtService.extraerIdUsuario(token);
 
-    PersonaMayorAcompanante relacion = relaciones.stream()
-            .filter(r -> r.getPersonaMayor().getIdUsuario().equals(idPersonaMayor))
-            .findFirst()
-            .orElse(null);
+        List<PersonaMayorAcompanante> relaciones =
+                relacionRepository.findById_IdAcompanante(
+                        idAcompanante
+                );
 
-    if (relacion == null) {
-        return ResponseEntity.notFound().build();
+
+        PersonaMayorAcompanante relacion =
+                relaciones.stream()
+
+                        .filter(r ->
+                                r.getPersonaMayor()
+                                        .getIdUsuario()
+                                        .equals(idPersonaMayor)
+                        )
+
+                        .findFirst()
+
+                        .orElse(null);
+
+
+        if (relacion == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+
+        if (!"PENDIENTE".equals(relacion.getEstado())) {
+
+            return ResponseEntity.badRequest()
+                    .body("Esta solicitud ya fue procesada");
+        }
+
+
+        relacion.setEstado("RECHAZADA");
+
+        relacionRepository.save(relacion);
+
+
+        return ResponseEntity.ok(
+                "Solicitud de acompañamiento rechazada"
+        );
     }
-
-    if (!"PENDIENTE".equals(relacion.getEstado())) {
-        return ResponseEntity.badRequest()
-                .body("Esta solicitud ya fue procesada");
-    }
-
-    relacion.setEstado("RECHAZADA");
-    relacionRepository.save(relacion);
-
-    return ResponseEntity.ok("Solicitud de acompañamiento rechazada");
-}
-
 }

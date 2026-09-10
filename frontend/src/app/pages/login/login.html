@@ -1,16 +1,57 @@
 <div class="login-page">
+
   <div class="login-card">
+
+    <!-- =====================================================
+         MARCA
+         ===================================================== -->
+
     <div class="login-brand">
-      <img src="logo.png" alt="Logo VITA+" class="login-brand__logo" />
-      <span class="login-brand__name">VITA+</span>
+
+      <img
+        src="logo.png"
+        alt="Logo VITA+"
+        class="login-brand__logo"
+      />
+
+      <span class="login-brand__name">
+        VITA+
+      </span>
+
     </div>
 
-    <a routerLink="/" class="login-back">← Volver al inicio</a>
 
-    <h1 class="login-title">Iniciar sesión</h1>
-    <p class="login-subtitle">Ingresa tus credenciales para acceder a tu panel</p>
+    <!-- =====================================================
+         VOLVER
+         ===================================================== -->
+
+    <a
+      routerLink="/"
+      class="login-back"
+    >
+      ← Volver al inicio
+    </a>
+
+
+    <!-- =====================================================
+         TÍTULO
+         ===================================================== -->
+
+    <h1 class="login-title">
+      Iniciar sesión
+    </h1>
+
+    <p class="login-subtitle">
+      Ingresa tus credenciales para acceder a tu panel
+    </p>
+
+
+    <!-- =====================================================
+         TABS
+         ===================================================== -->
 
     <div class="login-tabs">
+
       <button
         type="button"
         class="login-tab"
@@ -19,6 +60,7 @@
       >
         Correo
       </button>
+
       <button
         type="button"
         class="login-tab"
@@ -27,12 +69,35 @@
       >
         Teléfono
       </button>
+
     </div>
 
-    <form (ngSubmit)="onSubmit()" class="login-form">
+
+    <!-- =====================================================
+         FORMULARIO
+         ===================================================== -->
+
+    <form
+      (ngSubmit)="onSubmit()"
+      class="login-form"
+    >
+
+
+      <!-- ===================================================
+           LOGIN POR CORREO
+           =================================================== -->
 
       @if (modo() === 'correo') {
-        <label class="login-label" for="correo">Correo</label>
+
+        <!-- CORREO -->
+
+        <label
+          class="login-label"
+          for="correo"
+        >
+          Correo
+        </label>
+
         <input
           id="correo"
           name="correo"
@@ -43,7 +108,16 @@
           placeholder="tucorreo@ejemplo.com"
         />
 
-        <label class="login-label" for="contrasena">Contraseña</label>
+
+        <!-- CONTRASEÑA -->
+
+        <label
+          class="login-label"
+          for="contrasena"
+        >
+          Contraseña
+        </label>
+
         <input
           id="contrasena"
           name="contrasena"
@@ -53,12 +127,31 @@
           required
           placeholder="••••••••"
         />
+
       }
 
+
+      <!-- ===================================================
+           LOGIN POR TELÉFONO
+           =================================================== -->
+
       @if (modo() === 'telefono') {
-        <label class="login-label" for="telefono">Número de celular</label>
+
+        <!-- TELÉFONO -->
+
+        <label
+          class="login-label"
+          for="telefono"
+        >
+          Número de celular
+        </label>
+
         <div class="login-phone-row">
-          <span class="login-phone-prefix">+57</span>
+
+          <span class="login-phone-prefix">
+            +57
+          </span>
+
           <input
             id="telefono"
             name="telefono"
@@ -69,16 +162,46 @@
             placeholder="3001234567"
             [disabled]="otpEnviado()"
           />
+
         </div>
 
+
+        <!-- ================================================
+             PRIMER ENVÍO DEL CÓDIGO
+             ================================================ -->
+
         @if (!otpEnviado()) {
-          <button type="button" class="btn btn-primary login-submit" [disabled]="cargando()" (click)="enviarCodigo()">
-            {{ cargando() ? 'Enviando...' : 'Enviar código por SMS' }}
+
+          <button
+            type="button"
+            class="btn btn-primary login-submit"
+            [disabled]="cargando()"
+            (click)="enviarCodigo()"
+          >
+
+            {{ cargando()
+                ? 'Enviando...'
+                : 'Enviar código por SMS'
+            }}
+
           </button>
+
         }
 
+
+        <!-- ================================================
+             CÓDIGO OTP
+             ================================================ -->
+
         @if (otpEnviado()) {
-          <label class="login-label" for="codigo">Código de verificación</label>
+
+          <label
+            class="login-label"
+            for="codigo"
+          >
+            Código de verificación
+          </label>
+
           <input
             id="codigo"
             name="codigo"
@@ -89,26 +212,107 @@
             required
             placeholder="123456"
           />
+
+
+          <!-- ==============================================
+               REENVIAR CÓDIGO
+               ============================================== -->
+
+          @if (segundosReenvio() > 0) {
+
+            <button
+              type="button"
+              class="btn btn-secondary login-submit"
+              disabled
+            >
+              Reenviar código ({{ segundosReenvio() }}s)
+            </button>
+
+          } @else {
+
+            <button
+              type="button"
+              class="btn btn-secondary login-submit"
+              [disabled]="cargando()"
+              (click)="enviarCodigo()"
+            >
+              Reenviar código
+            </button>
+
+          }
+
         }
+
       }
+
+
+      <!-- ===================================================
+           MENSAJE INFORMATIVO
+           =================================================== -->
 
       @if (infoMensaje()) {
-        <p class="login-info">{{ infoMensaje() }}</p>
+
+        <p class="login-info">
+          {{ infoMensaje() }}
+        </p>
+
       }
+
+
+      <!-- ===================================================
+           MENSAJE DE ERROR
+           =================================================== -->
 
       @if (errorMensaje()) {
-        <p class="login-error">{{ errorMensaje() }}</p>
+
+        <p class="login-error">
+          {{ errorMensaje() }}
+        </p>
+
       }
 
-      @if (modo() === 'correo' || otpEnviado()) {
-        <button type="submit" class="btn btn-primary login-submit" [disabled]="cargando()">
-          {{ cargando() ? 'Ingresando...' : 'Ingresar' }}
+
+      <!-- ===================================================
+           BOTÓN INGRESAR
+           =================================================== -->
+
+      @if (
+        modo() === 'correo'
+        || otpEnviado()
+      ) {
+
+        <button
+          type="submit"
+          class="btn btn-primary login-submit"
+          [disabled]="cargando()"
+        >
+
+          {{ cargando()
+              ? 'Ingresando...'
+              : 'Ingresar'
+          }}
+
         </button>
+
       }
+
     </form>
 
+
+    <!-- =====================================================
+         REGISTRO
+         ===================================================== -->
+
     <p class="login-footer">
-      ¿No tienes cuenta? <a routerLink="/registro">Regístrate</a>
+
+      ¿No tienes cuenta?
+
+      <a routerLink="/registro">
+        Regístrate
+      </a>
+
     </p>
+
   </div>
+
 </div>

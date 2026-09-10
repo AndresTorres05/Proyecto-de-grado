@@ -10,12 +10,14 @@ export interface LoginRequest {
 
 export interface RegistroRequest {
   nombreUsuario: string;
-  correo: string;
-  contrasena: string;
+  correo?: string;
+  contrasena?: string;
   rol: string;
   direccion?: string;
   telefono?: string;
   disponibilidad?: string;
+  fechaNacimiento?: string;
+  genero?: string;
 }
 
 export interface EnviarOtpRequest {
@@ -32,7 +34,7 @@ export interface OtpRegistroRequest {
   codigo: string;
   nombreUsuario: string;
   rol: string;
-  //parentesco?: string;
+  correo?: string;
   fechaNacimiento?: string;
   genero?: string;
   direccion?: string;

@@ -10,6 +10,12 @@ export interface PersonaMayorResponse {
   fechaNacimiento: string;
   genero: string;
   direccion: string;
+  tieneContrasena: boolean;
+}
+
+export interface CambiarContrasenaRequest {
+  contrasenaActual?: string;
+  nuevaContrasena: string;
 }
 
 @Injectable({
@@ -17,7 +23,8 @@ export interface PersonaMayorResponse {
 })
 export class PersonaMayorService {
 
-  private readonly apiUrl = 'http://localhost:8080/api/persona-mayor';
+  private readonly apiUrl =
+    'http://localhost:8080/api/persona-mayor';
 
   constructor(private http: HttpClient) {}
 
@@ -26,6 +33,7 @@ export class PersonaMayorService {
       `${this.apiUrl}/informacion`
     );
   }
+
   actualizarInformacion(
     informacion: PersonaMayorResponse
   ): Observable<PersonaMayorResponse> {
@@ -34,4 +42,16 @@ export class PersonaMayorService {
       informacion
     );
   }
+
+  cambiarContrasena(
+  request: CambiarContrasenaRequest
+): Observable<string> {
+  return this.http.put(
+    `${this.apiUrl}/contrasena`,
+    request,
+    {
+      responseType: 'text'
+    }
+  );
+}
 }

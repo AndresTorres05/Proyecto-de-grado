@@ -3,16 +3,21 @@ package com.proyectogrado.backend.dto;
 public class OtpRegistroRequest {
 
     private String telefono;
+
     private String codigo;
+
     private String nombreUsuario;
+
     private String rol;
 
-    // Solo para ACOMPANANTE
-    //private String parentesco;
+    // Opcional para PERSONA_MAYOR y ACOMPANANTE
+    private String correo;
 
     // Solo para PERSONA_MAYOR
-    private String fechaNacimiento; // formato "yyyy-MM-dd"
+    private String fechaNacimiento;
+
     private String genero;
+
     private String direccion;
 
     public OtpRegistroRequest() {
@@ -50,13 +55,13 @@ public class OtpRegistroRequest {
         this.rol = rol;
     }
 
-    /*public String getParentesco() {
-        return parentesco;
+    public String getCorreo() {
+        return correo;
     }
 
-    public void setParentesco(String parentesco) {
-        this.parentesco = parentesco;
-    }*/
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
 
     public String getFechaNacimiento() {
         return fechaNacimiento;

@@ -11,6 +11,7 @@ public class PersonaMayorResponse {
     private LocalDate fechaNacimiento;
     private String genero;
     private String direccion;
+    private boolean tieneContrasena;
 
     public PersonaMayorResponse() {
     }
@@ -22,7 +23,8 @@ public class PersonaMayorResponse {
             String correo,
             LocalDate fechaNacimiento,
             String genero,
-            String direccion
+            String direccion,
+            boolean tieneContrasena
     ) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
@@ -31,6 +33,7 @@ public class PersonaMayorResponse {
         this.fechaNacimiento = fechaNacimiento;
         this.genero = genero;
         this.direccion = direccion;
+        this.tieneContrasena = tieneContrasena;
     }
 
     public Integer getIdUsuario() {
@@ -87,5 +90,13 @@ public class PersonaMayorResponse {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    public boolean isTieneContrasena() {
+        return tieneContrasena;
+    }
+
+    public void setTieneContrasena(boolean tieneContrasena) {
+        this.tieneContrasena = tieneContrasena;
     }
 }

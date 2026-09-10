@@ -1,17 +1,52 @@
 <div class="login-page">
+
   <div class="login-card">
+
     <div class="login-brand">
-      <img src="logo.png" alt="Logo VITA+" class="login-brand__logo" />
-      <span class="login-brand__name">VITA+</span>
+
+      <img
+        src="logo.png"
+        alt="Logo VITA+"
+        class="login-brand__logo"
+      />
+
+      <span class="login-brand__name">
+        VITA+
+      </span>
+
     </div>
 
-    <a routerLink="/" class="login-back">← Volver al inicio</a>
+    <a
+      routerLink="/"
+      class="login-back"
+    >
+      ← Volver al inicio
+    </a>
 
-    <h1 class="login-title">Crear cuenta</h1>
-    <p class="login-subtitle">Regístrate para acceder a tu panel</p>
+    <h1 class="login-title">
+      Crear cuenta
+    </h1>
 
-    <form (ngSubmit)="onSubmit()" class="login-form">
-      <label class="login-label" for="nombreUsuario">Nombre</label>
+    <p class="login-subtitle">
+      Regístrate para acceder a tu panel
+    </p>
+
+    <form
+      (ngSubmit)="onSubmit()"
+      class="login-form"
+    >
+
+      <!-- ================================================= -->
+      <!-- NOMBRE -->
+      <!-- ================================================= -->
+
+      <label
+        class="login-label"
+        for="nombreUsuario"
+      >
+        Nombre
+      </label>
+
       <input
         id="nombreUsuario"
         name="nombreUsuario"
@@ -22,7 +57,17 @@
         placeholder="Tu nombre"
       />
 
-      <label class="login-label" for="rol">Tipo de usuario</label>
+      <!-- ================================================= -->
+      <!-- ROL -->
+      <!-- ================================================= -->
+
+      <label
+        class="login-label"
+        for="rol"
+      >
+        Tipo de usuario
+      </label>
+
       <select
         id="rol"
         name="rol"
@@ -31,15 +76,247 @@
         (ngModelChange)="onCambioRol()"
         required
       >
-        <option value="" disabled selected>Selecciona una opción</option>
+
+        <option
+          value=""
+          disabled
+        >
+          Selecciona una opción
+        </option>
+
         @for (opcion of roles; track opcion.valor) {
-          <option [value]="opcion.valor">{{ opcion.etiqueta }}</option>
+
+          <option [value]="opcion.valor">
+            {{ opcion.etiqueta }}
+          </option>
+
         }
+
       </select>
 
-      <!-- ORGANIZACIÓN Y VOLUNTARIO: correo + contraseña -->
-      @if (rol && !esRegistroPorTelefono) {
-        <label class="login-label" for="correo">Correo</label>
+      <!-- ================================================= -->
+      <!-- PERSONA MAYOR / ACOMPAÑANTE -->
+      <!-- TELÉFONO -->
+      <!-- ================================================= -->
+
+      @if (esRegistroPorTelefono) {
+
+        <label
+          class="login-label"
+          for="telefono"
+        >
+          Número de celular
+        </label>
+
+        <div class="login-phone-row">
+
+          <span class="login-phone-prefix">
+            +57
+          </span>
+
+          <input
+            id="telefono"
+            name="telefono"
+            type="tel"
+            inputmode="numeric"
+            class="login-input login-input--phone"
+            [(ngModel)]="telefonoLocal"
+            required
+            maxlength="10"
+            placeholder="3001234567"
+            [disabled]="otpEnviado()"
+          />
+
+        </div>
+
+        <!-- ================================================= -->
+        <!-- CORREO PERSONA MAYOR / ACOMPAÑANTE -->
+        <!-- ================================================= -->
+
+        <label
+          class="login-label"
+          for="correoTelefono"
+        >
+          Correo electrónico (opcional)
+        </label>
+
+        <input
+          id="correoTelefono"
+          name="correoTelefono"
+          type="email"
+          class="login-input"
+          [(ngModel)]="correo"
+          placeholder="tucorreo@ejemplo.com"
+        />
+
+        <!-- ================================================= -->
+        <!-- CONTRASEÑA PERSONA MAYOR / ACOMPAÑANTE -->
+        <!-- ================================================= -->
+
+        <label
+          class="login-label"
+          for="contrasenaTelefono"
+        >
+          Contraseña (opcional)
+        </label>
+
+        <input
+          id="contrasenaTelefono"
+          name="contrasenaTelefono"
+          type="password"
+          class="login-input"
+          [(ngModel)]="contrasena"
+          minlength="6"
+          placeholder="Mínimo 6 caracteres"
+        />
+
+        <p class="login-info">
+          Si ingresas una contraseña, también debes ingresar
+          un correo electrónico.
+          Si no ingresas contraseña, recibirás un código por SMS.
+        </p>
+
+        <!-- ================================================= -->
+        <!-- DATOS PERSONA MAYOR -->
+        <!-- ================================================= -->
+
+        @if (rol === 'PERSONA_MAYOR') {
+
+          <label
+            class="login-label"
+            for="fechaNacimiento"
+          >
+            Fecha de nacimiento
+          </label>
+
+          <input
+            id="fechaNacimiento"
+            name="fechaNacimiento"
+            type="date"
+            class="login-input"
+            [(ngModel)]="fechaNacimiento"
+          />
+
+          <label
+            class="login-label"
+            for="genero"
+          >
+            Género
+          </label>
+
+          <select
+            id="genero"
+            name="genero"
+            class="login-input"
+            [(ngModel)]="genero"
+          >
+
+            <option
+              value=""
+              disabled
+            >
+              Selecciona una opción
+            </option>
+
+            @for (opcion of generos; track opcion.valor) {
+
+              <option [value]="opcion.valor">
+                {{ opcion.etiqueta }}
+              </option>
+
+            }
+
+          </select>
+
+          <label
+            class="login-label"
+            for="direccionPersonaMayor"
+          >
+            Dirección
+          </label>
+
+          <input
+            id="direccionPersonaMayor"
+            name="direccionPersonaMayor"
+            type="text"
+            class="login-input"
+            [(ngModel)]="direccionPersonaMayor"
+            placeholder="Tu dirección"
+          />
+
+        }
+
+        <!-- ================================================= -->
+        <!-- OTP -->
+        <!-- ================================================= -->
+
+        @if (otpEnviado()) {
+
+          <label
+            class="login-label"
+            for="codigo"
+          >
+            Código de verificación
+          </label>
+
+          <input
+            id="codigo"
+            name="codigo"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            class="login-input"
+            [(ngModel)]="codigo"
+            placeholder="123456"
+          />
+
+          <!-- ================================================= -->
+          <!-- TEMPORIZADOR -->
+          <!-- ================================================= -->
+
+          @if (segundosReenvio() > 0) {
+
+            <p class="login-info">
+              Puedes solicitar otro código en
+              {{ segundosReenvio() }} segundos.
+            </p>
+
+          } @else {
+
+            <button
+              type="button"
+              class="btn btn-primary login-submit"
+              [disabled]="cargando()"
+              (click)="enviarCodigo()"
+            >
+
+              {{
+                cargando()
+                  ? 'Enviando...'
+                  : 'Reenviar código'
+              }}
+
+            </button>
+
+          }
+
+        }
+
+      }
+
+      <!-- ================================================= -->
+      <!-- ORGANIZACIÓN / VOLUNTARIO -->
+      <!-- ================================================= -->
+
+      @if (!esRegistroPorTelefono && rol) {
+
+        <label
+          class="login-label"
+          for="correo"
+        >
+          Correo
+        </label>
+
         <input
           id="correo"
           name="correo"
@@ -50,7 +327,13 @@
           placeholder="tucorreo@ejemplo.com"
         />
 
-        <label class="login-label" for="contrasena">Contraseña</label>
+        <label
+          class="login-label"
+          for="contrasena"
+        >
+          Contraseña
+        </label>
+
         <input
           id="contrasena"
           name="contrasena"
@@ -61,11 +344,22 @@
           minlength="6"
           placeholder="Mínimo 6 caracteres"
         />
+
       }
 
-      <!-- Solo ORGANIZACIÓN -->
+      <!-- ================================================= -->
+      <!-- ORGANIZACIÓN -->
+      <!-- ================================================= -->
+
       @if (rol === 'ORGANIZACION') {
-        <label class="login-label" for="direccionOrganizacion">Dirección</label>
+
+        <label
+          class="login-label"
+          for="direccionOrganizacion"
+        >
+          Dirección
+        </label>
+
         <input
           id="direccionOrganizacion"
           name="direccionOrganizacion"
@@ -75,7 +369,13 @@
           placeholder="Dirección de la organización"
         />
 
-        <label class="login-label" for="telefonoOrganizacion">Teléfono de contacto</label>
+        <label
+          class="login-label"
+          for="telefonoOrganizacion"
+        >
+          Teléfono de contacto
+        </label>
+
         <input
           id="telefonoOrganizacion"
           name="telefonoOrganizacion"
@@ -84,11 +384,22 @@
           [(ngModel)]="telefonoOrganizacion"
           placeholder="Teléfono de la organización"
         />
+
       }
 
-      <!-- Solo VOLUNTARIO -->
+      <!-- ================================================= -->
+      <!-- VOLUNTARIO -->
+      <!-- ================================================= -->
+
       @if (rol === 'VOLUNTARIO') {
-        <label class="login-label" for="disponibilidad">Disponibilidad</label>
+
+        <label
+          class="login-label"
+          for="disponibilidad"
+        >
+          Disponibilidad
+        </label>
+
         <input
           id="disponibilidad"
           name="disponibilidad"
@@ -97,100 +408,89 @@
           [(ngModel)]="disponibilidad"
           placeholder="Ej. Fines de semana, tardes entre semana"
         />
+
       }
 
-      <!-- PERSONA MAYOR Y ACOMPAÑANTE: teléfono + OTP -->
-      @if (rol && esRegistroPorTelefono) {
-        <label class="login-label" for="telefono">Número de celular</label>
-        <div class="login-phone-row">
-          <span class="login-phone-prefix">+57</span>
-          <input
-            id="telefono"
-            name="telefono"
-            type="tel"
-            class="login-input login-input--phone"
-            [(ngModel)]="telefonoLocal"
-            required
-            placeholder="3001234567"
-            [disabled]="otpEnviado()"
-          />
-        </div>
-
-       
-
-        <!-- Solo PERSONA MAYOR -->
-        @if (rol === 'PERSONA_MAYOR') {
-          <label class="login-label" for="fechaNacimiento">Fecha de nacimiento</label>
-          <input
-            id="fechaNacimiento"
-            name="fechaNacimiento"
-            type="date"
-            class="login-input"
-            [(ngModel)]="fechaNacimiento"
-          />
-
-          <label class="login-label" for="genero">Género</label>
-          <select
-            id="genero"
-            name="genero"
-            class="login-input"
-            [(ngModel)]="genero"
-          >
-            <option value="" disabled selected>Selecciona una opción</option>
-            @for (opcion of generos; track opcion.valor) {
-              <option [value]="opcion.valor">{{ opcion.etiqueta }}</option>
-            }
-          </select>
-
-          <label class="login-label" for="direccionPersonaMayor">Dirección</label>
-          <input
-            id="direccionPersonaMayor"
-            name="direccionPersonaMayor"
-            type="text"
-            class="login-input"
-            [(ngModel)]="direccionPersonaMayor"
-            placeholder="Tu dirección"
-          />
-        }
-
-        @if (!otpEnviado()) {
-          <button type="button" class="btn btn-primary login-submit" [disabled]="cargando()" (click)="enviarCodigo()">
-            {{ cargando() ? 'Enviando...' : 'Enviar código por SMS' }}
-          </button>
-        }
-
-        @if (otpEnviado()) {
-          <label class="login-label" for="codigo">Código de verificación</label>
-          <input
-            id="codigo"
-            name="codigo"
-            type="text"
-            inputmode="numeric"
-            class="login-input"
-            [(ngModel)]="codigo"
-            required
-            placeholder="123456"
-          />
-        }
-      }
+      <!-- ================================================= -->
+      <!-- MENSAJES -->
+      <!-- ================================================= -->
 
       @if (infoMensaje()) {
-        <p class="login-info">{{ infoMensaje() }}</p>
+
+        <p class="login-info">
+          {{ infoMensaje() }}
+        </p>
+
       }
 
       @if (errorMensaje()) {
-        <p class="login-error">{{ errorMensaje() }}</p>
+
+        <p class="login-error">
+          {{ errorMensaje() }}
+        </p>
+
       }
 
-      @if (!esRegistroPorTelefono || otpEnviado()) {
-        <button type="submit" class="btn btn-primary login-submit" [disabled]="cargando()">
-          {{ cargando() ? 'Creando cuenta...' : 'Crear cuenta' }}
+      <!-- ================================================= -->
+      <!-- BOTÓN CREAR CUENTA -->
+      <!-- ================================================= -->
+
+      @if (rol && (!esRegistroPorTelefono || otpEnviado() || contrasena.trim())) {
+
+        <button
+          type="submit"
+          class="btn btn-primary login-submit"
+          [disabled]="cargando()"
+        >
+
+          {{
+            cargando()
+              ? 'Creando cuenta...'
+              : 'Crear cuenta'
+          }}
+
         </button>
+
       }
+
+      <!-- ================================================= -->
+      <!-- BOTÓN ENVIAR OTP -->
+      <!-- ================================================= -->
+
+      @if (
+        esRegistroPorTelefono &&
+        !otpEnviado() &&
+        !contrasena.trim()
+      ) {
+
+        <button
+          type="submit"
+          class="btn btn-primary login-submit"
+          [disabled]="cargando()"
+        >
+
+          {{
+            cargando()
+              ? 'Enviando...'
+              : 'Enviar código por SMS'
+          }}
+
+        </button>
+
+      }
+
     </form>
 
     <p class="login-footer">
-      ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>
+
+      ¿Ya tienes cuenta?
+
+      <a routerLink="/login">
+        Inicia sesión
+      </a>
+
     </p>
+
   </div>
+
 </div>

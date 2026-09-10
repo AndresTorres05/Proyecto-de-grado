@@ -7,8 +7,14 @@ public class RegistroRequest {
     private String contrasena;
     private String rol;
 
-    // Solo para ORGANIZACION
+    // Solo para PERSONA_MAYOR
+    private String fechaNacimiento;
+    private String genero;
+
+    // PERSONA_MAYOR y ORGANIZACION
     private String direccion;
+
+    // Solo para ORGANIZACION
     private String telefono;
 
     // Solo para VOLUNTARIO
@@ -47,6 +53,22 @@ public class RegistroRequest {
 
     public void setRol(String rol) {
         this.rol = rol;
+    }
+
+    public String getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(String fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public String getGenero() {
+        return genero;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
     }
 
     public String getDireccion() {

@@ -1,5 +1,8 @@
 <div class="informacion">
 
+  <!-- =========================
+       HEADER
+       ========================= -->
   <div class="informacion__header">
 
     <div>
@@ -8,6 +11,7 @@
     </div>
 
     @if (!cargando) {
+
       <button
         type="button"
         class="informacion__edit-button"
@@ -15,10 +19,15 @@
       >
         {{ editando ? 'Cancelar' : 'Editar información' }}
       </button>
+
     }
 
   </div>
 
+
+  <!-- =========================
+       CARGANDO
+       ========================= -->
   @if (cargando) {
 
     <div class="informacion__loading">
@@ -27,43 +36,143 @@
 
   } @else {
 
+    <!-- =========================
+         TARJETA PRINCIPAL
+         ========================= -->
     <div class="informacion__card">
 
+      <!-- =========================
+           DATOS PERSONALES
+           ========================= -->
       <div class="informacion__section">
 
         <h2>Datos personales</h2>
 
         <div class="informacion__grid">
 
+          <!-- NOMBRE -->
           <div class="informacion__field">
+
             <label>Nombre</label>
-            <p>{{ informacion?.nombre }}</p>
+
+            <p>
+              {{ informacion?.nombre }}
+            </p>
+
           </div>
 
+
+          <!-- CORREO -->
           <div class="informacion__field">
+
             <label>Correo electrónico</label>
-            <p>{{ informacion?.correo || 'No registrado' }}</p>
+
+            <p>
+              {{ informacion?.correo || 'No registrado' }}
+            </p>
+
           </div>
 
+
+          <!-- TELÉFONO -->
           <div class="informacion__field">
+
             <label>Teléfono</label>
-            <p>{{ informacion?.telefono || 'No registrado' }}</p>
+
+            <p>
+              {{ informacion?.telefono || 'No registrado' }}
+            </p>
+
           </div>
 
+
+          <!-- FECHA DE NACIMIENTO -->
           <div class="informacion__field">
+
             <label>Fecha de nacimiento</label>
-            <p>{{ informacion?.fechaNacimiento || 'No registrada' }}</p>
+
+            <p>
+              {{ informacion?.fechaNacimiento || 'No registrada' }}
+            </p>
+
           </div>
 
+
+          <!-- GÉNERO -->
           <div class="informacion__field">
+
             <label>Género</label>
-            <p>{{ informacion?.genero || 'No registrado' }}</p>
+
+            <p>
+              {{ informacion?.genero || 'No registrado' }}
+            </p>
+
           </div>
 
+
+          <!-- DIRECCIÓN -->
           <div class="informacion__field">
+
             <label>Dirección</label>
-            <p>{{ informacion?.direccion || 'No registrada' }}</p>
+
+            <p>
+              {{ informacion?.direccion || 'No registrada' }}
+            </p>
+
           </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           SEGURIDAD
+           ========================= -->
+      <div class="informacion__section">
+
+        <h2>Seguridad</h2>
+
+        <div class="informacion__security">
+
+          <div class="informacion__security-info">
+
+            <label>Contraseña</label>
+
+            <p>
+
+              @if (informacion?.tieneContrasena) {
+
+                Contraseña configurada
+
+              } @else {
+
+                No tienes una contraseña configurada
+
+              }
+
+            </p>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="informacion__save-button"
+            (click)="abrirModalContrasena()"
+          >
+
+            @if (informacion?.tieneContrasena) {
+
+              Cambiar contraseña
+
+            } @else {
+
+              Agregar contraseña
+
+            }
+
+          </button>
 
         </div>
 
@@ -73,9 +182,10 @@
 
   }
 
-  <!-- =========================
+
+  <!-- =====================================================
        MODAL EDITAR INFORMACIÓN
-       ========================= -->
+       ===================================================== -->
 
   @if (editando) {
 
@@ -88,6 +198,7 @@
         aria-labelledby="editarInformacionTitle"
       >
 
+        <!-- HEADER DEL MODAL -->
         <div class="informacion__edit-modal-header">
 
           <h2 id="editarInformacionTitle">
@@ -105,14 +216,16 @@
 
         </div>
 
+
         <p class="informacion__edit-modal-description">
           Actualiza tus datos personales.
         </p>
 
+
+        <!-- CAMPOS -->
         <div class="informacion__grid">
 
           <!-- NOMBRE -->
-
           <div class="informacion__field">
 
             <label for="nombre">
@@ -130,7 +243,6 @@
 
 
           <!-- CORREO -->
-
           <div class="informacion__field">
 
             <label for="correo">
@@ -148,7 +260,6 @@
 
 
           <!-- TELÉFONO NO EDITABLE -->
-
           <div class="informacion__field">
 
             <label>
@@ -163,7 +274,6 @@
 
 
           <!-- FECHA DE NACIMIENTO -->
-
           <div class="informacion__field">
 
             <label for="fechaNacimiento">
@@ -180,7 +290,6 @@
 
 
           <!-- GÉNERO -->
-
           <div class="informacion__field">
 
             <label for="genero">
@@ -214,7 +323,6 @@
 
 
           <!-- DIRECCIÓN -->
-
           <div class="informacion__field">
 
             <label for="direccion">
@@ -234,7 +342,6 @@
 
 
         <!-- ACCIONES -->
-
         <div class="informacion__actions">
 
           <button
@@ -262,9 +369,9 @@
   }
 
 
-  <!-- =========================
-       MODAL CONFIRMACIÓN
-       ========================= -->
+  <!-- =====================================================
+       MODAL CONFIRMACIÓN DE CAMBIOS
+       ===================================================== -->
 
   @if (mostrandoConfirmacion) {
 
@@ -282,9 +389,10 @@
         </h2>
 
         <p>
-          ¿Estás seguro de que deseas guardar los cambios realizados
-          en tu información?
+          ¿Estás seguro de que deseas guardar los cambios
+          realizados en tu información?
         </p>
+
 
         <div class="informacion__confirm-actions">
 
@@ -302,6 +410,170 @@
             (click)="confirmarGuardado()"
           >
             Confirmar
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       MODAL CONTRASEÑA
+       ===================================================== -->
+
+  @if (mostrandoContrasena) {
+
+    <div class="informacion__confirm-overlay">
+
+      <div
+        class="informacion__confirm-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="contrasenaTitle"
+      >
+
+        <!-- TÍTULO -->
+        <h2 id="contrasenaTitle">
+
+          @if (informacion?.tieneContrasena) {
+
+            Cambiar contraseña
+
+          } @else {
+
+            Agregar contraseña
+
+          }
+
+        </h2>
+
+
+        <!-- DESCRIPCIÓN -->
+        <p>
+
+          @if (informacion?.tieneContrasena) {
+
+            Ingresa tu contraseña actual y establece una nueva.
+
+          } @else {
+
+            Crea una contraseña para poder iniciar sesión
+            con tu correo electrónico.
+
+          }
+
+        </p>
+
+
+        <!-- CONTRASEÑA ACTUAL
+             SOLO SI YA EXISTE -->
+        @if (informacion?.tieneContrasena) {
+
+          <div class="informacion__field">
+
+            <label for="contrasenaActual">
+              Contraseña actual
+            </label>
+
+            <input
+              id="contrasenaActual"
+              type="password"
+              [(ngModel)]="contrasenaActual"
+              placeholder="Ingresa tu contraseña actual"
+            />
+
+          </div>
+
+        }
+
+
+        <!-- NUEVA CONTRASEÑA -->
+        <div class="informacion__field">
+
+          <label for="nuevaContrasena">
+            Nueva contraseña
+          </label>
+
+          <input
+            id="nuevaContrasena"
+            type="password"
+            [(ngModel)]="nuevaContrasena"
+            placeholder="Mínimo 6 caracteres"
+          />
+
+        </div>
+
+
+        <!-- CONFIRMAR CONTRASEÑA -->
+        <div class="informacion__field">
+
+          <label for="confirmarContrasena">
+            Confirmar contraseña
+          </label>
+
+          <input
+            id="confirmarContrasena"
+            type="password"
+            [(ngModel)]="confirmarContrasena"
+            placeholder="Repite la nueva contraseña"
+          />
+
+        </div>
+
+
+        <!-- ERROR -->
+        @if (errorContrasena) {
+
+          <p class="informacion__error">
+            {{ errorContrasena }}
+          </p>
+
+        }
+
+
+        <!-- ÉXITO -->
+        @if (mensajeContrasena) {
+
+          <p class="informacion__success">
+            {{ mensajeContrasena }}
+          </p>
+
+        }
+
+
+        <!-- BOTONES -->
+        <div class="informacion__confirm-actions">
+
+          <button
+            type="button"
+            class="informacion__cancel-button"
+            (click)="cerrarModalContrasena()"
+            [disabled]="guardandoContrasena"
+          >
+            Cerrar
+          </button>
+
+          <button
+            type="button"
+            class="informacion__save-button"
+            (click)="guardarContrasena()"
+            [disabled]="guardandoContrasena"
+          >
+
+            @if (guardandoContrasena) {
+
+              Guardando...
+
+            } @else {
+
+              Guardar contraseña
+
+            }
+
           </button>
 
         </div>

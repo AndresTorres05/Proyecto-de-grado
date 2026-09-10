@@ -248,15 +248,27 @@ public class OtpController {
 
         Usuario usuario = new Usuario();
 
-        usuario.setNombreUsuario(
-                request.getNombreUsuario()
-        );
+usuario.setNombreUsuario(request.getNombreUsuario());
+usuario.setTelefono(request.getTelefono());
 
-        usuario.setTelefono(
-                request.getTelefono()
-        );
+if ("PERSONA_MAYOR".equals(rol.getNombre())
+        && request.getCorreo() != null
+        && !request.getCorreo().isBlank()) {
 
-        usuario = usuarioRepository.saveAndFlush(usuario);
+    if (usuarioRepository.existsByCorreo(request.getCorreo())) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new LoginResponse(
+                        null,
+                        null,
+                        "Ese correo ya está registrado"
+                ));
+    }
+
+    usuario.setCorreo(request.getCorreo().trim());
+}
+
+usuario = usuarioRepository.saveAndFlush(usuario);
 
         System.out.println(
                 "Usuario creado con ID: "
