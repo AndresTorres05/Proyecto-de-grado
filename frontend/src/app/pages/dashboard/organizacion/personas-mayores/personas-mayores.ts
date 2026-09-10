@@ -29,9 +29,9 @@ export class PersonasMayores implements OnInit {
   protected readonly mensaje =
     signal<string | null>(null);
 
-  protected readonly error =
-    signal<string | null>(null);
-
+  protected readonly error = signal<string | null>(null);
+  protected readonly mostrandoConfirmacion = signal(false);
+  protected personaSeleccionada: PersonaMayorOrganizacion | null = null;
   protected telefono = '';
 
   constructor(
@@ -182,34 +182,41 @@ export class PersonasMayores implements OnInit {
 
       });
   }
-  cancelarAsociacion(persona: PersonaMayorOrganizacion): void {
+mostrarConfirmacion(persona: PersonaMayorOrganizacion): void {
+  this.personaSeleccionada = persona;
+  this.mostrandoConfirmacion.set(true);
+  this.mensaje.set(null);
+  this.error.set(null);
+}
 
-  const confirmar = window.confirm(
-    `¿Estás seguro de cancelar la asociación con ${persona.nombre}?`
-  );
+cerrarConfirmacion(): void {
+  this.mostrandoConfirmacion.set(false);
+  this.personaSeleccionada = null;
+}
 
-  if (!confirmar) {
-    return;
-  }
+confirmarCancelacion(): void {
+  if (!this.personaSeleccionada) return;
+
+  const persona = this.personaSeleccionada;
 
   this.mensaje.set(null);
   this.error.set(null);
+  this.mostrandoConfirmacion.set(false);
 
   this.organizacionService
     .cancelarAsociacionPersonaMayor(persona.idUsuario)
     .subscribe({
       next: (respuesta) => {
+        this.personaSeleccionada = null;
         this.mensaje.set(respuesta);
         this.cargarPersonasMayores();
       },
       error: (error) => {
         console.error('Error al cancelar la asociación:', error);
-
         const mensaje =
-          error?.error ||
-          'No se pudo cancelar la asociación.';
-
+          error?.error || 'No se pudo cancelar la asociación.';
         this.error.set(mensaje);
+        this.personaSeleccionada = null;
       }
     });
 }

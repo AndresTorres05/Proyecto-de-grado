@@ -94,4 +94,12 @@ obtenerOrganizaciones(): Observable<OrganizacionSolicitud[]> {
     'http://localhost:8080/api/persona-mayor/organizaciones'
   );
 }
+cancelarAsociacionOrganizacion(
+  idOrganizacion: number
+): Observable<string> {
+  return this.http.delete(
+    `http://localhost:8080/api/persona-mayor/organizaciones/${idOrganizacion}`,
+    { responseType: 'text' }
+  );
+}
 }

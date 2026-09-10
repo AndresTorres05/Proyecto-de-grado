@@ -32,6 +32,15 @@ export class Organizaciones implements OnInit {
   protected readonly error =
     signal<string | null>(null);
 
+    protected readonly modalAbierto =
+  signal(false);
+
+protected readonly organizacionSeleccionada =
+  signal<OrganizacionSolicitud | null>(null);
+
+protected readonly accionPendiente =
+  signal<'aceptar' | 'rechazar' | 'cancelar' | null>(null);
+
   constructor(
     private organizacionService: OrganizacionService
   ) {}
@@ -79,75 +88,94 @@ export class Organizaciones implements OnInit {
       });
   }
 
-  aceptarSolicitud(
-    idOrganizacion: number
-  ): void {
+aceptarSolicitud(
+  idOrganizacion: number
+): void {
 
-    const organizacion = this.solicitudes().find(
-      (item) => item.idOrganizacion === idOrganizacion
+  const organizacion = this.solicitudes().find(
+    (item) => item.idOrganizacion === idOrganizacion
+  );
+
+  if (!organizacion) {
+    return;
+  }
+
+  this.organizacionSeleccionada.set(organizacion);
+  this.accionPendiente.set('aceptar');
+  this.modalAbierto.set(true);
+}
+
+  rechazarSolicitud(
+  idOrganizacion: number
+): void {
+
+  const organizacion = this.solicitudes().find(
+    (item) => item.idOrganizacion === idOrganizacion
+  );
+
+  if (!organizacion) {
+    return;
+  }
+
+  this.organizacionSeleccionada.set(organizacion);
+  this.accionPendiente.set('rechazar');
+  this.modalAbierto.set(true);
+}
+
+
+cancelarAsociacion(
+  organizacion: OrganizacionSolicitud
+): void {
+
+  this.organizacionSeleccionada.set(organizacion);
+  this.accionPendiente.set('cancelar');
+  this.modalAbierto.set(true);
+}
+
+cerrarModal(): void {
+
+  this.modalAbierto.set(false);
+  this.organizacionSeleccionada.set(null);
+  this.accionPendiente.set(null);
+}
+
+confirmarAccion(): void {
+
+  const organizacion =
+    this.organizacionSeleccionada();
+
+  const accion =
+    this.accionPendiente();
+
+  if (!organizacion || !accion) {
+    return;
+  }
+
+  this.mensaje.set(null);
+  this.error.set(null);
+
+  this.modalAbierto.set(false);
+
+  if (accion === 'aceptar') {
+
+    this.procesandoSolicitud.set(
+      organizacion.idOrganizacion
     );
-
-    if (!organizacion) {
-      return;
-    }
-
-    const confirmar = window.confirm(
-      `¿Estás seguro de que deseas aceptar la solicitud de ${organizacion.nombre}?`
-    );
-
-    if (!confirmar) {
-      return;
-    }
-
-    this.mensaje.set(null);
-    this.error.set(null);
-
-    this.procesandoSolicitud.set(idOrganizacion);
 
     this.organizacionService
-      .aceptarSolicitudOrganizacion(idOrganizacion)
+      .aceptarSolicitudOrganizacion(
+        organizacion.idOrganizacion
+      )
       .subscribe({
 
         next: (respuesta) => {
-
-          console.log(
-            'Solicitud aceptada:',
-            respuesta
-          );
 
           this.procesandoSolicitud.set(null);
 
           this.mensaje.set(respuesta);
 
-          // Actualizar solicitudes pendientes
           this.cargarSolicitudes();
-
-          // Actualizar organizaciones aceptadas
-          this.organizacionService
-            .obtenerOrganizaciones()
-            .subscribe({
-
-              next: (organizaciones) => {
-
-                console.log(
-                  'Organizaciones aceptadas:',
-                  organizaciones
-                );
-
-                this.organizaciones.set(
-                  organizaciones
-                );
-              },
-
-              error: (error) => {
-
-                console.error(
-                  'Error al cargar organizaciones aceptadas:',
-                  error
-                );
-              }
-
-            });
+          this.cargarOrganizaciones();
         },
 
         error: (error) => {
@@ -162,35 +190,17 @@ export class Organizaciones implements OnInit {
         }
 
       });
-  }
 
-  rechazarSolicitud(
-    idOrganizacion: number
-  ): void {
+  } else if (accion === 'rechazar') {
 
-    const organizacion = this.solicitudes().find(
-      (item) => item.idOrganizacion === idOrganizacion
+    this.procesandoSolicitud.set(
+      organizacion.idOrganizacion
     );
-
-    if (!organizacion) {
-      return;
-    }
-
-    const confirmar = window.confirm(
-      `¿Estás seguro de que deseas rechazar la solicitud de ${organizacion.nombre}?`
-    );
-
-    if (!confirmar) {
-      return;
-    }
-
-    this.mensaje.set(null);
-    this.error.set(null);
-
-    this.procesandoSolicitud.set(idOrganizacion);
 
     this.organizacionService
-      .rechazarSolicitudOrganizacion(idOrganizacion)
+      .rechazarSolicitudOrganizacion(
+        organizacion.idOrganizacion
+      )
       .subscribe({
 
         next: (respuesta) => {
@@ -199,7 +209,6 @@ export class Organizaciones implements OnInit {
 
           this.mensaje.set(respuesta);
 
-          // Actualizar solicitudes pendientes
           this.cargarSolicitudes();
         },
 
@@ -215,5 +224,41 @@ export class Organizaciones implements OnInit {
         }
 
       });
+
+  } else if (accion === 'cancelar') {
+
+    this.organizacionService
+      .cancelarAsociacionOrganizacion(
+        organizacion.idOrganizacion
+      )
+      .subscribe({
+
+        next: (respuesta) => {
+
+          this.mensaje.set(respuesta);
+
+          this.cargarOrganizaciones();
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Error al cancelar la asociación:',
+            error
+          );
+
+          const mensaje =
+            error?.error ||
+            'No se pudo cancelar la asociación.';
+
+          this.error.set(mensaje);
+        }
+
+      });
   }
+
+  this.organizacionSeleccionada.set(null);
+  this.accionPendiente.set(null);
+}
+
 }

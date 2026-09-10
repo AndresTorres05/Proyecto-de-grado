@@ -207,15 +207,15 @@
     <span>Asociación activa</span>
   </div>
 
-  <button
-    type="button"
-    class="remove-association-button"
-    (click)="cancelarAsociacion(persona)"
-    title="Cancelar asociación"
-    aria-label="Cancelar asociación"
-  >
-    <app-icon name="x" />
-  </button>
+<button
+  type="button"
+  class="remove-association-button"
+  (click)="mostrarConfirmacion(persona)"
+  title="Cancelar asociación"
+  aria-label="Cancelar asociación"
+>
+  <app-icon name="x" />
+</button>
 
 </div>
 
@@ -338,4 +338,53 @@
 
   </div>
 
+}
+
+@if (mostrandoConfirmacion()) {
+  <div class="confirmation-overlay" (click)="cerrarConfirmacion()">
+    <div
+      class="confirmation-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="confirmation-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="confirmation-modal__icon">
+        <app-icon name="alert-triangle" />
+      </div>
+
+      <div class="confirmation-modal__content">
+        <h2 id="confirmation-title">¿Cancelar asociación?</h2>
+
+        <p>
+          Estás a punto de cancelar la asociación con
+          <strong>{{ personaSeleccionada?.nombre }}</strong>.
+        </p>
+
+        <p class="confirmation-modal__warning">
+          La persona mayor dejará de aparecer en la lista de personas
+          asociadas a tu organización.
+        </p>
+      </div>
+
+      <div class="confirmation-modal__actions">
+        <button
+          type="button"
+          class="confirmation-modal__cancel"
+          (click)="cerrarConfirmacion()"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="confirmation-modal__confirm"
+          (click)="confirmarCancelacion()"
+        >
+          <app-icon name="x" />
+          Cancelar asociación
+        </button>
+      </div>
+    </div>
+  </div>
 }
