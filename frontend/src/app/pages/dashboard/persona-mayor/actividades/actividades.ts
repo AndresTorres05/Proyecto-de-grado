@@ -1,5 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { CommonModule, DatePipe, registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es-CO';
 import { ActividadService, ActividadDisponible } from '../../../../core/actividades/actividad.service';
+
+registerLocaleData(localeEs);
 
 @Component({
   selector: 'app-actividades',
