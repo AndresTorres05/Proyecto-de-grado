@@ -138,22 +138,24 @@
 
         <div class="quick-actions">
 
-          @for (accion of accionesRapidas; track accion.label) {
+@for (accion of accionesRapidas; track accion.label) {
 
-            <button
-              type="button"
-              class="quick-action"
-            >
+  <button
+    type="button"
+    class="quick-action"
+    [routerLink]="accion.route"
+    [queryParams]="accion.abrirFormulario ? { abrir: 'registrar' } : null"
+  >
 
-              <span class="quick-action__icon">
-                <app-icon [name]="accion.icon" />
-              </span>
+    <span class="quick-action__icon">
+      <app-icon [name]="accion.icon" />
+    </span>
 
-              {{ accion.label }}
+    {{ accion.label }}
 
-            </button>
+  </button>
 
-          }
+}
 
         </div>
 

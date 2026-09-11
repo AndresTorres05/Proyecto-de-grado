@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { DashboardShell } from '../../../shared/dashboard-shell/dashboard-shell';
 import { Icon } from '../../../shared/icon/icon';
 
+import { RouterLink } from '@angular/router';
+
 import {
   ActividadService,
   Actividad,
@@ -38,6 +40,8 @@ interface Alerta {
 interface AccionRapida {
   icon: string;
   label: string;
+  route: string;
+  abrirFormulario?: boolean;
 }
 
 interface Inventario {
@@ -61,7 +65,7 @@ interface Bitacora {
 
 @Component({
   selector: 'app-organizacion-dashboard',
-  imports: [DashboardShell, FormsModule, Icon, DatePipe],
+  imports: [DashboardShell, FormsModule, Icon, DatePipe, RouterLink],
   templateUrl: './organizacion.html',
   styleUrl: './organizacion.css'
 })
@@ -153,24 +157,30 @@ export class OrganizacionDashboard implements OnInit {
   // ACCIONES RÁPIDAS
   // =========================================================
 
-  protected readonly accionesRapidas: AccionRapida[] = [
-    {
-      icon: 'user',
-      label: 'Registrar persona mayor'
-    },
-    {
-      icon: 'activity',
-      label: 'Registrar actividad'
-    },
-    {
-      icon: 'gift',
-      label: 'Registrar donación'
-    },
-    {
-      icon: 'clipboard',
-      label: 'Generar reporte'
-    }
-  ];
+protected readonly accionesRapidas: AccionRapida[] = [
+  {
+    icon: 'user',
+    label: 'Registrar persona mayor',
+    route: '/panel/organizacion/personas-mayores',
+    abrirFormulario: true
+  },
+  {
+    icon: 'activity',
+    label: 'Registrar actividad',
+    route: '/panel/organizacion/actividades',
+    abrirFormulario: true
+  },
+  {
+    icon: 'gift',
+    label: 'Registrar donación',
+    route: '/panel/organizacion/donaciones'
+  },
+  {
+    icon: 'clipboard',
+    label: 'Generar reporte',
+    route: '/panel/organizacion/reportes'
+  }
+];
 
   // =========================================================
   // ACTIVIDADES
