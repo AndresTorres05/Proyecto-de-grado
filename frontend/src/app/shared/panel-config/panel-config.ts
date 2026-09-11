@@ -27,14 +27,14 @@ export const PANEL_CONFIG: Record<string, PanelConfig> = {
     navItems: [
       { icon: 'home', label: 'Inicio', path: '/panel/organizacion' },
       { icon: 'user', label: 'Personas mayores', path: '/panel/organizacion/personas-mayores' },
-      { icon: 'users', label: 'Acompañantes', path: '/panel/organizacion/acompanantes' },
-      { icon: 'star', label: 'Voluntarios', path: '/panel/organizacion/voluntarios' },
+      //{ icon: 'users', label: 'Acompañantes', path: '/panel/organizacion/acompanantes' },
       { icon: 'activity', label: 'Actividades', path: '/panel/organizacion/actividades' },
-      { icon: 'pill', label: 'Medicamentos', path: '/panel/organizacion/medicamentos' },
-      { icon: 'gift', label: 'Donaciones', path: '/panel/organizacion/donaciones' },
-      { icon: 'bell', label: 'Alertas', path: '/panel/organizacion/alertas' },
-      { icon: 'bar-chart', label: 'Analítica', path: '/panel/organizacion/analitica' },
-      { icon: 'map', label: 'Mapa', path: '/panel/organizacion/mapa' },
+      { icon: 'star', label: 'Voluntarios', path: '/panel/organizacion/voluntarios' },
+      //{ icon: 'pill', label: 'Medicamentos', path: '/panel/organizacion/medicamentos' },
+      //{ icon: 'gift', label: 'Donaciones', path: '/panel/organizacion/donaciones' },
+      //{ icon: 'bell', label: 'Alertas', path: '/panel/organizacion/alertas' },
+      //{ icon: 'bar-chart', label: 'Analítica', path: '/panel/organizacion/analitica' },
+      //{ icon: 'map', label: 'Mapa', path: '/panel/organizacion/mapa' },
       { icon: 'settings', label: 'Administración', path: '/panel/organizacion/administracion' }
     ]
   },

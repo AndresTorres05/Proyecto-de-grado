@@ -19,6 +19,8 @@ import { PANEL_CONFIG } from '../../../shared/panel-config/panel-config';
 import { DatePipe, registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es-CO';
 
+registerLocaleData(localeEs);
+
 interface StatCard {
   icon: string;
   value: string;
