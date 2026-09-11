@@ -1,6 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 import {
   ActividadService,
@@ -64,18 +65,25 @@ protected actividadEditando: ActividadRequest = {
   protected participantes = signal<ParticipanteActividad[]>([])
   protected cargandoParticipantes = signal(false);
 
-  constructor(
-    private actividadService: ActividadService,
-    private authService: AuthService,
-    private organizacionService: OrganizacionService
-  ) {
+constructor(
+  private actividadService: ActividadService,
+  private authService: AuthService,
+  private organizacionService: OrganizacionService,
+  private route: ActivatedRoute
+) {
     this.nombreUsuario.set(this.authService.getNombreUsuario());
   }
 
-  ngOnInit(): void {
-    this.cargarActividades();
-    this.cargarInformacionOrganizacion();
-  }
+ngOnInit(): void {
+  this.cargarActividades();
+  this.cargarInformacionOrganizacion();
+
+  this.route.queryParams.subscribe(params => {
+    if (params['abrir'] === 'registrar') {
+      this.abrirFormulario();
+    }
+  });
+}
 
   private cargarInformacionOrganizacion(): void {
     this.organizacionService.obtenerInformacion().subscribe({

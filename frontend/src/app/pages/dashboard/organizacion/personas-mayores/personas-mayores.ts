@@ -1,5 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 import {
   OrganizacionService,
@@ -34,13 +35,20 @@ export class PersonasMayores implements OnInit {
   protected personaSeleccionada: PersonaMayorOrganizacion | null = null;
   protected telefono = '';
 
-  constructor(
-    private organizacionService: OrganizacionService
-  ) {}
+constructor(
+  private organizacionService: OrganizacionService,
+  private route: ActivatedRoute
+) {}
 
-  ngOnInit(): void {
-    this.cargarPersonasMayores();
-  }
+ngOnInit(): void {
+  this.cargarPersonasMayores();
+
+  this.route.queryParams.subscribe(params => {
+    if (params['abrir'] === 'registrar') {
+      this.mostrarFormulario();
+    }
+  });
+}
 
   // ==========================================
   // CARGAR PERSONAS MAYORES
