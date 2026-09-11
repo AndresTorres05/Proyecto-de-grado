@@ -1,0 +1,401 @@
+<div class="seguimiento">
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <header class="seguimiento__header">
+    <div>
+      <h1>Seguimiento</h1>
+
+      <p>
+        Consulta la información de las personas mayores
+        que tienes bajo tu acompañamiento.
+      </p>
+    </div>
+  </header>
+
+
+  <!-- =====================================================
+       CARGANDO PERSONAS
+  ====================================================== -->
+
+  @if (cargandoPersonas) {
+
+    <div class="seguimiento__mensaje">
+      Cargando personas mayores...
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       ERROR PERSONAS
+  ====================================================== -->
+
+  @if (!cargandoPersonas && errorPersonas) {
+
+    <div class="seguimiento__error">
+      {{ errorPersonas }}
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       SIN PERSONAS
+  ====================================================== -->
+
+  @if (
+    !cargandoPersonas &&
+    !errorPersonas &&
+    personasMayores.length === 0
+  ) {
+
+    <div class="seguimiento__vacio">
+
+      <div class="seguimiento__vacio-icono">
+        👥
+      </div>
+
+      <h2>
+        No tienes personas mayores asociadas
+      </h2>
+
+      <p>
+        Cuando una persona mayor acepte tu solicitud,
+        aparecerá aquí para que puedas realizar su seguimiento.
+      </p>
+
+    </div>
+
+  }
+
+
+  <!-- =====================================================
+       PERSONAS MAYORES
+  ====================================================== -->
+
+  @if (
+    !cargandoPersonas &&
+    personasMayores.length > 0
+  ) {
+
+    <section class="seguimiento__personas">
+
+      <h2>
+        Selecciona una persona mayor
+      </h2>
+
+      <div class="personas__lista">
+
+        @for (
+          persona of personasMayores;
+          track persona.idUsuario
+        ) {
+
+          <button
+            type="button"
+            class="persona-card"
+            [class.persona-card--seleccionada]="
+              personaSeleccionada?.idUsuario === persona.idUsuario
+            "
+            (click)="seleccionarPersona(persona)"
+          >
+
+            <div class="persona-card__icono">
+              👤
+            </div>
+
+            <div class="persona-card__info">
+
+              <strong>
+                {{ persona.nombre }}
+              </strong>
+
+              <span>
+                {{ persona.telefono }}
+              </span>
+
+            </div>
+
+          </button>
+
+        }
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         PERSONA SELECCIONADA
+    ==================================================== -->
+
+    @if (personaSeleccionada) {
+
+      <section class="seguimiento__contenido">
+
+        <div class="seguimiento__persona-header">
+
+          <div>
+
+            <span class="seguimiento__etiqueta">
+              Persona seleccionada
+            </span>
+
+            <h2>
+              {{ personaSeleccionada.nombre }}
+            </h2>
+
+            <p>
+              {{ personaSeleccionada.telefono }}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- ===============================================
+             MEDICAMENTOS
+        ================================================ -->
+
+        <section class="seguimiento__seccion">
+
+          <div class="seccion__titulo">
+
+            <div>
+
+              <span class="seccion__icono">
+                💊
+              </span>
+
+              <div>
+
+                <h2>
+                  Medicamentos
+                </h2>
+
+                <p>
+                  Medicamentos registrados actualmente.
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- =============================================
+               CARGANDO MEDICAMENTOS
+          ============================================== -->
+
+          @if (cargandoMedicamentos) {
+
+            <div class="seguimiento__mensaje">
+              Cargando medicamentos...
+            </div>
+
+          }
+
+
+          <!-- =============================================
+               ERROR MEDICAMENTOS
+          ============================================== -->
+
+          @if (
+            !cargandoMedicamentos &&
+            errorMedicamentos
+          ) {
+
+            <div class="seguimiento__error">
+              {{ errorMedicamentos }}
+            </div>
+
+          }
+
+
+          <!-- =============================================
+               SIN MEDICAMENTOS
+          ============================================== -->
+
+          @if (
+            !cargandoMedicamentos &&
+            !errorMedicamentos &&
+            medicamentos.length === 0
+          ) {
+
+            <div
+              class="seguimiento__vacio seguimiento__vacio--pequeno"
+            >
+
+              <div class="seguimiento__vacio-icono">
+                💊
+              </div>
+
+              <h3>
+                No hay medicamentos registrados
+              </h3>
+
+              <p>
+                Esta persona mayor no tiene medicamentos
+                registrados actualmente.
+              </p>
+
+            </div>
+
+          }
+
+
+          <!-- =============================================
+               LISTA DE MEDICAMENTOS
+          ============================================== -->
+
+          @if (
+            !cargandoMedicamentos &&
+            !errorMedicamentos &&
+            medicamentos.length > 0
+          ) {
+
+            <div class="medicamentos">
+
+              @for (
+                medicamento of medicamentos;
+                track medicamento.idMedicamento
+              ) {
+
+                <article class="medicamento-card">
+
+                  <!-- HEADER -->
+
+                  <div class="medicamento-card__header">
+
+                    <div class="medicamento-card__icono">
+                      💊
+                    </div>
+
+                    <div>
+
+                      <h3>
+                        {{ medicamento.nombre }}
+                      </h3>
+
+                      <span
+                        class="medicamento-card__estado"
+                        [class.inactivo]="!medicamento.activo"
+                      >
+                        {{ obtenerEstado(medicamento) }}
+                      </span>
+
+                    </div>
+
+                  </div>
+
+
+                  <!-- DATOS -->
+
+                  <div class="medicamento-card__datos">
+
+                    @if (medicamento.dosis) {
+
+                      <div class="dato">
+
+                        <span class="dato__label">
+                          Dosis
+                        </span>
+
+                        <strong>
+                          {{ medicamento.dosis }}
+                        </strong>
+
+                      </div>
+
+                    }
+
+
+                    @if (medicamento.frecuencia) {
+
+                      <div class="dato">
+
+                        <span class="dato__label">
+                          Frecuencia
+                        </span>
+
+                        <strong>
+                          {{ medicamento.frecuencia }}
+                        </strong>
+
+                      </div>
+
+                    }
+
+
+                    @if (medicamento.hora) {
+
+                      <div class="dato">
+
+                        <span class="dato__label">
+                          Hora
+                        </span>
+
+                        <strong>
+                          {{ medicamento.hora }}
+                        </strong>
+
+                      </div>
+
+                    }
+
+
+                    <div class="dato">
+
+                      <span class="dato__label">
+                        Próxima toma
+                      </span>
+
+                      <strong>
+                        {{ obtenerProximaToma(medicamento) }}
+                      </strong>
+
+                    </div>
+
+                  </div>
+
+
+                  <!-- ÚLTIMA TOMA -->
+
+                  @if (medicamento.ultimaToma) {
+
+                    <div class="medicamento-card__ultima">
+
+                      <span>
+                        Última toma:
+                      </span>
+
+                      <strong>
+                        {{ medicamento.ultimaToma }}
+                      </strong>
+
+                    </div>
+
+                  }
+
+                </article>
+
+              }
+
+            </div>
+
+          }
+
+        </section>
+
+      </section>
+
+    }
+
+  }
+
+</div>

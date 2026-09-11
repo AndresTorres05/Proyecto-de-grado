@@ -1,0 +1,216 @@
+<main class="contactos-container">
+
+  <!-- ENCABEZADO -->
+  <section class="page-header">
+
+    <div>
+      <h1>Contactos de emergencia</h1>
+
+      <p>
+        Consulta los contactos de las personas mayores que acompañas.
+      </p>
+    </div>
+
+  </section>
+
+
+  <!-- CARGANDO PERSONAS -->
+  <div
+    class="loading"
+    *ngIf="cargandoPersonas"
+  >
+    <div class="spinner"></div>
+
+    <p>Cargando personas mayores...</p>
+  </div>
+
+
+  <!-- ERROR PERSONAS -->
+  <div
+    class="error-message"
+    *ngIf="!cargandoPersonas && errorPersonas"
+  >
+    {{ errorPersonas }}
+  </div>
+
+
+  <!-- PERSONAS MAYORES -->
+  <section
+    class="personas-section"
+    *ngIf="!cargandoPersonas && !errorPersonas"
+  >
+
+    <h2>Personas mayores</h2>
+
+    <div
+      class="personas-grid"
+      *ngIf="personasMayores.length > 0"
+    >
+
+      <button
+        class="persona-card"
+        *ngFor="let persona of personasMayores"
+        [class.selected]="personaSeleccionada?.idUsuario === persona.idUsuario"
+        (click)="seleccionarPersona(persona)"
+      >
+
+        <div class="persona-icon">
+          👤
+        </div>
+
+        <div class="persona-info">
+
+          <h3>
+            {{ persona.nombre }}
+          </h3>
+
+          <p>
+            📱 {{ persona.telefono }}
+          </p>
+
+        </div>
+
+      </button>
+
+    </div>
+
+
+    <!-- SIN PERSONAS -->
+    <div
+      class="empty-state"
+      *ngIf="personasMayores.length === 0"
+    >
+
+      <div class="empty-icon">
+        👤
+      </div>
+
+      <h3>No tienes personas mayores asociadas</h3>
+
+      <p>
+        Cuando tengas una relación de acompañamiento aceptada,
+        podrás consultar sus contactos aquí.
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <!-- CONTACTOS -->
+  <section
+    class="contactos-section"
+    *ngIf="personaSeleccionada"
+  >
+
+    <div class="section-header">
+
+      <div>
+        <h2>Contactos</h2>
+
+        <p>
+          Contactos de
+          <strong>
+            {{ personaSeleccionada.nombre }}
+          </strong>
+        </p>
+      </div>
+
+    </div>
+
+
+    <!-- CARGANDO CONTACTOS -->
+    <div
+      class="loading"
+      *ngIf="cargandoContactos"
+    >
+
+      <div class="spinner"></div>
+
+      <p>Cargando contactos...</p>
+
+    </div>
+
+
+    <!-- ERROR CONTACTOS -->
+    <div
+      class="error-message"
+      *ngIf="!cargandoContactos && errorContactos"
+    >
+      {{ errorContactos }}
+    </div>
+
+
+    <!-- LISTA DE CONTACTOS -->
+    <div
+      class="contactos-grid"
+      *ngIf="
+        !cargandoContactos &&
+        !errorContactos &&
+        contactos.length > 0
+      "
+    >
+
+      <article
+        class="contacto-card"
+        *ngFor="let contacto of contactos"
+      >
+
+        <div class="contacto-icon">
+          📞
+        </div>
+
+        <div class="contacto-info">
+
+          <h3>
+            {{ contacto.nombre }}
+          </h3>
+
+          <span class="parentesco">
+            {{ contacto.parentesco }}
+          </span>
+
+          <p class="telefono">
+            {{ contacto.telefono }}
+          </p>
+
+        </div>
+
+        <a
+          class="llamar-button"
+          [href]="'tel:' + contacto.telefono"
+        >
+          📞 Llamar
+        </a>
+
+      </article>
+
+    </div>
+
+
+    <!-- SIN CONTACTOS -->
+    <div
+      class="empty-state"
+      *ngIf="
+        !cargandoContactos &&
+        !errorContactos &&
+        contactos.length === 0
+      "
+    >
+
+      <div class="empty-icon">
+        📞
+      </div>
+
+      <h3>No hay contactos registrados</h3>
+
+      <p>
+        {{ personaSeleccionada.nombre }}
+        no tiene contactos registrados actualmente.
+      </p>
+
+    </div>
+
+  </section>
+
+</main>

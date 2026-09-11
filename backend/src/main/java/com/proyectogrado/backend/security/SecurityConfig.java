@@ -129,6 +129,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/organizacion/**")
                         .authenticated()
 
+                         // Todo lo relacionado con acompañante
+                        .requestMatchers("/api/acompanante/**")
+                        .authenticated()
+
                         // Todo lo demás necesita autenticación
                         .anyRequest()
                         .authenticated()

@@ -1,0 +1,94 @@
+<main class="actividades-container">
+
+  <div class="encabezado">
+    <div>
+      <h1>Actividades</h1>
+      <p>
+        Consulta las actividades disponibles para las personas mayores que acompañas.
+      </p>
+    </div>
+  </div>
+
+  <div class="estado" *ngIf="cargando">
+    <p>Cargando actividades...</p>
+  </div>
+
+  <div class="estado error" *ngIf="!cargando && error">
+    <p>{{ error }}</p>
+
+    <button (click)="cargarActividades()">
+      Intentar nuevamente
+    </button>
+  </div>
+
+  <div
+    class="estado"
+    *ngIf="!cargando && !error && actividades.length === 0"
+  >
+    <h2>No hay actividades disponibles</h2>
+
+    <p>
+      Actualmente no hay actividades de las organizaciones a las que
+      pertenecen las personas mayores que acompañas.
+    </p>
+  </div>
+
+  <section
+    class="actividades-grid"
+    *ngIf="!cargando && !error && actividades.length > 0"
+  >
+
+    <article
+      class="actividad-card"
+      *ngFor="let actividad of actividades"
+    >
+
+      <div class="actividad-icono">
+        📅
+      </div>
+
+      <div class="actividad-contenido">
+
+        <h2>{{ actividad.nombre }}</h2>
+
+        <div class="dato">
+          <strong>Fecha:</strong>
+          <span>
+            {{ formatearFecha(actividad.fecha) }}
+          </span>
+        </div>
+
+        <div class="dato" *ngIf="actividad.hora">
+          <strong>Hora:</strong>
+          <span>{{ actividad.hora }}</span>
+        </div>
+
+        <div class="dato" *ngIf="actividad.lugar">
+          <strong>Lugar:</strong>
+          <span>{{ actividad.lugar }}</span>
+        </div>
+
+        <div class="dato" *ngIf="actividad.tipo">
+          <strong>Tipo:</strong>
+          <span>{{ actividad.tipo }}</span>
+        </div>
+
+        <div class="dato" *ngIf="actividad.cupos !== null">
+          <strong>Cupos:</strong>
+          <span>{{ actividad.cupos }}</span>
+        </div>
+
+        <p
+          class="descripcion"
+          *ngIf="actividad.descripcion"
+        >
+          {{ actividad.descripcion }}
+        </p>
+
+      </div>
+
+    </article>
+
+  </section>
+
+</main>

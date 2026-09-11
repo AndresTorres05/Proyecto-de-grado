@@ -231,34 +231,30 @@ export const routes: Routes = [
       {
         path: 'seguimiento',
         loadComponent: () =>
-          import('./shared/en-construccion/en-construccion')
-            .then((m) => m.EnConstruccion),
-        data: { titulo: 'Seguimiento' }
+          import('./pages/dashboard/acompanante/seguimiento/seguimiento')
+            .then((m) => m.Seguimiento)
       },
 
       {
         path: 'contactos-emergencia',
         loadComponent: () =>
-          import('./shared/en-construccion/en-construccion')
-            .then((m) => m.EnConstruccion),
-        data: { titulo: 'Contactos de emergencia' }
+          import('./pages/dashboard/acompanante/contactos-emergencia/contactos-emergencia')
+            .then((m) => m.ContactosEmergencia)
       },
 
       {
         path: 'actividades',
         loadComponent: () =>
-          import('./shared/en-construccion/en-construccion')
-            .then((m) => m.EnConstruccion),
-        data: { titulo: 'Actividades' }
+          import('./pages/dashboard/acompanante/actividades/actividades')
+            .then((m) => m.ActividadesComponent),
       },
 
       {
         path: 'perfil',
         loadComponent: () =>
-          import('./shared/en-construccion/en-construccion')
-            .then((m) => m.EnConstruccion),
-        data: { titulo: 'Mi perfil' }
-      }
+          import('./pages/dashboard/acompanante/informacion/informacion')
+            .then((m) => m.Informacion)
+      },
 
     ]
   },

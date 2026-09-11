@@ -105,6 +105,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .getContext()
                     .getAuthentication() == null) {
 
+                        
+
 
                 // -------------------------------------------------
                 // Buscar usuario
@@ -140,8 +142,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
                     SecurityContextHolder
-                            .getContext()
-                            .setAuthentication(authToken);
+        .getContext()
+        .setAuthentication(authToken);
+
+System.out.println(
+        "JWT autenticado correctamente. Usuario: "
+                + idUsuario
+);
+
+System.out.println(
+        "ROLES DEL USUARIO: "
+                + userDetails.getAuthorities()
+);
+
+System.out.println(
+        "RUTA SOLICITADA: "
+                + request.getRequestURI()
+);
 
 
                     System.out.println(

@@ -1,0 +1,293 @@
+.seguimiento {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.seguimiento__header {
+  margin-bottom: 2rem;
+}
+
+.seguimiento__header h1 {
+  margin: 0 0 0.5rem;
+  font-size: 2rem;
+}
+
+.seguimiento__header p {
+  margin: 0;
+  color: #666;
+}
+
+
+/* MENSAJES */
+
+.seguimiento__mensaje,
+.seguimiento__error,
+.seguimiento__vacio {
+  padding: 2rem;
+  border-radius: 16px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+}
+
+.seguimiento__error {
+  color: #b42318;
+  background: #fff5f5;
+  border-color: #f5c2c2;
+}
+
+.seguimiento__vacio-icono {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.seguimiento__vacio h2,
+.seguimiento__vacio h3 {
+  margin: 0 0 0.5rem;
+}
+
+.seguimiento__vacio p {
+  margin: 0;
+  color: #666;
+}
+
+.seguimiento__vacio--pequeno {
+  padding: 1.5rem;
+}
+
+
+/* PERSONAS */
+
+.seguimiento__personas {
+  margin-bottom: 2rem;
+}
+
+.seguimiento__personas h2 {
+  margin-bottom: 1rem;
+}
+
+.personas__lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.persona-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 2px solid #e5e5e5;
+  border-radius: 16px;
+  background: white;
+  cursor: pointer;
+  text-align: left;
+  transition: 0.2s ease;
+}
+
+.persona-card:hover {
+  border-color: #999;
+  transform: translateY(-2px);
+}
+
+.persona-card--seleccionada {
+  border-color: #2563eb;
+  background: #f5f8ff;
+}
+
+.persona-card__icono {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eef2ff;
+  font-size: 1.5rem;
+}
+
+.persona-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.persona-card__info strong {
+  font-size: 1rem;
+}
+
+.persona-card__info span {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+
+/* CONTENIDO */
+
+.seguimiento__contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.seguimiento__persona-header {
+  padding: 1.5rem;
+  border-radius: 18px;
+  background: #f5f8ff;
+  border: 1px solid #dbe5ff;
+}
+
+.seguimiento__etiqueta {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666;
+}
+
+.seguimiento__persona-header h2 {
+  margin: 0;
+}
+
+.seguimiento__persona-header p {
+  margin: 0.4rem 0 0;
+  color: #666;
+}
+
+
+/* SECCIONES */
+
+.seguimiento__seccion {
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 18px;
+  padding: 1.5rem;
+}
+
+.seccion__titulo {
+  margin-bottom: 1.5rem;
+}
+
+.seccion__titulo > div {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.seccion__icono {
+  font-size: 2rem;
+}
+
+.seccion__titulo h2 {
+  margin: 0;
+}
+
+.seccion__titulo p {
+  margin: 0.25rem 0 0;
+  color: #666;
+}
+
+
+/* MEDICAMENTOS */
+
+.medicamentos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.medicamento-card {
+  padding: 1.25rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+}
+
+.medicamento-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.medicamento-card__icono {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  font-size: 1.4rem;
+}
+
+.medicamento-card__header h3 {
+  margin: 0 0 0.35rem;
+}
+
+.medicamento-card__estado {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  background: #e8f7ee;
+  color: #18794e;
+}
+
+.medicamento-card__estado.inactivo {
+  background: #f1f1f1;
+  color: #666;
+}
+
+.medicamento-card__datos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.dato {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dato__label {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.dato strong {
+  font-size: 0.95rem;
+}
+
+.medicamento-card__ultima {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.medicamento-card__ultima strong {
+  margin-left: 0.25rem;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+
+  .seguimiento {
+    padding: 1rem;
+  }
+
+  .seguimiento__header h1 {
+    font-size: 1.6rem;
+  }
+
+  .medicamento-card__datos {
+    grid-template-columns: 1fr;
+  }
+
+}
