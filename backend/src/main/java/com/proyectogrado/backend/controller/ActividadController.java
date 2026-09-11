@@ -237,6 +237,10 @@ return ResponseEntity.status(HttpStatus.CREATED).build();
         if (request.getNombre() == null || request.getNombre().isBlank()) {
             return ResponseEntity.badRequest().body("El nombre es obligatorio");
         }
+        if (request.getFecha() != null && request.getFecha().isBefore(LocalDate.now())) {
+    return ResponseEntity.badRequest()
+            .body("No se puede crear una actividad con una fecha anterior a hoy");
+}
         if (request.getCupos() != null && request.getCupos() <= 0) {
     return ResponseEntity.badRequest()
             .body("Los cupos deben ser mayores a 0");

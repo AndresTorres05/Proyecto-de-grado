@@ -27,12 +27,18 @@
   border: none;
   border-radius: 10px;
   padding: 0.75rem 1.25rem;
-  background: #2563eb;
-  color: white;
+  background: var(--vita-orange);
+  color: var(--vita-white);
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: var(--vita-orange);
+  color: var(--vita-white);
+  transform: translateY(-1px);
 }
 
 .btn-primary:hover {
@@ -46,11 +52,11 @@
 }
 
 .activities-section {
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .section-header {
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.9rem;
 }
 
 .section-header h2 {

@@ -61,7 +61,7 @@ protected actividadEditando: ActividadRequest = {
 
   // Participantes
   protected actividadParticipantes = signal<Actividad | null>(null);
-  protected participantes = signal<ParticipanteActividad[]>([]);
+  protected participantes = signal<ParticipanteActividad[]>([])
   protected cargandoParticipantes = signal(false);
 
   constructor(
@@ -162,25 +162,35 @@ this.nuevaActividad = {
     this.mostrarFormulario.set(false);
   }
 
-  protected crearActividad(): void {
-    if (!this.nuevaActividad.nombre.trim()) {
-      this.error.set('El nombre de la actividad es obligatorio');
-      return;
-    }
-
-    this.error.set(null);
-
-    this.actividadService.crear(this.nuevaActividad).subscribe({
-      next: () => {
-        this.cerrarFormulario();
-        this.cargarActividades();
-      },
-      error: (error) => {
-        console.error('Error al crear actividad:', error);
-        this.error.set('No se pudo crear la actividad');
-      }
-    });
+protected crearActividad(): void {
+  if (!this.nuevaActividad.nombre.trim()) {
+    this.error.set('El nombre de la actividad es obligatorio');
+    return;
   }
+
+  if (
+    this.nuevaActividad.fecha &&
+    this.nuevaActividad.fecha < new Date().toISOString().split('T')[0]
+  ) {
+    this.error.set(
+      'No se puede crear una actividad con una fecha anterior a hoy'
+    );
+    return;
+  }
+
+  this.error.set(null);
+
+  this.actividadService.crear(this.nuevaActividad).subscribe({
+    next: () => {
+      this.cerrarFormulario();
+      this.cargarActividades();
+    },
+    error: (error) => {
+      console.error('Error al crear actividad:', error);
+      this.error.set('No se pudo crear la actividad');
+    }
+  });
+}
 
   protected editarActividad(actividad: Actividad): void {
     if (actividad.fecha && actividad.fecha < this.fechaHoy()) {

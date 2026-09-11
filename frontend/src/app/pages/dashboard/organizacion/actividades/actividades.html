@@ -353,14 +353,6 @@
                     Ver asistentes
                   </button>
 
-                  <button
-                    class="btn-delete"
-                    type="button"
-                    (click)="eliminarActividad(actividad)"
-                  >
-                    Eliminar
-                  </button>
-
                 </div>
 
               </div>
@@ -915,26 +907,26 @@
 
         @if (participantes().length === 0) {
 
-          <div class="empty-state compact">
+  <div class="empty-state compact">
 
-            <div class="empty-icon">
-              👥
-            </div>
+    <div class="empty-icon">
+      👥
+    </div>
 
-            <h3>
-              No hay personas confirmadas
-            </h3>
+    <h3>
+      No hay personas confirmadas
+    </h3>
 
-            <p>
-              Cuando una persona mayor confirme su asistencia,
-              aparecerá aquí.
-            </p>
+    <p>
+      Cuando una persona mayor confirme su asistencia,
+      aparecerá aquí.
+    </p>
 
-          </div>
+  </div>
 
-        } @else {
+} @else {
 
-          <div class="participants-list">
+  <div class="participants-list">
 
             @for (
               participante of participantes();
