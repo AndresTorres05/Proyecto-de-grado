@@ -3,6 +3,7 @@ package com.proyectogrado.backend.controller;
 import com.proyectogrado.backend.dto.ActividadDisponibleResponse;
 import com.proyectogrado.backend.dto.ActividadRequest;
 import com.proyectogrado.backend.dto.ActividadResponse;
+import com.proyectogrado.backend.dto.ParticipanteActividadResponse;
 import com.proyectogrado.backend.model.Actividad;
 import com.proyectogrado.backend.model.Participacion;
 import com.proyectogrado.backend.model.PersonaMayor;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import com.proyectogrado.backend.dto.AsistenciaRequest;
 
 import java.util.List;
 import java.util.Set;
@@ -70,14 +72,97 @@ public class ActividadController {
                 .collect(Collectors.toSet());
 
         List<ActividadDisponibleResponse> respuesta = actividadRepository.findAll().stream()
-                .map(a -> new ActividadDisponibleResponse(
-                        a.getIdActividad(), a.getNombre(), a.getFecha(), a.getLugar(), a.getTipo(),
-                        idsInscritos.contains(a.getIdActividad())
-                ))
+.map(a -> new ActividadDisponibleResponse(
+        a.getIdActividad(),
+        a.getNombre(),
+        a.getDescripcion(),
+        a.getFecha(),
+        a.getHora(),
+        a.getLugar(),
+        a.getTipo(),
+        a.getCupos(),
+        idsInscritos.contains(a.getIdActividad())
+))
                 .toList();
 
         return ResponseEntity.ok(respuesta);
     }
+
+    @GetMapping("/{id}/participantes")
+public ResponseEntity<?> listarParticipantes(@PathVariable Integer id,
+                                              Authentication authentication) {
+
+    Usuario usuario = usuarioActual(authentication);
+
+    if (usuario == null || usuario.getIdOrganizacion() == null) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("Solo una organización puede consultar participantes");
+    }
+
+    Actividad actividad = actividadRepository.findById(id).orElse(null);
+
+    if (actividad == null) {
+        return ResponseEntity.notFound().build();
+    }
+
+    if (!usuario.getIdOrganizacion().equals(actividad.getIdOrganizacion())) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("Esta actividad no pertenece a tu organización");
+    }
+
+    List<ParticipanteActividadResponse> participantes =
+            participacionRepository.findById_IdActividad(id)
+                    .stream()
+                    .map(p -> new ParticipanteActividadResponse(
+                            p.getPersonaMayor().getIdUsuario(),
+                            p.getPersonaMayor().getUsuario().getNombreUsuario(),
+                            p.getPersonaMayor().getUsuario().getTelefono(),
+                            p.getAsistio()
+                    ))
+                    .toList();
+
+    return ResponseEntity.ok(participantes);
+}
+
+@PutMapping("/{id}/participantes/{idPersonaMayor}/asistencia")
+public ResponseEntity<?> registrarAsistencia(
+        @PathVariable Integer id,
+        @PathVariable Integer idPersonaMayor,
+        @RequestBody AsistenciaRequest request,
+        Authentication authentication) {
+
+    Usuario usuario = usuarioActual(authentication);
+
+    if (usuario == null || usuario.getIdOrganizacion() == null) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("Solo una organización puede registrar asistencia");
+    }
+
+    Actividad actividad = actividadRepository.findById(id).orElse(null);
+
+    if (actividad == null) {
+        return ResponseEntity.notFound().build();
+    }
+
+    if (!usuario.getIdOrganizacion().equals(actividad.getIdOrganizacion())) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("Esta actividad no pertenece a tu organización");
+    }
+
+    Participacion participacion = participacionRepository
+            .findById_IdPersonaMayorAndId_IdActividad(idPersonaMayor, id)
+            .orElse(null);
+
+    if (participacion == null) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("La persona mayor no está inscrita en esta actividad");
+    }
+
+    participacion.setAsistio(request.getAsistio());
+    participacionRepository.save(participacion);
+
+    return ResponseEntity.ok().build();
+}
 
     @PostMapping("/{id}/inscribirse")
     public ResponseEntity<?> inscribirse(@PathVariable Integer id, Authentication authentication) {
@@ -91,17 +176,36 @@ public class ActividadController {
             return ResponseEntity.notFound().build();
         }
 
-        boolean yaInscrito = participacionRepository
-                .findById_IdPersonaMayorAndId_IdActividad(personaMayor.getIdUsuario(), id)
-                .isPresent();
+boolean yaInscrito = participacionRepository
+        .findById_IdPersonaMayorAndId_IdActividad(
+                personaMayor.getIdUsuario(),
+                id
+        )
+        .isPresent();
 
-        if (yaInscrito) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya estás inscrito en esta actividad");
-        }
+if (yaInscrito) {
+    return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body("Ya estás inscrito en esta actividad");
+}
 
-        participacionRepository.save(new Participacion(personaMayor, actividad));
+if (actividad.getCupos() != null) {
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    long participantesActuales =
+            participacionRepository
+                    .findById_IdActividad(id)
+                    .size();
+
+    if (participantesActuales >= actividad.getCupos()) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body("La actividad ya alcanzó el límite de cupos");
+    }
+}
+
+participacionRepository.save(
+        new Participacion(personaMayor, actividad)
+);
+
+return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/{id}/inscribirse")
@@ -133,13 +237,20 @@ public class ActividadController {
         if (request.getNombre() == null || request.getNombre().isBlank()) {
             return ResponseEntity.badRequest().body("El nombre es obligatorio");
         }
+        if (request.getCupos() != null && request.getCupos() <= 0) {
+    return ResponseEntity.badRequest()
+            .body("Los cupos deben ser mayores a 0");
+}
 
         Actividad actividad = new Actividad();
         actividad.setIdOrganizacion(usuario.getIdOrganizacion());
-        actividad.setNombre(request.getNombre());
-        actividad.setFecha(request.getFecha());
-        actividad.setLugar(request.getLugar());
-        actividad.setTipo(request.getTipo());
+actividad.setNombre(request.getNombre());
+actividad.setDescripcion(request.getDescripcion());
+actividad.setFecha(request.getFecha());
+actividad.setHora(request.getHora());
+actividad.setLugar(request.getLugar());
+actividad.setTipo(request.getTipo());
+actividad.setCupos(request.getCupos());
 
         actividad = actividadRepository.save(actividad);
         return ResponseEntity.status(HttpStatus.CREATED).body(aResponse(actividad));
@@ -160,11 +271,18 @@ public class ActividadController {
         if (request.getNombre() == null || request.getNombre().isBlank()) {
             return ResponseEntity.badRequest().body("El nombre es obligatorio");
         }
+        if (request.getCupos() != null && request.getCupos() <= 0) {
+    return ResponseEntity.badRequest()
+            .body("Los cupos deben ser mayores a 0");
+}
 
-        actividad.setNombre(request.getNombre());
-        actividad.setFecha(request.getFecha());
-        actividad.setLugar(request.getLugar());
-        actividad.setTipo(request.getTipo());
+actividad.setNombre(request.getNombre());
+actividad.setDescripcion(request.getDescripcion());
+actividad.setFecha(request.getFecha());
+actividad.setHora(request.getHora());
+actividad.setLugar(request.getLugar());
+actividad.setTipo(request.getTipo());
+actividad.setCupos(request.getCupos());
 
         actividad = actividadRepository.save(actividad);
         return ResponseEntity.ok(aResponse(actividad));
@@ -204,8 +322,17 @@ public class ActividadController {
         return personaMayorRepository.findById(usuario.getIdUsuario()).orElse(null);
     }
 
-    private ActividadResponse aResponse(Actividad a) {
-        return new ActividadResponse(a.getIdActividad(), a.getIdOrganizacion(), a.getNombre(),
-                a.getFecha(), a.getLugar(), a.getTipo());
-    }
+private ActividadResponse aResponse(Actividad a) {
+    return new ActividadResponse(
+            a.getIdActividad(),
+            a.getIdOrganizacion(),
+            a.getNombre(),
+            a.getDescripcion(),
+            a.getFecha(),
+            a.getHora(),
+            a.getLugar(),
+            a.getTipo(),
+            a.getCupos()
+    );
+}
 }

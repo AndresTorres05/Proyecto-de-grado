@@ -6,25 +6,41 @@ export interface Actividad {
   idActividad: number;
   idOrganizacion: number;
   nombre: string;
+  descripcion: string | null;
   fecha: string | null;
+  hora: string | null;
   lugar: string | null;
   tipo: string | null;
+  cupos: number | null;
 }
 
 export interface ActividadDisponible {
   idActividad: number;
   nombre: string;
+  descripcion: string | null;
   fecha: string | null;
+  hora: string | null;
   lugar: string | null;
   tipo: string | null;
+  cupos: number | null;
   inscrito: boolean;
 }
 
 export interface ActividadRequest {
   nombre: string;
+  descripcion: string | null;
   fecha: string | null;
+  hora: string | null;
   lugar: string | null;
   tipo: string | null;
+  cupos: number | null;
+}
+
+export interface ParticipanteActividad {
+  idPersonaMayor: number;
+  nombre: string;
+  telefono: string | null;
+  asistio: boolean | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -65,4 +81,20 @@ export class ActividadService {
   eliminar(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+  listarParticipantes(id: number): Observable<ParticipanteActividad[]> {
+  return this.http.get<ParticipanteActividad[]>(
+    `${this.apiUrl}/${id}/participantes`
+  );
+}
+
+registrarAsistencia(
+  idActividad: number,
+  idPersonaMayor: number,
+  asistio: boolean
+): Observable<void> {
+  return this.http.put<void>(
+    `${this.apiUrl}/${idActividad}/participantes/${idPersonaMayor}/asistencia`,
+    { asistio }
+  );
+}
 }

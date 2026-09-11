@@ -1,0 +1,1043 @@
+<div class="activities-page">
+
+  <!-- Encabezado -->
+  <header class="page-header">
+    <div>
+      <h1>Actividades</h1>
+      <p>Gestiona las actividades de tu organización.</p>
+    </div>
+
+    <button class="btn-primary" type="button" (click)="abrirFormulario()">
+      <span>+</span>
+      Crear actividad
+    </button>
+  </header>
+
+
+  <!-- Mensaje de error -->
+  @if (error()) {
+    <div class="error-message">
+      {{ error() }}
+    </div>
+  }
+
+
+  <!-- Cargando -->
+  @if (cargando()) {
+    <div class="empty-state">
+      <p>Cargando actividades...</p>
+    </div>
+  }
+
+
+  @if (!cargando()) {
+
+    <!-- =========================
+         PRÓXIMAS ACTIVIDADES
+         ========================= -->
+
+    <section class="activities-section">
+
+      <div class="section-header">
+        <div>
+          <h2>Próximas actividades</h2>
+          <p>Actividades programadas para tu organización.</p>
+        </div>
+      </div>
+
+
+      @if (actividadesProximas().length === 0) {
+
+        <div class="empty-state">
+
+          <div class="empty-icon">📅</div>
+
+          <h3>No hay próximas actividades</h3>
+
+          <p>
+            Crea una actividad para que las personas mayores
+            puedan conocerla y confirmar su asistencia.
+          </p>
+
+        </div>
+
+      } @else {
+
+        <div class="activities-list">
+
+          @for (
+            actividad of actividadesProximas();
+            track actividad.idActividad
+          ) {
+
+            <article class="activity-card">
+
+              <!-- Fecha -->
+              <div class="activity-date">
+
+                @if (actividad.fecha) {
+
+                  <span class="date-day">
+                    {{ actividad.fecha | date:'d' }}
+                  </span>
+
+                  <span class="date-month">
+                    {{ actividad.fecha | date:'MMM':'':'es-CO' }}
+                  </span>
+
+                } @else {
+
+                  <span class="date-day">—</span>
+
+                  <span class="date-month">
+                    Sin fecha
+                  </span>
+
+                }
+
+              </div>
+
+
+              <!-- Información -->
+              <div class="activity-content">
+
+                <div class="activity-info">
+
+                  <h3>
+                    {{ actividad.nombre }}
+                  </h3>
+
+
+                  @if (actividad.descripcion) {
+
+                    <p class="activity-description">
+                      {{ actividad.descripcion }}
+                    </p>
+
+                  }
+
+
+                  @if (actividad.tipo) {
+
+                    <span class="activity-type">
+                      {{ actividad.tipo }}
+                    </span>
+
+                  }
+
+
+                  <div class="activity-details">
+
+                    @if (actividad.fecha) {
+
+                      <span>
+                        📅
+                        {{ actividad.fecha | date:'EEEE, d \'de\' MMMM':'':'es-CO' }}
+                      </span>
+
+                    }
+
+
+                    @if (actividad.hora) {
+
+                      <span>
+                        🕐 {{ actividad.hora }}
+                      </span>
+
+                    }
+
+
+                    @if (actividad.lugar) {
+
+                      <span>
+                        📍 {{ actividad.lugar }}
+                      </span>
+
+                    }
+
+
+                    @if (actividad.cupos !== null) {
+
+                      <span>
+                        👥 {{ actividad.cupos }} cupos
+                      </span>
+
+                    }
+
+                  </div>
+
+                </div>
+
+
+                <!-- Acciones -->
+                <div class="activity-actions">
+
+                  <button
+                    class="btn-secondary"
+                    type="button"
+                    (click)="verParticipantes(actividad)"
+                  >
+                    Ver asistentes
+                  </button>
+
+                  <button
+                    class="btn-edit"
+                    type="button"
+                    (click)="editarActividad(actividad)"
+                  >
+                    Editar
+                  </button>
+
+                  <button
+                    class="btn-delete"
+                    type="button"
+                    (click)="eliminarActividad(actividad)"
+                  >
+                    Eliminar
+                  </button>
+
+                </div>
+
+              </div>
+
+            </article>
+
+          }
+
+        </div>
+
+      }
+
+    </section>
+
+
+    <!-- =========================
+         HISTORIAL
+         ========================= -->
+
+    <section class="activities-section history-section">
+
+      <div class="section-header">
+
+        <div>
+
+          <h2>Historial</h2>
+
+          <p>
+            Actividades que ya se realizaron.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      @if (actividadesPasadas().length === 0) {
+
+        <div class="empty-state compact">
+
+          <p>
+            Aún no hay actividades en el historial.
+          </p>
+
+        </div>
+
+      } @else {
+
+        <div class="activities-list">
+
+          @for (
+            actividad of actividadesPasadas();
+            track actividad.idActividad
+          ) {
+
+            <article class="activity-card past">
+
+              <!-- Fecha -->
+              <div class="activity-date">
+
+                @if (actividad.fecha) {
+
+                  <span class="date-day">
+                    {{ actividad.fecha | date:'d' }}
+                  </span>
+
+                  <span class="date-month">
+                    {{ actividad.fecha | date:'MMM':'':'es-CO' }}
+                  </span>
+
+                }
+
+              </div>
+
+
+              <!-- Información -->
+              <div class="activity-content">
+
+                <div class="activity-info">
+
+                  <h3>
+                    {{ actividad.nombre }}
+                  </h3>
+
+
+                  @if (actividad.descripcion) {
+
+                    <p class="activity-description">
+                      {{ actividad.descripcion }}
+                    </p>
+
+                  }
+
+
+                  @if (actividad.tipo) {
+
+                    <span class="activity-type">
+                      {{ actividad.tipo }}
+                    </span>
+
+                  }
+
+
+                  <div class="activity-details">
+
+                    @if (actividad.fecha) {
+
+                      <span>
+                        📅
+                        {{ actividad.fecha | date:'EEEE, d \'de\' MMMM':'':'es-CO' }}
+                      </span>
+
+                    }
+
+
+                    @if (actividad.hora) {
+
+                      <span>
+                        🕐 {{ actividad.hora }}
+                      </span>
+
+                    }
+
+
+                    @if (actividad.lugar) {
+
+                      <span>
+                        📍 {{ actividad.lugar }}
+                      </span>
+
+                    }
+
+
+                    @if (actividad.cupos !== null) {
+
+                      <span>
+                        👥 {{ actividad.cupos }} cupos
+                      </span>
+
+                    }
+
+                  </div>
+
+                </div>
+
+
+                <!-- Acciones -->
+                <div class="activity-actions">
+
+                  <button
+                    class="btn-secondary"
+                    type="button"
+                    (click)="verParticipantes(actividad)"
+                  >
+                    Ver asistentes
+                  </button>
+
+                  <button
+                    class="btn-delete"
+                    type="button"
+                    (click)="eliminarActividad(actividad)"
+                  >
+                    Eliminar
+                  </button>
+
+                </div>
+
+              </div>
+
+            </article>
+
+          }
+
+        </div>
+
+      }
+
+    </section>
+
+  }
+
+</div>
+
+
+
+<!-- =====================================================
+     MODAL CREAR ACTIVIDAD
+     ===================================================== -->
+
+@if (mostrarFormulario()) {
+
+  <div
+    class="modal-backdrop"
+    (click)="cerrarFormulario()"
+  >
+
+    <div
+      class="modal"
+      (click)="$event.stopPropagation()"
+    >
+
+      <!-- Encabezado -->
+      <div class="modal-header">
+
+        <div>
+
+          <h2>
+            Crear actividad
+          </h2>
+
+          <p>
+            Registra una nueva actividad para tu organización.
+          </p>
+
+        </div>
+
+
+        <button
+          class="modal-close"
+          type="button"
+          (click)="cerrarFormulario()"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <!-- Formulario -->
+      <form
+        class="activity-form"
+        (ngSubmit)="crearActividad()"
+      >
+
+        <!-- Nombre -->
+        <div class="form-group">
+
+          <label for="nombreActividad">
+            Nombre de la actividad
+          </label>
+
+          <input
+            id="nombreActividad"
+            type="text"
+            name="nombreActividad"
+            [(ngModel)]="nuevaActividad.nombre"
+            placeholder="Ej. Taller de memoria y estimulación cognitiva"
+            autocomplete="off"
+            required
+          />
+
+        </div>
+
+
+        <!-- Descripción -->
+        <div class="form-group">
+
+          <label for="descripcionActividad">
+            Descripción
+          </label>
+
+          <textarea
+            id="descripcionActividad"
+            name="descripcionActividad"
+            [(ngModel)]="nuevaActividad.descripcion"
+            placeholder="Describe brevemente en qué consiste la actividad"
+            rows="4"
+          ></textarea>
+
+        </div>
+
+
+        <!-- Fecha + Hora -->
+        <div class="form-row">
+
+          <div class="form-group">
+
+            <label for="fechaActividad">
+              Fecha
+            </label>
+
+            <input
+              id="fechaActividad"
+              type="date"
+              name="fechaActividad"
+              [(ngModel)]="nuevaActividad.fecha"
+            />
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="horaActividad">
+              Hora
+            </label>
+
+            <input
+              id="horaActividad"
+              type="time"
+              name="horaActividad"
+              [(ngModel)]="nuevaActividad.hora"
+            />
+
+          </div>
+
+        </div>
+
+
+        <!-- Lugar -->
+        <div class="form-group">
+
+          <label for="lugarActividad">
+            Lugar
+          </label>
+
+          <input
+            id="lugarActividad"
+            type="text"
+            name="lugarActividad"
+            [(ngModel)]="nuevaActividad.lugar"
+            placeholder="Ej. Salón principal"
+            autocomplete="off"
+          />
+
+        </div>
+
+
+        <!-- Tipo + Cupos -->
+        <div class="form-row">
+
+          <div class="form-group">
+
+            <label for="tipoActividad">
+              Tipo de actividad
+            </label>
+
+            <input
+              id="tipoActividad"
+              type="text"
+              name="tipoActividad"
+              [(ngModel)]="nuevaActividad.tipo"
+              placeholder="Ej. Recreativa"
+              autocomplete="off"
+            />
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="cuposActividad">
+              Cupos máximos
+            </label>
+
+            <input
+              id="cuposActividad"
+              type="number"
+              name="cuposActividad"
+              [(ngModel)]="nuevaActividad.cupos"
+              placeholder="Ej. 20"
+              min="1"
+            />
+
+          </div>
+
+        </div>
+
+
+        <!-- Botones -->
+        <div class="modal-actions">
+
+          <button
+            type="button"
+            class="btn-cancel"
+            (click)="cerrarFormulario()"
+          >
+            Cancelar
+          </button>
+
+          <button
+            type="submit"
+            class="btn-primary"
+          >
+            Crear actividad
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+}
+
+
+
+<!-- =====================================================
+     MODAL EDITAR ACTIVIDAD
+     ===================================================== -->
+
+@if (actividadEditandoId !== null) {
+
+  <div class="modal-backdrop">
+
+    <div class="modal">
+
+      <!-- Encabezado -->
+      <div class="modal-header">
+
+        <div>
+
+          <h2>
+            Editar actividad
+          </h2>
+
+          <p>
+            Modifica la información de la actividad.
+          </p>
+
+        </div>
+
+
+        <button
+          class="modal-close"
+          type="button"
+          (click)="cancelarEdicion()"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <!-- Formulario -->
+      <form
+        class="activity-form"
+        (ngSubmit)="guardarActividad()"
+      >
+
+        <!-- Nombre -->
+        <div class="form-group">
+
+          <label for="editarNombreActividad">
+            Nombre de la actividad
+          </label>
+
+          <input
+            id="editarNombreActividad"
+            type="text"
+            name="editarNombreActividad"
+            [(ngModel)]="actividadEditando.nombre"
+            autocomplete="off"
+            required
+          />
+
+        </div>
+
+
+        <!-- Descripción -->
+        <div class="form-group">
+
+          <label for="editarDescripcionActividad">
+            Descripción
+          </label>
+
+          <textarea
+            id="editarDescripcionActividad"
+            name="editarDescripcionActividad"
+            [(ngModel)]="actividadEditando.descripcion"
+            placeholder="Describe brevemente en qué consiste la actividad"
+            rows="4"
+          ></textarea>
+
+        </div>
+
+
+        <!-- Fecha + Hora -->
+        <div class="form-row">
+
+          <div class="form-group">
+
+            <label for="editarFechaActividad">
+              Fecha
+            </label>
+
+            <input
+              id="editarFechaActividad"
+              type="date"
+              name="editarFechaActividad"
+              [(ngModel)]="actividadEditando.fecha"
+            />
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="editarHoraActividad">
+              Hora
+            </label>
+
+            <input
+              id="editarHoraActividad"
+              type="time"
+              name="editarHoraActividad"
+              [(ngModel)]="actividadEditando.hora"
+            />
+
+          </div>
+
+        </div>
+
+
+        <!-- Lugar -->
+        <div class="form-group">
+
+          <label for="editarLugarActividad">
+            Lugar
+          </label>
+
+          <input
+            id="editarLugarActividad"
+            type="text"
+            name="editarLugarActividad"
+            [(ngModel)]="actividadEditando.lugar"
+            autocomplete="off"
+          />
+
+        </div>
+
+
+        <!-- Tipo + Cupos -->
+        <div class="form-row">
+
+          <div class="form-group">
+
+            <label for="editarTipoActividad">
+              Tipo de actividad
+            </label>
+
+            <input
+              id="editarTipoActividad"
+              type="text"
+              name="editarTipoActividad"
+              [(ngModel)]="actividadEditando.tipo"
+              placeholder="Ej. Recreativa"
+              autocomplete="off"
+            />
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="editarCuposActividad">
+              Cupos máximos
+            </label>
+
+            <input
+              id="editarCuposActividad"
+              type="number"
+              name="editarCuposActividad"
+              [(ngModel)]="actividadEditando.cupos"
+              placeholder="Ej. 20"
+              min="1"
+            />
+
+          </div>
+
+        </div>
+
+
+        <!-- Botones -->
+        <div class="modal-actions">
+
+          <button
+            type="button"
+            class="btn-cancel"
+            (click)="cancelarEdicion()"
+          >
+            Cancelar
+          </button>
+
+          <button
+            type="submit"
+            class="btn-primary"
+          >
+            Guardar cambios
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+}
+
+
+
+<!-- =====================================================
+     MODAL PARTICIPANTES
+     ===================================================== -->
+
+@if (actividadParticipantes(); as actividad) {
+
+  <div
+    class="modal-backdrop"
+    (click)="cerrarParticipantes()"
+  >
+
+    <div
+      class="modal participants-modal"
+      (click)="$event.stopPropagation()"
+    >
+
+      <!-- Encabezado -->
+      <div class="modal-header">
+
+        <div>
+
+          <h2>
+            {{ actividad.nombre }}
+          </h2>
+
+          @if (actividad.fecha) {
+
+            <p>
+              {{ actividad.fecha | date:'EEEE, d \'de\' MMMM \'de\' yyyy':'':'es-CO' }}
+
+              @if (actividad.hora) {
+                · {{ actividad.hora }}
+              }
+            </p>
+
+          }
+
+        </div>
+
+
+        <button
+          class="modal-close"
+          type="button"
+          (click)="cerrarParticipantes()"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      @if (cargandoParticipantes()) {
+
+        <div class="empty-state compact">
+
+          <p>
+            Cargando participantes...
+          </p>
+
+        </div>
+
+      } @else {
+
+
+        <!-- Resumen -->
+        <div class="participants-summary">
+
+          <div class="summary-item">
+
+            <strong>
+              {{ contarConfirmados() }}
+            </strong>
+
+            <span>
+              confirmados
+            </span>
+
+          </div>
+
+
+          <div class="summary-item">
+
+            <strong>
+              {{ contarAsistentes() }}
+            </strong>
+
+            <span>
+              asistieron
+            </span>
+
+          </div>
+
+
+          @if (actividad.cupos !== null) {
+
+            <div class="summary-item">
+
+              <strong>
+                {{ actividad.cupos }}
+              </strong>
+
+              <span>
+                cupos máximos
+              </span>
+
+            </div>
+
+          }
+
+        </div>
+
+
+        @if (participantes().length === 0) {
+
+          <div class="empty-state compact">
+
+            <div class="empty-icon">
+              👥
+            </div>
+
+            <h3>
+              No hay personas confirmadas
+            </h3>
+
+            <p>
+              Cuando una persona mayor confirme su asistencia,
+              aparecerá aquí.
+            </p>
+
+          </div>
+
+        } @else {
+
+          <div class="participants-list">
+
+            @for (
+              participante of participantes();
+              track participante.idPersonaMayor
+            ) {
+
+              <div class="participant-row">
+
+                <!-- Datos -->
+                <div class="participant-info">
+
+                  <div class="participant-avatar">
+                    {{ participante.nombre.charAt(0).toUpperCase() }}
+                  </div>
+
+                  <div>
+
+                    <strong>
+                      {{ participante.nombre }}
+                    </strong>
+
+                    @if (participante.telefono) {
+
+                      <span>
+                        {{ participante.telefono }}
+                      </span>
+
+                    }
+
+                  </div>
+
+                </div>
+
+
+                <!-- Asistencia -->
+                <div class="attendance-actions">
+
+                  @if (participante.asistio === true) {
+
+                    <span class="attendance-status attended">
+                      ✓ Asistió
+                    </span>
+
+                    <button
+                      type="button"
+                      class="attendance-button absent"
+                      (click)="registrarAsistencia(participante, false)"
+                    >
+                      Marcar no asistió
+                    </button>
+
+                  } @else if (participante.asistio === false) {
+
+                    <span class="attendance-status absent">
+                      No asistió
+                    </span>
+
+                    <button
+                      type="button"
+                      class="attendance-button attended"
+                      (click)="registrarAsistencia(participante, true)"
+                    >
+                      Marcar asistió
+                    </button>
+
+                  } @else {
+
+                    <span class="attendance-status pending">
+                      Pendiente
+                    </span>
+
+                    <button
+                      type="button"
+                      class="attendance-button attended"
+                      (click)="registrarAsistencia(participante, true)"
+                    >
+                      ✓ Asistió
+                    </button>
+
+                    <button
+                      type="button"
+                      class="attendance-button absent"
+                      (click)="registrarAsistencia(participante, false)"
+                    >
+                      No asistió
+                    </button>
+
+                  }
+
+                </div>
+
+              </div>
+
+            }
+
+          </div>
+
+        }
+
+      }
+
+    </div>
+
+  </div>
+
+}

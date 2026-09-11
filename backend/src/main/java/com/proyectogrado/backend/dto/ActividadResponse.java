@@ -10,18 +10,25 @@ public class ActividadResponse {
     private LocalDate fecha;
     private String lugar;
     private String tipo;
+    private String descripcion;
+private String hora;
+private Integer cupos;
 
     public ActividadResponse() {
     }
 
-    public ActividadResponse(Integer idActividad, Integer idOrganizacion, String nombre,
-                              LocalDate fecha, String lugar, String tipo) {
-        this.idActividad = idActividad;
-        this.idOrganizacion = idOrganizacion;
-        this.nombre = nombre;
-        this.fecha = fecha;
-        this.lugar = lugar;
-        this.tipo = tipo;
+public ActividadResponse(Integer idActividad, Integer idOrganizacion, String nombre,
+                         String descripcion, LocalDate fecha, String hora,
+                         String lugar, String tipo, Integer cupos) {
+this.idActividad = idActividad;
+this.idOrganizacion = idOrganizacion;
+this.nombre = nombre;
+this.descripcion = descripcion;
+this.fecha = fecha;
+this.hora = hora;
+this.lugar = lugar;
+this.tipo = tipo;
+this.cupos = cupos;
     }
 
     public Integer getIdActividad() {
@@ -71,4 +78,27 @@ public class ActividadResponse {
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
+ public String getDescripcion() {
+    return descripcion;
+}
+
+public void setDescripcion(String descripcion) {
+    this.descripcion = descripcion;
+}
+
+public String getHora() {
+    return hora;
+}
+
+public void setHora(String hora) {
+    this.hora = hora;
+}
+
+public Integer getCupos() {
+    return cupos;
+}
+
+public void setCupos(Integer cupos) {
+    this.cupos = cupos;
+}   
 }

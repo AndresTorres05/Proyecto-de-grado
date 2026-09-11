@@ -15,17 +15,26 @@ public class Actividad {
     @Column(name = "id_organizacion", nullable = false)
     private Integer idOrganizacion;
 
-    @Column(name = "nombre", nullable = false)
-    private String nombre;
+@Column(name = "nombre", nullable = false)
+private String nombre;
 
-    @Column(name = "fecha")
-    private LocalDate fecha;
+@Column(name = "descripcion", columnDefinition = "TEXT")
+private String descripcion;
 
-    @Column(name = "lugar")
-    private String lugar;
+@Column(name = "fecha")
+private LocalDate fecha;
 
-    @Column(name = "tipo")
-    private String tipo;
+@Column(name = "hora")
+private String hora;
+
+@Column(name = "lugar")
+private String lugar;
+
+@Column(name = "tipo")
+private String tipo;
+
+@Column(name = "cupos")
+private Integer cupos;
 
     public Actividad() {
     }
@@ -54,6 +63,14 @@ public class Actividad {
         this.nombre = nombre;
     }
 
+    public String getDescripcion() {
+    return descripcion;
+}
+
+public void setDescripcion(String descripcion) {
+    this.descripcion = descripcion;
+}
+
     public LocalDate getFecha() {
         return fecha;
     }
@@ -61,6 +78,14 @@ public class Actividad {
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
+
+    public String getHora() {
+    return hora;
+}
+
+public void setHora(String hora) {
+    this.hora = hora;
+}
 
     public String getLugar() {
         return lugar;
@@ -76,5 +101,13 @@ public class Actividad {
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    public Integer getCupos() {
+        return cupos;
+    }
+
+    public void setCupos(Integer cupos) {
+        this.cupos = cupos;
     }
 }

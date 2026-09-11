@@ -12,4 +12,6 @@ public interface ParticipacionRepository extends JpaRepository<Participacion, Pa
     List<Participacion> findById_IdPersonaMayor(Integer idPersonaMayor);
 
     Optional<Participacion> findById_IdPersonaMayorAndId_IdActividad(Integer idPersonaMayor, Integer idActividad);
+
+    List<Participacion> findById_IdActividad(Integer idActividad);
 }

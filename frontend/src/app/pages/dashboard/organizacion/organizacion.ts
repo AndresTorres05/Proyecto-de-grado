@@ -181,20 +181,26 @@ export class OrganizacionDashboard implements OnInit {
   protected readonly errorActividades = signal<string | null>(null);
 
   protected nuevaActividad: ActividadRequest = {
-    nombre: '',
-    fecha: null,
-    lugar: null,
-    tipo: null
-  };
+  nombre: '',
+  descripcion: null,
+  fecha: null,
+  hora: null,
+  lugar: null,
+  tipo: null,
+  cupos: null
+};
 
   protected actividadEditandoId: number | null = null;
 
   protected actividadEditando: ActividadRequest = {
-    nombre: '',
-    fecha: null,
-    lugar: null,
-    tipo: null
-  };
+  nombre: '',
+  descripcion: null,
+  fecha: null,
+  hora: null,
+  lugar: null,
+  tipo: null,
+  cupos: null
+};
 
   // =========================================================
   // CONSTRUCTOR
@@ -272,12 +278,15 @@ private cargarInformacionOrganizacion(): void {
 
     this.actividadService.crear(this.nuevaActividad).subscribe({
       next: () => {
-        this.nuevaActividad = {
-          nombre: '',
-          fecha: null,
-          lugar: null,
-          tipo: null
-        };
+this.nuevaActividad = {
+  nombre: '',
+  descripcion: null,
+  fecha: null,
+  hora: null,
+  lugar: null,
+  tipo: null,
+  cupos: null
+};
 
         this.cargarActividades();
       },
@@ -297,12 +306,15 @@ private cargarInformacionOrganizacion(): void {
   editarActividad(actividad: Actividad): void {
     this.actividadEditandoId = actividad.idActividad;
 
-    this.actividadEditando = {
-      nombre: actividad.nombre,
-      fecha: actividad.fecha,
-      lugar: actividad.lugar,
-      tipo: actividad.tipo
-    };
+this.actividadEditando = {
+  nombre: actividad.nombre,
+  descripcion: actividad.descripcion,
+  fecha: actividad.fecha,
+  hora: actividad.hora,
+  lugar: actividad.lugar,
+  tipo: actividad.tipo,
+  cupos: actividad.cupos
+};
   }
 
   // =========================================================
@@ -312,12 +324,15 @@ private cargarInformacionOrganizacion(): void {
   cancelarEdicionActividad(): void {
     this.actividadEditandoId = null;
 
-    this.actividadEditando = {
-      nombre: '',
-      fecha: null,
-      lugar: null,
-      tipo: null
-    };
+this.actividadEditando = {
+  nombre: '',
+  descripcion: null,
+  fecha: null,
+  hora: null,
+  lugar: null,
+  tipo: null,
+  cupos: null
+};
   }
 
   // =========================================================
