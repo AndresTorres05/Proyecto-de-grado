@@ -39,6 +39,11 @@ export class Actividades implements OnInit {
 
   protected mostrarConfirmacion = signal(false);
 
+  protected tipoConfirmacion: 'crear' | 'editar' = 'crear';
+
+  protected actividadEliminando: Actividad | null = null;
+protected mostrarConfirmacionEliminacion = signal(false);
+
 protected nuevaActividad: ActividadRequest = {
   nombre: '',
   descripcion: null,
@@ -207,22 +212,45 @@ protected crearActividad(): void {
   }
 
   this.error.set(null);
+  this.tipoConfirmacion = 'crear';
   this.mostrarConfirmacion.set(true);
 }
 
 protected confirmarCreacion(): void {
   this.mostrarConfirmacion.set(false);
 
-  this.actividadService.crear(this.nuevaActividad).subscribe({
-    next: () => {
-      this.cerrarFormulario();
-      this.cargarActividades();
-    },
-    error: (error) => {
-      console.error('Error al crear actividad:', error);
-      this.error.set('No se pudo crear la actividad.');
-    }
-  });
+  if (this.tipoConfirmacion === 'crear') {
+    this.actividadService.crear(this.nuevaActividad).subscribe({
+      next: () => {
+        this.cerrarFormulario();
+        this.cargarActividades();
+      },
+      error: (error) => {
+        console.error('Error al crear actividad:', error);
+        this.error.set('No se pudo crear la actividad.');
+      }
+    });
+
+    return;
+  }
+
+  if (this.tipoConfirmacion === 'editar' && this.actividadEditandoId !== null) {
+    this.actividadService
+      .actualizar(
+        this.actividadEditandoId,
+        this.actividadEditando
+      )
+      .subscribe({
+        next: () => {
+          this.cancelarEdicion();
+          this.cargarActividades();
+        },
+        error: (error) => {
+          console.error('Error al actualizar actividad:', error);
+          this.error.set('No se pudo actualizar la actividad');
+        }
+      });
+  }
 }
 
 protected cancelarConfirmacion(): void {
@@ -263,54 +291,51 @@ this.actividadEditando = {
 };
   }
 
-  protected guardarActividad(): void {
-    if (
-      this.actividadEditandoId === null ||
-      !this.actividadEditando.nombre.trim()
-    ) {
-      return;
-    }
-
-    this.error.set(null);
-
-    this.actividadService
-      .actualizar(
-        this.actividadEditandoId,
-        this.actividadEditando
-      )
-      .subscribe({
-        next: () => {
-          this.cancelarEdicion();
-          this.cargarActividades();
-        },
-        error: (error) => {
-          console.error('Error al actualizar actividad:', error);
-          this.error.set('No se pudo actualizar la actividad');
-        }
-      });
+protected guardarActividad(): void {
+  if (
+    this.actividadEditandoId === null ||
+    !this.actividadEditando.nombre.trim()
+  ) {
+    return;
   }
 
-  protected eliminarActividad(actividad: Actividad): void {
-    const confirmar = window.confirm(
-      `¿Seguro que deseas eliminar la actividad "${actividad.nombre}"?`
-    );
+  this.error.set(null);
+  this.tipoConfirmacion = 'editar';
+  this.mostrarConfirmacion.set(true);
+}
 
-    if (!confirmar) {
-      return;
-    }
+ protected eliminarActividad(actividad: Actividad): void {
+  this.actividadEliminando = actividad;
+  this.error.set(null);
+  this.mostrarConfirmacionEliminacion.set(true);
+}
 
-    this.error.set(null);
-
-    this.actividadService.eliminar(actividad.idActividad).subscribe({
-      next: () => {
-        this.cargarActividades();
-      },
-      error: (error) => {
-        console.error('Error al eliminar actividad:', error);
-        this.error.set('No se pudo eliminar la actividad');
-      }
-    });
+protected confirmarEliminacion(): void {
+  if (!this.actividadEliminando) {
+    return;
   }
+
+  const idActividad = this.actividadEliminando.idActividad;
+
+  this.mostrarConfirmacionEliminacion.set(false);
+
+  this.actividadService.eliminar(idActividad).subscribe({
+    next: () => {
+      this.actividadEliminando = null;
+      this.cargarActividades();
+    },
+    error: (error) => {
+      console.error('Error al eliminar actividad:', error);
+      this.error.set('No se pudo eliminar la actividad');
+      this.actividadEliminando = null;
+    }
+  });
+}
+
+protected cancelarEliminacion(): void {
+  this.mostrarConfirmacionEliminacion.set(false);
+  this.actividadEliminando = null;
+}
 
   protected verParticipantes(actividad: Actividad): void {
     this.actividadParticipantes.set(actividad);

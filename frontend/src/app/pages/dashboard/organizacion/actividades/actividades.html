@@ -1101,7 +1101,9 @@
     >
 
       <div class="modal-header">
-        <h2>Confirmar actividad</h2>
+        <h2>
+  {{ tipoConfirmacion === 'crear' ? 'Confirmar actividad' : 'Confirmar cambios' }}
+</h2>
 
         <button
           type="button"
@@ -1120,10 +1122,17 @@
     </div>
 
     <div>
-      <h3>¿Crear esta actividad?</h3>
-      <p>
-        Revisa la información antes de registrar la actividad.
-      </p>
+<h3>
+  {{ tipoConfirmacion === 'crear'
+    ? '¿Crear esta actividad?'
+    : '¿Guardar estos cambios?' }}
+</h3>
+
+<p>
+  {{ tipoConfirmacion === 'crear'
+    ? 'Revisa la información antes de registrar la actividad.'
+    : 'Revisa la información antes de guardar los cambios.' }}
+</p>
     </div>
   </div>
 
@@ -1131,19 +1140,31 @@
 
     <div class="confirmation-item">
       <span class="confirmation-label">Actividad</span>
-      <strong>{{ nuevaActividad.nombre }}</strong>
+      <strong>
+  {{ tipoConfirmacion === 'crear'
+    ? nuevaActividad.nombre
+    : actividadEditando.nombre }}
+</strong>
     </div>
 
     <div class="confirmation-row">
 
       <div class="confirmation-item">
         <span class="confirmation-label">Fecha</span>
-        <strong>{{ nuevaActividad.fecha }}</strong>
+        <strong>
+  {{ tipoConfirmacion === 'crear'
+    ? nuevaActividad.fecha
+    : actividadEditando.fecha }}
+</strong>
       </div>
 
       <div class="confirmation-item">
         <span class="confirmation-label">Hora</span>
-        <strong>{{ nuevaActividad.hora }}</strong>
+        <strong>
+  {{ tipoConfirmacion === 'crear'
+    ? nuevaActividad.hora
+    : actividadEditando.hora }}
+</strong>
       </div>
 
     </div>
@@ -1152,14 +1173,20 @@
 
       <div class="confirmation-item">
         <span class="confirmation-label">Lugar</span>
-        <strong>{{ nuevaActividad.lugar }}</strong>
+        <strong>
+  {{ tipoConfirmacion === 'crear'
+    ? nuevaActividad.lugar
+    : actividadEditando.lugar }}
+</strong>
       </div>
 
       <div class="confirmation-item">
         <span class="confirmation-label">Responsable</span>
-        <strong>
-          {{ nuevaActividad.responsable || 'No especificado' }}
-        </strong>
+  <strong>
+  {{ (tipoConfirmacion === 'crear'
+      ? nuevaActividad.responsable
+      : actividadEditando.responsable) || 'No especificado' }}
+</strong>
       </div>
 
     </div>
@@ -1168,24 +1195,36 @@
 
       <div class="confirmation-item">
         <span class="confirmation-label">Tipo</span>
-        <strong>
-          {{ nuevaActividad.tipo || 'No especificado' }}
-        </strong>
+<strong>
+  {{ (tipoConfirmacion === 'crear'
+      ? nuevaActividad.tipo
+      : actividadEditando.tipo) || 'No especificado' }}
+</strong>
       </div>
 
       <div class="confirmation-item">
         <span class="confirmation-label">Cupos</span>
-        <strong>
-          {{ nuevaActividad.cupos || 'No especificado' }}
-        </strong>
+<strong>
+  {{ (tipoConfirmacion === 'crear'
+      ? nuevaActividad.cupos
+      : actividadEditando.cupos) || 'No especificado' }}
+</strong>
       </div>
 
     </div>
 
-    @if (nuevaActividad.descripcion) {
+    @if (
+  tipoConfirmacion === 'crear'
+    ? nuevaActividad.descripcion
+    : actividadEditando.descripcion
+) {
       <div class="confirmation-item confirmation-description">
         <span class="confirmation-label">Descripción</span>
-        <strong>{{ nuevaActividad.descripcion }}</strong>
+        <strong>
+  {{ tipoConfirmacion === 'crear'
+    ? nuevaActividad.descripcion
+    : actividadEditando.descripcion }}
+</strong>
       </div>
     }
 
@@ -1207,8 +1246,122 @@
           class="btn-primary"
           (click)="confirmarCreacion()"
         >
-          Confirmar y crear
+          {{ tipoConfirmacion === 'crear'
+  ? 'Confirmar y crear'
+  : 'Confirmar y guardar' }}
         </button>
+      </div>
+
+    </div>
+  </div>
+}
+
+@if (mostrarConfirmacionEliminacion() && actividadEliminando) {
+  <div
+    class="modal-backdrop"
+    (click)="cancelarEliminacion()"
+  >
+    <div
+      class="modal confirmation-modal delete-confirmation-modal"
+      (click)="$event.stopPropagation()"
+    >
+
+      <div class="modal-header">
+        <h2>Eliminar actividad</h2>
+
+        <button
+          type="button"
+          class="modal-close"
+          (click)="cancelarEliminacion()"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="confirmation-content">
+
+        <div class="delete-message">
+          <div class="delete-icon">
+            !
+          </div>
+
+          <div>
+            <h3>¿Eliminar esta actividad?</h3>
+
+            <p>
+              Esta acción no se puede deshacer.
+            </p>
+          </div>
+        </div>
+
+        <div class="confirmation-details">
+
+          <div class="confirmation-item">
+            <span class="confirmation-label">
+              Actividad
+            </span>
+
+            <strong>
+              {{ actividadEliminando.nombre }}
+            </strong>
+          </div>
+
+          <div class="confirmation-row">
+
+            <div class="confirmation-item">
+              <span class="confirmation-label">
+                Fecha
+              </span>
+
+              <strong>
+                {{ actividadEliminando.fecha || 'No especificada' }}
+              </strong>
+            </div>
+
+            <div class="confirmation-item">
+              <span class="confirmation-label">
+                Hora
+              </span>
+
+              <strong>
+                {{ actividadEliminando.hora || 'No especificada' }}
+              </strong>
+            </div>
+
+          </div>
+
+          <div class="confirmation-item">
+            <span class="confirmation-label">
+              Lugar
+            </span>
+
+            <strong>
+              {{ actividadEliminando.lugar || 'No especificado' }}
+            </strong>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="btn-secondary"
+          (click)="cancelarEliminacion()"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="btn-delete"
+          (click)="confirmarEliminacion()"
+        >
+          Eliminar actividad
+        </button>
+
       </div>
 
     </div>
