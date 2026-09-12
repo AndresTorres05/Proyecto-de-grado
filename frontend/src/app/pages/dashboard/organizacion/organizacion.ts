@@ -197,7 +197,8 @@ protected readonly accionesRapidas: AccionRapida[] = [
   hora: null,
   lugar: null,
   tipo: null,
-  cupos: null
+  cupos: null,
+  responsable: null
 };
 
   protected actividadEditandoId: number | null = null;
@@ -209,7 +210,8 @@ protected readonly accionesRapidas: AccionRapida[] = [
   hora: null,
   lugar: null,
   tipo: null,
-  cupos: null
+  cupos: null,
+  responsable: null
 };
 
   // =========================================================
@@ -295,7 +297,8 @@ this.nuevaActividad = {
   hora: null,
   lugar: null,
   tipo: null,
-  cupos: null
+  cupos: null,
+  responsable: null
 };
 
         this.cargarActividades();
@@ -323,7 +326,8 @@ this.actividadEditando = {
   hora: actividad.hora,
   lugar: actividad.lugar,
   tipo: actividad.tipo,
-  cupos: actividad.cupos
+  cupos: actividad.cupos,
+  responsable: actividad.responsable
 };
   }
 
@@ -341,7 +345,8 @@ this.actividadEditando = {
   hora: null,
   lugar: null,
   tipo: null,
-  cupos: null
+  cupos: null,
+  responsable: null
 };
   }
 

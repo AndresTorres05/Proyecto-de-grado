@@ -37,6 +37,8 @@ export class Actividades implements OnInit {
   // Crear actividad
   protected mostrarFormulario = signal(false);
 
+  protected mostrarConfirmacion = signal(false);
+
 protected nuevaActividad: ActividadRequest = {
   nombre: '',
   descripcion: null,
@@ -44,7 +46,8 @@ protected nuevaActividad: ActividadRequest = {
   hora: null,
   lugar: null,
   tipo: null,
-  cupos: null
+  cupos: null,
+  responsable: null
 };
 
   // Editar actividad
@@ -57,7 +60,8 @@ protected actividadEditando: ActividadRequest = {
   hora: null,
   lugar: null,
   tipo: null,
-  cupos: null
+  cupos: null,
+  responsable: null
 };
 
   // Participantes
@@ -142,7 +146,7 @@ ngOnInit(): void {
       .reverse();
   }
 
-  private fechaHoy(): string {
+  protected fechaHoy(): string {
     const ahora = new Date();
 
     const year = ahora.getFullYear();
@@ -160,7 +164,8 @@ this.nuevaActividad = {
   hora: null,
   lugar: null,
   tipo: null,
-  cupos: null
+  cupos: null,
+  responsable: null
 };
 
     this.mostrarFormulario.set(true);
@@ -171,13 +176,28 @@ this.nuevaActividad = {
   }
 
 protected crearActividad(): void {
+
   if (!this.nuevaActividad.nombre.trim()) {
     this.error.set('El nombre de la actividad es obligatorio');
     return;
   }
 
+  if (!this.nuevaActividad.fecha) {
+    this.error.set('La fecha de la actividad es obligatoria');
+    return;
+  }
+
+  if (!this.nuevaActividad.hora) {
+    this.error.set('La hora de la actividad es obligatoria');
+    return;
+  }
+
+  if (!this.nuevaActividad.lugar?.trim()) {
+    this.error.set('El lugar de la actividad es obligatorio');
+    return;
+  }
+
   if (
-    this.nuevaActividad.fecha &&
     this.nuevaActividad.fecha < new Date().toISOString().split('T')[0]
   ) {
     this.error.set(
@@ -187,6 +207,11 @@ protected crearActividad(): void {
   }
 
   this.error.set(null);
+  this.mostrarConfirmacion.set(true);
+}
+
+protected confirmarCreacion(): void {
+  this.mostrarConfirmacion.set(false);
 
   this.actividadService.crear(this.nuevaActividad).subscribe({
     next: () => {
@@ -195,9 +220,13 @@ protected crearActividad(): void {
     },
     error: (error) => {
       console.error('Error al crear actividad:', error);
-      this.error.set('No se pudo crear la actividad');
+      this.error.set('No se pudo crear la actividad.');
     }
   });
+}
+
+protected cancelarConfirmacion(): void {
+  this.mostrarConfirmacion.set(false);
 }
 
   protected editarActividad(actividad: Actividad): void {
@@ -214,7 +243,8 @@ this.actividadEditando = {
   hora: actividad.hora,
   lugar: actividad.lugar,
   tipo: actividad.tipo,
-  cupos: actividad.cupos
+  cupos: actividad.cupos,
+  responsable: actividad.responsable
 };
   }
 
@@ -228,7 +258,8 @@ this.actividadEditando = {
   hora: null,
   lugar: null,
   tipo: null,
-  cupos: null
+  cupos: null,
+  responsable: null
 };
   }
 
@@ -289,10 +320,10 @@ this.actividadEditando = {
     this.actividadService.listarParticipantes(
       actividad.idActividad
     ).subscribe({
-      next: (participantes) => {
-        this.participantes.set(participantes);
-        this.cargandoParticipantes.set(false);
-      },
+next: (participantes) => {
+  this.participantes.set(participantes);
+  this.cargandoParticipantes.set(false);
+},
       error: (error) => {
         console.error('Error al cargar participantes:', error);
         this.error.set('No se pudieron cargar los participantes');
@@ -311,11 +342,15 @@ this.actividadEditando = {
     asistio: boolean
   ): void {
 
-    const actividad = this.actividadParticipantes();
+const actividad = this.actividadParticipantes();
 
-    if (!actividad) {
-      return;
-    }
+if (!actividad) {
+  return;
+}
+
+if (actividad.fecha && actividad.fecha < this.fechaHoy()) {
+  return;
+}
 
     this.actividadService
       .registrarAsistencia(

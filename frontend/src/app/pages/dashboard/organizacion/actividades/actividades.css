@@ -9,7 +9,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 1.5rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .page-header h1 {
@@ -36,12 +36,6 @@
 }
 
 .btn-primary:hover {
-  background: var(--vita-orange);
-  color: var(--vita-white);
-  transform: translateY(-1px);
-}
-
-.btn-primary:hover {
   opacity: 0.9;
   transform: translateY(-1px);
 }
@@ -52,10 +46,11 @@
 }
 
 .activities-section {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .section-header {
+  margin-top: 0;
   margin-bottom: 0.9rem;
 }
 
@@ -79,11 +74,12 @@
 
 .activity-card {
   display: flex;
+  align-items: center;
   gap: 1.25rem;
+  padding: 1.25rem;
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 14px;
-  padding: 1.25rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: 0.2s ease;
 }
@@ -175,8 +171,8 @@
 .activity-actions {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
   justify-content: flex-end;
+  flex-wrap: wrap;
   gap: 0.5rem;
 }
 
@@ -233,8 +229,8 @@
 }
 
 .empty-icon {
-  font-size: 2.5rem;
   margin-bottom: 0.75rem;
+  font-size: 2.5rem;
 }
 
 .empty-state h3 {
@@ -254,11 +250,6 @@
   color: #b91c1c;
   border: 1px solid #fecaca;
 }
-
-.history-section {
-  padding-top: 0.5rem;
-}
-
 
 /* =========================
    MODALES
@@ -370,7 +361,6 @@
   margin-top: 1.5rem;
 }
 
-
 /* =========================
    PARTICIPANTES
    ========================= */
@@ -462,12 +452,14 @@
   font-weight: 600;
 }
 
-.attendance-status.attended {
+.attendance-status.attended,
+.attendance-button.attended {
   background: #ecfdf5;
   color: #047857;
 }
 
-.attendance-status.absent {
+.attendance-status.absent,
+.attendance-button.absent {
   background: #fef2f2;
   color: #b91c1c;
 }
@@ -486,23 +478,11 @@
   cursor: pointer;
 }
 
-.attendance-button.attended {
-  background: #ecfdf5;
-  color: #047857;
-}
-
-.attendance-button.absent {
-  background: #fef2f2;
-  color: #b91c1c;
-}
-
-
 /* =========================
    RESPONSIVE
    ========================= */
 
 @media (max-width: 850px) {
-
   .page-header {
     align-items: flex-start;
     flex-direction: column;
@@ -517,11 +497,9 @@
     width: 100%;
     justify-content: flex-start;
   }
-
 }
 
 @media (max-width: 600px) {
-
   .activities-page {
     padding: 1rem;
   }
@@ -541,8 +519,12 @@
     font-size: 1.35rem;
   }
 
-  .form-row {
+  .form-row,
+  .confirmation-row {
     grid-template-columns: 1fr;
+  }
+
+  .form-row {
     gap: 0;
   }
 
@@ -555,5 +537,106 @@
     justify-content: flex-start;
     width: 100%;
   }
+}
 
+/* =========================
+   CONFIRMACIÓN
+   ========================= */
+
+.required {
+  color: #dc2626;
+}
+
+.form-error {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: #fee2e2;
+  color: #b91c1c;
+  font-size: 0.9rem;
+}
+
+.confirmation-modal {
+  padding: 1.75rem;
+}
+
+.confirmation-content {
+  margin: 1.5rem 0;
+  padding: 0 0.5rem;
+}
+
+.confirmation-message {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+  border-radius: 12px;
+  background: #f0fdf4;
+}
+
+.confirmation-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #dcfce7;
+  color: #16a34a;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.confirmation-message h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+  color: #111827;
+}
+
+.confirmation-message p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.confirmation-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.confirmation-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.confirmation-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.confirmation-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.confirmation-item strong {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #111827;
+}
+
+.confirmation-description {
+  margin-top: 0.05rem;
 }

@@ -14,12 +14,7 @@
   </header>
 
 
-  <!-- Mensaje de error -->
-  @if (error()) {
-    <div class="error-message">
-      {{ error() }}
-    </div>
-  }
+
 
 
   <!-- Cargando -->
@@ -426,8 +421,8 @@
         <div class="form-group">
 
           <label for="nombreActividad">
-            Nombre de la actividad
-          </label>
+  Nombre de la actividad <span class="required">*</span>
+</label>
 
           <input
             id="nombreActividad"
@@ -465,15 +460,16 @@
 
           <div class="form-group">
 
-            <label for="fechaActividad">
-              Fecha
-            </label>
+<label for="fechaActividad">
+  Fecha <span class="required">*</span>
+</label>
 
             <input
               id="fechaActividad"
               type="date"
               name="fechaActividad"
               [(ngModel)]="nuevaActividad.fecha"
+              required
             />
 
           </div>
@@ -482,14 +478,15 @@
           <div class="form-group">
 
             <label for="horaActividad">
-              Hora
-            </label>
+  Hora <span class="required">*</span>
+</label>
 
             <input
               id="horaActividad"
               type="time"
               name="horaActividad"
               [(ngModel)]="nuevaActividad.hora"
+              required
             />
 
           </div>
@@ -500,9 +497,9 @@
         <!-- Lugar -->
         <div class="form-group">
 
-          <label for="lugarActividad">
-            Lugar
-          </label>
+<label for="lugarActividad">
+  Lugar <span class="required">*</span>
+</label>
 
           <input
             id="lugarActividad"
@@ -511,6 +508,7 @@
             [(ngModel)]="nuevaActividad.lugar"
             placeholder="Ej. Salón principal"
             autocomplete="off"
+            required
           />
 
         </div>
@@ -556,6 +554,32 @@
 
         </div>
 
+
+<!-- Responsable -->
+<div class="form-group">
+
+  <label for="responsableActividad">
+    Responsable
+  </label>
+
+  <input
+    id="responsableActividad"
+    type="text"
+    name="responsableActividad"
+    [(ngModel)]="nuevaActividad.responsable"
+    placeholder="Ej. María González"
+    autocomplete="off"
+  />
+
+</div>
+
+
+  <!-- Mensaje de error -->
+  @if (error()) {
+    <div class="error-message">
+      {{ error() }}
+    </div>
+  }
 
         <!-- Botones -->
         <div class="modal-actions">
@@ -763,6 +787,12 @@
         </div>
 
 
+@if (error()) {
+  <div class="form-error">
+    {{ error() }}
+  </div>
+}
+
         <!-- Botones -->
         <div class="modal-actions">
 
@@ -961,62 +991,88 @@
                 </div>
 
 
-                <!-- Asistencia -->
-                <div class="attendance-actions">
+<!-- Asistencia -->
+<div class="attendance-actions">
 
-                  @if (participante.asistio === true) {
+  @if (actividadParticipantes()?.fecha && actividadParticipantes()!.fecha! < fechaHoy()) {
 
-                    <span class="attendance-status attended">
-                      ✓ Asistió
-                    </span>
+    @if (participante.asistio === true) {
 
-                    <button
-                      type="button"
-                      class="attendance-button absent"
-                      (click)="registrarAsistencia(participante, false)"
-                    >
-                      Marcar no asistió
-                    </button>
+      <span class="attendance-status attended">
+        ✓ Asistió
+      </span>
 
-                  } @else if (participante.asistio === false) {
+    } @else if (participante.asistio === false) {
 
-                    <span class="attendance-status absent">
-                      No asistió
-                    </span>
+      <span class="attendance-status absent">
+        No asistió
+      </span>
 
-                    <button
-                      type="button"
-                      class="attendance-button attended"
-                      (click)="registrarAsistencia(participante, true)"
-                    >
-                      Marcar asistió
-                    </button>
+    } @else {
 
-                  } @else {
+      <span class="attendance-status pending">
+        Pendiente
+      </span>
 
-                    <span class="attendance-status pending">
-                      Pendiente
-                    </span>
+    }
 
-                    <button
-                      type="button"
-                      class="attendance-button attended"
-                      (click)="registrarAsistencia(participante, true)"
-                    >
-                      ✓ Asistió
-                    </button>
+  } @else {
 
-                    <button
-                      type="button"
-                      class="attendance-button absent"
-                      (click)="registrarAsistencia(participante, false)"
-                    >
-                      No asistió
-                    </button>
+    @if (participante.asistio === true) {
 
-                  }
+      <span class="attendance-status attended">
+        ✓ Asistió
+      </span>
 
-                </div>
+      <button
+        type="button"
+        class="attendance-button absent"
+        (click)="registrarAsistencia(participante, false)"
+      >
+        Marcar no asistió
+      </button>
+
+    } @else if (participante.asistio === false) {
+
+      <span class="attendance-status absent">
+        No asistió
+      </span>
+
+      <button
+        type="button"
+        class="attendance-button attended"
+        (click)="registrarAsistencia(participante, true)"
+      >
+        Marcar asistió
+      </button>
+
+    } @else {
+
+      <span class="attendance-status pending">
+        Pendiente
+      </span>
+
+      <button
+        type="button"
+        class="attendance-button attended"
+        (click)="registrarAsistencia(participante, true)"
+      >
+        ✓ Asistió
+      </button>
+
+      <button
+        type="button"
+        class="attendance-button absent"
+        (click)="registrarAsistencia(participante, false)"
+      >
+        No asistió
+      </button>
+
+    }
+
+  }
+
+</div>
 
               </div>
 
@@ -1032,4 +1088,129 @@
 
   </div>
 
+}
+
+@if (mostrarConfirmacion()) {
+  <div
+    class="modal-backdrop"
+    (click)="cancelarConfirmacion()"
+  >
+    <div
+      class="modal confirmation-modal"
+      (click)="$event.stopPropagation()"
+    >
+
+      <div class="modal-header">
+        <h2>Confirmar actividad</h2>
+
+        <button
+          type="button"
+          class="modal-close"
+          (click)="cancelarConfirmacion()"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="confirmation-content">
+
+  <div class="confirmation-message">
+    <div class="confirmation-icon">
+      ✓
+    </div>
+
+    <div>
+      <h3>¿Crear esta actividad?</h3>
+      <p>
+        Revisa la información antes de registrar la actividad.
+      </p>
+    </div>
+  </div>
+
+  <div class="confirmation-details">
+
+    <div class="confirmation-item">
+      <span class="confirmation-label">Actividad</span>
+      <strong>{{ nuevaActividad.nombre }}</strong>
+    </div>
+
+    <div class="confirmation-row">
+
+      <div class="confirmation-item">
+        <span class="confirmation-label">Fecha</span>
+        <strong>{{ nuevaActividad.fecha }}</strong>
+      </div>
+
+      <div class="confirmation-item">
+        <span class="confirmation-label">Hora</span>
+        <strong>{{ nuevaActividad.hora }}</strong>
+      </div>
+
+    </div>
+
+    <div class="confirmation-row">
+
+      <div class="confirmation-item">
+        <span class="confirmation-label">Lugar</span>
+        <strong>{{ nuevaActividad.lugar }}</strong>
+      </div>
+
+      <div class="confirmation-item">
+        <span class="confirmation-label">Responsable</span>
+        <strong>
+          {{ nuevaActividad.responsable || 'No especificado' }}
+        </strong>
+      </div>
+
+    </div>
+
+    <div class="confirmation-row">
+
+      <div class="confirmation-item">
+        <span class="confirmation-label">Tipo</span>
+        <strong>
+          {{ nuevaActividad.tipo || 'No especificado' }}
+        </strong>
+      </div>
+
+      <div class="confirmation-item">
+        <span class="confirmation-label">Cupos</span>
+        <strong>
+          {{ nuevaActividad.cupos || 'No especificado' }}
+        </strong>
+      </div>
+
+    </div>
+
+    @if (nuevaActividad.descripcion) {
+      <div class="confirmation-item confirmation-description">
+        <span class="confirmation-label">Descripción</span>
+        <strong>{{ nuevaActividad.descripcion }}</strong>
+      </div>
+    }
+
+  </div>
+
+</div>
+
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="btn-secondary"
+          (click)="cancelarConfirmacion()"
+        >
+          Volver
+        </button>
+
+        <button
+          type="button"
+          class="btn-primary"
+          (click)="confirmarCreacion()"
+        >
+          Confirmar y crear
+        </button>
+      </div>
+
+    </div>
+  </div>
 }

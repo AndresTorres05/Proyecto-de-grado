@@ -615,6 +615,7 @@ public class ActividadController {
         actividad.setLugar(request.getLugar());
         actividad.setTipo(request.getTipo());
         actividad.setCupos(request.getCupos());
+        actividad.setResponsable(request.getResponsable());
 
         actividad = actividadRepository.save(actividad);
 
@@ -676,6 +677,7 @@ public class ActividadController {
         actividad.setLugar(request.getLugar());
         actividad.setTipo(request.getTipo());
         actividad.setCupos(request.getCupos());
+        actividad.setResponsable(request.getResponsable());
 
         actividad = actividadRepository.save(actividad);
 
@@ -781,7 +783,8 @@ public class ActividadController {
                 a.getHora(),
                 a.getLugar(),
                 a.getTipo(),
-                a.getCupos()
+                a.getCupos(),
+                a.getResponsable()
         );
     }
 }

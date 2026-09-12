@@ -36,6 +36,9 @@ private String tipo;
 @Column(name = "cupos")
 private Integer cupos;
 
+@Column(name = "responsable")
+private String responsable;
+
     public Actividad() {
     }
 
@@ -110,4 +113,12 @@ public void setHora(String hora) {
     public void setCupos(Integer cupos) {
         this.cupos = cupos;
     }
+
+    public String getResponsable() {
+    return responsable;
+}
+
+public void setResponsable(String responsable) {
+    this.responsable = responsable;
+}
 }

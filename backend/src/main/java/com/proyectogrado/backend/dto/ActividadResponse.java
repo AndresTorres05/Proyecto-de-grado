@@ -13,13 +13,15 @@ public class ActividadResponse {
     private String descripcion;
 private String hora;
 private Integer cupos;
+private String responsable;
 
     public ActividadResponse() {
     }
 
 public ActividadResponse(Integer idActividad, Integer idOrganizacion, String nombre,
                          String descripcion, LocalDate fecha, String hora,
-                         String lugar, String tipo, Integer cupos) {
+                         String lugar, String tipo, Integer cupos,
+                         String responsable) {
 this.idActividad = idActividad;
 this.idOrganizacion = idOrganizacion;
 this.nombre = nombre;
@@ -29,6 +31,7 @@ this.hora = hora;
 this.lugar = lugar;
 this.tipo = tipo;
 this.cupos = cupos;
+this.responsable = responsable;
     }
 
     public Integer getIdActividad() {
@@ -101,4 +104,11 @@ public Integer getCupos() {
 public void setCupos(Integer cupos) {
     this.cupos = cupos;
 }   
+public String getResponsable() {
+    return responsable;
+}
+
+public void setResponsable(String responsable) {
+    this.responsable = responsable;
+}
 }

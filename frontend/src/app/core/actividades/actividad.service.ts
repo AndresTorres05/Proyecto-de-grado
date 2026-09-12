@@ -16,6 +16,7 @@ export interface Actividad {
   lugar: string | null;
   tipo: string | null;
   cupos: number | null;
+  responsable: string | null;
 }
 
 // =========================================================
@@ -46,6 +47,7 @@ export interface ActividadRequest {
   lugar: string | null;
   tipo: string | null;
   cupos: number | null;
+  responsable: string | null;
 }
 
 // =========================================================
