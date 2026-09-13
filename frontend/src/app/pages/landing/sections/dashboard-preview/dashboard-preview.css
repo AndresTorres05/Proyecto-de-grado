@@ -1,3 +1,8 @@
+
+/* =========================================================
+   TARJETA PRINCIPAL DEL DASHBOARD
+   ========================================================= */
+
 .dashboard-card {
   max-width: 960px;
   margin-inline: auto;
@@ -5,7 +10,10 @@
   padding: 0;
 }
 
-/* Header */
+
+/* =========================================================
+   HEADER
+   ========================================================= */
 
 .dashboard-card__header {
   background: var(--vita-navy);
@@ -39,7 +47,10 @@
   background: var(--vita-green);
 }
 
-/* Tabs */
+
+/* =========================================================
+   TABS / PESTAÑAS
+   ========================================================= */
 
 .dashboard-tabs {
   padding: 12px 24px;
@@ -78,7 +89,10 @@
   color: var(--vita-text-gray);
 }
 
-/* Stats grid */
+
+/* =========================================================
+   TARJETAS DE ESTADÍSTICAS
+   ========================================================= */
 
 .dashboard-stats {
   display: grid;
@@ -127,7 +141,10 @@
   margin-top: 4px;
 }
 
-/* Charts */
+
+/* =========================================================
+   GRÁFICAS
+   ========================================================= */
 
 .dashboard-charts {
   display: grid;
@@ -135,6 +152,9 @@
   gap: 20px;
   padding: 0 24px 24px;
 }
+
+
+/* ---------- Panel de gráfica ---------- */
 
 .chart-panel {
   border: 1px solid var(--vita-border);
@@ -147,6 +167,9 @@
   color: var(--vita-text-gray);
   margin-top: 4px;
 }
+
+
+/* ---------- Leyenda de gráfica ---------- */
 
 .chart-legend {
   display: flex;
@@ -170,6 +193,11 @@
   flex-shrink: 0;
 }
 
+
+/* =========================================================
+   GRÁFICA DE DONA
+   ========================================================= */
+
 .donut-row {
   display: flex;
   align-items: center;
@@ -189,6 +217,9 @@
     var(--vita-gold) 85% 100%
   );
 }
+
+
+/* ---------- Leyenda de la dona ---------- */
 
 .donut-legend {
   list-style: none;
@@ -214,13 +245,21 @@
   flex-shrink: 0;
 }
 
-/* Responsive */
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+/* Tablets */
 
 @media (max-width: 960px) {
   .dashboard-charts {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Móviles */
 
 @media (max-width: 768px) {
   .dashboard-stats {

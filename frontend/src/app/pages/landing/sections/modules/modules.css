@@ -1,18 +1,30 @@
+/* =========================================================
+   MÓDULOS
+   ========================================================= */
+
 .modules-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
 }
 
+/* =========================================================
+   TARJETAS DE MÓDULOS
+   ========================================================= */
+
 .module-card {
   position: relative;
   padding: 24px;
 }
 
+/* ---------- Icono ---------- */
+
 .module-icon {
   font-size: 1.75rem;
   margin-bottom: 12px;
 }
+
+/* ---------- Título ---------- */
 
 .module-card h3 {
   color: var(--vita-navy);
@@ -21,10 +33,14 @@
   margin-bottom: 6px;
 }
 
+/* ---------- Descripción ---------- */
+
 .module-card p {
   color: var(--vita-text-gray);
   font-size: 0.85rem;
 }
+
+/* ---------- Badge ---------- */
 
 .module-badge {
   position: absolute;
@@ -38,11 +54,19 @@
   border-radius: var(--radius-pill);
 }
 
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+/* ---------- Tablets ---------- */
+
 @media (max-width: 960px) {
   .modules-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ---------- Móviles ---------- */
 
 @media (max-width: 560px) {
   .modules-grid {

@@ -1,13 +1,25 @@
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
 :host {
   display: block;
-  // Aumenta el primer valor (por ejemplo de 80px a 120px) para darle más distancia con el borde superior
-  padding-top: 20px; 
+  padding-top: 20px;
   padding-bottom: 0;
 }
+
+/* =========================================================
+   CONTENEDOR PRINCIPAL
+   ========================================================= */
+
 .footer-wrapper {
   max-width: 1200px;
   margin: 0 auto;
 }
+
+/* =========================================================
+   GRID PRINCIPAL
+   ========================================================= */
 
 .footer-grid {
   display: grid;
@@ -16,16 +28,27 @@
   align-items: start;
   margin-bottom: 20px;
 
+  /* ---------- Tablets ---------- */
+
   @media (max-width: 960px) {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  /* ---------- Móviles ---------- */
 
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
   }
 }
 
+/* =========================================================
+   MARCA / INFORMACIÓN PRINCIPAL
+   ========================================================= */
+
 .footer-brand {
+
+  /* ---------- Logo ---------- */
+
   .footer-logo-row {
     display: flex;
     align-items: center;
@@ -36,8 +59,6 @@
       height: 36px;
       width: 36px;
       object-fit: contain;
-      /* El footer va sobre navy muy oscuro: se pone un chip claro
-         para que la parte azul del logo no se pierda contra el fondo. */
       padding: 6px;
       border-radius: 12px;
       background: var(--vita-white);
@@ -52,6 +73,8 @@
     }
   }
 
+  /* ---------- Descripción ---------- */
+
   .footer-description {
     color: rgba(255, 255, 255, 0.80);
     font-size: 0.9rem;
@@ -60,11 +83,17 @@
     max-width: 280px;
   }
 
+  /* ---------- Redes sociales ---------- */
+
   .social-links-row {
     display: flex;
     gap: 12px;
   }
 }
+
+/* =========================================================
+   TÍTULOS DEL FOOTER
+   ========================================================= */
 
 .footer-heading {
   color: #ffffff;
@@ -74,6 +103,10 @@
   margin-bottom: 20px;
   font-weight: 700;
 }
+
+/* =========================================================
+   ENLACES
+   ========================================================= */
 
 .footer-links {
   list-style: none;
@@ -97,6 +130,10 @@
   }
 }
 
+/* =========================================================
+   REDES SOCIALES
+   ========================================================= */
+
 .social-link {
   width: 38px;
   height: 38px;
@@ -110,21 +147,37 @@
   font-size: 0.85rem;
   text-decoration: none;
   transition: all 0.2s ease;
+  overflow: hidden;
 
   &:hover {
     background: rgba(255, 255, 255, 0.15);
     transform: translateY(-2px);
   }
+
+  /* ---------- Icono de GitHub ---------- */
+
+  .social-icon-img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    filter: grayscale(1) brightness(0) invert(1);
+  }
 }
 
+/* =========================================================
+   CONTACTO
+   ========================================================= */
+
 .footer-contact-col {
+
   .contact-info-list {
     display: flex;
     flex-direction: column;
     gap: 10px;
     margin-bottom: 24px;
 
-    .contact-link, .contact-text {
+    .contact-link,
+    .contact-text {
       color: rgba(255, 255, 255, 0.80);
       font-size: 0.9rem;
       text-decoration: none;
@@ -141,6 +194,10 @@
   }
 }
 
+/* =========================================================
+   NEWSLETTER
+   ========================================================= */
+
 .newsletter-form {
   display: flex;
   align-items: center;
@@ -154,6 +211,8 @@
     border-color: var(--vita-gold, #f6c95e);
   }
 
+  /* ---------- Campo ---------- */
+
   .newsletter-input {
     flex: 1;
     background: transparent;
@@ -166,6 +225,8 @@
       color: rgba(255, 255, 255, 0.35);
     }
   }
+
+  /* ---------- Botón ---------- */
 
   .newsletter-btn {
     width: 34px;
@@ -187,7 +248,10 @@
   }
 }
 
-// Barra de Alianzas Institucionales Innovadora
+/* =========================================================
+   ALIANZAS INSTITUCIONALES
+   ========================================================= */
+
 .footer-partners-bar {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding-top: 20px;
@@ -197,6 +261,8 @@
   flex-direction: column;
   gap: 14px;
 
+  /* ---------- Etiqueta ---------- */
+
   .partners-label {
     font-size: 0.75rem;
     text-transform: uppercase;
@@ -205,16 +271,18 @@
     font-weight: 600;
   }
 
+  /* ---------- Logos ---------- */
+
   .partners-logos {
     display: flex;
     align-items: center;
-    justify-content: center; // Centra los logos
+    justify-content: center;
     gap: 45px;
     flex-wrap: wrap;
     width: 100%;
 
     .inst-logo {
-    height: 70px; // Logos un poco más grandes
+      height: 70px;
       object-fit: contain;
       transition: opacity 0.2s ease;
       opacity: 0.70;
@@ -223,18 +291,43 @@
         opacity: 1;
       }
 
-      // Solo aplica filtro blanco al logo de la Javeriana
+      /* Logo Javeriana */
+
       &.javeriana-logo {
         filter: brightness(0) invert(1);
       }
 
-      // Mantiene los colores originales de ProSofi
+      /* Logo ProSofi */
+
       &.original-color {
         filter: none;
       }
     }
   }
 }
+
+/* =========================================================
+   ENLACE AL REPOSITORIO
+   ========================================================= */
+
+.repository-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .footer-repository-text {
+    color: rgba(255, 255, 255, 0.80);
+    font-size: 0.9rem;
+    font-family: inherit;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+/* =========================================================
+   PARTE INFERIOR
+   ========================================================= */
 
 .footer-bottom {
   margin-top: 40px;
@@ -245,50 +338,11 @@
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.80);
 }
+
+/* =========================================================
+   CONFIGURACIÓN DEL FOOTER OSCURO
+   ========================================================= */
+
 footer.section--darker {
-  padding-top: 30px !important; // Sube este valor a 80px, 100px o lo que necesites para separarlo del borde
+  padding-top: 30px !important;
 }
-.social-link {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  font-size: 0.85rem;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  overflow: hidden; // Asegura que la imagen no se salga del círculo
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.15);
-    transform: translateY(-2px);
-  }
-
-  // Estilo específico para la imagen de GitHub
-  .social-icon-img {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-    filter: grayscale(1) brightness(0) invert(1);
-  }
-
-}
-
-  .repository-link {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    .footer-repository-text {
-      color: rgba(255, 255, 255, 0.80);
-      font-size: 0.9rem;
-      font-family: inherit;
-      font-weight: 400;
-      line-height: 1.5;
-      margin: 0;
-    }
-  }

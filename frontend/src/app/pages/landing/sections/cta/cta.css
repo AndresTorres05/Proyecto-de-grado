@@ -1,19 +1,37 @@
+/* =========================================================
+   SECCIÓN CTA (CALL TO ACTION)
+   ========================================================= */
+
+/* ---------- Contenedor principal ---------- */
+
 .cta {
   padding-block: 64px;
 }
 
+
+/* ---------- Contenido ---------- */
+
 .cta__content {
   text-align: center;
 }
+
+
+/* ---------- Título ---------- */
 
 .cta h2 {
   font-size: clamp(1.75rem, 3vw, 2.5rem);
   margin-bottom: 20px;
 }
 
+
+/* ---------- Acento de color ---------- */
+
 .accent-gold {
   color: var(--vita-gold);
 }
+
+
+/* ---------- Texto principal ---------- */
 
 .cta__lead {
   color: rgba(255, 255, 255, 0.75);
@@ -22,6 +40,11 @@
   margin-bottom: 32px;
 }
 
+
+/* =========================================================
+   ACCIONES
+   ========================================================= */
+
 .cta__actions {
   display: flex;
   justify-content: center;
@@ -29,6 +52,11 @@
   flex-wrap: wrap;
   margin-bottom: 48px;
 }
+
+
+/* =========================================================
+   ESTADÍSTICAS
+   ========================================================= */
 
 .cta__stats {
   display: flex;
@@ -39,6 +67,9 @@
   border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
+
+/* ---------- Elemento individual ---------- */
+
 .cta__stat {
   display: flex;
   flex-direction: column;
@@ -46,16 +77,27 @@
   gap: 4px;
 }
 
+
+/* Número de la estadística */
+
 .cta__stat-number {
   font-size: 2rem;
   font-weight: 700;
   color: var(--vita-white);
 }
 
+
+/* Etiqueta de la estadística */
+
 .cta__stat-label {
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.65);
 }
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
 @media (max-width: 768px) {
   .cta__stats {

@@ -1,8 +1,18 @@
+
+/* =========================================================
+   SECCIÓN DE BENEFICIOS
+   ========================================================= */
+
+/* ---------- Título ---------- */
+
 .benefits-title {
   text-align: center;
   margin-bottom: 48px;
   font-size: clamp(1.75rem, 3vw, 2.5rem);
 }
+
+
+/* ---------- Distribución principal ---------- */
 
 .benefits-row {
   display: grid;
@@ -11,11 +21,16 @@
   align-items: center;
 }
 
-/* Mini dashboard decorativo */
+
+/* =========================================================
+   MINI DASHBOARD DECORATIVO
+   ========================================================= */
 
 .mini-dashboard {
   padding: 24px;
 }
+
+/* Estadísticas */
 
 .mini-dashboard__stats {
   display: flex;
@@ -39,6 +54,9 @@
   color: var(--vita-text-gray-light);
 }
 
+
+/* Gráfica de barras */
+
 .mini-dashboard__chart {
   display: flex;
   align-items: flex-end;
@@ -51,6 +69,9 @@
   width: 12%;
   border-radius: 4px 4px 0 0;
 }
+
+
+/* Gráfica circular y leyenda */
 
 .mini-dashboard__donut-row {
   display: flex;
@@ -95,7 +116,10 @@
   flex-shrink: 0;
 }
 
-/* Texto del beneficio */
+
+/* =========================================================
+   TEXTO DEL BENEFICIO
+   ========================================================= */
 
 .benefits-text__eyebrow-row {
   display: flex;
@@ -127,6 +151,11 @@
   margin-top: 16px;
   display: inline-block;
 }
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
 @media (max-width: 900px) {
   .benefits-row {

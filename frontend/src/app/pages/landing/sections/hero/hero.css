@@ -1,3 +1,8 @@
+
+/* =========================================================
+   HERO - DISTRIBUCIÓN PRINCIPAL
+   ========================================================= */
+
 .hero__grid {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
@@ -5,7 +10,12 @@
   align-items: center;
 }
 
-/* ---------- Columna de texto ---------- */
+
+/* =========================================================
+   COLUMNA DE TEXTO
+   ========================================================= */
+
+/* ---------- Badge ---------- */
 
 .hero__badge {
   display: inline-flex;
@@ -27,6 +37,9 @@
   flex-shrink: 0;
 }
 
+
+/* ---------- Título ---------- */
+
 .hero__title {
   font-size: clamp(2.25rem, 4vw, 3.25rem);
   font-weight: 700;
@@ -38,11 +51,17 @@
   color: var(--vita-orange);
 }
 
+
+/* ---------- Descripción ---------- */
+
 .hero__description {
   color: var(--vita-text-gray);
   font-size: 1.05rem;
   max-width: 480px;
 }
+
+
+/* ---------- Acciones ---------- */
 
 .hero__actions {
   display: flex;
@@ -50,6 +69,9 @@
   gap: 16px;
   margin-top: 32px;
 }
+
+
+/* ---------- Estadísticas ---------- */
 
 .hero__stats {
   display: flex;
@@ -83,7 +105,10 @@
   color: var(--vita-text-gray-light);
 }
 
-/* ---------- Columna de ilustración ---------- */
+
+/* =========================================================
+   COLUMNA DE ILUSTRACIÓN
+   ========================================================= */
 
 .hero__illustration {
   display: flex;
@@ -91,11 +116,17 @@
   align-items: center;
 }
 
+
+/* ---------- Escenario de la ilustración ---------- */
+
 .hero__stage {
   position: relative;
   width: 100%;
   height: 420px;
 }
+
+
+/* ---------- Círculo de fondo ---------- */
 
 .hero__circle {
   position: absolute;
@@ -104,20 +135,31 @@
   width: 320px;
   height: 320px;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--vita-navy-light) 12%, var(--vita-cream));
-  overflow: hidden; /* Vital para que la imagen respete el círculo o contenedor */
+  background: color-mix(
+    in srgb,
+    var(--vita-navy-light) 12%,
+    var(--vita-cream)
+  );
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Estilo para tu imagen dentro del círculo de fondo */
+
+/* ---------- Imagen de fondo ---------- */
+
 .hero__bg-img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ajusta la imagen para que llene el espacio */
-  opacity: 0.85; /* Opcional: un toque sutil para que combine con los elementos flotantes */
+  object-fit: cover;
+  opacity: 0.85;
 }
+
+
+/* =========================================================
+   AVATARES
+   ========================================================= */
 
 .hero__avatar {
   position: absolute;
@@ -129,7 +171,7 @@
   justify-content: center;
   font-size: 1.5rem;
   box-shadow: var(--shadow-card);
-  z-index: 3; /* Asegura que estén por encima de la imagen */
+  z-index: 3;
 }
 
 .hero__avatar--1 {
@@ -150,6 +192,11 @@
   background: var(--vita-orange);
 }
 
+
+/* =========================================================
+   TARJETAS FLOTANTES
+   ========================================================= */
+
 .float-card {
   position: absolute;
   display: flex;
@@ -161,7 +208,7 @@
   border-radius: var(--radius-md);
   font-size: 0.8rem;
   white-space: nowrap;
-  z-index: 4; /* Asegura que las tarjetas estén flotando encima */
+  z-index: 4;
 }
 
 .float-card__icon {
@@ -189,6 +236,9 @@
   color: var(--vita-orange);
 }
 
+
+/* ---------- Posición de tarjetas ---------- */
+
 .float-card--1 {
   top: 4%;
   left: 0;
@@ -213,6 +263,11 @@
   bottom: 2%;
   left: 14%;
 }
+
+
+/* =========================================================
+   ROLES
+   ========================================================= */
 
 .hero__roles {
   display: flex;
@@ -247,7 +302,12 @@
   color: var(--vita-navy-darker);
 }
 
-/* ---------- Responsive ---------- */
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+/* ---------- Tablets ---------- */
 
 @media (max-width: 960px) {
   .hero__grid {
@@ -258,6 +318,9 @@
     margin-top: 48px;
   }
 }
+
+
+/* ---------- Móviles ---------- */
 
 @media (max-width: 768px) {
   .hero__description {
@@ -272,6 +335,9 @@
     padding-right: 24px;
   }
 }
+
+
+/* ---------- Móviles pequeños ---------- */
 
 @media (max-width: 600px) {
   .hero__stage {
@@ -288,28 +354,53 @@
     display: none;
   }
 }
-/* ---------- Animación de flotación ---------- */
+
+
+/* =========================================================
+   ANIMACIÓN DE FLOTACIÓN
+   ========================================================= */
 
 @keyframes floatAnimation {
   0% {
     transform: translateY(0px);
   }
+
   50% {
-    transform: translateY(-8px); /* Sube 8 píxeles suavemente */
+    transform: translateY(-8px);
   }
+
   100% {
     transform: translateY(0px);
   }
 }
 
-/* Aplicamos la animación a las tarjetas flotantes */
+
+/* ---------- Aplicación de la animación ---------- */
+
 .float-card {
   animation: floatAnimation 4s ease-in-out infinite;
 }
 
-/* Opcional: Desfasar el tiempo de cada tarjeta para que no se muevan todas al mismo ritmo exacto */
-.float-card--1 { animation-delay: 0s; }
-.float-card--2 { animation-delay: 1s; }
-.float-card--3 { animation-delay: 2s; }
-.float-card--4 { animation-delay: 1.5s; }
-.float-card--5 { animation-delay: 2.5s; }
+
+/* ---------- Desfase entre tarjetas ---------- */
+
+.float-card--1 {
+  animation-delay: 0s;
+}
+
+.float-card--2 {
+  animation-delay: 1s;
+}
+
+.float-card--3 {
+  animation-delay: 2s;
+}
+
+.float-card--4 {
+  animation-delay: 1.5s;
+}
+
+.float-card--5 {
+  animation-delay: 2.5s;
+}
+
