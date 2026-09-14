@@ -1,0 +1,66 @@
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          # Sin esto el navegador nunca llega ni siquiera a /api/auth/login
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowedOrigins: "http://localhost:4200"
+                allowedMethods:
+                  - GET
+                  - POST
+                  - PUT
+                  - DELETE
+                  - OPTIONS
+                allowedHeaders: "*"
+                allowCredentials: true
+
+          routes:
+
+            # ---------------------------------------------------
+            # AUTH-BACKEND
+            # login, login-otp y registro son publicos:
+            # son la puerta para CONSEGUIR el token, no la requieren.
+            # ---------------------------------------------------
+            - id: auth-backend
+              uri: http://localhost:8081
+              predicates:
+                - Path=/api/auth/**
+
+            # ---------------------------------------------------
+            # MESSAGING-BACKEND
+            # /api/otp/** publico: se usa ANTES de tener sesion
+            # (verificacion de telefono en registro/login).
+            # ---------------------------------------------------
+            - id: messaging-otp
+              uri: http://localhost:8082
+              predicates:
+                - Path=/api/otp/**
+
+            # ---------------------------------------------------
+            # EJEMPLO para cuando agreguemos servicios protegidos:
+            # cualquier ruta que SI necesite saber quien esta
+            # autenticado lleva el filtro JwtAuthFilter, que agrega
+            # X-User-Id / X-User-Rol y bloquea con 401 si no hay
+            # token valido.
+            #
+            # - id: personas-backend
+            #   uri: http://localhost:8083
+            #   predicates:
+            #     - Path=/api/persona-mayor/**
+            #   filters:
+            #     - JwtAuth
+            # ---------------------------------------------------
+
+server:
+  port: 8080
+
+# Debe ser IDENTICO al jwt.secret de auth-backend: es quien firma
+# los tokens que este gateway solo valida.
+jwt:
+  secret: cambia_esto_por_una_clave_larga_y_secreta_1234567890abcdef
