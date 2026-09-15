@@ -1,5 +1,6 @@
 package com.proyectogrado.messaging_backend.security;
 
+import tools.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,7 @@ import java.net.http.HttpResponse;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -32,6 +34,8 @@ public class TextBeeOtpService {
     private final HttpClient httpClient = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(10))
             .build();
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private String obtenerUrlTextBee() {
         return "https://api.textbee.dev/api/v1/gateway/devices/"
@@ -125,7 +129,12 @@ public class TextBeeOtpService {
 
         try {
 
-            String cuerpoJson = construirCuerpoJson(telefono, mensaje);
+            String cuerpoJson = objectMapper.writeValueAsString(
+                    Map.of(
+                            "recipients", List.of(telefono),
+                            "message", mensaje
+                    )
+            );
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(obtenerUrlTextBee()))
@@ -177,33 +186,6 @@ public class TextBeeOtpService {
                     e
             );
         }
-    }
-
-    /**
-     * Arma el cuerpo JSON que espera TextBee sin depender de Jackson
-     * (Spring Boot 4 ya no trae com.fasterxml.jackson.databind por defecto).
-     */
-    private String construirCuerpoJson(String telefono, String mensaje) {
-
-        return "{\"recipients\":[\""
-                + escaparJson(telefono)
-                + "\"],\"message\":\""
-                + escaparJson(mensaje)
-                + "\"}";
-    }
-
-    /**
-     * Escapa los caracteres especiales de JSON para evitar romper el cuerpo
-     * de la petición (comillas, saltos de línea, backslashes, etc.).
-     */
-    private String escaparJson(String valor) {
-
-        return valor
-                .replace("\\", "\\\\")
-                .replace("\"", "\\\"")
-                .replace("\n", "\\n")
-                .replace("\r", "\\r")
-                .replace("\t", "\\t");
     }
 
     /**

@@ -43,19 +43,18 @@ spring:
                 - Path=/api/otp/**
 
             # ---------------------------------------------------
-            # EJEMPLO para cuando agreguemos servicios protegidos:
-            # cualquier ruta que SI necesite saber quien esta
-            # autenticado lleva el filtro JwtAuthFilter, que agrega
-            # X-User-Id / X-User-Rol y bloquea con 401 si no hay
-            # token valido.
-            #
-            # - id: personas-backend
-            #   uri: http://localhost:8083
-            #   predicates:
-            #     - Path=/api/persona-mayor/**
-            #   filters:
-            #     - JwtAuth
+            # PERSONAS-BACKEND
+            # Relaciones persona mayor <-> acompanante/organizacion,
+            # gustos y emergencias. TODO requiere JWT valido: el gateway
+            # agrega X-User-Id / X-User-Rol, personas-backend confia en
+            # esos headers y no valida tokens por su cuenta.
             # ---------------------------------------------------
+            - id: personas-backend
+              uri: http://localhost:8083
+              predicates:
+                - Path=/api/persona-mayor/**,/api/acompanante/**,/api/organizacion/**,/api/gustos/**
+              filters:
+                - JwtAuth
 
 server:
   port: 8080
