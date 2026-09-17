@@ -8,31 +8,34 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.5</version>
+        <version>4.1.1</version>
         <relativePath/>
     </parent>
 
     <groupId>com.proyectogrado</groupId>
     <artifactId>api-gateway</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-
     <name>api-gateway</name>
     <description>Puerta de entrada unica para el frontend de Vita+</description>
 
     <properties>
         <java.version>17</java.version>
-        <spring-cloud.version>2025.0.3</spring-cloud.version>
+        <spring-cloud.version>2025.1.2</spring-cloud.version>
     </properties>
 
     <dependencies>
 
-        <!-- Spring Cloud Gateway (WebFlux) -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway-server-webflux</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <!-- JWT: solo para VALIDAR el token que emitio auth-backend -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>

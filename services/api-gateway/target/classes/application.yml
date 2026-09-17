@@ -2,11 +2,14 @@ spring:
   application:
     name: api-gateway
 
+  autoconfigure:
+    exclude:
+      - org.springframework.cloud.client.discovery.simple.SimpleDiscoveryClientAutoConfiguration
+
   cloud:
     gateway:
       server:
         webflux:
-          # Sin esto el navegador nunca llega ni siquiera a /api/auth/login
           globalcors:
             cors-configurations:
               '[/**]':
@@ -22,44 +25,60 @@ spring:
 
           routes:
 
-            # ---------------------------------------------------
-            # AUTH-BACKEND
-            # login, login-otp y registro son publicos:
-            # son la puerta para CONSEGUIR el token, no la requieren.
-            # ---------------------------------------------------
             - id: auth-backend
               uri: http://localhost:8081
               predicates:
                 - Path=/api/auth/**
 
-            # ---------------------------------------------------
-            # MESSAGING-BACKEND
-            # /api/otp/** publico: se usa ANTES de tener sesion
-            # (verificacion de telefono en registro/login).
-            # ---------------------------------------------------
             - id: messaging-otp
               uri: http://localhost:8082
               predicates:
                 - Path=/api/otp/**
 
-            # ---------------------------------------------------
-            # PERSONAS-BACKEND
-            # Relaciones persona mayor <-> acompanante/organizacion,
-            # gustos y emergencias. TODO requiere JWT valido: el gateway
-            # agrega X-User-Id / X-User-Rol, personas-backend confia en
-            # esos headers y no valida tokens por su cuenta.
-            # ---------------------------------------------------
-            - id: personas-backend
-              uri: http://localhost:8083
+            - id: personamayor-service
+              uri: http://localhost:8085
               predicates:
-                - Path=/api/persona-mayor/**,/api/acompanante/**,/api/organizacion/**,/api/gustos/**
+                - Path=/api/persona-mayor/acompanantes/**,/api/persona-mayor/organizaciones/**,/api/persona-mayor/emergencia,/api/persona-mayor/*/gustos,/api/persona-mayor/informacion,/api/acompanante/**,/api/organizacion/**,/api/gustos/**
+              filters:
+                - JwtAuth
+
+            - id: acompanante-service
+              uri: http://localhost:8086
+              predicates:
+                - Path=/api/acompanante/**
+              filters:
+                - JwtAuth
+
+            - id: organizacion-service
+              uri: http://localhost:8088
+              predicates:
+                - Path=/api/organizacion/**
+              filters:
+                - JwtAuth
+
+            - id: voluntario-service
+              uri: http://localhost:8087
+              predicates:
+                - Path=/api/voluntario/**
+              filters:
+                - JwtAuth
+
+            - id: salud-backend
+              uri: http://localhost:8084
+              predicates:
+                - Path=/api/persona-mayor/medicamentos/**
+              filters:
+                - JwtAuth
+
+            - id: actividad-service
+              uri: http://localhost:8089
+              predicates:
+                - Path=/api/actividades/**
               filters:
                 - JwtAuth
 
 server:
   port: 8080
 
-# Debe ser IDENTICO al jwt.secret de auth-backend: es quien firma
-# los tokens que este gateway solo valida.
 jwt:
   secret: cambia_esto_por_una_clave_larga_y_secreta_1234567890abcdef

@@ -117,9 +117,19 @@ public class SecurityConfig {
                 // -------------------------------------------------
                 .authorizeHttpRequests(auth -> auth
 
-                        // Login, registro y OTP
-                        .requestMatchers("/api/auth/**")
+                        // Login, registro y OTP: publicos, son la puerta
+                        // para CONSEGUIR el token, no lo requieren.
+                        .requestMatchers(
+                                "/api/auth/login",
+                                "/api/auth/login-otp",
+                                "/api/auth/registro"
+                        )
                         .permitAll()
+
+                        // Cualquier otra cosa bajo /api/auth (como
+                        // /api/auth/informacion) SI requiere token.
+                        .requestMatchers("/api/auth/**")
+                        .authenticated()
 
                         // Todo lo relacionado con persona mayor
                         .requestMatchers("/api/persona-mayor/**")

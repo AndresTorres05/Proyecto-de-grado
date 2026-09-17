@@ -1,0 +1,9 @@
+com\proyectogrado\organizacion_service\model\PersonaMayorOrganizacion.class
+com\proyectogrado\organizacion_service\dto\AsociarPersonaMayorRequest.class
+com\proyectogrado\organizacion_service\OrganizacionServiceApplication.class
+com\proyectogrado\organizacion_service\controller\OrganizacionRelacionController.class
+com\proyectogrado\organizacion_service\model\PersonaMayorOrganizacionId.class
+com\proyectogrado\organizacion_service\model\UsuarioLookup.class
+com\proyectogrado\organizacion_service\dto\PersonaMayorResponse.class
+com\proyectogrado\organizacion_service\repository\PersonaMayorOrganizacionRepository.class
+com\proyectogrado\organizacion_service\repository\UsuarioLookupRepository.class

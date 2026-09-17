@@ -1,0 +1,15 @@
+C:\Users\pipe1\Documents\GitHub\Proyecto-de-grado\services\acompanante-service\src\main\java\com\proyectogrado\acompanante_service\AcompananteServiceApplication.java
+C:\Users\pipe1\Documents\GitHub\Proyecto-de-grado\services\acompanante-service\src\main\java\com\proyectogrado\acompanante_service\controller\AcompananteRelacionController.java
+C:\Users\pipe1\Documents\GitHub\Proyecto-de-grado\services\acompanante-service\src\main\java\com\proyectogrado\acompanante_service\controller\AcompananteSeguimientoController.java
+C:\Users\pipe1\Documents\GitHub\Proyecto-de-grado\services\acompanante-service\src\main\java\com\proyectogrado\acompanante_service\dto\ContactoResponse.java
+C:\Users\pipe1\Documents\GitHub\Proyecto-de-grado\services\acompanante-service\src\main\java\com\proyectogrado\acompanante_service\dto\MedicamentoSeguimientoResponse.java
+C:\Users\pipe1\Documents\GitHub\Proyecto-de-grado\services\acompanante-service\src\main\java\com\proyectogrado\acompanante_service\dto\PersonaMayorResponse.java
+C:\Users\pipe1\Documents\GitHub\Proyecto-de-grado\services\acompanante-service\src\main\java\com\proyectogrado\acompanante_service\model\AcompananteInfoLookup.java
+C:\Users\pipe1\Documents\GitHub\Proyecto-de-grado\services\acompanante-service\src\main\java\com\proyectogrado\acompanante_service\model\MedicamentoLookup.java
+C:\Users\pipe1\Documents\GitHub\Proyecto-de-grado\services\acompanante-service\src\main\java\com\proyectogrado\acompanante_service\model\PersonaMayorAcompanante.java
+C:\Users\pipe1\Documents\GitHub\Proyecto-de-grado\services\acompanante-service\src\main\java\com\proyectogrado\acompanante_service\model\PersonaMayorAcompananteId.java
+C:\Users\pipe1\Documents\GitHub\Proyecto-de-grado\services\acompanante-service\src\main\java\com\proyectogrado\acompanante_service\model\UsuarioLookup.java
+C:\Users\pipe1\Documents\GitHub\Proyecto-de-grado\services\acompanante-service\src\main\java\com\proyectogrado\acompanante_service\repository\AcompananteInfoLookupRepository.java
+C:\Users\pipe1\Documents\GitHub\Proyecto-de-grado\services\acompanante-service\src\main\java\com\proyectogrado\acompanante_service\repository\MedicamentoLookupRepository.java
+C:\Users\pipe1\Documents\GitHub\Proyecto-de-grado\services\acompanante-service\src\main\java\com\proyectogrado\acompanante_service\repository\PersonaMayorAcompananteRepository.java
+C:\Users\pipe1\Documents\GitHub\Proyecto-de-grado\services\acompanante-service\src\main\java\com\proyectogrado\acompanante_service\repository\UsuarioLookupRepository.java

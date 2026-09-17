@@ -1,0 +1,8 @@
+com\proyectogrado\acompanante_service\model\UsuarioLookup.class
+com\proyectogrado\acompanante_service\model\PersonaMayorAcompanante.class
+com\proyectogrado\acompanante_service\controller\AcompananteRelacionController.class
+com\proyectogrado\acompanante_service\repository\UsuarioLookupRepository.class
+com\proyectogrado\acompanante_service\AcompananteServiceApplication.class
+com\proyectogrado\acompanante_service\model\PersonaMayorAcompananteId.class
+com\proyectogrado\acompanante_service\dto\PersonaMayorResponse.class
+com\proyectogrado\acompanante_service\repository\PersonaMayorAcompananteRepository.class

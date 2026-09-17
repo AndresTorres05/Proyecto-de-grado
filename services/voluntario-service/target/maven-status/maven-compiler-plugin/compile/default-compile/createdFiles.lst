@@ -1,0 +1,8 @@
+com\proyectogrado\voluntario_service\dto\VoluntarioPerfilResponse.class
+com\proyectogrado\voluntario_service\model\VoluntarioLookup.class
+com\proyectogrado\voluntario_service\repository\VoluntarioLookupRepository.class
+com\proyectogrado\voluntario_service\model\UsuarioLookup.class
+com\proyectogrado\voluntario_service\repository\UsuarioLookupRepository.class
+com\proyectogrado\voluntario_service\controller\VoluntarioController.class
+com\proyectogrado\voluntario_service\VoluntarioServiceApplication.class
+com\proyectogrado\voluntario_service\dto\ActualizarDisponibilidadRequest.class

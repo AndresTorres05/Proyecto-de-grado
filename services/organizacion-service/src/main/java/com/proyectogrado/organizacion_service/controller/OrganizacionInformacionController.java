@@ -1,0 +1,97 @@
+package com.proyectogrado.organizacion_service.controller;
+
+import com.proyectogrado.organizacion_service.dto.ActualizarOrganizacionRequest;
+import com.proyectogrado.organizacion_service.dto.OrganizacionInformacionResponse;
+import com.proyectogrado.organizacion_service.model.OrganizacionLookup;
+import com.proyectogrado.organizacion_service.model.UsuarioLookup;
+import com.proyectogrado.organizacion_service.repository.OrganizacionLookupRepository;
+import com.proyectogrado.organizacion_service.repository.UsuarioLookupRepository;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * Perfil propio de la organizacion: solo "direccion".
+ *
+ * nombre/correo/telefono son de identidad (auth-backend) y solo se leen
+ * aqui via UsuarioLookup; para editarlos, PUT /api/auth/informacion.
+ */
+@RestController
+@RequestMapping("/api/organizacion/informacion")
+public class OrganizacionInformacionController {
+
+    private final UsuarioLookupRepository usuarioLookupRepository;
+    private final OrganizacionLookupRepository organizacionLookupRepository;
+
+    public OrganizacionInformacionController(
+            UsuarioLookupRepository usuarioLookupRepository,
+            OrganizacionLookupRepository organizacionLookupRepository
+    ) {
+        this.usuarioLookupRepository = usuarioLookupRepository;
+        this.organizacionLookupRepository = organizacionLookupRepository;
+    }
+
+    @GetMapping
+    public ResponseEntity<?> obtenerInformacion(
+            @RequestHeader("X-User-Id") Integer idUsuario
+    ) {
+        UsuarioLookup usuario = usuarioLookupRepository.findById(idUsuario).orElse(null);
+
+        if (usuario == null || usuario.getIdOrganizacion() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("El usuario no tiene una organización asociada");
+        }
+
+        OrganizacionLookup organizacion = organizacionLookupRepository
+                .findById(usuario.getIdOrganizacion())
+                .orElse(null);
+
+        if (organizacion == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Organización no encontrada");
+        }
+
+        return ResponseEntity.ok(aRespuesta(usuario, organizacion));
+    }
+
+    @PutMapping
+    public ResponseEntity<?> actualizarInformacion(
+            @RequestHeader("X-User-Id") Integer idUsuario,
+            @RequestBody ActualizarOrganizacionRequest request
+    ) {
+        UsuarioLookup usuario = usuarioLookupRepository.findById(idUsuario).orElse(null);
+
+        if (usuario == null || usuario.getIdOrganizacion() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("El usuario no tiene una organización asociada");
+        }
+
+        OrganizacionLookup organizacion = organizacionLookupRepository
+                .findById(usuario.getIdOrganizacion())
+                .orElse(null);
+
+        if (organizacion == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Organización no encontrada");
+        }
+
+        organizacion.setDireccion(request.getDireccion());
+        organizacion = organizacionLookupRepository.save(organizacion);
+
+        return ResponseEntity.ok(aRespuesta(usuario, organizacion));
+    }
+
+    private OrganizacionInformacionResponse aRespuesta(UsuarioLookup usuario, OrganizacionLookup organizacion) {
+        return new OrganizacionInformacionResponse(
+                organizacion.getIdOrganizacion(),
+                usuario.getNombreUsuario(),
+                usuario.getCorreo(),
+                usuario.getTelefono(),
+                organizacion.getDireccion()
+        );
+    }
+}

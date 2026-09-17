@@ -1,0 +1,7 @@
+package com.proyectogrado.organizacion_service.repository;
+
+import com.proyectogrado.organizacion_service.model.OrganizacionLookup;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface OrganizacionLookupRepository extends JpaRepository<OrganizacionLookup, Integer> {
+}
