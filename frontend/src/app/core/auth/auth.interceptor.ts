@@ -4,10 +4,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   const rutasPublicas = [
     '/api/auth/login',
+    '/api/auth/login-otp',
     '/api/auth/registro',
-    '/api/auth/otp/enviar',
-    '/api/auth/otp/login',
-    '/api/auth/otp/registro'
+    '/api/otp/send',
+    '/api/otp/verify'
   ];
 
   const esRutaPublica = rutasPublicas.some(ruta =>
@@ -33,4 +33,4 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       }
     })
   );
-};2
+};

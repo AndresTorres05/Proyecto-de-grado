@@ -18,10 +18,16 @@ export interface RegistroRequest {
   disponibilidad?: string;
   fechaNacimiento?: string;
   genero?: string;
+  codigo?: string;
 }
 
 export interface EnviarOtpRequest {
   telefono: string;
+}
+
+export interface OtpEnviarResponse {
+  success: boolean;
+  message: string;
 }
 
 export interface OtpLoginRequest {
@@ -59,6 +65,7 @@ const RUTAS_POR_ROL: Record<string, string> = {
 export class AuthService {
 
   private readonly apiUrl = 'http://localhost:8080/api/auth';
+  private readonly otpApiUrl = 'http://localhost:8080/api/otp';
 
   private readonly autenticadoSignal = signal(
     !!sessionStorage.getItem('token')
@@ -85,17 +92,20 @@ export class AuthService {
       );
   }
 
-  enviarOtp(telefono: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(
-      `${this.apiUrl}/otp/enviar`,
-      { telefono }
+  // El envío de OTP vive en messaging-backend (/api/otp/send),
+  // no en auth-backend. Espera "phoneNumber", no "telefono", y
+  // responde {success, message}, no un LoginResponse.
+  enviarOtp(telefono: string): Observable<OtpEnviarResponse> {
+    return this.http.post<OtpEnviarResponse>(
+      `${this.otpApiUrl}/send`,
+      { phoneNumber: telefono }
     );
   }
 
   loginOtp(request: OtpLoginRequest): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>(
-        `${this.apiUrl}/otp/login`,
+        `${this.apiUrl}/login-otp`,
         request
       )
       .pipe(
@@ -103,10 +113,13 @@ export class AuthService {
       );
   }
 
+  // El registro por OTP usa el MISMO /api/auth/registro de siempre;
+  // auth-backend decide internamente si valida el codigo o no según
+  // si viene correo+contrasena. No existe un endpoint separado.
   registroOtp(request: OtpRegistroRequest): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>(
-        `${this.apiUrl}/otp/registro`,
+        `${this.apiUrl}/registro`,
         request
       )
       .pipe(

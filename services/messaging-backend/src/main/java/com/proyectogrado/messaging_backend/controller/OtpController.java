@@ -9,7 +9,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/otp")
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
 public class OtpController {
 
     private final TextBeeOtpService textBeeOtpService;

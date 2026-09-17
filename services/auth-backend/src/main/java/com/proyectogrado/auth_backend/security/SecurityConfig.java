@@ -1,8 +1,8 @@
+
 package com.proyectogrado.auth_backend.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -13,12 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -35,7 +29,6 @@ public class SecurityConfig {
         this.usuarioDetailsService = usuarioDetailsService;
     }
 
-
     // =========================================================
     // PASSWORD ENCODER
     // =========================================================
@@ -44,7 +37,6 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
     // =========================================================
     // AUTHENTICATION PROVIDER
@@ -61,7 +53,6 @@ public class SecurityConfig {
         return provider;
     }
 
-
     // =========================================================
     // AUTHENTICATION MANAGER
     // =========================================================
@@ -73,7 +64,6 @@ public class SecurityConfig {
 
         return config.getAuthenticationManager();
     }
-
 
     // =========================================================
     // SECURITY FILTER CHAIN
@@ -89,124 +79,79 @@ public class SecurityConfig {
                 // -------------------------------------------------
                 // CSRF
                 // -------------------------------------------------
+
                 .csrf(csrf -> csrf.disable())
-
-
-                // -------------------------------------------------
-                // CORS
-                // -------------------------------------------------
-                .cors(cors ->
-                        cors.configurationSource(
-                                corsConfigurationSource()
-                        )
-                )
-
 
                 // -------------------------------------------------
                 // SESIONES
                 // -------------------------------------------------
+
                 .sessionManagement(sm ->
                         sm.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS
                         )
                 )
 
-
                 // -------------------------------------------------
                 // AUTORIZACIÓN
                 // -------------------------------------------------
+
                 .authorizeHttpRequests(auth -> auth
 
-                        // Login, registro y OTP: publicos, son la puerta
-                        // para CONSEGUIR el token, no lo requieren.
+                        // Login, registro y OTP: públicos.
+                        // Son la puerta para conseguir el token,
+                        // no lo requieren.
+
                         .requestMatchers(
                                 "/api/auth/login",
                                 "/api/auth/login-otp",
-                                "/api/auth/registro"
+                                "/api/auth/registro",
+                                "/error"
                         )
                         .permitAll()
 
-                        // Cualquier otra cosa bajo /api/auth (como
-                        // /api/auth/informacion) SI requiere token.
+                        // Cualquier otra cosa bajo /api/auth
+                        // requiere autenticación.
+
                         .requestMatchers("/api/auth/**")
                         .authenticated()
 
-                        // Todo lo relacionado con persona mayor
+                        // Todo lo relacionado con persona mayor.
+
                         .requestMatchers("/api/persona-mayor/**")
                         .authenticated()
 
-                        // Todo lo relacionado con organización
+                        // Todo lo relacionado con organización.
+
                         .requestMatchers("/api/organizacion/**")
                         .authenticated()
 
-                         // Todo lo relacionado con acompañante
+                        // Todo lo relacionado con acompañante.
+
                         .requestMatchers("/api/acompanante/**")
                         .authenticated()
 
-                        // Todo lo demás necesita autenticación
+                        // Todo lo demás necesita autenticación.
+
                         .anyRequest()
                         .authenticated()
                 )
 
-
                 // -------------------------------------------------
                 // AUTHENTICATION PROVIDER
                 // -------------------------------------------------
-                .authenticationProvider(authenticationProvider())
 
+                .authenticationProvider(authenticationProvider())
 
                 // -------------------------------------------------
                 // JWT FILTER
                 // -------------------------------------------------
+
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
                 );
 
-
         return http.build();
-    }
-
-
-    // =========================================================
-    // CORS
-    // =========================================================
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-
-        CorsConfiguration configuration =
-                new CorsConfiguration();
-
-        configuration.setAllowedOrigins(
-                List.of("http://localhost:4200")
-        );
-
-        configuration.setAllowedMethods(
-                List.of(
-                        "GET",
-                        "POST",
-                        "PUT",
-                        "DELETE",
-                        "OPTIONS"
-                )
-        );
-
-        configuration.setAllowedHeaders(
-                List.of("*")
-        );
-
-        configuration.setAllowCredentials(true);
-
-
-        UrlBasedCorsConfigurationSource source =
-                new UrlBasedCorsConfigurationSource();
-
-        source.registerCorsConfiguration(
-                "/**",
-                configuration
-        );
-
-        return source;
     }
 }

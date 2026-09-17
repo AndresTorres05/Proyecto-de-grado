@@ -29,7 +29,7 @@ export interface MedicamentoRequest {
 @Injectable({ providedIn: 'root' })
 export class MedicamentoService {
 
-  private readonly apiUrl = 'http://localhost:8080/api/medicamentos';
+  private readonly apiUrl = 'http://localhost:8080/api/persona-mayor/medicamentos';
 
   constructor(private http: HttpClient) {}
 
