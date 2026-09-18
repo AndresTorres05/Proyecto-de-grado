@@ -344,10 +344,9 @@ public class AuthService {
 
         String telefono = request.getTelefono().trim();
 
-        if (!telefono.matches("\\d{10}")) {
+        if (!telefono.matches("\\+57\\d{10}")) {
             throw new RuntimeException(
-                    "El teléfono debe tener exactamente 10 dígitos"
-            );
+        "El teléfono debe tener el formato +57 seguido de 10 dígitos"            );
         }
 
         boolean tieneCorreo =

@@ -107,6 +107,7 @@ export interface Actividad {
 export class AcompananteService {
 
   private readonly apiUrl = 'http://localhost:8080/api';
+private readonly authUrl = 'http://localhost:8080/api/auth';
 
   constructor(private http: HttpClient) {}
 
@@ -184,35 +185,35 @@ export class AcompananteService {
   // =========================================================
 
   obtenerInformacion(): Observable<AcompanantePerfil> {
-    return this.http.get<AcompanantePerfil>(
-      `${this.apiUrl}/acompanante/informacion`
-    );
-  }
+  return this.http.get<AcompanantePerfil>(
+    `${this.authUrl}/informacion`
+  );
+}
 
-  actualizarInformacion(
-    datos: ActualizarAcompananteRequest
-  ): Observable<AcompanantePerfil> {
-    return this.http.put<AcompanantePerfil>(
-      `${this.apiUrl}/acompanante/informacion`,
-      datos
-    );
-  }
+actualizarInformacion(
+  datos: ActualizarAcompananteRequest
+): Observable<AcompanantePerfil> {
+  return this.http.put<AcompanantePerfil>(
+    `${this.authUrl}/informacion`,
+    datos
+  );
+}
 
   // =========================================================
   // CONTRASEÑA
   // =========================================================
 
   cambiarContrasena(
-    datos: CambiarContrasenaRequest
-  ): Observable<string> {
-    return this.http.put(
-      `${this.apiUrl}/acompanante/contrasena`,
-      datos,
-      {
-        responseType: 'text'
-      }
-    );
-  }
+  datos: CambiarContrasenaRequest
+): Observable<string> {
+  return this.http.put(
+    `${this.authUrl}/contrasena`,
+    datos,
+    {
+      responseType: 'text'
+    }
+  );
+}
 
   // =========================================================
   // SEGUIMIENTO - MEDICAMENTOS
