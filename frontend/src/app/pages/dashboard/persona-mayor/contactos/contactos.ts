@@ -91,6 +91,8 @@ if (!/^\d{10}$/.test(telefonoIngresado)) {
 
 const telefono = '+57' + telefonoIngresado;
 
+this.agregandoAcompanante.set(true);
+
 this.acompananteService.agregarAcompanante({
   telefono: telefono,
   parentesco: this.parentescoAcompanante
