@@ -242,50 +242,11 @@ export class Registro implements OnDestroy {
 
     this.errorMensaje.set(null);
 
-    // Persona Mayor / Acompañante
-    if (this.esRegistroPorTelefono) {
-
-      const tieneContrasena =
-        this.contrasena.trim().length > 0;
-
-      const tieneCorreo =
-        this.correo.trim().length > 0;
-
-      // Si puso contraseña, DEBE poner correo
-      if (tieneContrasena && !tieneCorreo) {
-
-        this.errorMensaje.set(
-          'Para usar una contraseña debes ingresar un correo.'
-        );
-
-        return;
-      }
-
-      // Si tiene contraseña → registro directo
-      if (tieneContrasena) {
-
-        this.registrarConContrasena();
-
-      } else {
-
-        // Sin contraseña → OTP
-        if (!this.otpEnviado()) {
-
-          this.enviarCodigo();
-
-        } else {
-
-          this.registrarPorTelefono();
-
-        }
-      }
-
-      return;
-    }
-
-    // Organización / Voluntario
+    // Todos los roles se registran con correo + contraseña
     this.registrarConContrasena();
-  }
+
+    
+}
 
   // =========================================================
   // REGISTRO DIRECTO CON CORREO + CONTRASEÑA

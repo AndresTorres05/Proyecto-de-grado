@@ -435,7 +435,7 @@
       <!-- BOTÓN CREAR CUENTA -->
       <!-- ================================================= -->
 
-      @if (rol && (!esRegistroPorTelefono || otpEnviado() || contrasena.trim())) {
+      @if (rol) {
 
         <button
           type="submit"
@@ -453,31 +453,7 @@
 
       }
 
-      <!-- ================================================= -->
-      <!-- BOTÓN ENVIAR OTP -->
-      <!-- ================================================= -->
-
-      @if (
-        esRegistroPorTelefono &&
-        !otpEnviado() &&
-        !contrasena.trim()
-      ) {
-
-        <button
-          type="submit"
-          class="btn btn-primary login-submit"
-          [disabled]="cargando()"
-        >
-
-          {{
-            cargando()
-              ? 'Enviando...'
-              : 'Enviar código por SMS'
-          }}
-
-        </button>
-
-      }
+      
 
     </form>
 
