@@ -46,257 +46,261 @@
     </p>
 
 
-    <!-- =====================================================
-         TABS
-         ===================================================== -->
-
-    <div class="login-tabs">
-
-      <button
-        type="button"
-        class="login-tab"
-        [class.login-tab--active]="modo() === 'correo'"
-        (click)="cambiarModo('correo')"
-      >
-        Correo
-      </button>
-
-      <button
-        type="button"
-        class="login-tab"
-        [class.login-tab--active]="modo() === 'telefono'"
-        (click)="cambiarModo('telefono')"
-      >
-        Teléfono
-      </button>
-
-    </div>
 
 
-    <!-- =====================================================
-         FORMULARIO
-         ===================================================== -->
+
+
+
 
     <form
-      (ngSubmit)="onSubmit()"
-      class="login-form"
-    >
+  (ngSubmit)="onSubmit()"
+  class="login-form"
+>
 
+  <!-- ===================================================
+       LOGIN PRINCIPAL: TELÉFONO
+       =================================================== -->
 
-      <!-- ===================================================
-           LOGIN POR CORREO
-           =================================================== -->
+  @if (modo() === 'telefono') {
 
-      @if (modo() === 'correo') {
+    @if (!otpEnviado()) {
 
-        <!-- CORREO -->
+      <label
+        class="login-label"
+        for="telefono"
+      >
+        Número de celular
+      </label>
 
-        <label
-          class="login-label"
-          for="correo"
-        >
-          Correo
-        </label>
+      <div class="login-phone-row">
 
-        <input
-          id="correo"
-          name="correo"
-          type="email"
-          class="login-input"
-          [(ngModel)]="correo"
-          required
-          placeholder="tucorreo@ejemplo.com"
-        />
-
-
-        <!-- CONTRASEÑA -->
-
-        <label
-          class="login-label"
-          for="contrasena"
-        >
-          Contraseña
-        </label>
+        <span class="login-phone-prefix">
+          +57
+        </span>
 
         <input
-          id="contrasena"
-          name="contrasena"
-          type="password"
-          class="login-input"
-          [(ngModel)]="contrasena"
+          id="telefono"
+          name="telefono"
+          type="tel"
+          class="login-input login-input--phone"
+          [(ngModel)]="telefonoLocal"
           required
-          placeholder="••••••••"
+          placeholder="3001234567"
         />
 
-      }
+      </div>
 
+      <button
+        type="button"
+        class="btn btn-primary login-submit"
+        [disabled]="enviandoCodigo()"
+        (click)="enviarCodigo()"
+      >
+        {{ enviandoCodigo()
+            ? 'Enviando...'
+            : 'Enviar código por SMS'
+        }}
+      </button>
 
-      <!-- ===================================================
-           LOGIN POR TELÉFONO
-           =================================================== -->
+    }
 
-      @if (modo() === 'telefono') {
+    <!-- =================================================
+         CÓDIGO OTP
+         ================================================= -->
 
-        <!-- TELÉFONO -->
+    @if (otpEnviado()) {
 
-        <label
-          class="login-label"
-          for="telefono"
-        >
-          Número de celular
-        </label>
+      <label
+        class="login-label"
+        for="codigo"
+      >
+        Código de verificación
+      </label>
 
-        <div class="login-phone-row">
+      <input
+        id="codigo"
+        name="codigo"
+        type="text"
+        inputmode="numeric"
+        class="login-input"
+        [(ngModel)]="codigo"
+        required
+        placeholder="123456"
+      />
 
-          <span class="login-phone-prefix">
-            +57
-          </span>
+      <!-- ================================================
+           REENVIAR CÓDIGO
+           ================================================ -->
 
-          <input
-            id="telefono"
-            name="telefono"
-            type="tel"
-            class="login-input login-input--phone"
-            [(ngModel)]="telefonoLocal"
-            required
-            placeholder="3001234567"
-            [disabled]="otpEnviado()"
-          />
-
-        </div>
-
-
-        <!-- ================================================
-             PRIMER ENVÍO DEL CÓDIGO
-             ================================================ -->
-
-        @if (!otpEnviado()) {
-
-          <button
-            type="button"
-            class="btn btn-primary login-submit"
-            [disabled]="cargando()"
-            (click)="enviarCodigo()"
-          >
-
-            {{ cargando()
-                ? 'Enviando...'
-                : 'Enviar código por SMS'
-            }}
-
-          </button>
-
-        }
-
-
-        <!-- ================================================
-             CÓDIGO OTP
-             ================================================ -->
-
-        @if (otpEnviado()) {
-
-          <label
-            class="login-label"
-            for="codigo"
-          >
-            Código de verificación
-          </label>
-
-          <input
-            id="codigo"
-            name="codigo"
-            type="text"
-            inputmode="numeric"
-            class="login-input"
-            [(ngModel)]="codigo"
-            required
-            placeholder="123456"
-          />
-
-
-          <!-- ==============================================
-               REENVIAR CÓDIGO
-               ============================================== -->
-
-          @if (segundosReenvio() > 0) {
-
-            <button
-              type="button"
-              class="btn btn-secondary login-submit"
-              disabled
-            >
-              Reenviar código ({{ segundosReenvio() }}s)
-            </button>
-
-          } @else {
-
-            <button
-              type="button"
-              class="btn btn-secondary login-submit"
-              [disabled]="cargando()"
-              (click)="enviarCodigo()"
-            >
-              Reenviar código
-            </button>
-
-          }
-
-        }
-
-      }
-
-
-      <!-- ===================================================
-           MENSAJE INFORMATIVO
-           =================================================== -->
-
-      @if (infoMensaje()) {
-
-        <p class="login-info">
-          {{ infoMensaje() }}
-        </p>
-
-      }
-
-
-      <!-- ===================================================
-           MENSAJE DE ERROR
-           =================================================== -->
-
-      @if (errorMensaje()) {
-
-        <p class="login-error">
-          {{ errorMensaje() }}
-        </p>
-
-      }
-
-
-      <!-- ===================================================
-           BOTÓN INGRESAR
-           =================================================== -->
-
-      @if (
-        modo() === 'correo'
-        || otpEnviado()
-      ) {
+      @if (segundosReenvio() > 0) {
 
         <button
-          type="submit"
-          class="btn btn-primary login-submit"
-          [disabled]="cargando()"
+          type="button"
+          class="login-resend"
+          disabled
         >
-
-          {{ cargando()
-              ? 'Ingresando...'
-              : 'Ingresar'
-          }}
-
+          Reenviar código ({{ segundosReenvio() }}s)
         </button>
 
-      }
+} @else {
 
-    </form>
+  <button
+    type="button"
+    class="login-resend"
+    [disabled]="enviandoCodigo()"
+    (click)="enviarCodigo()"
+  >
+    {{ enviandoCodigo()
+        ? 'Enviando...'
+        : 'Reenviar código'
+    }}
+  </button>
+
+}
+
+      <button
+        type="submit"
+        class="btn btn-primary login-submit"
+        [disabled]="cargando()"
+      >
+        {{ cargando()
+            ? 'Ingresando...'
+            : 'Ingresar'
+        }}
+      </button>
+
+    }
+
+  }
+
+
+  <!-- ===================================================
+       LOGIN ALTERNATIVO: CORREO
+       =================================================== -->
+
+  @if (modo() === 'correo') {
+
+    <label
+      class="login-label"
+      for="correo"
+    >
+      Correo electrónico
+    </label>
+
+    <input
+      id="correo"
+      name="correo"
+      type="email"
+      class="login-input"
+      [(ngModel)]="correo"
+      required
+      placeholder="tucorreo@ejemplo.com"
+    />
+
+    <label
+      class="login-label"
+      for="contrasena"
+    >
+      Contraseña
+    </label>
+
+    <input
+      id="contrasena"
+      name="contrasena"
+      type="password"
+      class="login-input"
+      [(ngModel)]="contrasena"
+      required
+      placeholder="••••••••"
+    />
+
+    <button
+      type="submit"
+      class="btn btn-primary login-submit"
+      [disabled]="cargando()"
+    >
+      {{ cargando()
+          ? 'Ingresando...'
+          : 'Ingresar'
+      }}
+    </button>
+
+  }
+
+
+  <!-- ===================================================
+       MENSAJE INFORMATIVO
+       =================================================== -->
+
+  @if (infoMensaje()) {
+
+    <p class="login-info">
+      {{ infoMensaje() }}
+    </p>
+
+  }
+
+
+  <!-- ===================================================
+       MENSAJE DE ERROR
+       =================================================== -->
+
+  @if (errorMensaje()) {
+
+    <p class="login-error">
+      {{ errorMensaje() }}
+    </p>
+
+  }
+
+
+  <!-- ===================================================
+       MÉTODO ALTERNATIVO
+       =================================================== -->
+
+  @if (!otpEnviado()) {
+
+  <div class="login-method-divider">
+    <span>o</span>
+  </div>
+
+  <div class="login-method-option">
+
+    <p>
+      ¿Prefieres ingresar de otra forma?
+    </p>
+
+    @if (modo() === 'telefono') {
+
+      <button
+        type="button"
+        class="login-alternative"
+        (click)="cambiarModo('correo')"
+      >
+        Ingresar con correo y contraseña
+      </button>
+
+    } @else {
+
+      <button
+        type="button"
+        class="login-alternative"
+        (click)="cambiarModo('telefono')"
+      >
+        Ingresar con número de celular
+      </button>
+
+    }
+
+  </div>
+
+}
+
+
+</form>
+
+
+
 
 
     <!-- =====================================================

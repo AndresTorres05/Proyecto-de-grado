@@ -19,7 +19,7 @@ type ModoLogin = 'correo' | 'telefono';
 })
 export class Login implements OnDestroy {
 
-  modo = signal<ModoLogin>('correo');
+  modo = signal<ModoLogin>('telefono');
 
   // =========================================================
   // CORREO / CONTRASEÑA
@@ -50,6 +50,8 @@ export class Login implements OnDestroy {
 
   cargando = signal(false);
 
+  enviandoCodigo = signal(false);
+
   errorMensaje = signal<string | null>(null);
 
   infoMensaje = signal<string | null>(null);
@@ -74,22 +76,22 @@ export class Login implements OnDestroy {
   // CAMBIAR MODO
   // =========================================================
 
-  cambiarModo(modo: ModoLogin): void {
+cambiarModo(modo: ModoLogin): void {
 
-    this.modo.set(modo);
+  this.modo.set(modo);
 
-    this.otpEnviado.set(false);
+  // Reiniciar el flujo OTP al cambiar de método
+  this.otpEnviado.set(false);
+  this.codigo = '';
 
-    this.codigo = '';
+  // Limpiar mensajes
+  this.errorMensaje.set(null);
+  this.infoMensaje.set(null);
 
-    this.errorMensaje.set(null);
-
-    this.infoMensaje.set(null);
-
-    this.detenerContador();
-
-    this.segundosReenvio.set(0);
-  }
+  // Reiniciar contador
+  this.detenerContador();
+  this.segundosReenvio.set(0);
+}
 
 
   // =========================================================
@@ -134,7 +136,7 @@ export class Login implements OnDestroy {
     // Enviar OTP
     // ---------------------------------------------------------
 
-    this.cargando.set(true);
+    this.enviandoCodigo.set(true);
 
     this.authService
       .enviarOtp(this.telefonoCompleto)
@@ -142,7 +144,7 @@ export class Login implements OnDestroy {
 
         next: () => {
 
-          this.cargando.set(false);
+          this.enviandoCodigo.set(false);
 
           this.otpEnviado.set(true);
 
@@ -156,7 +158,7 @@ export class Login implements OnDestroy {
 
         error: (error) => {
 
-          this.cargando.set(false);
+          this.enviandoCodigo.set(false);
 
           console.error(
             'Error al enviar código:',
