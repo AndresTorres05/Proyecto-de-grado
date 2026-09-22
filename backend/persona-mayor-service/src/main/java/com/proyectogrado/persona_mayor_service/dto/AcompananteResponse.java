@@ -1,0 +1,9 @@
+package com.proyectogrado.persona_mayor_service.dto;
+
+public record AcompananteResponse(
+        Integer idUsuario,
+        String nombre,
+        String telefono,
+        String parentesco
+) {
+}
