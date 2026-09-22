@@ -431,6 +431,27 @@
 
       }
 
+
+      <div class="login-terms">
+  <label class="login-terms__label">
+    <input
+      type="checkbox"
+      name="aceptaTerminos"
+      [(ngModel)]="aceptaTerminos"
+    />
+
+    <span>
+      Acepto los
+<a
+  href="#"
+  (click)="abrirTerminos(); $event.preventDefault()"
+>
+  términos y condiciones
+</a>
+    </span>
+  </label>
+</div>
+
       <!-- ================================================= -->
       <!-- BOTÓN CREAR CUENTA -->
       <!-- ================================================= -->
@@ -469,4 +490,61 @@
 
   </div>
 
+  @if (mostrarTerminos) {
+
+  <div class="terms-modal">
+
+    <div class="terms-modal__content">
+
+      <button
+        type="button"
+        class="terms-modal__close"
+        (click)="cerrarTerminos()"
+        aria-label="Cerrar"
+      >
+        ×
+      </button>
+
+      <h2>Términos y condiciones</h2>
+
+      <p>
+        Al crear una cuenta en VITA+, aceptas utilizar la plataforma
+        de manera responsable y proporcionar información verdadera,
+        completa y actualizada. La información registrada será utilizada
+        para las funcionalidades propias de la plataforma y para apoyar
+        la gestión y atención de las personas mayores.
+      </p>
+
+      <p>
+        El usuario es responsable de mantener la confidencialidad de sus credenciales y de la información proporcionada 
+        durante el registro y uso de VITA+. Este es un proyecto académico desarrollado en el marco del Proyecto de Grado 
+        de Ingeniería de Sistemas, por lo que la plataforma tiene un alcance principalmente académico, de desarrollo y 
+        demostración de las funcionalidades propuestas. La información registrada en la aplicación será utilizada 
+        exclusivamente para permitir el funcionamiento de las funcionalidades implementadas en VITA+ y para los fines 
+        propios del proyecto, como la gestión, consulta y organización de la información necesaria para prestar los servicios
+         de la plataforma. El tratamiento de esta información se limita al entorno de la aplicación y no implica su 
+         comercialización, venta o divulgación pública. La información almacenada solo podrá ser consultada por el usuario al 
+         que pertenece y por las personas u organizaciones que este haya autorizado o a las que haya otorgado los permisos 
+         correspondientes dentro de la plataforma. Dichos permisos tienen como finalidad facilitar las funcionalidades de 
+         acompañamiento, gestión y colaboración contempladas por VITA+, y el acceso estará sujeto a las restricciones definidas 
+         para cada tipo de usuario. Al continuar con el registro, manifiestas que has leído, comprendido y aceptado estos 
+         términos y condiciones, así como el alcance del tratamiento de la información que proporciones dentro de VITA+ para 
+         las finalidades descritas.
+      </p>
+
+      <button
+        type="button"
+        class="btn btn-primary terms-modal__button"
+        (click)="cerrarTerminos()"
+      >
+        Cerrar
+      </button>
+
+    </div>
+
+  </div>
+
+}
+
 </div>
+

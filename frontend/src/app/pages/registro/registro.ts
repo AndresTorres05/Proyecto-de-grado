@@ -18,6 +18,8 @@ export class Registro implements OnDestroy {
 
   nombreUsuario = '';
   rol = '';
+  aceptaTerminos = false;
+  mostrarTerminos = false;
 
   // =========================================================
   // CORREO Y CONTRASEÑA
@@ -234,18 +236,32 @@ export class Registro implements OnDestroy {
     }, 1000);
   }
 
+
+  abrirTerminos(): void {
+  this.mostrarTerminos = true;
+}
+
+cerrarTerminos(): void {
+  this.mostrarTerminos = false;
+}
+
   // =========================================================
   // SUBMIT PRINCIPAL
   // =========================================================
 
-  onSubmit(): void {
+onSubmit(): void {
 
-    this.errorMensaje.set(null);
+  this.errorMensaje.set(null);
 
-    // Todos los roles se registran con correo + contraseña
-    this.registrarConContrasena();
+  if (!this.aceptaTerminos) {
+    this.errorMensaje.set(
+      'Debes aceptar los términos y condiciones para crear tu cuenta.'
+    );
+    return;
+  }
 
-    
+  // Todos los roles se registran con correo + contraseña
+  this.registrarConContrasena();
 }
 
   // =========================================================

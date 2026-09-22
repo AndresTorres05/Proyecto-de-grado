@@ -169,3 +169,79 @@
   margin-top: 14px;
   margin-bottom: 0;
 }
+
+.login-terms {
+  margin-top: 16px;
+}
+
+.login-terms a {
+  color: var(--vita-orange);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-terms a:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Términos y condiciones ---------- */
+
+.terms-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.terms-modal__content {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 32px;
+  background: var(--vita-white);
+  border-radius: var(--radius-md);
+  border-top: 3px solid var(--vita-orange);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.terms-modal__content h2 {
+  margin: 0 32px 20px 0;
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  color: var(--vita-navy);
+}
+
+.terms-modal__content p {
+  margin: 0 0 16px;
+  color: var(--vita-text-gray);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+.terms-modal__close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  border: none;
+  background: transparent;
+  color: var(--vita-text-gray);
+  font-size: 1.7rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.terms-modal__close:hover {
+  color: var(--vita-navy);
+}
+
+.terms-modal__button {
+  margin-top: 8px;
+  width: 100%;
+}
