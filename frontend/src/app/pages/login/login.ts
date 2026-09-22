@@ -138,40 +138,70 @@ cambiarModo(modo: ModoLogin): void {
 
     this.enviandoCodigo.set(true);
 
-    this.authService
-      .enviarOtp(this.telefonoCompleto)
-      .subscribe({
+this.authService
+  .telefonoExiste(this.telefonoCompleto)
+  .subscribe({
 
-        next: () => {
+    next: (existe) => {
 
-          this.enviandoCodigo.set(false);
+      if (!existe) {
+        this.enviandoCodigo.set(false);
 
-          this.otpEnviado.set(true);
+        this.errorMensaje.set(
+          'No existe una cuenta asociada a este número de celular.'
+        );
 
-          this.infoMensaje.set(
-            'Código solicitado. Puede tardar unos segundos en llegar.'
-          );
+        return;
+      }
 
-          // Comenzar contador de 30 segundos
-          this.iniciarContador();
-        },
+      this.authService
+        .enviarOtp(this.telefonoCompleto)
+        .subscribe({
 
-        error: (error) => {
+          next: () => {
 
-          this.enviandoCodigo.set(false);
+            this.enviandoCodigo.set(false);
 
-          console.error(
-            'Error al enviar código:',
-            error
-          );
+            this.otpEnviado.set(true);
 
-          this.errorMensaje.set(
-            'No se pudo enviar el código. Verifica el número.'
-          );
-        }
-      });
+            this.infoMensaje.set(
+              'Código solicitado. Puede tardar unos segundos en llegar.'
+            );
+
+            this.iniciarContador();
+          },
+
+          error: (error) => {
+
+            this.enviandoCodigo.set(false);
+
+            console.error(
+              'Error al enviar código:',
+              error
+            );
+
+            this.errorMensaje.set(
+              'No se pudo enviar el código. Verifica el número.'
+            );
+          }
+        });
+    },
+
+    error: (error) => {
+
+      this.enviandoCodigo.set(false);
+
+      console.error(
+        'Error al verificar el teléfono:',
+        error
+      );
+
+      this.errorMensaje.set(
+        'No se pudo verificar el número. Intenta nuevamente.'
+      );
+    }
+  });
   }
-
 
   // =========================================================
   // INICIAR CONTADOR

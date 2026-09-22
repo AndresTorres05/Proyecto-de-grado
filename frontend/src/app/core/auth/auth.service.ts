@@ -92,6 +92,15 @@ export class AuthService {
       );
   }
 
+  telefonoExiste(telefono: string): Observable<boolean> {
+  return this.http.get<boolean>(
+    `${this.apiUrl}/telefono-existe`,
+    {
+      params: { telefono }
+    }
+  );
+}
+
   // El envío de OTP vive en messaging-backend (/api/otp/send),
   // no en auth-backend. Espera "phoneNumber", no "telefono", y
   // responde {success, message}, no un LoginResponse.

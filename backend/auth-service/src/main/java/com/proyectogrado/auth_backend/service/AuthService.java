@@ -148,6 +148,14 @@ public class AuthService {
         return generarRespuestaLogin(usuario, "Inicio de sesión exitoso");
     }
 
+    public boolean existeTelefono(String telefono) {
+    if (telefono == null || telefono.isBlank()) {
+        return false;
+    }
+
+        return usuarioRepository.existsByTelefono(telefono);
+    }
+
     private LoginResponse generarRespuestaLogin(Usuario usuario, String mensaje) {
 
         List<UsuarioRol> usuariosRoles =

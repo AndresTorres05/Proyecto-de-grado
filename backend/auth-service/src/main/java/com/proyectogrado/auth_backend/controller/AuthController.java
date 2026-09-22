@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -95,4 +98,13 @@ public class AuthController {
                     .body(response);
         }
     }
+
+    @GetMapping("/telefono-existe")
+public ResponseEntity<Boolean> telefonoExiste(
+        @RequestParam String telefono
+) {
+    return ResponseEntity.ok(
+            authService.existeTelefono(telefono)
+    );
+}
 }
