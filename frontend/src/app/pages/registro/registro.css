@@ -245,3 +245,9 @@
   margin-top: 8px;
   width: 100%;
 }
+
+.required-mark {
+  color: var(--vita-orange);
+  margin-left: 3px;
+  font-weight: 700;
+}

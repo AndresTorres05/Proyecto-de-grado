@@ -44,7 +44,7 @@
         class="login-label"
         for="rol"
       >
-        Tipo de usuario
+        Tipo de usuario <span class="required-mark">*</span>
       </label>
 
       <select
@@ -82,6 +82,7 @@
   for="nombreUsuario"
 >
   {{ rol === 'ORGANIZACION' ? 'Nombre de la organización' : 'Nombre' }}
+<span class="required-mark">*</span>
 </label>
 
 <input
@@ -109,7 +110,7 @@
           class="login-label"
           for="telefono"
         >
-          Número de celular
+          Número de celular <span class="required-mark">*</span>
         </label>
 
         <div class="login-phone-row">
@@ -209,7 +210,7 @@
             class="login-label"
             for="fechaNacimiento"
           >
-            Fecha de nacimiento
+            Fecha de nacimiento <span class="required-mark">*</span>
           </label>
 
           <input
@@ -225,7 +226,7 @@
             class="login-label"
             for="genero"
           >
-            Género
+            Género <span class="required-mark">*</span>
           </label>
 
           <select
@@ -258,6 +259,7 @@
           for="direccion"
         >
           {{ rol === 'ORGANIZACION' ? 'Dirección / sede' : 'Dirección' }}
+<span class="required-mark">*</span>
         </label>
 
         <input
