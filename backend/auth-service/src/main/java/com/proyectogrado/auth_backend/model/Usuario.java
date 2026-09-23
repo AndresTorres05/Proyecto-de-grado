@@ -2,6 +2,7 @@ package com.proyectogrado.auth_backend.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "usuario")
@@ -23,6 +24,15 @@ public class Usuario {
 
     @Column(name = "telefono", unique = true)
     private String telefono;
+
+    @Column(name = "fecha_nacimiento")
+    private LocalDate fechaNacimiento;
+
+    @Column(name = "genero")
+    private String genero;
+
+    @Column(name = "direccion")
+    private String direccion;
 
     @Column(name = "id_organizacion")
     private Integer idOrganizacion;
@@ -77,6 +87,30 @@ public class Usuario {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
+
+    public LocalDate getFechaNacimiento() {
+    return fechaNacimiento;
+}
+
+public void setFechaNacimiento(LocalDate fechaNacimiento) {
+    this.fechaNacimiento = fechaNacimiento;
+}
+
+public String getGenero() {
+    return genero;
+}
+
+public void setGenero(String genero) {
+    this.genero = genero;
+}
+
+public String getDireccion() {
+    return direccion;
+}
+
+public void setDireccion(String direccion) {
+    this.direccion = direccion;
+}
 
     public Integer getIdOrganizacion() {
         return idOrganizacion;

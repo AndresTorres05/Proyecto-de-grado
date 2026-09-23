@@ -10,14 +10,11 @@ public class RegistroRequest {
     // Obligatorio SOLO cuando el registro es por telefono (sin correo/contrasena)
     private String codigo;
 
-    // Solo para PERSONA_MAYOR
+    // Persona mayor, acompañante y voluntario    
     private String fechaNacimiento;
     private String genero;
-
-    // PERSONA_MAYOR y ORGANIZACION
     private String direccion;
 
-    // Solo para ORGANIZACION
     private String telefono;
 
     // Solo para VOLUNTARIO

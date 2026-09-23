@@ -257,6 +257,16 @@ public class AuthService {
         usuario.setNombreUsuario(request.getNombreUsuario().trim());
         usuario.setTelefono(telefono);
 
+        if (request.getFechaNacimiento() != null
+        && !request.getFechaNacimiento().isBlank()) {
+    usuario.setFechaNacimiento(
+            LocalDate.parse(request.getFechaNacimiento())
+    );
+}
+
+usuario.setGenero(request.getGenero());
+usuario.setDireccion(request.getDireccion());
+
         if (correo != null) {
             usuario.setCorreo(correo);
         }
@@ -279,35 +289,26 @@ public class AuthService {
 
         switch (rolNombre) {
 
-            case "PERSONA_MAYOR" -> {
-                PersonaMayor personaMayor = new PersonaMayor(usuarioGuardado);
-
-                if (request.getFechaNacimiento() != null
-                        && !request.getFechaNacimiento().isBlank()) {
-                    personaMayor.setFechaNacimiento(
-                            LocalDate.parse(request.getFechaNacimiento())
-                    );
-                }
-
-                personaMayor.setGenero(request.getGenero());
-                personaMayor.setDireccion(request.getDireccion());
-
-                personaMayorRepository.save(personaMayor);
-            }
+case "PERSONA_MAYOR" -> {
+    PersonaMayor personaMayor = new PersonaMayor(usuarioGuardado);
+    personaMayorRepository.save(personaMayor);
+}
 
             case "ACOMPANANTE" -> {
                 Acompanante acompanante = new Acompanante(usuarioGuardado, null);
                 acompananteRepository.save(acompanante);
             }
 
-            case "ORGANIZACION" -> {
-                Organizacion organizacion = new Organizacion();
-                organizacion.setDireccion(request.getDireccion());
-                organizacion = organizacionRepository.save(organizacion);
+case "ORGANIZACION" -> {
+    Organizacion organizacion = new Organizacion();
+    organizacion.setNombre(request.getNombreUsuario());
+    organizacion.setDireccion(request.getDireccion());
 
-                usuarioGuardado.setIdOrganizacion(organizacion.getIdOrganizacion());
-                usuarioRepository.save(usuarioGuardado);
-            }
+    organizacion = organizacionRepository.save(organizacion);
+
+    usuarioGuardado.setIdOrganizacion(organizacion.getIdOrganizacion());
+    usuarioRepository.save(usuarioGuardado);
+}
 
             case "VOLUNTARIO" -> voluntarioRepository.save(
                     new Voluntario(usuarioGuardado, request.getDisponibilidad())
@@ -382,5 +383,42 @@ public class AuthService {
                     "La contraseña debe tener mínimo 6 caracteres"
             );
         }
+        String rol = request.getRol().trim().toUpperCase();
+
+if (rol.equals("PERSONA_MAYOR")
+        || rol.equals("ACOMPANANTE")
+        || rol.equals("VOLUNTARIO")) {
+
+    if (request.getFechaNacimiento() == null
+            || request.getFechaNacimiento().isBlank()) {
+        throw new RuntimeException(
+                "La fecha de nacimiento es obligatoria"
+        );
+    }
+
+    if (request.getGenero() == null
+            || request.getGenero().isBlank()) {
+        throw new RuntimeException(
+                "El género es obligatorio"
+        );
+    }
+
+    if (request.getDireccion() == null
+            || request.getDireccion().isBlank()) {
+        throw new RuntimeException(
+                "La dirección es obligatoria"
+        );
+    }
+}
+
+if (rol.equals("ORGANIZACION")) {
+
+    if (request.getDireccion() == null
+            || request.getDireccion().isBlank()) {
+        throw new RuntimeException(
+                "La dirección de la organización es obligatoria"
+        );
+    }
+}
     }
 }

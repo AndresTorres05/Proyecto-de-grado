@@ -11,6 +11,9 @@ public class Organizacion {
     @Column(name = "id_organizacion")
     private Integer idOrganizacion;
 
+    @Column(name = "nombre", nullable = false)
+    private String nombre;
+
     @Column(name = "direccion")
     private String direccion;
 
@@ -24,6 +27,14 @@ public class Organizacion {
     public void setIdOrganizacion(Integer idOrganizacion) {
         this.idOrganizacion = idOrganizacion;
     }
+
+    public String getNombre() {
+    return nombre;
+}
+
+public void setNombre(String nombre) {
+    this.nombre = nombre;
+}
 
     public String getDireccion() {
         return direccion;
