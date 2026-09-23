@@ -36,28 +36,7 @@
       class="login-form"
     >
 
-      <!-- ================================================= -->
-      <!-- NOMBRE -->
-      <!-- ================================================= -->
-
-      <label
-        class="login-label"
-        for="nombreUsuario"
-      >
-        Nombre
-      </label>
-
-      <input
-        id="nombreUsuario"
-        name="nombreUsuario"
-        type="text"
-        class="login-input"
-        [(ngModel)]="nombreUsuario"
-        required
-        placeholder="Tu nombre"
-      />
-
-      <!-- ================================================= -->
+<!-- ================================================= -->
       <!-- ROL -->
       <!-- ================================================= -->
 
@@ -95,11 +74,36 @@
       </select>
 
       <!-- ================================================= -->
+      <!-- NOMBRE -->
+      <!-- ================================================= -->
+
+<label
+  class="login-label"
+  for="nombreUsuario"
+>
+  {{ rol === 'ORGANIZACION' ? 'Nombre de la organización' : 'Nombre' }}
+</label>
+
+<input
+  id="nombreUsuario"
+  name="nombreUsuario"
+  type="text"
+  class="login-input"
+  [(ngModel)]="nombreUsuario"
+  required
+  [placeholder]="rol === 'ORGANIZACION'
+    ? 'Nombre de la organización'
+    : 'Tu nombre'"
+/>
+
+      
+
+      <!-- ================================================= -->
       <!-- PERSONA MAYOR / ACOMPAÑANTE -->
       <!-- TELÉFONO -->
       <!-- ================================================= -->
 
-      @if (esRegistroPorTelefono) {
+      @if (rol) {
 
         <label
           class="login-label"
@@ -124,7 +128,6 @@
             required
             maxlength="10"
             placeholder="3001234567"
-            [disabled]="otpEnviado()"
           />
 
         </div>
@@ -170,17 +173,37 @@
           placeholder="Mínimo 6 caracteres"
         />
 
+        <label
+          class="login-label"
+          for="confirmarContrasena"
+        >
+          Confirmar contraseña
+        </label>
+
+        <input
+          id="confirmarContrasena"
+          name="confirmarContrasena"
+          type="password"
+          class="login-input"
+          [(ngModel)]="confirmarContrasena"
+          minlength="6"
+          placeholder="Repite tu contraseña"
+        />
+
         <p class="login-info">
           Si ingresas una contraseña, también debes ingresar
           un correo electrónico.
-          Si no ingresas contraseña, recibirás un código por SMS.
         </p>
 
         <!-- ================================================= -->
         <!-- DATOS PERSONA MAYOR -->
         <!-- ================================================= -->
 
-        @if (rol === 'PERSONA_MAYOR') {
+        @if (
+          rol === 'PERSONA_MAYOR' ||
+          rol === 'ACOMPANANTE' ||
+          rol === 'VOLUNTARIO'
+        ) {
 
           <label
             class="login-label"
@@ -195,6 +218,7 @@
             type="date"
             class="login-input"
             [(ngModel)]="fechaNacimiento"
+            required
           />
 
           <label
@@ -209,6 +233,7 @@
             name="genero"
             class="login-input"
             [(ngModel)]="genero"
+            required
           >
 
             <option
@@ -227,189 +252,36 @@
             }
 
           </select>
-
-          <label
-            class="login-label"
-            for="direccionPersonaMayor"
-          >
-            Dirección
-          </label>
-
-          <input
-            id="direccionPersonaMayor"
-            name="direccionPersonaMayor"
-            type="text"
-            class="login-input"
-            [(ngModel)]="direccionPersonaMayor"
-            placeholder="Tu dirección"
-          />
-
         }
-
-        <!-- ================================================= -->
-        <!-- OTP -->
-        <!-- ================================================= -->
-
-        @if (otpEnviado()) {
-
-          <label
-            class="login-label"
-            for="codigo"
-          >
-            Código de verificación
-          </label>
-
-          <input
-            id="codigo"
-            name="codigo"
-            type="text"
-            inputmode="numeric"
-            maxlength="6"
-            class="login-input"
-            [(ngModel)]="codigo"
-            placeholder="123456"
-          />
-
-          <!-- ================================================= -->
-          <!-- TEMPORIZADOR -->
-          <!-- ================================================= -->
-
-          @if (segundosReenvio() > 0) {
-
-            <p class="login-info">
-              Puedes solicitar otro código en
-              {{ segundosReenvio() }} segundos.
-            </p>
-
-          } @else {
-
-            <button
-              type="button"
-              class="btn btn-primary login-submit"
-              [disabled]="cargando()"
-              (click)="enviarCodigo()"
-            >
-
-              {{
-                cargando()
-                  ? 'Enviando...'
-                  : 'Reenviar código'
-              }}
-
-            </button>
-
-          }
-
-        }
-
-      }
-
-      <!-- ================================================= -->
-      <!-- ORGANIZACIÓN / VOLUNTARIO -->
-      <!-- ================================================= -->
-
-      @if (!esRegistroPorTelefono && rol) {
-
-        <label
+                <label
           class="login-label"
-          for="correo"
+          for="direccion"
         >
-          Correo
+          {{ rol === 'ORGANIZACION' ? 'Dirección / sede' : 'Dirección' }}
         </label>
 
         <input
-          id="correo"
-          name="correo"
-          type="email"
+          id="direccion"
+          name="direccion"
+          type="text"
           class="login-input"
-          [(ngModel)]="correo"
+          [(ngModel)]="direccion"
           required
-          placeholder="tucorreo@ejemplo.com"
+          [placeholder]="rol === 'ORGANIZACION'
+            ? 'Dirección de la organización'
+            : 'Tu dirección'"
         />
 
-        <label
-          class="login-label"
-          for="contrasena"
-        >
-          Contraseña
-        </label>
+        }
 
-        <input
-          id="contrasena"
-          name="contrasena"
-          type="password"
-          class="login-input"
-          [(ngModel)]="contrasena"
-          required
-          minlength="6"
-          placeholder="Mínimo 6 caracteres"
-        />
-
-      }
+      
 
       <!-- ================================================= -->
       <!-- ORGANIZACIÓN -->
       <!-- ================================================= -->
 
-      @if (rol === 'ORGANIZACION') {
 
-        <label
-          class="login-label"
-          for="direccionOrganizacion"
-        >
-          Dirección
-        </label>
 
-        <input
-          id="direccionOrganizacion"
-          name="direccionOrganizacion"
-          type="text"
-          class="login-input"
-          [(ngModel)]="direccionOrganizacion"
-          placeholder="Dirección de la organización"
-        />
-
-        <label
-          class="login-label"
-          for="telefonoOrganizacion"
-        >
-          Teléfono de contacto
-        </label>
-
-        <input
-          id="telefonoOrganizacion"
-          name="telefonoOrganizacion"
-          type="tel"
-          class="login-input"
-          [(ngModel)]="telefonoOrganizacion"
-          placeholder="Teléfono de la organización"
-        />
-
-      }
-
-      <!-- ================================================= -->
-      <!-- VOLUNTARIO -->
-      <!-- ================================================= -->
-
-      @if (rol === 'VOLUNTARIO') {
-
-        <label
-          class="login-label"
-          for="disponibilidad"
-        >
-          Disponibilidad
-        </label>
-
-        <input
-          id="disponibilidad"
-          name="disponibilidad"
-          type="text"
-          class="login-input"
-          [(ngModel)]="disponibilidad"
-          placeholder="Ej. Fines de semana, tardes entre semana"
-        />
-
-      }
 
       <!-- ================================================= -->
       <!-- MENSAJES -->

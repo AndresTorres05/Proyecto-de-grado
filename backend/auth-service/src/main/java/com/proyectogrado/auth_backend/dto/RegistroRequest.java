@@ -7,9 +7,6 @@ public class RegistroRequest {
     private String contrasena;
     private String rol;
 
-    // Obligatorio SOLO cuando el registro es por telefono (sin correo/contrasena)
-    private String codigo;
-
     // Persona mayor, acompañante y voluntario    
     private String fechaNacimiento;
     private String genero;
@@ -85,14 +82,6 @@ public class RegistroRequest {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
-    }
-
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
     }
 
     public String getDisponibilidad() {

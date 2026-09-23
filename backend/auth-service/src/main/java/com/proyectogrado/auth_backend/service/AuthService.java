@@ -183,10 +183,11 @@ public class AuthService {
         );
     }
 
-    // =========================================================
-    // REGISTRO (telefono siempre obligatorio;
-    // correo+contrasena juntos y opcionales)
-    // =========================================================
+// =========================================================
+// REGISTRO
+// telefono obligatorio;
+// correo + contrasena opcionales, pero deben ir juntos
+// =========================================================
 
     @Transactional
     public LoginResponse registrar(RegistroRequest request) {
@@ -226,28 +227,6 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException(
                         "El rol solicitado no existe: " + rolNombre
                 ));
-
-        // -----------------------------------------------------
-        // Si NO hay correo/contrasena, el telefono se confirma
-        // con OTP verificado contra messaging-backend.
-        // -----------------------------------------------------
-        if (!registroConContrasena) {
-
-            if (request.getCodigo() == null || request.getCodigo().isBlank()) {
-                throw new RuntimeException(
-                        "El código de verificación es obligatorio"
-                );
-            }
-
-            boolean codigoValido = messagingClient.verificarOtp(
-                    telefono,
-                    request.getCodigo().trim()
-            );
-
-            if (!codigoValido) {
-                throw new RuntimeException("Código incorrecto o expirado");
-            }
-        }
 
         // -----------------------------------------------------
         // Crear usuario

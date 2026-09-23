@@ -1,4 +1,4 @@
-import { Component, OnDestroy, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
@@ -10,7 +10,7 @@ import { AuthService } from '../../core/auth/auth.service';
   templateUrl: './registro.html',
   styleUrl: './registro.css'
 })
-export class Registro implements OnDestroy {
+export class Registro {
 
   // =========================================================
   // CAMPOS COMUNES
@@ -28,36 +28,20 @@ export class Registro implements OnDestroy {
   correo = '';
   contrasena = '';
 
-  // =========================================================
-  // SOLO ORGANIZACIÓN
-  // =========================================================
+// =========================================================
+// DATOS PERSONALES
+// =========================================================
 
-  direccionOrganizacion = '';
-  telefonoOrganizacion = '';
+telefonoLocal = '';
+fechaNacimiento = '';
+genero = '';
+direccion = '';
 
-  // =========================================================
-  // SOLO VOLUNTARIO
-  // =========================================================
+// =========================================================
+// CONFIRMACIÓN DE CONTRASEÑA
+// =========================================================
 
-  disponibilidad = '';
-
-  // =========================================================
-  // TELÉFONO / OTP
-  // PERSONA MAYOR Y ACOMPAÑANTE
-  // =========================================================
-
-  telefonoLocal = '';
-  codigo = '';
-
-  otpEnviado = signal(false);
-
-  // =========================================================
-  // SOLO PERSONA MAYOR
-  // =========================================================
-
-  fechaNacimiento = '';
-  genero = '';
-  direccionPersonaMayor = '';
+confirmarContrasena = '';
 
   // =========================================================
   // ROLES
@@ -76,11 +60,6 @@ export class Registro implements OnDestroy {
     { valor: 'OTRO', etiqueta: 'Otro' }
   ];
 
-  private readonly ROLES_POR_TELEFONO = [
-    'PERSONA_MAYOR',
-    'ACOMPANANTE'
-  ];
-
   // =========================================================
   // ESTADOS
   // =========================================================
@@ -89,23 +68,9 @@ export class Registro implements OnDestroy {
   errorMensaje = signal<string | null>(null);
   infoMensaje = signal<string | null>(null);
 
-  // =========================================================
-  // TEMPORIZADOR OTP
-  // =========================================================
 
-  segundosReenvio = signal(0);
-
-  private intervaloReenvio?: ReturnType<typeof setInterval>;
 
   constructor(private authService: AuthService) {}
-
-  // =========================================================
-  // ¿ES PERSONA MAYOR O ACOMPAÑANTE?
-  // =========================================================
-
-  get esRegistroPorTelefono(): boolean {
-    return this.ROLES_POR_TELEFONO.includes(this.rol);
-  }
 
   // =========================================================
   // TELÉFONO COMPLETO
@@ -123,119 +88,18 @@ export class Registro implements OnDestroy {
   // CAMBIO DE ROL
   // =========================================================
 
-  onCambioRol(): void {
+onCambioRol(): void {
+  this.errorMensaje.set(null);
+  this.infoMensaje.set(null);
 
-    this.otpEnviado.set(false);
-
-    this.codigo = '';
-
-    this.errorMensaje.set(null);
-
-    this.infoMensaje.set(null);
-
-    this.segundosReenvio.set(0);
-
-    if (this.intervaloReenvio) {
-
-      clearInterval(this.intervaloReenvio);
-
-      this.intervaloReenvio = undefined;
-    }
-
-  }
-
-  // =========================================================
-  // ENVIAR / REENVIAR OTP
-  // =========================================================
-
-  enviarCodigo(): void {
-
-    this.errorMensaje.set(null);
-    this.infoMensaje.set(null);
-
-    const telefono =
-      this.telefonoLocal.replace(/\D/g, '');
-
-    if (telefono.length !== 10) {
-
-      this.errorMensaje.set(
-        'Ingresa un número de celular válido (10 dígitos)'
-      );
-
-      return;
-    }
-
-    if (this.segundosReenvio() > 0) {
-      return;
-    }
-
-    this.cargando.set(true);
-
-    this.authService
-      .enviarOtp(this.telefonoCompleto)
-      .subscribe({
-
-        next: () => {
-
-          this.cargando.set(false);
-
-          this.otpEnviado.set(true);
-
-          this.iniciarTemporizador();
-
-          this.infoMensaje.set(
-            'Código solicitado. Puede tardar unos segundos en llegar.'
-          );
-        },
-
-        error: () => {
-
-          this.cargando.set(false);
-
-          this.errorMensaje.set(
-            'No se pudo enviar el código. Verifica el número.'
-          );
-        }
-
-      });
-  }
-
-  // =========================================================
-  // TEMPORIZADOR
-  // =========================================================
-
-  private iniciarTemporizador(): void {
-
-    this.segundosReenvio.set(30);
-
-    if (this.intervaloReenvio) {
-
-      clearInterval(this.intervaloReenvio);
-    }
-
-    this.intervaloReenvio = setInterval(() => {
-
-      const actual = this.segundosReenvio();
-
-      if (actual <= 1) {
-
-        this.segundosReenvio.set(0);
-
-        if (this.intervaloReenvio) {
-
-          clearInterval(this.intervaloReenvio);
-
-          this.intervaloReenvio = undefined;
-        }
-
-      } else {
-
-        this.segundosReenvio.set(actual - 1);
-      }
-
-    }, 1000);
-  }
-
+  this.correo = '';
+  this.contrasena = '';
+  this.confirmarContrasena = '';
+  this.telefonoLocal = '';
+  this.fechaNacimiento = '';
+  this.genero = '';
+  this.direccion = '';
+}
 
   abrirTerminos(): void {
   this.mostrarTerminos = true;
@@ -250,7 +114,6 @@ cerrarTerminos(): void {
   // =========================================================
 
 onSubmit(): void {
-
   this.errorMensaje.set(null);
 
   if (!this.aceptaTerminos) {
@@ -260,264 +123,166 @@ onSubmit(): void {
     return;
   }
 
-  // Todos los roles se registran con correo + contraseña
-  this.registrarConContrasena();
+  this.registrar();
 }
 
-  // =========================================================
-  // REGISTRO DIRECTO CON CORREO + CONTRASEÑA
-  // =========================================================
+// =========================================================
+// REGISTRO
+// =========================================================
 
-  private registrarConContrasena(): void {
+private registrar(): void {
 
-    if (!this.correo.trim()) {
+  const telefono = this.telefonoLocal.replace(/\D/g, '');
+  const correo = this.correo.trim();
+  const contrasena = this.contrasena.trim();
+  const confirmarContrasena = this.confirmarContrasena.trim();
 
+  // Teléfono obligatorio para todos los perfiles
+  if (telefono.length !== 10) {
+    this.errorMensaje.set(
+      'Ingresa un número de celular válido (10 dígitos).'
+    );
+    return;
+  }
+
+  // Correo y contraseña deben ir juntos
+  if (correo && !contrasena) {
+    this.errorMensaje.set(
+      'Si ingresas un correo, debes ingresar una contraseña.'
+    );
+    return;
+  }
+
+  if (!correo && contrasena) {
+    this.errorMensaje.set(
+      'Si ingresas una contraseña, debes ingresar un correo.'
+    );
+    return;
+  }
+
+  // Validar contraseña
+  if (contrasena && contrasena.length < 6) {
+    this.errorMensaje.set(
+      'La contraseña debe tener mínimo 6 caracteres.'
+    );
+    return;
+  }
+
+  // Confirmación de contraseña
+  if (contrasena && !confirmarContrasena) {
+    this.errorMensaje.set(
+      'Debes confirmar la contraseña.'
+    );
+    return;
+  }
+
+  if (contrasena && contrasena !== confirmarContrasena) {
+    this.errorMensaje.set(
+      'Las contraseñas no coinciden.'
+    );
+    return;
+  }
+
+  // Datos obligatorios para perfiles personales
+  if (
+    this.rol === 'PERSONA_MAYOR' ||
+    this.rol === 'ACOMPANANTE' ||
+    this.rol === 'VOLUNTARIO'
+  ) {
+
+    if (!this.fechaNacimiento) {
       this.errorMensaje.set(
-        'El correo es obligatorio para crear una cuenta con contraseña.'
+        'La fecha de nacimiento es obligatoria.'
       );
-
       return;
     }
 
-    if (!this.contrasena.trim()) {
-
+    if (!this.genero) {
       this.errorMensaje.set(
-        'La contraseña es obligatoria.'
+        'El género es obligatorio.'
       );
-
       return;
     }
 
-    if (this.contrasena.trim().length < 6) {
-
+    if (!this.direccion.trim()) {
       this.errorMensaje.set(
-        'La contraseña debe tener mínimo 6 caracteres.'
+        'La dirección es obligatoria.'
       );
-
       return;
     }
+  }
 
-    // Teléfono obligatorio para Persona Mayor/Acompañante
-    if (this.esRegistroPorTelefono) {
+  // Dirección obligatoria para organización
+  if (
+    this.rol === 'ORGANIZACION' &&
+    !this.direccion.trim()
+  ) {
+    this.errorMensaje.set(
+      'La dirección de la organización es obligatoria.'
+    );
+    return;
+  }
 
-      const telefono =
-        this.telefonoLocal.replace(/\D/g, '');
+  this.cargando.set(true);
 
-      if (telefono.length !== 10) {
+  this.authService.registro({
+
+    nombreUsuario: this.nombreUsuario.trim(),
+
+    correo: correo || undefined,
+
+    contrasena: contrasena || undefined,
+
+    rol: this.rol,
+
+    telefono: this.telefonoCompleto,
+
+    fechaNacimiento:
+      this.rol === 'PERSONA_MAYOR' ||
+      this.rol === 'ACOMPANANTE' ||
+      this.rol === 'VOLUNTARIO'
+        ? this.fechaNacimiento
+        : undefined,
+
+    genero:
+      this.rol === 'PERSONA_MAYOR' ||
+      this.rol === 'ACOMPANANTE' ||
+      this.rol === 'VOLUNTARIO'
+        ? this.genero
+        : undefined,
+
+    direccion: this.direccion.trim()
+
+  }).subscribe({
+
+    next: (response) => {
+
+      this.cargando.set(false);
+
+      this.authService.redirigirSegunRol(
+        response.rol
+      );
+    },
+
+    error: (err) => {
+
+      this.cargando.set(false);
+
+      if (err.status === 400 || err.status === 409) {
 
         this.errorMensaje.set(
-          'Ingresa un número de celular válido (10 dígitos).'
+          err.error?.mensaje ||
+          'Revisa los datos ingresados.'
         );
 
-        return;
+      } else {
+
+        this.errorMensaje.set(
+          'No se pudo conectar con el servidor. Intenta de nuevo.'
+        );
       }
     }
 
-    this.cargando.set(true);
-
-    this.authService.registro({
-
-      nombreUsuario: this.nombreUsuario,
-
-      correo: this.correo.trim(),
-
-      contrasena: this.contrasena,
-
-      rol: this.rol,
-
-      // Persona Mayor / Organización
-      direccion:
-        this.rol === 'PERSONA_MAYOR'
-          ? this.direccionPersonaMayor
-          : this.rol === 'ORGANIZACION'
-            ? this.direccionOrganizacion
-            : undefined,
-
-      // Teléfono de Persona Mayor/Acompañante
-      // o teléfono de contacto de Organización
-      telefono:
-        this.esRegistroPorTelefono
-          ? this.telefonoCompleto
-          : this.rol === 'ORGANIZACION'
-            ? this.telefonoOrganizacion
-            : undefined,
-
-      disponibilidad:
-        this.rol === 'VOLUNTARIO'
-          ? this.disponibilidad
-          : undefined,
-
-      fechaNacimiento:
-        this.rol === 'PERSONA_MAYOR'
-          ? this.fechaNacimiento
-          : undefined,
-
-      genero:
-        this.rol === 'PERSONA_MAYOR'
-          ? this.genero
-          : undefined
-
-    }).subscribe({
-
-      next: (response) => {
-
-        this.cargando.set(false);
-
-        this.authService.redirigirSegunRol(
-          response.rol
-        );
-      },
-
-      error: (err) => {
-
-        this.cargando.set(false);
-
-        if (err.status === 409) {
-
-          if (
-            err.error?.mensaje ===
-            'Ese teléfono ya está registrado'
-          ) {
-
-            this.errorMensaje.set(
-              'Ese teléfono ya está registrado.'
-            );
-
-          } else {
-
-            this.errorMensaje.set(
-              'Ese correo ya está registrado.'
-            );
-          }
-
-        } else if (err.status === 400) {
-
-          this.errorMensaje.set(
-            err.error?.mensaje ||
-            'Revisa los datos ingresados.'
-          );
-
-        } else {
-
-          this.errorMensaje.set(
-            'No se pudo conectar con el servidor. Intenta de nuevo.'
-          );
-        }
-      }
-
-    });
-  }
-
-  // =========================================================
-  // REGISTRO MEDIANTE OTP
-  // =========================================================
-
-  private registrarPorTelefono(): void {
-
-    if (!this.codigo.trim()) {
-
-      this.errorMensaje.set(
-        'Ingresa el código que te llegó por SMS.'
-      );
-
-      return;
-    }
-
-    this.cargando.set(true);
-
-    this.authService.registroOtp({
-
-      telefono: this.telefonoCompleto,
-
-      codigo: this.codigo,
-
-      nombreUsuario: this.nombreUsuario,
-
-      rol: this.rol,
-
-      // Correo opcional para ambos
-      correo:
-        this.correo.trim()
-          ? this.correo.trim()
-          : undefined,
-
-      // Solo Persona Mayor
-      fechaNacimiento:
-        this.rol === 'PERSONA_MAYOR'
-          ? this.fechaNacimiento
-          : undefined,
-
-      genero:
-        this.rol === 'PERSONA_MAYOR'
-          ? this.genero
-          : undefined,
-
-      direccion:
-        this.rol === 'PERSONA_MAYOR'
-          ? this.direccionPersonaMayor
-          : undefined
-
-    }).subscribe({
-
-      next: (response) => {
-
-        this.cargando.set(false);
-
-        this.authService.redirigirSegunRol(
-          response.rol
-        );
-      },
-
-      error: (err) => {
-
-        this.cargando.set(false);
-
-        if (err.status === 401) {
-
-          this.errorMensaje.set(
-            'Código incorrecto o expirado.'
-          );
-
-        } else if (err.status === 409) {
-
-          if (
-            err.error?.mensaje ===
-            'Ese correo ya está registrado'
-          ) {
-
-            this.errorMensaje.set(
-              'Ese correo ya está registrado.'
-            );
-
-          } else {
-
-            this.errorMensaje.set(
-              'Ese teléfono ya está registrado.'
-            );
-          }
-
-        } else {
-
-          this.errorMensaje.set(
-            'No se pudo conectar con el servidor. Intenta de nuevo.'
-          );
-        }
-      }
-
-    });
-  }
-
-  // =========================================================
-  // LIMPIAR TEMPORIZADOR
-  // =========================================================
-
-  ngOnDestroy(): void {
-
-    if (this.intervaloReenvio) {
-
-      clearInterval(this.intervaloReenvio);
-
-      this.intervaloReenvio = undefined;
-    }
-  }
+  });
+}
 }
