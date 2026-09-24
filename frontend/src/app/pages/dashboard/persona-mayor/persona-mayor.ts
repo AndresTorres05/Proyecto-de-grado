@@ -2,7 +2,7 @@ import { Component, OnInit, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Icon } from '../../../shared/icon/icon';
 import { AuthService } from '../../../core/auth/auth.service';
-import { ActividadService, Actividad } from '../../../core/actividades/actividad.service';
+import { ActividadService, ActividadDisponible } from '../../../core/actividades/actividad.service';
 import { GustoService, Gusto, CategoriaGusto } from '../../../core/gustos/gusto.service';
 import { AcompananteService, Acompanante } from '../../../core/acompanantes/acompanante.service';
 import { EmergenciaService } from '../../../core/emergencia/emergencia.service';
@@ -49,7 +49,9 @@ export class PersonaMayorDashboard implements OnInit {
     )[0];
   });
 
-  protected readonly actividades = signal<Actividad[]>([]);
+  // Solo actividades con asistencia confirmada (inscrito) y que no
+  // hayan pasado, ordenadas de la más cercana a la más lejana.
+  protected readonly actividades = signal<ActividadDisponible[]>([]);
 
   protected readonly categorias: CategoriaTab[] = [
     { valor: 'GUSTO', label: 'Gustos', icon: 'heart' },
@@ -91,7 +93,17 @@ export class PersonaMayorDashboard implements OnInit {
   }
 
   ngOnInit(): void {
-    this.actividadService.listar().subscribe((actividades) => this.actividades.set(actividades));
+    this.actividadService.listarDisponibles().subscribe((actividades) => {
+      // Fecha local (YYYY-MM-DD); toISOString() usaría UTC.
+      const hoy = new Date().toLocaleDateString('en-CA');
+      this.actividades.set(
+        actividades
+          .filter((a) => a.inscrito && (!a.fecha || a.fecha >= hoy))
+          .sort((a, b) =>
+            (a.fecha ?? '9999').localeCompare(b.fecha ?? '9999')
+            || (a.hora ?? '').localeCompare(b.hora ?? ''))
+      );
+    });
     this.acompananteService.obtenerAcompanantes().subscribe((acompanantes) =>
       this.acompanante.set(acompanantes[0] ?? null)
     );
