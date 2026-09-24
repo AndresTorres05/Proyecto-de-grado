@@ -16,6 +16,16 @@ public class PersonaMayor {
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
+    // Datos propios de la persona mayor (no van en usuario).
+    @Column(name = "fecha_nacimiento")
+    private LocalDate fechaNacimiento;
+
+    @Column(name = "genero")
+    private String genero;
+
+    @Column(name = "direccion")
+    private String direccion;
+
     public PersonaMayor() {
     }
 
@@ -37,5 +47,29 @@ public class PersonaMayor {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public LocalDate getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public String getGenero() {
+        return genero;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 }

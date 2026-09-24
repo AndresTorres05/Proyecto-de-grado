@@ -183,12 +183,8 @@ private registrar(): void {
     return;
   }
 
-  // Datos obligatorios para perfiles personales
-  if (
-    this.rol === 'PERSONA_MAYOR' ||
-    this.rol === 'ACOMPANANTE' ||
-    this.rol === 'VOLUNTARIO'
-  ) {
+  // Datos personales: solo la persona mayor los registra
+  if (this.rol === 'PERSONA_MAYOR') {
 
     if (!this.fechaNacimiento) {
       this.errorMensaje.set(
@@ -238,20 +234,15 @@ private registrar(): void {
     celular: this.celularCompleto,
 
     fechaNacimiento:
-      this.rol === 'PERSONA_MAYOR' ||
-      this.rol === 'ACOMPANANTE' ||
-      this.rol === 'VOLUNTARIO'
-        ? this.fechaNacimiento
-        : undefined,
+      this.rol === 'PERSONA_MAYOR' ? this.fechaNacimiento : undefined,
 
     genero:
-      this.rol === 'PERSONA_MAYOR' ||
-      this.rol === 'ACOMPANANTE' ||
-      this.rol === 'VOLUNTARIO'
-        ? this.genero
-        : undefined,
+      this.rol === 'PERSONA_MAYOR' ? this.genero : undefined,
 
-    direccion: this.direccion.trim()
+    direccion:
+      this.rol === 'PERSONA_MAYOR' || this.rol === 'ORGANIZACION'
+        ? this.direccion.trim()
+        : undefined
 
   }).subscribe({
 
