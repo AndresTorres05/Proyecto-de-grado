@@ -64,17 +64,17 @@ public class PersonaMayorAcompananteController {
             @RequestHeader("X-User-Id") Integer idPersonaMayor,
             @RequestBody AgregarAcompananteRequest request
     ) {
-        if (request.telefono() == null || request.telefono().isBlank()) {
-            return ResponseEntity.badRequest().body("El teléfono es obligatorio");
+        if (request.celular() == null || request.celular().isBlank()) {
+            return ResponseEntity.badRequest().body("El celular es obligatorio");
         }
 
         UsuarioLookup usuario = usuarioLookupRepository
-                .findByTelefono(request.telefono())
+                .findByCelular(request.celular())
                 .orElse(null);
 
         if (usuario == null) {
             return ResponseEntity.badRequest()
-                    .body("No existe un usuario registrado con ese teléfono");
+                    .body("No existe un usuario registrado con ese celular");
         }
 
         AcompananteLookup acompanante = acompananteLookupRepository
@@ -133,7 +133,7 @@ public class PersonaMayorAcompananteController {
         return new AcompananteResponse(
                 idAcompanante,
                 usuario != null ? usuario.getNombreUsuario() : null,
-                usuario != null ? usuario.getTelefono() : null,
+                usuario != null ? usuario.getCelular() : null,
                 parentesco
         );
     }

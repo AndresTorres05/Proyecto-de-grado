@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 /**
  * Vista de SOLO LECTURA sobre la tabla "usuario", que es dueña de
  * auth-backend. acompanante-service NUNCA crea, edita ni borra usuarios;
- * esto existe solo para poder mostrar nombre/telefono/correo de la
+ * esto existe solo para poder mostrar nombre/celular/correo de la
  * persona mayor en las respuestas de relaciones, sin tener que llamar
  * por HTTP a auth-backend en cada consulta (válido en arquitectura de
  * servicios con BD compartida, NO sería válido en microservicios
@@ -26,7 +26,7 @@ public class UsuarioLookup {
     private String nombreUsuario;
 
     @Column(name = "telefono")
-    private String telefono;
+    private String celular;
 
     @Column(name = "correo")
     private String correo;
@@ -43,8 +43,8 @@ public class UsuarioLookup {
         return nombreUsuario;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getCelular() {
+        return celular;
     }
 
     public String getCorreo() {

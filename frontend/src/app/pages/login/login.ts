@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 
-type ModoLogin = 'correo' | 'telefono';
+type ModoLogin = 'correo' | 'celular';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +19,7 @@ type ModoLogin = 'correo' | 'telefono';
 })
 export class Login implements OnDestroy {
 
-  modo = signal<ModoLogin>('telefono');
+  modo = signal<ModoLogin>('celular');
 
   // =========================================================
   // CORREO / CONTRASEÑA
@@ -30,10 +30,10 @@ export class Login implements OnDestroy {
 
 
   // =========================================================
-  // TELÉFONO / OTP
+  // CELULAR / OTP
   // =========================================================
 
-  telefonoLocal = '';
+  celularLocal = '';
   codigo = '';
 
   otpEnviado = signal(false);
@@ -63,12 +63,12 @@ export class Login implements OnDestroy {
 
 
   // =========================================================
-  // TELÉFONO COMPLETO
+  // CELULAR COMPLETO
   // =========================================================
 
-  get telefonoCompleto(): string {
+  get celularCompleto(): string {
 
-    return `+57${this.telefonoLocal.replace(/\D/g, '')}`;
+    return `+57${this.celularLocal.replace(/\D/g, '')}`;
   }
 
 
@@ -116,13 +116,13 @@ cambiarModo(modo: ModoLogin): void {
 
 
     // ---------------------------------------------------------
-    // Validar teléfono
+    // Validar celular
     // ---------------------------------------------------------
 
-    const telefono =
-      this.telefonoLocal.replace(/\D/g, '');
+    const celular =
+      this.celularLocal.replace(/\D/g, '');
 
-    if (telefono.length !== 10) {
+    if (celular.length !== 10) {
 
       this.errorMensaje.set(
         'Ingresa un número de celular válido (10 dígitos)'
@@ -139,7 +139,7 @@ cambiarModo(modo: ModoLogin): void {
     this.enviandoCodigo.set(true);
 
 this.authService
-  .telefonoExiste(this.telefonoCompleto)
+  .celularExiste(this.celularCompleto)
   .subscribe({
 
     next: (existe) => {
@@ -155,7 +155,7 @@ this.authService
       }
 
       this.authService
-        .enviarOtp(this.telefonoCompleto)
+        .enviarOtp(this.celularCompleto)
         .subscribe({
 
           next: () => {
@@ -192,7 +192,7 @@ this.authService
       this.enviandoCodigo.set(false);
 
       console.error(
-        'Error al verificar el teléfono:',
+        'Error al verificar el celular:',
         error
       );
 
@@ -269,7 +269,7 @@ this.authService
 
     } else {
 
-      this.loginPorTelefono();
+      this.loginPorCelular();
     }
   }
 
@@ -319,10 +319,10 @@ this.authService
 
 
   // =========================================================
-  // LOGIN POR TELÉFONO
+  // LOGIN POR CELULAR
   // =========================================================
 
-  private loginPorTelefono(): void {
+  private loginPorCelular(): void {
 
     if (!this.codigo.trim()) {
 
@@ -338,7 +338,7 @@ this.authService
 
     this.authService
       .loginOtp({
-        telefono: this.telefonoCompleto,
+        celular: this.celularCompleto,
         codigo: this.codigo
       })
       .subscribe({
@@ -368,7 +368,7 @@ this.authService
           } else if (err.status === 404) {
 
             this.errorMensaje.set(
-              'No existe una cuenta con ese teléfono'
+              'No existe una cuenta con ese celular'
             );
 
           } else {

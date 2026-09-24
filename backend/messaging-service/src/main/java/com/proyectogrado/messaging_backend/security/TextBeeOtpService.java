@@ -44,11 +44,11 @@ public class TextBeeOtpService {
     }
 
     /**
-     * Genera y envía un código OTP al teléfono indicado.
+     * Genera y envía un código OTP al celular indicado.
      */
-    public void enviarCodigo(String telefono) {
+    public void enviarCodigo(String celular) {
 
-        validarTelefono(telefono);
+        validarCelular(celular);
 
         String codigo = generarCodigo();
 
@@ -58,13 +58,13 @@ public class TextBeeOtpService {
                 + MINUTOS_EXPIRACION
                 + " minutos.";
 
-        enviarSms(telefono, mensaje);
+        enviarSms(celular, mensaje);
 
         Instant expiracion = Instant.now()
                 .plusSeconds(MINUTOS_EXPIRACION * 60);
 
         codigosPendientes.put(
-                normalizarTelefono(telefono),
+                normalizarCelular(celular),
                 new CodigoOtp(codigo, expiracion)
         );
     }
@@ -72,9 +72,9 @@ public class TextBeeOtpService {
     /**
      * Envía un mensaje SMS normal, por ejemplo una alerta de emergencia.
      */
-    public void enviarMensaje(String telefono, String mensaje) {
+    public void enviarMensaje(String celular, String mensaje) {
 
-        validarTelefono(telefono);
+        validarCelular(celular);
 
         if (mensaje == null || mensaje.isBlank()) {
             throw new IllegalArgumentException(
@@ -82,33 +82,33 @@ public class TextBeeOtpService {
             );
         }
 
-        enviarSms(telefono, mensaje);
+        enviarSms(celular, mensaje);
     }
 
     /**
      * Verifica el código OTP enviado anteriormente.
      */
-    public boolean verificarCodigo(String telefono, String codigo) {
+    public boolean verificarCodigo(String celular, String codigo) {
 
-        if (telefono == null
-                || telefono.isBlank()
+        if (celular == null
+                || celular.isBlank()
                 || codigo == null
                 || codigo.isBlank()) {
 
             return false;
         }
 
-        String telefonoNormalizado = normalizarTelefono(telefono);
+        String celularNormalizado = normalizarCelular(celular);
 
         CodigoOtp guardado =
-                codigosPendientes.get(telefonoNormalizado);
+                codigosPendientes.get(celularNormalizado);
 
         if (guardado == null) {
             return false;
         }
 
         if (Instant.now().isAfter(guardado.expiracion())) {
-            codigosPendientes.remove(telefonoNormalizado);
+            codigosPendientes.remove(celularNormalizado);
             return false;
         }
 
@@ -116,7 +116,7 @@ public class TextBeeOtpService {
                 guardado.codigo().equals(codigo.trim());
 
         if (coincide) {
-            codigosPendientes.remove(telefonoNormalizado);
+            codigosPendientes.remove(celularNormalizado);
         }
 
         return coincide;
@@ -125,13 +125,13 @@ public class TextBeeOtpService {
     /**
      * Realiza el envío físico del SMS mediante TextBee.
      */
-    private void enviarSms(String telefono, String mensaje) {
+    private void enviarSms(String celular, String mensaje) {
 
         try {
 
             String cuerpoJson = objectMapper.writeValueAsString(
                     Map.of(
-                            "recipients", List.of(telefono),
+                            "recipients", List.of(celular),
                             "message", mensaje
                     )
             );
@@ -199,24 +199,24 @@ public class TextBeeOtpService {
     }
 
     /**
-     * Valida que el teléfono tenga un valor válido.
+     * Valida que el celular tenga un valor válido.
      */
-    private void validarTelefono(String telefono) {
+    private void validarCelular(String celular) {
 
-        if (telefono == null || telefono.isBlank()) {
+        if (celular == null || celular.isBlank()) {
 
             throw new IllegalArgumentException(
-                    "El teléfono es obligatorio"
+                    "El celular es obligatorio"
             );
         }
     }
 
     /**
-     * Normaliza el teléfono para evitar problemas al verificar el OTP.
+     * Normaliza el celular para evitar problemas al verificar el OTP.
      */
-    private String normalizarTelefono(String telefono) {
+    private String normalizarCelular(String celular) {
 
-        return telefono.trim().replaceAll("\\s+", "");
+        return celular.trim().replaceAll("\\s+", "");
     }
 
     private record CodigoOtp(

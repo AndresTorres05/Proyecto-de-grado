@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Perfil propio de la organizacion: solo "direccion".
  *
- * nombre/correo/telefono son de identidad (auth-backend) y solo se leen
+ * nombre/correo/celular son de identidad (auth-backend) y solo se leen
  * aqui via UsuarioLookup; para editarlos, PUT /api/auth/informacion.
  */
 @RestController
@@ -90,7 +90,7 @@ public class OrganizacionInformacionController {
                 organizacion.getIdOrganizacion(),
                 usuario.getNombreUsuario(),
                 usuario.getCorreo(),
-                usuario.getTelefono(),
+                usuario.getCelular(),
                 organizacion.getDireccion()
         );
     }

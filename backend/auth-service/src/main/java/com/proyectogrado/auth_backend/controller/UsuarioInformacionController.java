@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Informacion de identidad (nombre/correo/telefono), valida para
- * cualquier rol: persona mayor, acompanante u organizacion. El telefono
+ * Informacion de identidad (nombre/correo/celular), valida para
+ * cualquier rol: persona mayor, acompanante u organizacion. El celular
  * NUNCA se edita aqui porque se usa para login por OTP.
  *
  * Sirve tanto para persona-mayor-service como para acompanante-service
@@ -86,7 +86,7 @@ public class UsuarioInformacionController {
         return new InformacionUsuarioResponse(
                 usuario.getIdUsuario(),
                 usuario.getNombreUsuario(),
-                usuario.getTelefono(),
+                usuario.getCelular(),
                 usuario.getCorreo(),
                 tieneContrasena
         );

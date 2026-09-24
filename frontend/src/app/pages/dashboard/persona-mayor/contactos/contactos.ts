@@ -25,7 +25,7 @@ export class Contactos implements OnInit {
 
   protected readonly mostrandoFormularioAcompanante = signal(false);
 
-  protected telefonoAcompanante = '';
+  protected celularAcompanante = '';
   protected parentescoAcompanante = '';
 
   protected readonly agregandoAcompanante = signal(false);
@@ -57,7 +57,7 @@ export class Contactos implements OnInit {
   cancelarFormularioAcompanante(): void {
     this.mostrandoFormularioAcompanante.set(false);
 
-    this.telefonoAcompanante = '';
+    this.celularAcompanante = '';
     this.parentescoAcompanante = '';
 
     this.errorAcompanante.set(null);
@@ -69,7 +69,7 @@ agregarAcompanante(): void {
   this.mensajeAcompanante.set(null);
 
   if (
-    !this.telefonoAcompanante.trim() ||
+    !this.celularAcompanante.trim() ||
     !this.parentescoAcompanante.trim()
   ) {
     this.errorAcompanante.set(
@@ -80,21 +80,21 @@ agregarAcompanante(): void {
 
   this.agregandoAcompanante.set(true);
 
-  const telefonoIngresado = this.telefonoAcompanante.trim();
+  const celularIngresado = this.celularAcompanante.trim();
 
-if (!/^\d{10}$/.test(telefonoIngresado)) {
+if (!/^\d{10}$/.test(celularIngresado)) {
   this.errorAcompanante.set(
-    'Ingresa un número de teléfono válido de 10 dígitos.'
+    'Ingresa un número de celular válido de 10 dígitos.'
   );
   return;
 }
 
-const telefono = '+57' + telefonoIngresado;
+const celular = '+57' + celularIngresado;
 
 this.agregandoAcompanante.set(true);
 
 this.acompananteService.agregarAcompanante({
-  telefono: telefono,
+  celular: celular,
   parentesco: this.parentescoAcompanante
 }).subscribe({
     next: (respuesta) => {
@@ -104,7 +104,7 @@ this.acompananteService.agregarAcompanante({
 
       this.mensajeAcompanante.set(respuesta);
 
-      this.telefonoAcompanante = '';
+      this.celularAcompanante = '';
       this.parentescoAcompanante = '';
 
       // Actualizar la tarjeta del acompañante

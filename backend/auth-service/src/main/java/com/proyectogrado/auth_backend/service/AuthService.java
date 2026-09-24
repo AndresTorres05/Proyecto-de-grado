@@ -108,26 +108,26 @@ public class AuthService {
     }
 
     // =========================================================
-    // LOGIN CON TELEFONO + OTP
+    // LOGIN CON CELULAR + OTP
     // =========================================================
 
     public LoginResponse loginConOtp(LoginOtpRequest request) {
 
         if (request == null
-                || request.getTelefono() == null
-                || request.getTelefono().isBlank()
+                || request.getCelular() == null
+                || request.getCelular().isBlank()
                 || request.getCodigo() == null
                 || request.getCodigo().isBlank()) {
 
             throw new RuntimeException(
-                    "El teléfono y el código son obligatorios"
+                    "El celular y el código son obligatorios"
             );
         }
 
-        String telefono = request.getTelefono().trim();
+        String celular = request.getCelular().trim();
 
         boolean codigoValido = messagingClient.verificarOtp(
-                telefono,
+                celular,
                 request.getCodigo().trim()
         );
 
@@ -136,9 +136,9 @@ public class AuthService {
         }
 
         Usuario usuario = usuarioRepository
-                .findByTelefono(telefono)
+                .findByCelular(celular)
                 .orElseThrow(() -> new RuntimeException(
-                        "No existe una cuenta con ese teléfono"
+                        "No existe una cuenta con ese celular"
                 ));
 
         if (!Boolean.TRUE.equals(usuario.getActivo())) {
@@ -148,12 +148,12 @@ public class AuthService {
         return generarRespuestaLogin(usuario, "Inicio de sesión exitoso");
     }
 
-    public boolean existeTelefono(String telefono) {
-    if (telefono == null || telefono.isBlank()) {
+    public boolean existeCelular(String celular) {
+    if (celular == null || celular.isBlank()) {
         return false;
     }
 
-        return usuarioRepository.existsByTelefono(telefono);
+        return usuarioRepository.existsByCelular(celular);
     }
 
     private LoginResponse generarRespuestaLogin(Usuario usuario, String mensaje) {
@@ -185,7 +185,7 @@ public class AuthService {
 
 // =========================================================
 // REGISTRO
-// telefono obligatorio;
+// celular obligatorio;
 // correo + contrasena opcionales, pero deben ir juntos
 // =========================================================
 
@@ -194,7 +194,7 @@ public class AuthService {
 
         validarRegistro(request);
 
-        String telefono = request.getTelefono().trim();
+        String celular = request.getCelular().trim();
 
         String correo = null;
         if (request.getCorreo() != null && !request.getCorreo().isBlank()) {
@@ -210,9 +210,9 @@ public class AuthService {
 
         String rolNombre = request.getRol().trim().toUpperCase();
 
-        if (usuarioRepository.existsByTelefono(telefono)) {
+        if (usuarioRepository.existsByCelular(celular)) {
             throw new RuntimeException(
-                    "Ya existe un usuario registrado con ese teléfono"
+                    "Ya existe un usuario registrado con ese celular"
             );
         }
 
@@ -234,7 +234,7 @@ public class AuthService {
 
         Usuario usuario = new Usuario();
         usuario.setNombreUsuario(request.getNombreUsuario().trim());
-        usuario.setTelefono(telefono);
+        usuario.setCelular(celular);
 
         if (request.getFechaNacimiento() != null
         && !request.getFechaNacimiento().isBlank()) {
@@ -326,15 +326,15 @@ case "ORGANIZACION" -> {
             throw new RuntimeException("El rol es obligatorio");
         }
 
-        if (request.getTelefono() == null || request.getTelefono().isBlank()) {
-            throw new RuntimeException("El teléfono es obligatorio");
+        if (request.getCelular() == null || request.getCelular().isBlank()) {
+            throw new RuntimeException("El celular es obligatorio");
         }
 
-        String telefono = request.getTelefono().trim();
+        String celular = request.getCelular().trim();
 
-        if (!telefono.matches("\\+57\\d{10}")) {
+        if (!celular.matches("\\+57\\d{10}")) {
             throw new RuntimeException(
-        "El teléfono debe tener el formato +57 seguido de 10 dígitos"            );
+        "El celular debe tener el formato +57 seguido de 10 dígitos"            );
         }
 
         boolean tieneCorreo =

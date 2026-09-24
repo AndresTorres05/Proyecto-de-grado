@@ -65,7 +65,7 @@
           </h3>
 
           <p>
-            📱 {{ persona.telefono }}
+            📱 {{ persona.celular }}
           </p>
 
         </div>
@@ -170,15 +170,15 @@
             {{ contacto.parentesco }}
           </span>
 
-          <p class="telefono">
-            {{ contacto.telefono }}
+          <p class="celular">
+            {{ contacto.celular }}
           </p>
 
         </div>
 
         <a
           class="llamar-button"
-          [href]="'tel:' + contacto.telefono"
+          [href]="'tel:' + contacto.celular"
         >
           📞 Llamar
         </a>

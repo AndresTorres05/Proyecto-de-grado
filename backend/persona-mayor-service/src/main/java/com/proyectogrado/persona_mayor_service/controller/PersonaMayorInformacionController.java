@@ -20,7 +20,7 @@ import java.time.LocalDate;
 /**
  * Perfil propio de la persona mayor: fechaNacimiento/genero/direccion.
  *
- * nombre/correo/telefono son de identidad (auth-backend) y solo se leen
+ * nombre/correo/celular son de identidad (auth-backend) y solo se leen
  * aqui (UsuarioLookup); NO se editan desde este servicio.
  */
 @RestController
@@ -82,7 +82,7 @@ public class PersonaMayorInformacionController {
         return new PersonaMayorInformacionResponse(
                 personaMayor.getIdUsuario(),
                 usuario != null ? usuario.getNombreUsuario() : null,
-                usuario != null ? usuario.getTelefono() : null,
+                usuario != null ? usuario.getCelular() : null,
                 usuario != null ? usuario.getCorreo() : null,
                 personaMayor.getFechaNacimiento() != null ? personaMayor.getFechaNacimiento().toString() : null,
                 personaMayor.getGenero(),

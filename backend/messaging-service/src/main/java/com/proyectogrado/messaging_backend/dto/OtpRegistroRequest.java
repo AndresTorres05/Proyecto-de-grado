@@ -2,7 +2,7 @@ package com.proyectogrado.messaging_backend.dto;
 
 public class OtpRegistroRequest {
 
-    private String telefono;
+    private String celular;
 
     private String codigo;
 
@@ -23,12 +23,12 @@ public class OtpRegistroRequest {
     public OtpRegistroRequest() {
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getCelular() {
+        return celular;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
+    public void setCelular(String celular) {
+        this.celular = celular;
     }
 
     public String getCodigo() {

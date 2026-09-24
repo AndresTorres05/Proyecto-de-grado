@@ -35,7 +35,7 @@ interface AlertaConsulta {
 interface ContactoEmergencia {
   nombre: string;
   parentesco: string;
-  telefono: string;
+  celular: string;
   persona: string;
 }
 
@@ -141,13 +141,13 @@ export class AcompananteDashboard implements OnInit {
     {
       nombre: 'Marta Gómez',
       parentesco: 'Hija',
-      telefono: '300 456 7890',
+      celular: '300 456 7890',
       persona: 'Rosa Elvira Gómez'
     },
     {
       nombre: 'Pedro Méndez',
       parentesco: 'Hijo',
-      telefono: '311 222 3344',
+      celular: '311 222 3344',
       persona: 'Carlos Julio Méndez'
     }
   ];

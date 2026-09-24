@@ -101,14 +101,14 @@
 
       <!-- ================================================= -->
       <!-- PERSONA MAYOR / ACOMPAÑANTE -->
-      <!-- TELÉFONO -->
+      <!-- CELULAR -->
       <!-- ================================================= -->
 
       @if (rol) {
 
         <label
           class="login-label"
-          for="telefono"
+          for="celular"
         >
           Número de celular <span class="required-mark">*</span>
         </label>
@@ -120,12 +120,12 @@
           </span>
 
           <input
-            id="telefono"
-            name="telefono"
+            id="celular"
+            name="celular"
             type="tel"
             inputmode="numeric"
             class="login-input login-input--phone"
-            [(ngModel)]="telefonoLocal"
+            [(ngModel)]="celularLocal"
             required
             maxlength="10"
             placeholder="3001234567"
@@ -139,14 +139,14 @@
 
         <label
           class="login-label"
-          for="correoTelefono"
+          for="correoCelular"
         >
           Correo electrónico (opcional)
         </label>
 
         <input
-          id="correoTelefono"
-          name="correoTelefono"
+          id="correoCelular"
+          name="correoCelular"
           type="email"
           class="login-input"
           [(ngModel)]="correo"
@@ -159,14 +159,14 @@
 
         <label
           class="login-label"
-          for="contrasenaTelefono"
+          for="contrasenaCelular"
         >
           Contraseña (opcional)
         </label>
 
         <input
-          id="contrasenaTelefono"
-          name="contrasenaTelefono"
+          id="contrasenaCelular"
+          name="contrasenaCelular"
           type="password"
           class="login-input"
           [(ngModel)]="contrasena"

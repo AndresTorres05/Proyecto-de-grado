@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 /**
  * Vista de SOLO LECTURA sobre la tabla "usuario", que es dueno de
  * auth-backend. personamayor-service NUNCA crea, edita ni borra usuarios;
- * esto existe solo para poder mostrar nombre/telefono/correo en las
+ * esto existe solo para poder mostrar nombre/celular/correo en las
  * respuestas de relaciones sin tener que llamar por HTTP a auth-backend
  * en cada consulta (valido en arquitectura de servicios con BD compartida,
  * NO seria valido en microservicios estrictos).
@@ -25,7 +25,7 @@ public class UsuarioLookup {
     private String nombreUsuario;
 
     @Column(name = "telefono")
-    private String telefono;
+    private String celular;
 
     @Column(name = "correo")
     private String correo;
@@ -45,8 +45,8 @@ public class UsuarioLookup {
         return nombreUsuario;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getCelular() {
+        return celular;
     }
 
     public String getCorreo() {

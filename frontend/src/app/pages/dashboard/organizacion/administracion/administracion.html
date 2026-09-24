@@ -93,7 +93,7 @@
             </label>
 
             <p>
-              {{ informacion?.telefono || 'No registrado' }}
+              {{ informacion?.celular || 'No registrado' }}
             </p>
 
           </div>
@@ -209,14 +209,14 @@
 
           <div class="informacion__field">
 
-            <label for="telefono">
+            <label for="celular">
               Celular
             </label>
 
             <input
-              id="telefono"
+              id="celular"
               type="tel"
-              [(ngModel)]="informacion.telefono"
+              [(ngModel)]="informacion.celular"
               placeholder="Ingresa el celular"
             />
 

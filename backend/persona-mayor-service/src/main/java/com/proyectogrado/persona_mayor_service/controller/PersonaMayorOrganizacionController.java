@@ -70,12 +70,12 @@ public class PersonaMayorOrganizacionController {
         }
 
         UsuarioLookup usuarioPersonaMayor = usuarioLookupRepository
-                .findByTelefono(request.telefono())
+                .findByCelular(request.celular())
                 .orElse(null);
 
         if (usuarioPersonaMayor == null) {
             return ResponseEntity.badRequest()
-                    .body("No existe un usuario registrado con ese teléfono");
+                    .body("No existe un usuario registrado con ese celular");
         }
 
         Integer idPersonaMayor = usuarioPersonaMayor.getIdUsuario();
@@ -241,7 +241,7 @@ public class PersonaMayorOrganizacionController {
                     return new OrganizacionSolicitudResponse(
                             idOrganizacion,
                             usuarioOrganizacion != null ? usuarioOrganizacion.getNombreUsuario() : "Organización",
-                            usuarioOrganizacion != null ? usuarioOrganizacion.getTelefono() : null,
+                            usuarioOrganizacion != null ? usuarioOrganizacion.getCelular() : null,
                             usuarioOrganizacion != null ? usuarioOrganizacion.getCorreo() : null
                     );
                 })
@@ -257,7 +257,7 @@ public class PersonaMayorOrganizacionController {
                     return new PersonaMayorResponse(
                             idPersonaMayor,
                             usuario != null ? usuario.getNombreUsuario() : null,
-                            usuario != null ? usuario.getTelefono() : null,
+                            usuario != null ? usuario.getCelular() : null,
                             usuario != null ? usuario.getCorreo() : null
                     );
                 })

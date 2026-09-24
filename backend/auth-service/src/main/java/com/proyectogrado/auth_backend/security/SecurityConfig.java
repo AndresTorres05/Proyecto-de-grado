@@ -106,7 +106,7 @@ public class SecurityConfig {
                                 "/api/auth/login",
                                 "/api/auth/login-otp",
                                 "/api/auth/registro",
-                                "/api/auth/telefono-existe",
+                                "/api/auth/celular-existe",
                                 "/error"
                         )
                         .permitAll()

@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface UsuarioLookupRepository extends JpaRepository<UsuarioLookup, Integer> {
 
-    Optional<UsuarioLookup> findByTelefono(String telefono);
+    Optional<UsuarioLookup> findByCelular(String celular);
 
     List<UsuarioLookup> findByIdOrganizacion(Integer idOrganizacion);
 }

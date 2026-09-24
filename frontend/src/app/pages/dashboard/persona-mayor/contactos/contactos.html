@@ -164,7 +164,7 @@
 
             <p class="companion-card__phone">
               <app-icon name="phone" />
-              {{ ac.telefono }}
+              {{ ac.celular }}
             </p>
 
             @if (ac.parentesco) {
@@ -178,7 +178,7 @@
           </div>
 
           <a
-            [href]="'tel:' + ac.telefono"
+            [href]="'tel:' + ac.celular"
             class="btn btn-gold companion-card__call"
           >
             <app-icon name="phone" />
@@ -249,14 +249,14 @@
 
       <div class="add-companion-modal__form-group">
 
-        <label for="telefonoAcompanante">
-          Teléfono del acompañante
+        <label for="celularAcompanante">
+          Celular del acompañante
         </label>
 
         <input
-          id="telefonoAcompanante"
+          id="celularAcompanante"
           type="tel"
-          [(ngModel)]="telefonoAcompanante"
+          [(ngModel)]="celularAcompanante"
           placeholder="Ej. 3001234567"
         />
 

@@ -6,20 +6,20 @@ export interface OrganizacionResponse {
   idOrganizacion: number;
   nombre: string;
   direccion: string;
-  telefono: string;
+  celular: string;
   correo: string;
 }
 
 export interface PersonaMayorOrganizacion {
   idUsuario: number;
   nombre: string;
-  telefono: string;
+  celular: string;
 }
 
 export interface OrganizacionSolicitud {
   idOrganizacion: number;
   nombre: string;
-  telefono: string;
+  celular: string;
   correo: string;
   direccion: string;
 }
@@ -53,10 +53,10 @@ export class OrganizacionService {
   );
 }
 
-asociarPersonaMayor(telefono: string): Observable<string> {
+asociarPersonaMayor(celular: string): Observable<string> {
   return this.http.post(
     `${this.apiUrl}/personas-mayores`,
-    { telefono },
+    { celular },
     { responseType: 'text' }
   );
 }

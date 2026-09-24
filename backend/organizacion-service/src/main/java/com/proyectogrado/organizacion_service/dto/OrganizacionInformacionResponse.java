@@ -5,15 +5,15 @@ public class OrganizacionInformacionResponse {
     private Integer idOrganizacion;
     private String nombre;
     private String correo;
-    private String telefono;
+    private String celular;
     private String direccion;
 
     public OrganizacionInformacionResponse(Integer idOrganizacion, String nombre, String correo,
-                                            String telefono, String direccion) {
+                                            String celular, String direccion) {
         this.idOrganizacion = idOrganizacion;
         this.nombre = nombre;
         this.correo = correo;
-        this.telefono = telefono;
+        this.celular = celular;
         this.direccion = direccion;
     }
 
@@ -29,8 +29,8 @@ public class OrganizacionInformacionResponse {
         return correo;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getCelular() {
+        return celular;
     }
 
     public String getDireccion() {

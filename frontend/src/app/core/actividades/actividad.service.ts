@@ -57,7 +57,7 @@ export interface ActividadRequest {
 export interface ParticipanteActividad {
   idPersonaMayor: number;
   nombre: string;
-  telefono: string | null;
+  celular: string | null;
   asistio: boolean | null;
 }
 

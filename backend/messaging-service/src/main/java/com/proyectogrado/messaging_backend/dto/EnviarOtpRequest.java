@@ -2,17 +2,17 @@ package com.proyectogrado.messaging_backend.dto;
 
 public class EnviarOtpRequest {
 
-    private String telefono;
+    private String celular;
 
     public EnviarOtpRequest() {
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getCelular() {
+        return celular;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
+    public void setCelular(String celular) {
+        this.celular = celular;
     }
 
 }

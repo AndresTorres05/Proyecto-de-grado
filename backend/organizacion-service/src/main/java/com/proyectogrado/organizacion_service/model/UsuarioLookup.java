@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
  * Vista de SOLO LECTURA sobre la tabla "usuario", que es dueña de
  * auth-backend. organizacion-service NUNCA crea, edita ni borra
  * usuarios; esto existe solo para:
- *  - buscar una persona mayor por teléfono al asociarla, y
+ *  - buscar una persona mayor por celular al asociarla, y
  *  - saber a qué organización pertenece el usuario autenticado
  *    (columna id_organizacion, presente en TODO usuario pero solo
  *    con valor para el rol ORGANIZACION).
@@ -26,7 +26,7 @@ public class UsuarioLookup {
     private String nombreUsuario;
 
     @Column(name = "telefono")
-    private String telefono;
+    private String celular;
 
     @Column(name = "correo")
     private String correo;
@@ -46,8 +46,8 @@ public class UsuarioLookup {
         return nombreUsuario;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getCelular() {
+        return celular;
     }
 
     public String getCorreo() {

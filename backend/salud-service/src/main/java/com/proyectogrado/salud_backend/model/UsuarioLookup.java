@@ -7,7 +7,7 @@ import jakarta.persistence.Table;
 
 /**
  * Solo lectura sobre "usuario" (dueno de auth-backend). Mismo patron que
- * ya usamos en personas-backend: necesitamos el nombre/telefono de la
+ * ya usamos en personas-backend: necesitamos el nombre/celular de la
  * persona mayor y del acompanante para redactar y enviar el SMS.
  */
 @Entity
@@ -22,7 +22,7 @@ public class UsuarioLookup {
     private String nombreUsuario;
 
     @Column(name = "telefono")
-    private String telefono;
+    private String celular;
 
     protected UsuarioLookup() {
         // JPA
@@ -36,7 +36,7 @@ public class UsuarioLookup {
         return nombreUsuario;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getCelular() {
+        return celular;
     }
 }

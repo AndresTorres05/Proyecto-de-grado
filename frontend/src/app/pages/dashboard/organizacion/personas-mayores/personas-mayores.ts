@@ -33,7 +33,7 @@ export class PersonasMayores implements OnInit {
   protected readonly error = signal<string | null>(null);
   protected readonly mostrandoConfirmacion = signal(false);
   protected personaSeleccionada: PersonaMayorOrganizacion | null = null;
-  protected telefono = '';
+  protected celular = '';
 
 constructor(
   private organizacionService: OrganizacionService,
@@ -81,7 +81,7 @@ ngOnInit(): void {
 
     this.mostrandoFormulario.set(true);
 
-    this.telefono = '';
+    this.celular = '';
 
     this.mensaje.set(null);
     this.error.set(null);
@@ -96,7 +96,7 @@ ngOnInit(): void {
 
     this.mostrandoFormulario.set(false);
 
-    this.telefono = '';
+    this.celular = '';
 
     this.mensaje.set(null);
     this.error.set(null);
@@ -112,18 +112,18 @@ ngOnInit(): void {
     this.mensaje.set(null);
     this.error.set(null);
 
-    const telefonoIngresado =
-      this.telefono.trim();
+    const celularIngresado =
+      this.celular.trim();
 
 
     // ==========================================
     // VALIDAR CAMPO
     // ==========================================
 
-    if (!telefonoIngresado) {
+    if (!celularIngresado) {
 
       this.error.set(
-        'Por favor ingresa el teléfono de la persona mayor.'
+        'Por favor ingresa el celular de la persona mayor.'
       );
 
       return;
@@ -134,10 +134,10 @@ ngOnInit(): void {
     // VALIDAR FORMATO
     // ==========================================
 
-    if (!/^\d{10}$/.test(telefonoIngresado)) {
+    if (!/^\d{10}$/.test(celularIngresado)) {
 
       this.error.set(
-        'Ingresa un número de teléfono válido de 10 dígitos.'
+        'Ingresa un número de celular válido de 10 dígitos.'
       );
 
       return;
@@ -148,8 +148,8 @@ ngOnInit(): void {
     // FORMATO COLOMBIANO
     // ==========================================
 
-    const telefono =
-      '+57' + telefonoIngresado;
+    const celular =
+      '+57' + celularIngresado;
 
 
     this.agregandoPersonaMayor.set(true);
@@ -160,7 +160,7 @@ ngOnInit(): void {
     // ==========================================
 
     this.organizacionService
-      .asociarPersonaMayor(telefono)
+      .asociarPersonaMayor(celular)
       .subscribe({
 
         next: (respuesta) => {
@@ -169,7 +169,7 @@ ngOnInit(): void {
 
           this.mostrandoFormulario.set(false);
 
-          this.telefono = '';
+          this.celular = '';
 
           this.mensaje.set(respuesta);
 

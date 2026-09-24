@@ -12,7 +12,7 @@ public class RegistroRequest {
     private String genero;
     private String direccion;
 
-    private String telefono;
+    private String celular;
 
     // Solo para VOLUNTARIO
     private String disponibilidad;
@@ -76,12 +76,12 @@ public class RegistroRequest {
         this.direccion = direccion;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getCelular() {
+        return celular;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
+    public void setCelular(String celular) {
+        this.celular = celular;
     }
 
     public String getDisponibilidad() {

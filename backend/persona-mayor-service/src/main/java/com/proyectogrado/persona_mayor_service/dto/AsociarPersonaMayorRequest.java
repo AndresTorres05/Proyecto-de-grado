@@ -1,4 +1,4 @@
 package com.proyectogrado.persona_mayor_service.dto;
 
-public record AsociarPersonaMayorRequest(String telefono) {
+public record AsociarPersonaMayorRequest(String celular) {
 }

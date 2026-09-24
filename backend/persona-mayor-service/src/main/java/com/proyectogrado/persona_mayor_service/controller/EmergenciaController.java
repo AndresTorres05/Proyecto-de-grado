@@ -64,15 +64,15 @@ public class EmergenciaController {
 
             Integer idAcompanante = relacion.getId().getIdAcompanante();
 
-            String telefono = usuarioLookupRepository.findById(idAcompanante)
-                    .map(UsuarioLookup::getTelefono)
+            String celular = usuarioLookupRepository.findById(idAcompanante)
+                    .map(UsuarioLookup::getCelular)
                     .orElse(null);
 
-            if (telefono == null || telefono.isBlank()) {
+            if (celular == null || celular.isBlank()) {
                 continue;
             }
 
-            if (messagingClient.enviarMensaje(telefono, mensaje)) {
+            if (messagingClient.enviarMensaje(celular, mensaje)) {
                 enviadosAcompanantes++;
             }
         }
@@ -87,15 +87,15 @@ public class EmergenciaController {
             List<UsuarioLookup> usuariosOrganizacion =
                     usuarioLookupRepository.findByIdOrganizacion(idOrganizacion);
 
-            String telefono = usuariosOrganizacion.isEmpty()
+            String celular = usuariosOrganizacion.isEmpty()
                     ? null
-                    : usuariosOrganizacion.get(0).getTelefono();
+                    : usuariosOrganizacion.get(0).getCelular();
 
-            if (telefono == null || telefono.isBlank()) {
+            if (celular == null || celular.isBlank()) {
                 continue;
             }
 
-            if (messagingClient.enviarMensaje(telefono, mensaje)) {
+            if (messagingClient.enviarMensaje(celular, mensaje)) {
                 enviadosOrganizaciones++;
             }
         }

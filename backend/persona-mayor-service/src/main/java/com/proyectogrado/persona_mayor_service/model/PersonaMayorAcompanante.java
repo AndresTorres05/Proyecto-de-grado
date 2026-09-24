@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
  *
  * OJO: aqui NO se referencia a PersonaMayor ni Acompanante como entidades
  * JPA (esos son de auth-backend). Solo se guardan sus IDs. Para mostrar
- * nombre/telefono en las respuestas se usa UsuarioLookup (solo lectura).
+ * nombre/celular en las respuestas se usa UsuarioLookup (solo lectura).
  */
 @Entity
 @Table(name = "persona_mayor_acompanante")

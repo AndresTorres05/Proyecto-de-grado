@@ -58,16 +58,16 @@
 >
 
   <!-- ===================================================
-       LOGIN PRINCIPAL: TELÉFONO
+       LOGIN PRINCIPAL: CELULAR
        =================================================== -->
 
-  @if (modo() === 'telefono') {
+  @if (modo() === 'celular') {
 
     @if (!otpEnviado()) {
 
       <label
         class="login-label"
-        for="telefono"
+        for="celular"
       >
         Número de celular
       </label>
@@ -79,11 +79,11 @@
         </span>
 
         <input
-          id="telefono"
-          name="telefono"
+          id="celular"
+          name="celular"
           type="tel"
           class="login-input login-input--phone"
-          [(ngModel)]="telefonoLocal"
+          [(ngModel)]="celularLocal"
           required
           placeholder="3001234567"
         />
@@ -270,7 +270,7 @@
       ¿Prefieres ingresar de otra forma?
     </p>
 
-    @if (modo() === 'telefono') {
+    @if (modo() === 'celular') {
 
       <button
         type="button"
@@ -285,7 +285,7 @@
       <button
         type="button"
         class="login-alternative"
-        (click)="cambiarModo('telefono')"
+        (click)="cambiarModo('celular')"
       >
         Ingresar con número de celular
       </button>

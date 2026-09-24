@@ -108,7 +108,7 @@ public class AcompananteRelacionController {
                     return new PersonaMayorResponse(
                             idPersonaMayor,
                             usuario != null ? usuario.getNombreUsuario() : null,
-                            usuario != null ? usuario.getTelefono() : null,
+                            usuario != null ? usuario.getCelular() : null,
                             usuario != null ? usuario.getCorreo() : null
                     );
                 })

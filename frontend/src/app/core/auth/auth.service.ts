@@ -14,7 +14,7 @@ export interface RegistroRequest {
   contrasena?: string;
   rol: string;
   direccion?: string;
-  telefono?: string;
+  celular?: string;
   disponibilidad?: string;
   fechaNacimiento?: string;
   genero?: string;
@@ -22,7 +22,7 @@ export interface RegistroRequest {
 }
 
 export interface EnviarOtpRequest {
-  telefono: string;
+  celular: string;
 }
 
 export interface OtpEnviarResponse {
@@ -31,12 +31,12 @@ export interface OtpEnviarResponse {
 }
 
 export interface OtpLoginRequest {
-  telefono: string;
+  celular: string;
   codigo: string;
 }
 
 export interface OtpRegistroRequest {
-  telefono: string;
+  celular: string;
   codigo: string;
   nombreUsuario: string;
   rol: string;
@@ -92,22 +92,22 @@ export class AuthService {
       );
   }
 
-  telefonoExiste(telefono: string): Observable<boolean> {
+  celularExiste(celular: string): Observable<boolean> {
   return this.http.get<boolean>(
-    `${this.apiUrl}/telefono-existe`,
+    `${this.apiUrl}/celular-existe`,
     {
-      params: { telefono }
+      params: { celular }
     }
   );
 }
 
   // El envío de OTP vive en messaging-backend (/api/otp/send),
-  // no en auth-backend. Espera "phoneNumber", no "telefono", y
+  // no en auth-backend. Espera "phoneNumber", no "celular", y
   // responde {success, message}, no un LoginResponse.
-  enviarOtp(telefono: string): Observable<OtpEnviarResponse> {
+  enviarOtp(celular: string): Observable<OtpEnviarResponse> {
     return this.http.post<OtpEnviarResponse>(
       `${this.otpApiUrl}/send`,
-      { phoneNumber: telefono }
+      { phoneNumber: celular }
     );
   }
 

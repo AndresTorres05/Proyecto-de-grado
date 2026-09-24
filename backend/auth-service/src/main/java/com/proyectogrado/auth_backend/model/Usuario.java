@@ -23,7 +23,7 @@ public class Usuario {
     private String correo;
 
     @Column(name = "telefono", unique = true)
-    private String telefono;
+    private String celular;
 
     @Column(name = "fecha_nacimiento")
     private LocalDate fechaNacimiento;
@@ -80,12 +80,12 @@ public class Usuario {
         this.correo = correo;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getCelular() {
+        return celular;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
+    public void setCelular(String celular) {
+        this.celular = celular;
     }
 
     public LocalDate getFechaNacimiento() {

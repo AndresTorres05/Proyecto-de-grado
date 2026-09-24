@@ -2,18 +2,18 @@ package com.proyectogrado.auth_backend.dto;
 
 public class LoginOtpRequest {
 
-    private String telefono;
+    private String celular;
     private String codigo;
 
     public LoginOtpRequest() {
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getCelular() {
+        return celular;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
+    public void setCelular(String celular) {
+        this.celular = celular;
     }
 
     public String getCodigo() {

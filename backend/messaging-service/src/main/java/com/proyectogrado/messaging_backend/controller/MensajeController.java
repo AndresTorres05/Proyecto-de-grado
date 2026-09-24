@@ -35,11 +35,11 @@ public class MensajeController {
     @PostMapping("/enviar")
     public ResponseEntity<?> enviar(@RequestBody Map<String, String> request) {
 
-        String telefono = request.get("telefono");
+        String celular = request.get("celular");
         String mensaje = request.get("mensaje");
 
         try {
-            textBeeOtpService.enviarMensaje(telefono, mensaje);
+            textBeeOtpService.enviarMensaje(celular, mensaje);
             return ResponseEntity.ok(Map.of("success", true));
 
         } catch (IllegalArgumentException e) {

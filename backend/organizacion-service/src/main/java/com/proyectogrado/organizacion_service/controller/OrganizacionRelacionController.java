@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * Lado "organizacion" de la relacion con personas mayores:
- * verlas, asociar una nueva por teléfono, cancelar la asociación.
+ * verlas, asociar una nueva por celular, cancelar la asociación.
  *
  * El id del usuario autenticado llega en el header X-User-Id, puesto
  * por el api-gateway despues de validar el JWT. Este servicio no valida
@@ -78,12 +78,12 @@ public class OrganizacionRelacionController {
         }
 
         UsuarioLookup usuarioPersonaMayor = usuarioLookupRepository
-                .findByTelefono(request.telefono())
+                .findByCelular(request.celular())
                 .orElse(null);
 
         if (usuarioPersonaMayor == null) {
             return ResponseEntity.badRequest()
-                    .body("No existe un usuario registrado con ese teléfono");
+                    .body("No existe un usuario registrado con ese celular");
         }
 
         Integer idPersonaMayor = usuarioPersonaMayor.getIdUsuario();
@@ -165,7 +165,7 @@ public class OrganizacionRelacionController {
                     return new PersonaMayorResponse(
                             idPersonaMayor,
                             usuario != null ? usuario.getNombreUsuario() : null,
-                            usuario != null ? usuario.getTelefono() : null,
+                            usuario != null ? usuario.getCelular() : null,
                             usuario != null ? usuario.getCorreo() : null
                     );
                 })

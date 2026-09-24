@@ -5,7 +5,7 @@ import { Observable, forkJoin, map } from 'rxjs';
 export interface PersonaMayorResponse {
   idUsuario: number;
   nombre: string;
-  telefono: string;
+  celular: string;
   correo: string;
   fechaNacimiento: string;
   genero: string;
@@ -35,7 +35,7 @@ export class PersonaMayorService {
       map(({ identidad, perfil }) => ({
         idUsuario: identidad.idUsuario,
         nombre: identidad.nombre,
-        telefono: identidad.telefono,
+        celular: identidad.celular,
         correo: identidad.correo,
         tieneContrasena: identidad.tieneContrasena,
         fechaNacimiento: perfil.fechaNacimiento,
@@ -60,7 +60,7 @@ export class PersonaMayorService {
       map(({ identidad, perfil }) => ({
         idUsuario: identidad.idUsuario,
         nombre: identidad.nombre,
-        telefono: identidad.telefono,
+        celular: identidad.celular,
         correo: identidad.correo,
         tieneContrasena: identidad.tieneContrasena,
         fechaNacimiento: perfil.fechaNacimiento,

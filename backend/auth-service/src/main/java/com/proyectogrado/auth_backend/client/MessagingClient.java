@@ -26,13 +26,13 @@ public class MessagingClient {
      *
      * @return true si el codigo es valido (y ya fue consumido alla).
      */
-    public boolean verificarOtp(String telefono, String codigo) {
+    public boolean verificarOtp(String celular, String codigo) {
 
         try {
             Map<?, ?> respuesta = restClient.post()
                     .uri("/api/otp/verify")
                     .body(Map.of(
-                            "phoneNumber", telefono,
+                            "phoneNumber", celular,
                             "code", codigo
                     ))
                     .retrieve()

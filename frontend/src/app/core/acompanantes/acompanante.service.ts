@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 export interface Acompanante {
   idUsuario: number;
   nombre: string;
-  telefono: string;
+  celular: string;
   parentesco: string;
 }
 
@@ -20,7 +20,7 @@ export interface Acompanante {
 export interface PersonaMayorAcompanada {
   idUsuario: number;
   nombre: string;
-  telefono: string;
+  celular: string;
 }
 
 // =========================================================
@@ -30,7 +30,7 @@ export interface PersonaMayorAcompanada {
 export interface SolicitudAcompanamiento {
   idUsuario: number;
   nombre: string;
-  telefono: string;
+  celular: string;
 }
 
 // =========================================================
@@ -40,7 +40,7 @@ export interface SolicitudAcompanamiento {
 export interface AcompanantePerfil {
   idUsuario: number;
   nombre: string;
-  telefono: string;
+  celular: string;
   correo: string | null;
   tieneContrasena: boolean;
 }
@@ -80,7 +80,7 @@ export interface MedicamentoSeguimiento {
 export interface ContactoEmergencia {
   idUsuario: number;
   nombre: string;
-  telefono: string;
+  celular: string;
   parentesco: string;
 }
 
@@ -123,7 +123,7 @@ private readonly authUrl = 'http://localhost:8080/api/auth';
 
   agregarAcompanante(
     datos: {
-      telefono: string;
+      celular: string;
       parentesco: string;
     }
   ): Observable<string> {

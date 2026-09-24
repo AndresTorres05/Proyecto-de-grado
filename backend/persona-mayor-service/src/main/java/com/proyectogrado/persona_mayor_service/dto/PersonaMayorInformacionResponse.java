@@ -4,17 +4,17 @@ public class PersonaMayorInformacionResponse {
 
     private Integer idUsuario;
     private String nombre;
-    private String telefono;
+    private String celular;
     private String correo;
     private String fechaNacimiento;
     private String genero;
     private String direccion;
 
-    public PersonaMayorInformacionResponse(Integer idUsuario, String nombre, String telefono, String correo,
+    public PersonaMayorInformacionResponse(Integer idUsuario, String nombre, String celular, String correo,
                                             String fechaNacimiento, String genero, String direccion) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
-        this.telefono = telefono;
+        this.celular = celular;
         this.correo = correo;
         this.fechaNacimiento = fechaNacimiento;
         this.genero = genero;
@@ -29,8 +29,8 @@ public class PersonaMayorInformacionResponse {
         return nombre;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getCelular() {
+        return celular;
     }
 
     public String getCorreo() {

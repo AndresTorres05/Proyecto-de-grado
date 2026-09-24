@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
  * esto existe solo para:
  *  - saber a que organizacion pertenece el usuario autenticado
  *    (columna id_organizacion, solo tiene valor para el rol ORGANIZACION),
- *  - mostrar nombre/telefono de un participante en las respuestas.
+ *  - mostrar nombre/celular de un participante en las respuestas.
  */
 @Entity
 @Table(name = "usuario")
@@ -25,7 +25,7 @@ public class UsuarioLookup {
     private String nombreUsuario;
 
     @Column(name = "telefono")
-    private String telefono;
+    private String celular;
 
     @Column(name = "correo")
     private String correo;
@@ -45,8 +45,8 @@ public class UsuarioLookup {
         return nombreUsuario;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getCelular() {
+        return celular;
     }
 
     public String getCorreo() {

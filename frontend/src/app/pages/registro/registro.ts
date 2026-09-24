@@ -32,7 +32,7 @@ export class Registro {
 // DATOS PERSONALES
 // =========================================================
 
-telefonoLocal = '';
+celularLocal = '';
 fechaNacimiento = '';
 genero = '';
 direccion = '';
@@ -73,15 +73,15 @@ confirmarContrasena = '';
   constructor(private authService: AuthService) {}
 
   // =========================================================
-  // TELÉFONO COMPLETO
+  // CELULAR COMPLETO
   // =========================================================
 
-  get telefonoCompleto(): string {
+  get celularCompleto(): string {
 
-    const telefono =
-      this.telefonoLocal.replace(/\D/g, '');
+    const celular =
+      this.celularLocal.replace(/\D/g, '');
 
-    return `+57${telefono}`;
+    return `+57${celular}`;
   }
 
   // =========================================================
@@ -95,7 +95,7 @@ onCambioRol(): void {
   this.correo = '';
   this.contrasena = '';
   this.confirmarContrasena = '';
-  this.telefonoLocal = '';
+  this.celularLocal = '';
   this.fechaNacimiento = '';
   this.genero = '';
   this.direccion = '';
@@ -132,13 +132,13 @@ onSubmit(): void {
 
 private registrar(): void {
 
-  const telefono = this.telefonoLocal.replace(/\D/g, '');
+  const celular = this.celularLocal.replace(/\D/g, '');
   const correo = this.correo.trim();
   const contrasena = this.contrasena.trim();
   const confirmarContrasena = this.confirmarContrasena.trim();
 
-  // Teléfono obligatorio para todos los perfiles
-  if (telefono.length !== 10) {
+  // Celular obligatorio para todos los perfiles
+  if (celular.length !== 10) {
     this.errorMensaje.set(
       'Ingresa un número de celular válido (10 dígitos).'
     );
@@ -235,7 +235,7 @@ private registrar(): void {
 
     rol: this.rol,
 
-    telefono: this.telefonoCompleto,
+    celular: this.celularCompleto,
 
     fechaNacimiento:
       this.rol === 'PERSONA_MAYOR' ||

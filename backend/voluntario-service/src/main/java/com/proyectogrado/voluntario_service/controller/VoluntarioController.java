@@ -57,7 +57,7 @@ public class VoluntarioController {
         return ResponseEntity.ok(new VoluntarioPerfilResponse(
                 idVoluntario,
                 usuario.getNombreUsuario(),
-                usuario.getTelefono(),
+                usuario.getCelular(),
                 usuario.getCorreo(),
                 voluntario.getDisponibilidad()
         ));

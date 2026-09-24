@@ -17,12 +17,12 @@ public class MessagingClient {
     /**
      * @return true si messaging-backend confirmo el envio.
      */
-    public boolean enviarMensaje(String telefono, String mensaje) {
+    public boolean enviarMensaje(String celular, String mensaje) {
 
         try {
             Map<?, ?> respuesta = restClient.post()
                     .uri("/api/mensajes/enviar")
-                    .body(Map.of("telefono", telefono, "mensaje", mensaje))
+                    .body(Map.of("celular", celular, "mensaje", mensaje))
                     .retrieve()
                     .body(Map.class);
 

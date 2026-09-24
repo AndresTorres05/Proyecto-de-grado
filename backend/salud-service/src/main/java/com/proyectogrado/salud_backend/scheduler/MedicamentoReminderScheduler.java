@@ -96,10 +96,10 @@ public class MedicamentoReminderScheduler {
 
         String nombrePersona = personaMayor != null ? personaMayor.getNombreUsuario() : "la persona mayor";
 
-        if (personaMayor != null && personaMayor.getTelefono() != null) {
+        if (personaMayor != null && personaMayor.getCelular() != null) {
             String mensaje = "Recordatorio: es hora de tomar " + medicamento.getNombre()
                     + (medicamento.getDosis() != null ? " (" + medicamento.getDosis() + ")" : "") + ".";
-            intentarEnviar(personaMayor.getTelefono(), mensaje);
+            intentarEnviar(personaMayor.getCelular(), mensaje);
         }
 
         List<RelacionAcompananteLookup> vinculos = relacionAcompananteLookupRepository
@@ -109,22 +109,22 @@ public class MedicamentoReminderScheduler {
 
             Integer idAcompanante = vinculo.getId().getIdAcompanante();
 
-            String telefonoAcompanante = usuarioLookupRepository.findById(idAcompanante)
-                    .map(UsuarioLookup::getTelefono)
+            String celularAcompanante = usuarioLookupRepository.findById(idAcompanante)
+                    .map(UsuarioLookup::getCelular)
                     .orElse(null);
 
-            if (telefonoAcompanante != null) {
+            if (celularAcompanante != null) {
                 String mensaje = "Recordatorio para " + nombrePersona + ": aún no ha tomado "
                         + medicamento.getNombre()
                         + (medicamento.getDosis() != null ? " (" + medicamento.getDosis() + ")" : "") + ".";
-                intentarEnviar(telefonoAcompanante, mensaje);
+                intentarEnviar(celularAcompanante, mensaje);
             }
         }
     }
 
-    private void intentarEnviar(String telefono, String mensaje) {
-        boolean enviado = messagingClient.enviarMensaje(telefono, mensaje);
-        System.out.println("[SCHEDULER " + instanciaId + "] Envio a " + telefono + ": "
+    private void intentarEnviar(String celular, String mensaje) {
+        boolean enviado = messagingClient.enviarMensaje(celular, mensaje);
+        System.out.println("[SCHEDULER " + instanciaId + "] Envio a " + celular + ": "
                 + (enviado ? "OK" : "FALLO"));
     }
 }

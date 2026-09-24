@@ -4,15 +4,15 @@ public class InformacionUsuarioResponse {
 
     private Integer idUsuario;
     private String nombre;
-    private String telefono;
+    private String celular;
     private String correo;
     private boolean tieneContrasena;
 
-    public InformacionUsuarioResponse(Integer idUsuario, String nombre, String telefono,
+    public InformacionUsuarioResponse(Integer idUsuario, String nombre, String celular,
                                        String correo, boolean tieneContrasena) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
-        this.telefono = telefono;
+        this.celular = celular;
         this.correo = correo;
         this.tieneContrasena = tieneContrasena;
     }
@@ -25,8 +25,8 @@ public class InformacionUsuarioResponse {
         return nombre;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getCelular() {
+        return celular;
     }
 
     public String getCorreo() {

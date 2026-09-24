@@ -4,13 +4,13 @@ public class ContactoResponse {
 
     private Integer idUsuario;
     private String nombre;
-    private String telefono;
+    private String celular;
     private String parentesco;
 
-    public ContactoResponse(Integer idUsuario, String nombre, String telefono, String parentesco) {
+    public ContactoResponse(Integer idUsuario, String nombre, String celular, String parentesco) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
-        this.telefono = telefono;
+        this.celular = celular;
         this.parentesco = parentesco;
     }
 
@@ -22,8 +22,8 @@ public class ContactoResponse {
         return nombre;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getCelular() {
+        return celular;
     }
 
     public String getParentesco() {

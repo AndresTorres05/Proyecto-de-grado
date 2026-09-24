@@ -234,7 +234,7 @@ public class ActividadController {
                             return new ParticipanteActividadResponse(
                                     idPersonaMayor,
                                     usuario != null ? usuario.getNombreUsuario() : null,
-                                    usuario != null ? usuario.getTelefono() : null,
+                                    usuario != null ? usuario.getCelular() : null,
                                     p.getAsistio()
                             );
                         })

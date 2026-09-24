@@ -99,12 +99,12 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/telefono-existe")
-public ResponseEntity<Boolean> telefonoExiste(
-        @RequestParam String telefono
+    @GetMapping("/celular-existe")
+public ResponseEntity<Boolean> celularExiste(
+        @RequestParam String celular
 ) {
     return ResponseEntity.ok(
-            authService.existeTelefono(telefono)
+            authService.existeCelular(celular)
     );
 }
 }

@@ -4,17 +4,17 @@ public class ParticipanteActividadResponse {
 
     private Integer idPersonaMayor;
     private String nombre;
-    private String telefono;
+    private String celular;
     private Boolean asistio;
 
     public ParticipanteActividadResponse() {
     }
 
     public ParticipanteActividadResponse(Integer idPersonaMayor, String nombre,
-                                          String telefono, Boolean asistio) {
+                                          String celular, Boolean asistio) {
         this.idPersonaMayor = idPersonaMayor;
         this.nombre = nombre;
-        this.telefono = telefono;
+        this.celular = celular;
         this.asistio = asistio;
     }
 
@@ -34,12 +34,12 @@ public class ParticipanteActividadResponse {
         this.nombre = nombre;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getCelular() {
+        return celular;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
+    public void setCelular(String celular) {
+        this.celular = celular;
     }
 
     public Boolean getAsistio() {

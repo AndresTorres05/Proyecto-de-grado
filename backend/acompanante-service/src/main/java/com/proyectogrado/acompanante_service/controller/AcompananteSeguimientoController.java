@@ -109,7 +109,7 @@ public class AcompananteSeguimientoController {
                     return new ContactoResponse(
                             idOtroAcompanante,
                             usuario != null ? usuario.getNombreUsuario() : null,
-                            usuario != null ? usuario.getTelefono() : null,
+                            usuario != null ? usuario.getCelular() : null,
                             parentesco
                     );
                 })

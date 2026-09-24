@@ -28,7 +28,7 @@ public class UsuarioDetailsService implements UserDetailsService {
             throws UsernameNotFoundException {
 
         Usuario usuario = usuarioRepository.findByCorreo(identificador)
-                .or(() -> usuarioRepository.findByTelefono(identificador))
+                .or(() -> usuarioRepository.findByCelular(identificador))
                 .orElseThrow(() ->
                         new UsernameNotFoundException(
                                 "Usuario no encontrado: " + identificador
@@ -63,7 +63,7 @@ public class UsuarioDetailsService implements UserDetailsService {
 
         String username = usuario.getCorreo() != null
                 ? usuario.getCorreo()
-                : usuario.getTelefono();
+                : usuario.getCelular();
 
         return User.builder()
                 .username(username)

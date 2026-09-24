@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 /**
  * Vista de SOLO LECTURA sobre la tabla "usuario", que es dueña de
  * auth-backend. voluntario-service NUNCA crea, edita ni borra usuarios;
- * esto existe solo para poder mostrar nombre/telefono/correo en el
+ * esto existe solo para poder mostrar nombre/celular/correo en el
  * perfil del voluntario sin llamar por HTTP a auth-backend en cada
  * consulta (válido en arquitectura de servicios con BD compartida).
  */
@@ -24,7 +24,7 @@ public class UsuarioLookup {
     private String nombreUsuario;
 
     @Column(name = "telefono")
-    private String telefono;
+    private String celular;
 
     @Column(name = "correo")
     private String correo;
@@ -41,8 +41,8 @@ public class UsuarioLookup {
         return nombreUsuario;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getCelular() {
+        return celular;
     }
 
     public String getCorreo() {
