@@ -1,6 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+import { AuthService } from '../../../../core/auth/auth.service';
+
 import {
   OrganizacionService,
   OrganizacionResponse
@@ -26,6 +28,7 @@ export class Administracion implements OnInit {
 
   constructor(
     private organizacionService: OrganizacionService,
+    private authService: AuthService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -106,6 +109,7 @@ export class Administracion implements OnInit {
 
           this.informacion = data;
           this.formulario = null;
+          this.authService.actualizarNombreUsuario(data.nombre);
 
           this.editando = false;
           this.mostrandoConfirmacion = false;

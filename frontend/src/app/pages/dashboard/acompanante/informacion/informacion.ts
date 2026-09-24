@@ -1,6 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+import { AuthService } from '../../../../core/auth/auth.service';
+
 import {
   AcompananteService,
   AcompanantePerfil
@@ -39,6 +41,7 @@ export class Informacion implements OnInit {
 
   constructor(
     private acompananteService: AcompananteService,
+    private authService: AuthService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -114,6 +117,7 @@ export class Informacion implements OnInit {
 
           this.informacion = data;
           this.formulario = null;
+          this.authService.actualizarNombreUsuario(data.nombre);
           this.editando = false;
           this.mostrandoConfirmacion = false;
 

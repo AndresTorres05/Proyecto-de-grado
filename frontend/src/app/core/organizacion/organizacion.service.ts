@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 
 export interface OrganizacionResponse {
   idOrganizacion: number;
@@ -30,6 +30,7 @@ export interface OrganizacionSolicitud {
 export class OrganizacionService {
 
   private readonly apiUrl = 'http://localhost:8080/api/organizacion';
+  private readonly authInformacionUrl = 'http://localhost:8080/api/auth/informacion';
 
   constructor(private http: HttpClient) {}
 
@@ -39,12 +40,20 @@ export class OrganizacionService {
     );
   }
 
+  // nombre/correo son de identidad (auth-backend); organizacion-service
+  // solo guarda la dirección. Primero se guarda la identidad para que la
+  // respuesta de organizacion-service ya traiga el nombre nuevo.
   actualizarInformacion(
     informacion: OrganizacionResponse
   ): Observable<OrganizacionResponse> {
-    return this.http.put<OrganizacionResponse>(
-      `${this.apiUrl}/informacion`,
-      informacion
+    return this.http.put(this.authInformacionUrl, {
+      nombre: informacion.nombre,
+      correo: informacion.correo
+    }).pipe(
+      switchMap(() => this.http.put<OrganizacionResponse>(
+        `${this.apiUrl}/informacion`,
+        { direccion: informacion.direccion }
+      ))
     );
   }
   obtenerPersonasMayores(): Observable<PersonaMayorOrganizacion[]> {

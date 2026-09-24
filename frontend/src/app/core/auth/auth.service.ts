@@ -71,6 +71,12 @@ export class AuthService {
     !!sessionStorage.getItem('token')
   );
 
+  // Nombre mostrado en el panel (arriba a la derecha). Es un signal
+  // para que al editarlo en "Mi información" se vea al instante.
+  private readonly nombreUsuarioSignal = signal(
+    sessionStorage.getItem('nombreUsuario') ?? 'Usuario'
+  );
+
   constructor(
     private http: HttpClient,
     private router: Router
@@ -149,6 +155,7 @@ export class AuthService {
     sessionStorage.setItem('rol', response.rol);
     sessionStorage.setItem('idUsuario', String(response.idUsuario));
     sessionStorage.setItem('nombreUsuario', response.nombreUsuario);
+    this.nombreUsuarioSignal.set(response.nombreUsuario);
 
     // Avisar a toda la aplicación que hay una sesión
     this.autenticadoSignal.set(true);
@@ -164,6 +171,7 @@ export class AuthService {
     sessionStorage.removeItem('rol');
     sessionStorage.removeItem('idUsuario');
     sessionStorage.removeItem('nombreUsuario');
+    this.nombreUsuarioSignal.set('Usuario');
 
     // Avisar a toda la aplicación que la sesión terminó
     this.autenticadoSignal.set(false);
@@ -180,8 +188,16 @@ export class AuthService {
     return idUsuario ? Number(idUsuario) : null;
   }
 
+  // Lee un signal: usado dentro de computed()/plantillas se
+  // actualiza solo cuando cambia el nombre.
   getNombreUsuario(): string {
-    return sessionStorage.getItem('nombreUsuario') ?? 'Usuario';
+    return this.nombreUsuarioSignal();
+  }
+
+  // Llamar después de guardar un nombre nuevo (cualquier rol).
+  actualizarNombreUsuario(nombre: string): void {
+    sessionStorage.setItem('nombreUsuario', nombre);
+    this.nombreUsuarioSignal.set(nombre);
   }
 
   getRol(): string | null {
