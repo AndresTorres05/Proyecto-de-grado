@@ -136,6 +136,14 @@ export class AuthService {
       );
   }
 
+  // Borra la cuenta del usuario autenticado (cualquier rol).
+  // El backend toma el id del token.
+  eliminarCuenta(): Observable<string> {
+    return this.http.delete(`${this.apiUrl}/cuenta`, {
+      responseType: 'text'
+    });
+  }
+
   private guardarSesion(response: LoginResponse): void {
     sessionStorage.setItem('token', response.token);
     sessionStorage.setItem('rol', response.rol);

@@ -289,6 +289,96 @@
   border-top: 1px solid var(--vita-border);
 }
 
+.shell__user-menu .shell__user-menu-danger,
+.shell__user-menu .shell__user-menu-danger:hover {
+  color: #c0392b;
+}
+
+/* ---------- Confirmar eliminar cuenta ---------- */
+
+.shell__confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(10, 32, 56, 0.5);
+}
+
+.shell__confirm-modal {
+  width: 100%;
+  max-width: 440px;
+  padding: 28px;
+  background: var(--vita-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card-lg);
+  color: var(--vita-text);
+}
+
+.shell__confirm-modal h2 {
+  margin: 0 0 12px;
+  font-size: 1.3rem;
+}
+
+.shell__confirm-modal p {
+  margin: 0 0 16px;
+  color: var(--vita-text-gray);
+}
+
+.shell__confirm-modal label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.shell__confirm-modal input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--vita-border);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.shell__confirm-modal .shell__confirm-error {
+  margin: 12px 0 0;
+  color: #c0392b;
+}
+
+.shell__confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.shell__confirm-actions button {
+  padding: 10px 18px;
+  border-radius: var(--radius-pill);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.shell__confirm-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.shell__confirm-cancel {
+  border: 1px solid var(--vita-border);
+  background: var(--vita-white);
+  color: var(--vita-navy);
+}
+
+.shell__confirm-delete {
+  border: none;
+  background: #c0392b;
+  color: var(--vita-white);
+}
+
 .shell__logout {
   display: inline-flex;
   align-items: center;
