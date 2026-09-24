@@ -27,6 +27,10 @@ import java.util.List;
 @RequestMapping("/api/persona-mayor/medicamentos")
 public class MedicamentoController {
 
+    // Cuanto antes de la hora de la toma se habilita "Ya la tomé".
+    // Debe coincidir con MINUTOS_ANTES_PARA_CONFIRMAR del frontend.
+    private static final long MINUTOS_ANTES_PARA_CONFIRMAR = 15;
+
     private final MedicamentoRepository medicamentoRepository;
 
     public MedicamentoController(MedicamentoRepository medicamentoRepository) {
@@ -92,7 +96,17 @@ public class MedicamentoController {
                     .body("Este medicamento no pertenece a este usuario");
         }
 
+        // Solo se puede confirmar a la hora de la toma o poco antes;
+        // si no, se podria "adelantar" la siguiente dosis.
         LocalDateTime ahora = LocalDateTime.now();
+        LocalDateTime habilitadoDesde = medicamento.getProximaToma()
+                .minusMinutes(MINUTOS_ANTES_PARA_CONFIRMAR);
+
+        if (ahora.isBefore(habilitadoDesde)) {
+            return ResponseEntity.badRequest()
+                    .body("Todavía no es la hora de tomar este medicamento");
+        }
+
         medicamento.setUltimaToma(ahora);
         medicamento.setProximaToma(ahora.plusHours(medicamento.getIntervaloHoras()));
         medicamento.setUltimoRecordatorioEnviado(null);

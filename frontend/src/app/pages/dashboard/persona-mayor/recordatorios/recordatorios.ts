@@ -1,6 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MedicamentoService, Medicamento, MedicamentoRequest } from '../../../../core/medicamentos/medicamento.service';
+
+// Cuánto antes de la hora de la toma se habilita "Ya la tomé".
+// Debe coincidir con MINUTOS_ANTES_PARA_CONFIRMAR de salud-service.
+const MINUTOS_ANTES_PARA_CONFIRMAR = 15;
 
 @Component({
   selector: 'app-recordatorios',
@@ -9,7 +13,12 @@ import { MedicamentoService, Medicamento, MedicamentoRequest } from '../../../..
   templateUrl: './recordatorios.html',
   styleUrl: './recordatorios.css'
 })
-export class Recordatorios implements OnInit {
+export class Recordatorios implements OnInit, OnDestroy {
+
+  // Hora actual, se refresca sola para que el botón "Ya la tomé"
+  // se habilite a la hora correspondiente sin recargar la página.
+  protected readonly ahora = signal(Date.now());
+  private intervaloReloj?: ReturnType<typeof setInterval>;
 
   protected readonly medicamentos = signal<Medicamento[]>([]);
   protected readonly cargando = signal(true);
@@ -34,6 +43,11 @@ export class Recordatorios implements OnInit {
 
   ngOnInit(): void {
     this.cargar();
+    this.intervaloReloj = setInterval(() => this.ahora.set(Date.now()), 30_000);
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.intervaloReloj);
   }
 
   private cargar(): void {
@@ -53,7 +67,22 @@ export class Recordatorios implements OnInit {
   }
 
   estaVencido(medicamento: Medicamento): boolean {
-    return new Date(medicamento.proximaToma).getTime() <= Date.now();
+    return new Date(medicamento.proximaToma).getTime() <= this.ahora();
+  }
+
+  // Solo se puede confirmar a la hora de la toma o poco antes.
+  puedeConfirmar(medicamento: Medicamento): boolean {
+    return this.ahora() >= this.habilitadoDesde(medicamento);
+  }
+
+  formatearHabilitadoDesde(medicamento: Medicamento): string {
+    return new Date(this.habilitadoDesde(medicamento))
+      .toLocaleTimeString('es-CO', { timeStyle: 'short' });
+  }
+
+  private habilitadoDesde(medicamento: Medicamento): number {
+    return new Date(medicamento.proximaToma).getTime()
+      - MINUTOS_ANTES_PARA_CONFIRMAR * 60_000;
   }
 
   formatearProximaToma(medicamento: Medicamento): string {

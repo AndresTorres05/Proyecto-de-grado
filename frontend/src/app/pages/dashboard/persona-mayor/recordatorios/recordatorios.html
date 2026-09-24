@@ -48,10 +48,16 @@
           <button
             type="button"
             class="btn btn-primary medicamento-card__confirmar"
-            [disabled]="confirmandoId() === medicamento.idMedicamento"
+            [disabled]="confirmandoId() === medicamento.idMedicamento || !puedeConfirmar(medicamento)"
             (click)="confirmarToma(medicamento)"
           >
-            {{ confirmandoId() === medicamento.idMedicamento ? 'Confirmando...' : '✓ Ya la tomé' }}
+            @if (confirmandoId() === medicamento.idMedicamento) {
+              Confirmando...
+            } @else if (puedeConfirmar(medicamento)) {
+              ✓ Ya la tomé
+            } @else {
+              Disponible desde las {{ formatearHabilitadoDesde(medicamento) }}
+            }
           </button>
 
           <div class="medicamento-card__acciones">
