@@ -15,7 +15,7 @@
       <button
         type="button"
         class="informacion__edit-button"
-        (click)="editando = !editando"
+        (click)="editando ? cancelarEdicion() : abrirEdicion()"
       >
         {{ editando ? 'Cancelar' : 'Editar información' }}
       </button>
@@ -235,7 +235,7 @@
             <input
               id="nombre"
               type="text"
-              [(ngModel)]="informacion!.nombre"
+              [(ngModel)]="formulario!.nombre"
               placeholder="Ingresa tu nombre"
             />
 
@@ -252,7 +252,7 @@
             <input
               id="correo"
               type="email"
-              [(ngModel)]="informacion!.correo"
+              [(ngModel)]="formulario!.correo"
               placeholder="Ingresa tu correo"
             />
 
@@ -283,7 +283,7 @@
             <input
               id="fechaNacimiento"
               type="date"
-              [(ngModel)]="informacion!.fechaNacimiento"
+              [(ngModel)]="formulario!.fechaNacimiento"
             />
 
           </div>
@@ -298,7 +298,7 @@
 
             <select
               id="genero"
-              [(ngModel)]="informacion!.genero"
+              [(ngModel)]="formulario!.genero"
             >
 
               <option value="">
@@ -332,7 +332,7 @@
             <input
               id="direccion"
               type="text"
-              [(ngModel)]="informacion!.direccion"
+              [(ngModel)]="formulario!.direccion"
               placeholder="Ingresa tu dirección"
             />
 

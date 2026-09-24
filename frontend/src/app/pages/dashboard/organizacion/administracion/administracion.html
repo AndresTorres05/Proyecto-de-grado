@@ -16,7 +16,7 @@
       <button
         type="button"
         class="informacion__edit-button"
-        (click)="editando = !editando"
+        (click)="editando ? cancelarEdicion() : abrirEdicion()"
       >
         {{ editando ? 'Cancelar' : 'Editar información' }}
       </button>
@@ -126,7 +126,7 @@
        MODAL EDITAR
        ========================= -->
 
-  @if (editando && informacion) {
+  @if (editando && formulario) {
 
     <div class="informacion__edit-overlay">
 
@@ -180,7 +180,7 @@
             <input
               id="nombre"
               type="text"
-              [(ngModel)]="informacion.nombre"
+              [(ngModel)]="formulario!.nombre"
               placeholder="Ingresa el nombre de la organización"
             />
 
@@ -198,7 +198,7 @@
             <input
               id="correo"
               type="email"
-              [(ngModel)]="informacion.correo"
+              [(ngModel)]="formulario!.correo"
               placeholder="Ingresa el correo electrónico"
             />
 
@@ -216,7 +216,7 @@
             <input
               id="celular"
               type="tel"
-              [(ngModel)]="informacion.celular"
+              [(ngModel)]="formulario!.celular"
               placeholder="Ingresa el celular"
             />
 
@@ -234,7 +234,7 @@
             <input
               id="direccion"
               type="text"
-              [(ngModel)]="informacion.direccion"
+              [(ngModel)]="formulario!.direccion"
               placeholder="Ingresa la dirección"
             />
 

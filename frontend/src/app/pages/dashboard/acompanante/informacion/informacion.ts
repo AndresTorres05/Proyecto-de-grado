@@ -16,6 +16,10 @@ export class Informacion implements OnInit {
 
   informacion: AcompanantePerfil | null = null;
 
+  // Copia que se edita en el modal; "informacion" solo cambia
+  // cuando el backend confirma el guardado.
+  formulario: AcompanantePerfil | null = null;
+
   cargando = true;
   editando = false;
   mostrandoConfirmacion = false;
@@ -80,27 +84,36 @@ export class Informacion implements OnInit {
   // EDITAR INFORMACIÓN
   // =========================
 
-  guardarCambios(): void {
+  abrirEdicion(): void {
 
     if (!this.informacion) return;
+
+    this.formulario = { ...this.informacion };
+    this.editando = true;
+  }
+
+  guardarCambios(): void {
+
+    if (!this.formulario) return;
 
     this.mostrandoConfirmacion = true;
   }
 
   confirmarGuardado(): void {
 
-    if (!this.informacion) return;
+    if (!this.formulario) return;
 
     this.acompananteService
       .actualizarInformacion({
-        nombre: this.informacion.nombre,
-        correo: this.informacion.correo || undefined
+        nombre: this.formulario.nombre,
+        correo: this.formulario.correo || undefined
       })
       .subscribe({
 
         next: (data) => {
 
           this.informacion = data;
+          this.formulario = null;
           this.editando = false;
           this.mostrandoConfirmacion = false;
 
@@ -125,8 +138,9 @@ export class Informacion implements OnInit {
   }
 
   cancelarEdicion(): void {
+
     this.editando = false;
-    this.cargarInformacion();
+    this.formulario = null;
   }
 
   // =========================

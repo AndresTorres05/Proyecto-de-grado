@@ -16,6 +16,10 @@ export class Administracion implements OnInit {
 
   informacion: OrganizacionResponse | null = null;
 
+  // Copia que se edita en el modal; "informacion" solo cambia
+  // cuando el backend confirma el guardado.
+  formulario: OrganizacionResponse | null = null;
+
   cargando = true;
   editando = false;
   mostrandoConfirmacion = false;
@@ -67,9 +71,17 @@ export class Administracion implements OnInit {
   // INICIAR GUARDADO
   // ==========================================
 
+  abrirEdicion(): void {
+
+    if (!this.informacion) return;
+
+    this.formulario = { ...this.informacion };
+    this.editando = true;
+  }
+
   guardarCambios(): void {
 
-    if (!this.informacion) {
+    if (!this.formulario) {
       return;
     }
 
@@ -82,17 +94,18 @@ export class Administracion implements OnInit {
 
   confirmarGuardado(): void {
 
-    if (!this.informacion) {
+    if (!this.formulario) {
       return;
     }
 
     this.organizacionService
-      .actualizarInformacion(this.informacion)
+      .actualizarInformacion(this.formulario)
       .subscribe({
 
         next: (data) => {
 
           this.informacion = data;
+          this.formulario = null;
 
           this.editando = false;
           this.mostrandoConfirmacion = false;
@@ -129,7 +142,6 @@ export class Administracion implements OnInit {
   cancelarEdicion(): void {
 
     this.editando = false;
-
-    this.cargarInformacion();
+    this.formulario = null;
   }
 }

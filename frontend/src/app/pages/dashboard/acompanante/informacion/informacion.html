@@ -16,7 +16,7 @@
       <button
         type="button"
         class="informacion__edit-button"
-        (click)="editando = !editando"
+        (click)="editando ? cancelarEdicion() : abrirEdicion()"
       >
         {{ editando ? 'Cancelar' : 'Editar información' }}
       </button>
@@ -210,7 +210,7 @@
             <input
               id="nombre"
               type="text"
-              [(ngModel)]="informacion!.nombre"
+              [(ngModel)]="formulario!.nombre"
               placeholder="Ingresa tu nombre"
             />
 
@@ -228,7 +228,7 @@
             <input
               id="correo"
               type="email"
-              [(ngModel)]="informacion!.correo"
+              [(ngModel)]="formulario!.correo"
               placeholder="Ingresa tu correo"
             />
 
