@@ -236,6 +236,16 @@ public class AuthService {
         usuario.setNombreUsuario(request.getNombreUsuario().trim());
         usuario.setCelular(celular);
 
+        if (request.getFechaNacimiento() != null
+        && !request.getFechaNacimiento().isBlank()) {
+    usuario.setFechaNacimiento(
+            LocalDate.parse(request.getFechaNacimiento())
+    );
+}
+
+usuario.setGenero(request.getGenero());
+usuario.setDireccion(request.getDireccion());
+
         if (correo != null) {
             usuario.setCorreo(correo);
         }
@@ -258,21 +268,10 @@ public class AuthService {
 
         switch (rolNombre) {
 
-            case "PERSONA_MAYOR" -> {
-                PersonaMayor personaMayor = new PersonaMayor(usuarioGuardado);
-
-                if (request.getFechaNacimiento() != null
-                        && !request.getFechaNacimiento().isBlank()) {
-                    personaMayor.setFechaNacimiento(
-                            LocalDate.parse(request.getFechaNacimiento())
-                    );
-                }
-
-                personaMayor.setGenero(request.getGenero());
-                personaMayor.setDireccion(request.getDireccion());
-
-                personaMayorRepository.save(personaMayor);
-            }
+case "PERSONA_MAYOR" -> {
+    PersonaMayor personaMayor = new PersonaMayor(usuarioGuardado);
+    personaMayorRepository.save(personaMayor);
+}
 
             case "ACOMPANANTE" -> {
                 Acompanante acompanante = new Acompanante(usuarioGuardado, null);
@@ -365,9 +364,9 @@ case "ORGANIZACION" -> {
         }
         String rol = request.getRol().trim().toUpperCase();
 
-// Datos personales: solo la persona mayor los registra
-// (se guardan en persona_mayor, no en usuario).
-if (rol.equals("PERSONA_MAYOR")) {
+if (rol.equals("PERSONA_MAYOR")
+        || rol.equals("ACOMPANANTE")
+        || rol.equals("VOLUNTARIO")) {
 
     if (request.getFechaNacimiento() == null
             || request.getFechaNacimiento().isBlank()) {

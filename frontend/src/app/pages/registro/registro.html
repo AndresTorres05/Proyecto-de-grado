@@ -200,7 +200,11 @@
         <!-- DATOS PERSONA MAYOR -->
         <!-- ================================================= -->
 
-        @if (rol === 'PERSONA_MAYOR') {
+        @if (
+          rol === 'PERSONA_MAYOR' ||
+          rol === 'ACOMPANANTE' ||
+          rol === 'VOLUNTARIO'
+        ) {
 
           <label
             class="login-label"
@@ -250,11 +254,7 @@
 
           </select>
         }
-
-        <!-- Dirección: solo persona mayor y organización -->
-        @if (rol === 'PERSONA_MAYOR' || rol === 'ORGANIZACION') {
-
-        <label
+                <label
           class="login-label"
           for="direccion"
         >
@@ -273,8 +273,6 @@
             ? 'Dirección de la organización'
             : 'Tu dirección'"
         />
-
-        }
 
         }
 
