@@ -435,3 +435,10 @@
     width: 100%;
   }
 }
+
+/* Error al guardar (p. ej. correo rechazado) */
+.informacion__form-error {
+  margin: 16px 0 0;
+  color: #c0392b;
+  font-size: 0.95rem;
+}

@@ -249,6 +249,10 @@
              ACCIONES
              ========================= -->
 
+        @if (errorGuardado) {
+          <p class="informacion__form-error">{{ errorGuardado }}</p>
+        }
+
         <div class="informacion__actions">
 
           <button

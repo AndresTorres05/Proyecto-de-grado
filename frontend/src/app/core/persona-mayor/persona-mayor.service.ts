@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin, map } from 'rxjs';
+import { Observable, forkJoin, map, switchMap } from 'rxjs';
 
 export interface PersonaMayorResponse {
   idUsuario: number;
@@ -45,18 +45,20 @@ export class PersonaMayorService {
     );
   }
 
+  // Primero la identidad (nombre/correo): si el correo es rechazado,
+  // no se guarda el perfil a medias.
   actualizarInformacion(informacion: PersonaMayorResponse): Observable<PersonaMayorResponse> {
-    return forkJoin({
-      identidad: this.http.put<any>(this.authUrl, {
-        nombre: informacion.nombre,
-        correo: informacion.correo
-      }),
-      perfil: this.http.put<any>(this.perfilUrl, {
-        fechaNacimiento: informacion.fechaNacimiento,
-        genero: informacion.genero,
-        direccion: informacion.direccion
-      })
+    return this.http.put<any>(this.authUrl, {
+      nombre: informacion.nombre,
+      correo: informacion.correo
     }).pipe(
+      switchMap((identidad) =>
+        this.http.put<any>(this.perfilUrl, {
+          fechaNacimiento: informacion.fechaNacimiento,
+          genero: informacion.genero,
+          direccion: informacion.direccion
+        }).pipe(map((perfil) => ({ identidad, perfil })))
+      ),
       map(({ identidad, perfil }) => ({
         idUsuario: identidad.idUsuario,
         nombre: identidad.nombre,

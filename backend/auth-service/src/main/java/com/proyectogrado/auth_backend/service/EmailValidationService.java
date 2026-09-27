@@ -43,6 +43,14 @@ public class EmailValidationService {
                 apiKey.length(), apiKey.substring(0, Math.min(4, apiKey.length())));
     }
 
+    // Misma regla que usa el registro: solo se acepta si Hunter
+    // responde status "valid" (el correo existe y puede recibir).
+    public boolean puedeRecibirCorreos(String correo) {
+        return "valid".equalsIgnoreCase(
+                validarCorreo(correo).path("data").path("status").asText()
+        );
+    }
+
     public JsonNode validarCorreo(String correo) {
 
         try {

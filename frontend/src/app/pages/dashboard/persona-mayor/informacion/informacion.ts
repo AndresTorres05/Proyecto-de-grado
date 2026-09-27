@@ -21,6 +21,8 @@ export class Informacion implements OnInit {
 
   // Copia que se edita en el modal; "informacion" solo cambia
   // cuando el backend confirma el guardado.
+  errorGuardado = '';
+
   formulario: PersonaMayorResponse | null = null;
 
   cargando = true;
@@ -83,6 +85,7 @@ export class Informacion implements OnInit {
     if (!this.informacion) return;
 
     this.formulario = { ...this.informacion };
+    this.errorGuardado = '';
     this.editando = true;
   }
 
@@ -119,7 +122,13 @@ export class Informacion implements OnInit {
             error
           );
 
+          // El backend responde el motivo en texto (p. ej. correo inválido)
+          this.errorGuardado = typeof error.error === 'string' && error.error
+            ? error.error
+            : 'No se pudo guardar la información. Intenta de nuevo.';
+
           this.mostrandoConfirmacion = false;
+          this.cdr.detectChanges();
         }
       });
   }
