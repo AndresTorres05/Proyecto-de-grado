@@ -11,6 +11,14 @@ export interface ShellNavItem {
   path?: string;
 }
 
+// Página de "Mi información" de cada rol (no todas se llaman igual).
+const RUTA_MI_INFORMACION: Record<string, string> = {
+  PERSONA_MAYOR: '/panel/persona-mayor/informacion',
+  ACOMPANANTE: '/panel/acompanante/perfil',
+  ORGANIZACION: '/panel/organizacion/administracion',
+  VOLUNTARIO: '/panel/voluntario/perfil'
+};
+
 @Component({
   selector: 'app-dashboard-shell',
   imports: [RouterLink, RouterLinkActive, Icon],
@@ -48,6 +56,11 @@ export class DashboardShell {
 
   irAMiInformacion(): void {
     this.menuUsuarioAbierto = false;
-    this.router.navigateByUrl('/panel/persona-mayor/informacion');
+    const rol = this.authService.getRol();
+    const ruta = rol ? RUTA_MI_INFORMACION[rol] : undefined;
+
+    if (ruta) {
+      this.router.navigateByUrl(ruta);
+    }
   }
 }
