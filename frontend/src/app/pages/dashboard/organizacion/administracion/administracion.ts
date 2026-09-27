@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { EliminarCuenta } from '../../../../shared/eliminar-cuenta/eliminar-cuenta';
 
 import { AuthService } from '../../../../core/auth/auth.service';
 
@@ -10,7 +11,7 @@ import {
 
 @Component({
   selector: 'app-administracion',
-  imports: [FormsModule],
+  imports: [FormsModule, EliminarCuenta],
   templateUrl: './administracion.html',
   styleUrl: './administracion.css'
 })

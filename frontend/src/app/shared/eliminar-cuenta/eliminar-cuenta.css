@@ -1,0 +1,131 @@
+/* ---------- Zona de peligro ---------- */
+
+.zona-peligro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+
+  margin-top: 28px;
+  padding: 24px 28px;
+
+  background: var(--vita-white);
+  border: 1px solid #f1c6c1;
+  border-radius: var(--radius-md);
+}
+
+.zona-peligro h2 {
+  margin: 0 0 6px;
+  color: #c0392b;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.zona-peligro p {
+  margin: 0;
+  max-width: 520px;
+  color: var(--vita-text-gray);
+}
+
+.zona-peligro__boton {
+  padding: 10px 18px;
+  border: 1px solid #c0392b;
+  border-radius: var(--radius-pill);
+  background: var(--vita-white);
+  color: #c0392b;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.zona-peligro__boton:hover {
+  background: #c0392b;
+  color: var(--vita-white);
+}
+
+/* ---------- Modal de confirmación ---------- */
+
+.eliminar-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(10, 32, 56, 0.5);
+}
+
+.eliminar-modal {
+  width: 100%;
+  max-width: 440px;
+  padding: 28px;
+  background: var(--vita-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card-lg);
+  color: var(--vita-text);
+}
+
+.eliminar-modal h2 {
+  margin: 0 0 12px;
+  font-size: 1.3rem;
+}
+
+.eliminar-modal p {
+  margin: 0 0 16px;
+  color: var(--vita-text-gray);
+}
+
+.eliminar-modal label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.eliminar-modal input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--vita-border);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.eliminar-modal .eliminar-modal__error {
+  margin: 12px 0 0;
+  color: #c0392b;
+}
+
+.eliminar-modal__acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.eliminar-modal__acciones button {
+  padding: 10px 18px;
+  border-radius: var(--radius-pill);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.eliminar-modal__acciones button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.eliminar-modal__cancelar {
+  border: 1px solid var(--vita-border);
+  background: var(--vita-white);
+  color: var(--vita-navy);
+}
+
+.eliminar-modal__confirmar {
+  border: none;
+  background: #c0392b;
+  color: var(--vita-white);
+}

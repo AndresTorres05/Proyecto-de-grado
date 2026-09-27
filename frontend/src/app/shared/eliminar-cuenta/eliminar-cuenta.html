@@ -1,0 +1,70 @@
+<section class="zona-peligro" aria-labelledby="zonaPeligroTitle">
+  <div>
+    <h2 id="zonaPeligroTitle">Eliminar cuenta</h2>
+    <p>
+      Se borrarán tu cuenta y toda tu información de forma permanente.
+      Esta acción no se puede deshacer.
+    </p>
+  </div>
+
+  <button
+    type="button"
+    class="zona-peligro__boton"
+    (click)="abrirModal()"
+  >
+    Eliminar mi cuenta
+  </button>
+</section>
+
+@if (mostrandoModal()) {
+  <div class="eliminar-overlay">
+    <div
+      class="eliminar-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="eliminarCuentaTitle"
+    >
+      <h2 id="eliminarCuentaTitle">¿Eliminar tu cuenta?</h2>
+
+      <p>
+        Se borrarán tu cuenta y toda tu información de forma permanente.
+        Esta acción no se puede deshacer.
+      </p>
+
+      <label for="confirmacionEliminar">
+        Escribe <strong>ELIMINAR</strong> para confirmar
+      </label>
+      <input
+        id="confirmacionEliminar"
+        type="text"
+        autocomplete="off"
+        [value]="textoConfirmacion()"
+        (input)="textoConfirmacion.set($any($event.target).value)"
+        [disabled]="eliminando()"
+      />
+
+      @if (error()) {
+        <p class="eliminar-modal__error">{{ error() }}</p>
+      }
+
+      <div class="eliminar-modal__acciones">
+        <button
+          type="button"
+          class="eliminar-modal__cancelar"
+          (click)="cerrarModal()"
+          [disabled]="eliminando()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="eliminar-modal__confirmar"
+          (click)="confirmar()"
+          [disabled]="!confirmacionValida() || eliminando()"
+        >
+          {{ eliminando() ? 'Eliminando…' : 'Eliminar cuenta' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
