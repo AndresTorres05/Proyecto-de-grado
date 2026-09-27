@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.proyectogrado.auth_backend.dto.RestablecerContrasenaRequest;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.proyectogrado.auth_backend.service.EmailValidationService;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -25,8 +28,11 @@ public class AuthController {
 
     private final AuthService authService;
 
-    public AuthController(AuthService authService) {
+    private final EmailValidationService emailValidationService;
+
+    public AuthController(AuthService authService, EmailValidationService emailValidationService) {
         this.authService = authService;
+        this.emailValidationService = emailValidationService;
     }
 
     @PostMapping("/login")
@@ -143,6 +149,31 @@ public ResponseEntity<LoginResponse> restablecerContrasena(
                                 e.getMessage(),
                                 null,
                                 null
+                        )
+                );
+    }
+}
+
+@GetMapping("/validar-correo")
+public ResponseEntity<?> validarCorreo(
+        @RequestParam String correo
+) {
+    try {
+        JsonNode resultado =
+                emailValidationService.validarCorreo(correo);
+
+        return ResponseEntity
+                .ok()
+                .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                .body(resultado.toString());
+
+    } catch (RuntimeException e) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_GATEWAY)
+                .body(
+                        java.util.Map.of(
+                                "mensaje",
+                                e.getMessage()
                         )
                 );
     }

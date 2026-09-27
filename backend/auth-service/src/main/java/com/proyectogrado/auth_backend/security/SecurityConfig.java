@@ -108,6 +108,7 @@ public class SecurityConfig {
                                 "/api/auth/registro",
                                 "/api/auth/celular-existe",
                                 "/api/auth/restablecer-contrasena",
+                                "/api/auth/validar-correo",
                                 "/error"
                         )
                         .permitAll()

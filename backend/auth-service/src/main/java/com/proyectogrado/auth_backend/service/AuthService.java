@@ -26,6 +26,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -42,6 +44,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final MessagingClient messagingClient;
+    private final EmailValidationService emailValidationService;
 
     public AuthService(
             UsuarioRepository usuarioRepository,
@@ -53,8 +56,10 @@ public class AuthService {
             VoluntarioRepository voluntarioRepository,
             PasswordEncoder passwordEncoder,
             JwtService jwtService,
-            MessagingClient messagingClient
+            MessagingClient messagingClient,
+            EmailValidationService emailValidationService
     ) {
+
         this.usuarioRepository = usuarioRepository;
         this.rolRepository = rolRepository;
         this.usuarioRolRepository = usuarioRolRepository;
@@ -65,6 +70,7 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.messagingClient = messagingClient;
+        this.emailValidationService = emailValidationService;
     }
 
     // =========================================================
@@ -311,9 +317,27 @@ public void restablecerContrasena(
         }
 
         if (correo != null && usuarioRepository.existsByCorreo(correo)) {
-            throw new RuntimeException(
-                    "Ya existe un usuario registrado con ese correo"
-            );
+        throw new RuntimeException(
+                "Ya existe un usuario registrado con ese correo"
+        );
+}
+
+        if (correo != null) {
+
+        JsonNode resultado =
+                emailValidationService.validarCorreo(correo);
+
+        String status =
+                resultado
+                        .path("data")
+                        .path("status")
+                        .asText();
+
+        if (!"valid".equalsIgnoreCase(status)) {
+                throw new RuntimeException(
+                        "El correo electrónico no parece ser válido o no puede recibir correos. Verifica que esté escrito correctamente."
+                );
+        }
         }
 
         Rol rol = rolRepository
