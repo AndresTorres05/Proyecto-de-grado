@@ -34,273 +34,492 @@
 
 
     <!-- =====================================================
-         TÍTULO
+         FORMULARIO
          ===================================================== -->
 
-    <h1 class="login-title">
-      Iniciar sesión
-    </h1>
-
-    <p class="login-subtitle">
-      Ingresa tus credenciales para acceder a tu panel
-    </p>
-
-
-
-
-
-
-
-
     <form
-  (ngSubmit)="onSubmit()"
-  class="login-form"
->
+      (ngSubmit)="onSubmit()"
+      class="login-form"
+    >
 
-  <!-- ===================================================
-       LOGIN PRINCIPAL: CELULAR
-       =================================================== -->
+      <!-- ===================================================
+           RECUPERACIÓN DE CONTRASEÑA
+           =================================================== -->
 
-  @if (modo() === 'celular') {
+      @if (modoRecuperacion()) {
 
-    @if (!otpEnviado()) {
+        <h1 class="login-title login-recovery-title">
+          Recuperar contraseña
+        </h1>
 
-      <label
-        class="login-label"
-        for="celular"
-      >
-        Número de celular
-      </label>
+        <p class="login-subtitle login-recovery-subtitle">
+          Te enviaremos un código de verificación a tu celular
+        </p>
 
-      <div class="login-phone-row">
 
-        <span class="login-phone-prefix">
-          +57
-        </span>
+        <!-- ================================================
+             PASO 1: CELULAR
+             ================================================ -->
 
-        <input
-          id="celular"
-          name="celular"
-          type="tel"
-          class="login-input login-input--phone"
-          [(ngModel)]="celularLocal"
-          required
-          placeholder="3001234567"
-        />
+        @if (!recuperacionOtpEnviado()) {
 
-      </div>
+          <label
+            class="login-label"
+            for="celularRecuperacion"
+          >
+            Número de celular
+          </label>
 
-      <button
-        type="button"
-        class="btn btn-primary login-submit"
-        [disabled]="enviandoCodigo()"
-        (click)="enviarCodigo()"
-      >
-        {{ enviandoCodigo()
-            ? 'Enviando...'
-            : 'Enviar código por SMS'
-        }}
-      </button>
+          <div class="login-phone-row">
 
-    }
+            <span class="login-phone-prefix">
+              +57
+            </span>
 
-    <!-- =================================================
-         CÓDIGO OTP
-         ================================================= -->
+            <input
+              id="celularRecuperacion"
+              name="celularRecuperacion"
+              type="tel"
+              class="login-input login-input--phone"
+              [(ngModel)]="celularLocal"
+              required
+              placeholder="3001234567"
+            />
 
-    @if (otpEnviado()) {
+          </div>
 
-      <label
-        class="login-label"
-        for="codigo"
-      >
-        Código de verificación
-      </label>
 
-      <input
-        id="codigo"
-        name="codigo"
-        type="text"
-        inputmode="numeric"
-        class="login-input"
-        [(ngModel)]="codigo"
-        required
-        placeholder="123456"
-      />
+          <button
+            type="button"
+            class="btn btn-primary login-submit"
+            [disabled]="enviandoCodigo()"
+            (click)="enviarCodigoRecuperacion()"
+          >
+            {{ enviandoCodigo()
+                ? 'Enviando...'
+                : 'Enviar código por SMS'
+            }}
+          </button>
 
-      <!-- ================================================
-           REENVIAR CÓDIGO
-           ================================================ -->
+        }
 
-      @if (segundosReenvio() > 0) {
+
+        <!-- ================================================
+             PASO 2: CÓDIGO + NUEVA CONTRASEÑA
+             ================================================ -->
+
+        @if (recuperacionOtpEnviado()) {
+
+          <label
+            class="login-label"
+            for="codigoRecuperacion"
+          >
+            Código de verificación
+          </label>
+
+          <input
+            id="codigoRecuperacion"
+            name="codigoRecuperacion"
+            type="text"
+            inputmode="numeric"
+            class="login-input"
+            [(ngModel)]="recuperacionCodigo"
+            required
+            placeholder="123456"
+          />
+
+
+          <!-- REENVIAR CÓDIGO -->
+
+          @if (segundosReenvio() > 0) {
+
+            <button
+              type="button"
+              class="login-resend"
+              disabled
+            >
+              Reenviar código ({{ segundosReenvio() }}s)
+            </button>
+
+          } @else {
+
+            <button
+              type="button"
+              class="login-resend"
+              [disabled]="enviandoCodigo()"
+              (click)="enviarCodigoRecuperacion()"
+            >
+              {{ enviandoCodigo()
+                  ? 'Enviando...'
+                  : 'Reenviar código'
+              }}
+            </button>
+
+          }
+
+
+          <!-- NUEVA CONTRASEÑA -->
+
+          <label
+            class="login-label"
+            for="nuevaContrasena"
+          >
+            Nueva contraseña
+          </label>
+
+          <input
+            id="nuevaContrasena"
+            name="nuevaContrasena"
+            type="password"
+            class="login-input"
+            [(ngModel)]="nuevaContrasena"
+            required
+            minlength="6"
+            placeholder="••••••••"
+          />
+
+
+          <!-- CONFIRMAR CONTRASEÑA -->
+
+          <label
+            class="login-label"
+            for="confirmarNuevaContrasena"
+          >
+            Confirmar nueva contraseña
+          </label>
+
+          <input
+            id="confirmarNuevaContrasena"
+            name="confirmarNuevaContrasena"
+            type="password"
+            class="login-input"
+            [(ngModel)]="confirmarNuevaContrasena"
+            required
+            minlength="6"
+            placeholder="••••••••"
+          />
+
+
+          <button
+            type="button"
+            class="btn btn-primary login-submit"
+            [disabled]="cargando()"
+            (click)="restablecerContrasena()"
+          >
+            {{ cargando()
+                ? 'Actualizando...'
+                : 'Cambiar contraseña'
+            }}
+          </button>
+
+        }
+
+
+        <!-- ================================================
+             MENSAJES DE RECUPERACIÓN
+             ================================================ -->
+
+        @if (infoMensaje()) {
+
+          <p class="login-info">
+            {{ infoMensaje() }}
+          </p>
+
+        }
+
+        @if (errorMensaje()) {
+
+          <p class="login-error">
+            {{ errorMensaje() }}
+          </p>
+
+        }
+
+
+        <!-- ================================================
+             VOLVER AL LOGIN
+             ================================================ -->
 
         <button
           type="button"
-          class="login-resend"
-          disabled
+          class="login-recovery-back"
+          (click)="volverAlLogin()"
         >
-          Reenviar código ({{ segundosReenvio() }}s)
+          ← Volver a iniciar sesión
         </button>
 
-} @else {
-
-  <button
-    type="button"
-    class="login-resend"
-    [disabled]="enviandoCodigo()"
-    (click)="enviarCodigo()"
-  >
-    {{ enviandoCodigo()
-        ? 'Enviando...'
-        : 'Reenviar código'
-    }}
-  </button>
-
-}
-
-      <button
-        type="submit"
-        class="btn btn-primary login-submit"
-        [disabled]="cargando()"
-      >
-        {{ cargando()
-            ? 'Ingresando...'
-            : 'Ingresar'
-        }}
-      </button>
-
-    }
-
-  }
+      }
 
 
-  <!-- ===================================================
-       LOGIN ALTERNATIVO: CORREO
-       =================================================== -->
+      <!-- ===================================================
+           INICIO DE SESIÓN
+           =================================================== -->
 
-  @if (modo() === 'correo') {
+      @else {
 
-    <label
-      class="login-label"
-      for="correo"
-    >
-      Correo electrónico
-    </label>
+        <h1 class="login-title">
+          Iniciar sesión
+        </h1>
 
-    <input
-      id="correo"
-      name="correo"
-      type="email"
-      class="login-input"
-      [(ngModel)]="correo"
-      required
-      placeholder="tucorreo@ejemplo.com"
-    />
-
-    <label
-      class="login-label"
-      for="contrasena"
-    >
-      Contraseña
-    </label>
-
-    <input
-      id="contrasena"
-      name="contrasena"
-      type="password"
-      class="login-input"
-      [(ngModel)]="contrasena"
-      required
-      placeholder="••••••••"
-    />
-
-    <button
-      type="submit"
-      class="btn btn-primary login-submit"
-      [disabled]="cargando()"
-    >
-      {{ cargando()
-          ? 'Ingresando...'
-          : 'Ingresar'
-      }}
-    </button>
-
-  }
+        <p class="login-subtitle">
+          Ingresa tus credenciales para acceder a tu panel
+        </p>
 
 
-  <!-- ===================================================
-       MENSAJE INFORMATIVO
-       =================================================== -->
+        <!-- ================================================
+             LOGIN POR CELULAR
+             ================================================ -->
 
-  @if (infoMensaje()) {
+        @if (modo() === 'celular') {
 
-    <p class="login-info">
-      {{ infoMensaje() }}
-    </p>
+          @if (!otpEnviado()) {
 
-  }
+            <label
+              class="login-label"
+              for="celular"
+            >
+              Número de celular
+            </label>
 
+            <div class="login-phone-row">
 
-  <!-- ===================================================
-       MENSAJE DE ERROR
-       =================================================== -->
+              <span class="login-phone-prefix">
+                +57
+              </span>
 
-  @if (errorMensaje()) {
+              <input
+                id="celular"
+                name="celular"
+                type="tel"
+                class="login-input login-input--phone"
+                [(ngModel)]="celularLocal"
+                required
+                placeholder="3001234567"
+              />
 
-    <p class="login-error">
-      {{ errorMensaje() }}
-    </p>
-
-  }
-
-
-  <!-- ===================================================
-       MÉTODO ALTERNATIVO
-       =================================================== -->
-
-  @if (!otpEnviado()) {
-
-  <div class="login-method-divider">
-    <span>o</span>
-  </div>
-
-  <div class="login-method-option">
-
-    <p>
-      ¿Prefieres ingresar de otra forma?
-    </p>
-
-    @if (modo() === 'celular') {
-
-      <button
-        type="button"
-        class="login-alternative"
-        (click)="cambiarModo('correo')"
-      >
-        Ingresar con correo y contraseña
-      </button>
-
-    } @else {
-
-      <button
-        type="button"
-        class="login-alternative"
-        (click)="cambiarModo('celular')"
-      >
-        Ingresar con número de celular
-      </button>
-
-    }
-
-  </div>
-
-}
+            </div>
 
 
-</form>
+            <button
+              type="button"
+              class="btn btn-primary login-submit"
+              [disabled]="enviandoCodigo()"
+              (click)="enviarCodigo()"
+            >
+              {{ enviandoCodigo()
+                  ? 'Enviando...'
+                  : 'Enviar código por SMS'
+              }}
+            </button>
+
+          }
 
 
+          <!-- ==============================================
+               CÓDIGO OTP
+               ============================================== -->
 
+          @if (otpEnviado()) {
+
+            <label
+              class="login-label"
+              for="codigo"
+            >
+              Código de verificación
+            </label>
+
+            <input
+              id="codigo"
+              name="codigo"
+              type="text"
+              inputmode="numeric"
+              class="login-input"
+              [(ngModel)]="codigo"
+              required
+              placeholder="123456"
+            />
+
+
+            <!-- REENVIAR -->
+
+            @if (segundosReenvio() > 0) {
+
+              <button
+                type="button"
+                class="login-resend"
+                disabled
+              >
+                Reenviar código ({{ segundosReenvio() }}s)
+              </button>
+
+            } @else {
+
+              <button
+                type="button"
+                class="login-resend"
+                [disabled]="enviandoCodigo()"
+                (click)="enviarCodigo()"
+              >
+                {{ enviandoCodigo()
+                    ? 'Enviando...'
+                    : 'Reenviar código'
+                }}
+              </button>
+
+            }
+
+
+            <button
+              type="submit"
+              class="btn btn-primary login-submit"
+              [disabled]="cargando()"
+            >
+              {{ cargando()
+                  ? 'Ingresando...'
+                  : 'Ingresar'
+              }}
+            </button>
+
+          }
+
+        }
+
+
+        <!-- ================================================
+             LOGIN POR CORREO
+             ================================================ -->
+
+        @if (modo() === 'correo') {
+
+          <label
+            class="login-label"
+            for="correo"
+          >
+            Correo electrónico
+          </label>
+
+          <input
+            id="correo"
+            name="correo"
+            type="email"
+            class="login-input"
+            [(ngModel)]="correo"
+            required
+            placeholder="tucorreo@ejemplo.com"
+          />
+
+
+          <label
+            class="login-label"
+            for="contrasena"
+          >
+            Contraseña
+          </label>
+
+          <input
+            id="contrasena"
+            name="contrasena"
+            type="password"
+            class="login-input"
+            [(ngModel)]="contrasena"
+            required
+            placeholder="••••••••"
+          />
+
+
+          <!-- RECUPERAR CONTRASEÑA -->
+
+          <button
+            type="button"
+            class="login-forgot-password"
+            (click)="abrirRecuperacion()"
+          >
+            ¿Olvidaste tu contraseña?
+          </button>
+
+
+          <button
+            type="submit"
+            class="btn btn-primary login-submit"
+            [disabled]="cargando()"
+          >
+            {{ cargando()
+                ? 'Ingresando...'
+                : 'Ingresar'
+            }}
+          </button>
+
+        }
+
+
+        <!-- ================================================
+             MENSAJES DEL LOGIN
+             ================================================ -->
+
+        @if (infoMensaje()) {
+
+          <p class="login-info">
+            {{ infoMensaje() }}
+          </p>
+
+        }
+
+        @if (errorMensaje()) {
+
+          <p class="login-error">
+            {{ errorMensaje() }}
+          </p>
+
+        }
+
+
+        <!-- ================================================
+             CAMBIAR MÉTODO DE LOGIN
+             ================================================ -->
+
+        @if (!otpEnviado()) {
+
+          <div class="login-method-divider">
+            <span>o</span>
+          </div>
+
+
+          <div class="login-method-option">
+
+            <p>
+              ¿Prefieres ingresar de otra forma?
+            </p>
+
+
+            @if (modo() === 'celular') {
+
+              <button
+                type="button"
+                class="login-alternative"
+                (click)="cambiarModo('correo')"
+              >
+                Ingresar con correo y contraseña
+              </button>
+
+            } @else {
+
+              <button
+                type="button"
+                class="login-alternative"
+                (click)="cambiarModo('celular')"
+              >
+                Ingresar con número de celular
+              </button>
+
+            }
+
+          </div>
+
+        }
+
+      }
+
+    </form>
 
 
     <!-- =====================================================

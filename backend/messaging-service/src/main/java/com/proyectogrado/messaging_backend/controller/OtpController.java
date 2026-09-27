@@ -19,7 +19,7 @@ public class OtpController {
     }
 
     /**
-     * Envía un código OTP al número de teléfono indicado.
+     * Envía un código OTP al número de celular indicado.
      *
      * Ejemplo de petición:
      *
@@ -42,7 +42,7 @@ public class OtpController {
                         .badRequest()
                         .body(Map.of(
                                 "success", false,
-                                "message", "El número de teléfono es obligatorio"
+                                "message", "El número de celular es obligatorio"
                         ));
             }
 
@@ -92,7 +92,7 @@ public class OtpController {
                         .badRequest()
                         .body(Map.of(
                                 "success", false,
-                                "message", "El número de teléfono es obligatorio"
+                                "message", "El número de celular es obligatorio"
                         ));
             }
 

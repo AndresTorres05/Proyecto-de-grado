@@ -5,6 +5,7 @@ import com.proyectogrado.auth_backend.dto.LoginOtpRequest;
 import com.proyectogrado.auth_backend.dto.LoginRequest;
 import com.proyectogrado.auth_backend.dto.LoginResponse;
 import com.proyectogrado.auth_backend.dto.RegistroRequest;
+import com.proyectogrado.auth_backend.dto.RestablecerContrasenaRequest;
 import com.proyectogrado.auth_backend.model.Acompanante;
 import com.proyectogrado.auth_backend.model.Organizacion;
 import com.proyectogrado.auth_backend.model.PersonaMayor;
@@ -146,6 +147,99 @@ public class AuthService {
         }
 
         return generarRespuestaLogin(usuario, "Inicio de sesión exitoso");
+    }
+
+    // =========================================================
+// RESTABLECER CONTRASEÑA
+// =========================================================
+
+public void restablecerContrasena(
+        RestablecerContrasenaRequest request
+) {
+
+    if (request == null
+            || request.getCelular() == null
+            || request.getCelular().isBlank()
+            || request.getCodigo() == null
+            || request.getCodigo().isBlank()
+            || request.getContrasena() == null
+            || request.getContrasena().isBlank()
+            || request.getConfirmarContrasena() == null
+            || request.getConfirmarContrasena().isBlank()) {
+
+        throw new RuntimeException(
+                "Todos los campos son obligatorios"
+        );
+    }
+
+
+    // ---------------------------------------------------------
+    // Validar que las contraseñas coincidan
+    // ---------------------------------------------------------
+
+    if (!request.getContrasena().equals(
+            request.getConfirmarContrasena())) {
+
+        throw new RuntimeException(
+                "Las contraseñas no coinciden"
+        );
+    }
+
+
+    // ---------------------------------------------------------
+    // Validar longitud de contraseña
+    // ---------------------------------------------------------
+
+    if (request.getContrasena().length() < 6) {
+
+        throw new RuntimeException(
+                "La contraseña debe tener mínimo 6 caracteres"
+        );
+    }
+
+
+    // ---------------------------------------------------------
+    // Buscar usuario por celular
+    // ---------------------------------------------------------
+
+    String celular = request.getCelular().trim();
+
+    Usuario usuario = usuarioRepository
+            .findByCelular(celular)
+            .orElseThrow(() -> new RuntimeException(
+                    "No existe una cuenta con ese celular"
+            ));
+
+
+    // ---------------------------------------------------------
+    // Verificar OTP
+    // ---------------------------------------------------------
+
+    boolean codigoValido =
+            messagingClient.verificarOtp(
+                    celular,
+                    request.getCodigo().trim()
+            );
+
+    if (!codigoValido) {
+
+        throw new RuntimeException(
+                "Código incorrecto o expirado"
+        );
+    }
+
+
+    // ---------------------------------------------------------
+    // Actualizar contraseña
+    // ---------------------------------------------------------
+
+    usuario.setContrasenaHash(
+            passwordEncoder.encode(
+                    request.getContrasena()
+            )
+    );
+
+        usuarioRepository.save(usuario);
     }
 
     public boolean existeCelular(String celular) {

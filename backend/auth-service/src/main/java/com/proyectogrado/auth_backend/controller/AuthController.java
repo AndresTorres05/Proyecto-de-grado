@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import com.proyectogrado.auth_backend.dto.RestablecerContrasenaRequest;
 
 
 @RestController
@@ -107,4 +108,44 @@ public ResponseEntity<Boolean> celularExiste(
             authService.existeCelular(celular)
     );
 }
+
+// =========================================================
+// RESTABLECER CONTRASEÑA
+// =========================================================
+
+@PostMapping("/restablecer-contrasena")
+public ResponseEntity<LoginResponse> restablecerContrasena(
+        @RequestBody RestablecerContrasenaRequest request
+) {
+
+    try {
+
+        authService.restablecerContrasena(request);
+
+        return ResponseEntity.ok(
+                new LoginResponse(
+                        null,
+                        null,
+                        "Contraseña actualizada correctamente",
+                        null,
+                        null
+                )
+        );
+
+    } catch (RuntimeException e) {
+
+        return ResponseEntity
+                .badRequest()
+                .body(
+                        new LoginResponse(
+                                null,
+                                null,
+                                e.getMessage(),
+                                null,
+                                null
+                        )
+                );
+    }
+}
+
 }

@@ -41,10 +41,10 @@ public class MessagingClient {
             return respuesta != null
                     && Boolean.TRUE.equals(respuesta.get("success"));
 
-        } catch (Exception e) {
-            // 401 de messaging-backend (codigo invalido/expirado) tambien
-            // cae aqui porque RestClient lanza excepcion en 4xx/5xx.
-            return false;
-        }
+     } catch (Exception e) {
+    System.out.println("ERROR VERIFICANDO OTP: " + e.getMessage());
+    e.printStackTrace();
+    return false;
+}
     }
 }

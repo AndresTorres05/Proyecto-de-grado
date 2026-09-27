@@ -105,6 +105,8 @@
   border-color: var(--vita-orange);
 }
 
+/* ---------- Mensajes ---------- */
+
 .login-error {
   color: #c23b3b;
   background: color-mix(in srgb, #d64545 12%, white);
@@ -114,6 +116,18 @@
   margin-top: 14px;
   margin-bottom: 0;
 }
+
+.login-info {
+  color: var(--vita-navy);
+  background: color-mix(in srgb, var(--vita-navy-light) 12%, white);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 0.85rem;
+  margin-top: 14px;
+  margin-bottom: 0;
+}
+
+/* ---------- Botón principal ---------- */
 
 .login-submit {
   margin-top: 22px;
@@ -126,6 +140,8 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* ---------- Teléfono ---------- */
 
 .login-phone-row {
   display: flex;
@@ -146,28 +162,6 @@
 
 .login-input--phone {
   flex: 1;
-}
-
-.login-info {
-  color: var(--vita-navy);
-  background: color-mix(in srgb, var(--vita-navy-light) 12%, white);
-  border-radius: var(--radius-sm);
-  padding: 10px 12px;
-  font-size: 0.85rem;
-  margin-top: 14px;
-  margin-bottom: 0;
-}
-
-.login-footer {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 0.85rem;
-  color: var(--vita-text-gray);
-}
-
-.login-footer a {
-  color: var(--vita-orange);
-  font-weight: 600;
 }
 
 /* ---------- Métodos de inicio de sesión ---------- */
@@ -220,6 +214,8 @@
   text-decoration: underline;
 }
 
+/* ---------- Cambiar teléfono ---------- */
+
 .login-change-phone {
   display: block;
   width: 100%;
@@ -237,6 +233,8 @@
   color: var(--vita-navy);
   text-decoration: underline;
 }
+
+/* ---------- Reenviar código ---------- */
 
 .login-resend {
   display: block;
@@ -259,4 +257,70 @@
   color: var(--vita-text-gray);
   cursor: not-allowed;
   opacity: 0.7;
+}
+
+/* ---------- Recuperar contraseña ---------- */
+
+.login-forgot-password {
+  display: block;
+  margin: 8px 0 2px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--vita-orange);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+}
+
+.login-forgot-password:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Recuperación de contraseña ---------- */
+
+.login-recovery-title {
+  margin-bottom: 0;
+}
+
+.login-recovery-subtitle {
+  margin-bottom: 4px;
+}
+
+/* ---------- Volver al inicio de sesión ---------- */
+
+.login-recovery-back {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--vita-navy-light);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+}
+
+.login-recovery-back:hover {
+  color: var(--vita-navy);
+  text-decoration: underline;
+}
+
+/* ---------- Footer ---------- */
+
+.login-footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: var(--vita-text-gray);
+}
+
+.login-footer a {
+  color: var(--vita-orange);
+  font-weight: 600;
 }

@@ -58,8 +58,6 @@ public class TextBeeOtpService {
                 + MINUTOS_EXPIRACION
                 + " minutos.";
 
-        enviarSms(celular, mensaje);
-
         Instant expiracion = Instant.now()
                 .plusSeconds(MINUTOS_EXPIRACION * 60);
 
@@ -67,6 +65,8 @@ public class TextBeeOtpService {
                 normalizarCelular(celular),
                 new CodigoOtp(codigo, expiracion)
         );
+
+        enviarSms(celular, mensaje);
     }
 
     /**

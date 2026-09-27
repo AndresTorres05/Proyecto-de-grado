@@ -54,6 +54,13 @@ export interface LoginResponse {
   nombreUsuario: string;
 }
 
+export interface RestablecerContrasenaRequest {
+  celular: string;
+  codigo: string;
+  contrasena: string;
+  confirmarContrasena: string;
+}
+
 const RUTAS_POR_ROL: Record<string, string> = {
   ORGANIZACION: '/panel/organizacion',
   VOLUNTARIO: '/panel/voluntario',
@@ -104,6 +111,15 @@ export class AuthService {
     {
       params: { celular }
     }
+  );
+}
+
+restablecerContrasena(
+  request: RestablecerContrasenaRequest
+) {
+  return this.http.post(
+    `${this.apiUrl}/restablecer-contrasena`,
+    request
   );
 }
 
