@@ -210,6 +210,7 @@
 
 .person-card {
   display: grid;
+  cursor: pointer;
 
   grid-template-columns:
     minmax(250px, 1.35fr)
@@ -1096,4 +1097,200 @@
   .confirmation-modal__confirm {
     width: 100%;
   }
+}
+
+/* =========================================================
+   MODAL DE ACOMPAÑANTES
+   ========================================================= */
+
+.acompanantes-modal {
+  max-width: 560px;
+}
+
+/* ---------- Encabezado ---------- */
+
+.acompanantes-modal .modal__header {
+  margin-bottom: 6px;
+}
+
+.acompanantes-modal .eyebrow {
+  margin-bottom: 4px;
+  color: var(--vita-text-gray);
+  font-size: 0.8rem;
+}
+
+/* ---------- Descripción ---------- */
+
+.acompanantes-modal .modal__description {
+  margin-bottom: 22px;
+}
+
+.acompanantes-modal .modal__description strong {
+  color: var(--vita-navy);
+}
+
+/* ---------- Lista ---------- */
+
+.acompanantes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+/* ---------- Acompañante ---------- */
+
+.acompanante-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 14px 16px;
+
+  border: 1px solid var(--vita-border);
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.acompanante-item:hover {
+  background: #f8faf9;
+  border-color: #d6dfdb;
+}
+
+/* ---------- Icono ---------- */
+
+.acompanante-item__icon {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 12px;
+
+  background: #edf5fc;
+  color: var(--vita-navy);
+
+  font-size: 1.2rem;
+}
+
+/* ---------- Información ---------- */
+
+.acompanante-item__info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  min-width: 0;
+}
+
+.acompanante-item__info strong {
+  color: var(--vita-navy);
+
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.acompanante-item__info span {
+  color: var(--vita-text-gray);
+
+  font-size: 0.85rem;
+}
+
+.acompanante-item__info small {
+  color: var(--vita-green);
+
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ---------- Cargando ---------- */
+
+.acompanantes-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 120px;
+
+  color: var(--vita-text-gray);
+
+  font-size: 0.9rem;
+}
+
+/* ---------- Estado vacío ---------- */
+
+.acompanantes-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 28px 20px;
+
+  text-align: center;
+}
+
+.acompanantes-empty__icon {
+  width: 52px;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 12px;
+
+  border-radius: 14px;
+
+  background: #edf5fc;
+  color: var(--vita-navy);
+
+  font-size: 1.35rem;
+}
+
+.acompanantes-empty h3 {
+  margin: 0;
+
+  color: var(--vita-navy);
+
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.acompanantes-empty p {
+  max-width: 400px;
+
+  margin: 7px 0 0;
+
+  color: var(--vita-text-gray);
+
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 600px) {
+
+  .acompanantes-modal {
+    padding: 24px 20px;
+  }
+
+  .acompanantes-list {
+    max-height: 350px;
+  }
+
+  .acompanante-item {
+    padding: 13px;
+  }
+
 }

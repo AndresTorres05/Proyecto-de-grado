@@ -8,6 +8,11 @@ import com.proyectogrado.persona_mayor_service.model.PersonaMayorOrganizacionId;
 import com.proyectogrado.persona_mayor_service.model.UsuarioLookup;
 import com.proyectogrado.persona_mayor_service.repository.PersonaMayorOrganizacionRepository;
 import com.proyectogrado.persona_mayor_service.repository.UsuarioLookupRepository;
+import com.proyectogrado.persona_mayor_service.repository.AcompananteLookupRepository;
+import com.proyectogrado.persona_mayor_service.dto.AcompananteResponse;
+import com.proyectogrado.persona_mayor_service.repository.PersonaMayorAcompananteRepository;
+import com.proyectogrado.persona_mayor_service.model.AcompananteLookup;
+import com.proyectogrado.persona_mayor_service.model.PersonaMayorAcompanante;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,14 +32,21 @@ public class PersonaMayorOrganizacionController {
 
     private final PersonaMayorOrganizacionRepository relacionRepository;
     private final UsuarioLookupRepository usuarioLookupRepository;
+    private final AcompananteLookupRepository acompananteLookupRepository;
+    private final PersonaMayorAcompananteRepository personaMayorAcompananteRepository;
+    
 
-    public PersonaMayorOrganizacionController(
-            PersonaMayorOrganizacionRepository relacionRepository,
-            UsuarioLookupRepository usuarioLookupRepository
-    ) {
-        this.relacionRepository = relacionRepository;
-        this.usuarioLookupRepository = usuarioLookupRepository;
-    }
+public PersonaMayorOrganizacionController(
+        PersonaMayorOrganizacionRepository relacionRepository,
+        UsuarioLookupRepository usuarioLookupRepository,
+        AcompananteLookupRepository acompananteLookupRepository,
+        PersonaMayorAcompananteRepository personaMayorAcompananteRepository
+) {
+    this.relacionRepository = relacionRepository;
+    this.usuarioLookupRepository = usuarioLookupRepository;
+    this.acompananteLookupRepository = acompananteLookupRepository;
+    this.personaMayorAcompananteRepository = personaMayorAcompananteRepository;
+}
 
     // =========================================================
     // ORGANIZACION: personas mayores asociadas
@@ -56,6 +68,81 @@ public class PersonaMayorOrganizacionController {
 
         return ResponseEntity.ok(mapearAPersonaMayor(relaciones));
     }
+
+    // =========================================================
+// ORGANIZACION: acompanantes de una persona mayor
+// =========================================================
+
+@GetMapping("/api/organizacion/personas-mayores/{idPersonaMayor}/acompanantes")
+public ResponseEntity<?> obtenerAcompanantesPersonaMayor(
+        @RequestHeader("X-User-Id") Integer idUsuarioOrganizacion,
+        @PathVariable Integer idPersonaMayor
+) {
+
+    Integer idOrganizacion = obtenerIdOrganizacion(idUsuarioOrganizacion);
+
+    if (idOrganizacion == null) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("El usuario no tiene una organización asociada");
+    }
+
+    // Verificar que la persona mayor pertenece a esta organización
+    PersonaMayorOrganizacionId idRelacion =
+            new PersonaMayorOrganizacionId(
+                    idPersonaMayor,
+                    idOrganizacion
+            );
+
+    PersonaMayorOrganizacion relacion =
+            relacionRepository.findById(idRelacion).orElse(null);
+
+    if (relacion == null || !"ACEPTADA".equals(relacion.getEstado())) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("La persona mayor no está asociada a esta organización");
+    }
+
+    // Buscar acompanantes aceptados
+    List<PersonaMayorAcompanante> relaciones =
+            personaMayorAcompananteRepository
+                    .findById_IdPersonaMayorAndEstado(
+                            idPersonaMayor,
+                            "ACEPTADA"
+                    );
+
+    List<AcompananteResponse> acompanantes = relaciones.stream()
+            .map(relacionAcompanante -> {
+
+                Integer idAcompanante =
+                        relacionAcompanante.getId().getIdAcompanante();
+
+                UsuarioLookup usuario =
+                        usuarioLookupRepository
+                                .findById(idAcompanante)
+                                .orElse(null);
+
+                AcompananteLookup acompanante =
+                        acompananteLookupRepository
+                                .findById(idAcompanante)
+                                .orElse(null);
+
+                if (usuario == null) {
+                    return null;
+                }
+
+                return new AcompananteResponse(
+                        idAcompanante,
+                        usuario.getNombreUsuario(),
+                        usuario.getCelular(),
+                        acompanante != null
+                                ? acompanante.getRelacion()
+                                : null
+                );
+            })
+            .filter(java.util.Objects::nonNull)
+            .toList();
+
+    return ResponseEntity.ok(acompanantes);
+}
 
     @PostMapping("/api/organizacion/personas-mayores")
     public ResponseEntity<?> asociarPersonaMayor(

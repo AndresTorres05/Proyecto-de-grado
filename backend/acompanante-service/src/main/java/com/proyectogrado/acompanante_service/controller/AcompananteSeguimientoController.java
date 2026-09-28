@@ -97,20 +97,30 @@ public class AcompananteSeguimientoController {
                 .findById_IdPersonaMayorAndEstado(idPersonaMayor, "ACEPTADA");
 
         List<ContactoResponse> respuesta = relaciones.stream()
-                .map(relacion -> {
-                    Integer idOtroAcompanante = relacion.getId().getIdAcompanante();
+                .map(relacionAcompanante -> {
+                    Integer idOtroAcompanante =
+                            relacionAcompanante.getId().getIdAcompanante();
 
-                    UsuarioLookup usuario = usuarioLookupRepository.findById(idOtroAcompanante).orElse(null);
+                    UsuarioLookup usuario =
+                            usuarioLookupRepository
+                                    .findById(idOtroAcompanante)
+                                    .orElse(null);
 
-                    String relacion = acompananteInfoLookupRepository.findById(idOtroAcompanante)
-                            .map(AcompananteInfoLookup::getRelacion)
-                            .orElse(null);
+                    String tipoRelacion =
+                            acompananteInfoLookupRepository
+                                    .findById(idOtroAcompanante)
+                                    .map(AcompananteInfoLookup::getRelacion)
+                                    .orElse(null);
 
                     return new ContactoResponse(
                             idOtroAcompanante,
-                            usuario != null ? usuario.getNombreUsuario() : null,
-                            usuario != null ? usuario.getCelular() : null,
-                            relacion
+                            usuario != null
+                                    ? usuario.getNombreUsuario()
+                                    : null,
+                            usuario != null
+                                    ? usuario.getCelular()
+                                    : null,
+                            tipoRelacion
                     );
                 })
                 .toList();
@@ -118,10 +128,20 @@ public class AcompananteSeguimientoController {
         return ResponseEntity.ok(respuesta);
     }
 
-    private boolean tieneRelacionAceptada(Integer idAcompanante, Integer idPersonaMayor) {
+    private boolean tieneRelacionAceptada(
+            Integer idAcompanante,
+            Integer idPersonaMayor
+    ) {
         return relacionRepository
-                .findById_IdAcompananteAndEstado(idAcompanante, "ACEPTADA")
+                .findById_IdAcompananteAndEstado(
+                        idAcompanante,
+                        "ACEPTADA"
+                )
                 .stream()
-                .anyMatch(relacion -> relacion.getId().getIdPersonaMayor().equals(idPersonaMayor));
+                .anyMatch(
+                        relacion -> relacion.getId()
+                                .getIdPersonaMayor()
+                                .equals(idPersonaMayor)
+                );
     }
 }

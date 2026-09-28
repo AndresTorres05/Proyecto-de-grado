@@ -4,7 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 
 import {
   OrganizacionService,
-  PersonaMayorOrganizacion
+  PersonaMayorOrganizacion,
+  AcompanantePersonaMayor
 } from '../../../../core/organizacion/organizacion.service';
 
 import { Icon } from '../../../../shared/icon/icon';
@@ -29,6 +30,18 @@ export class PersonasMayores implements OnInit {
 
   protected readonly mensaje =
     signal<string | null>(null);
+
+  protected readonly mostrandoAcompanantes =
+  signal(false);
+
+protected readonly cargandoAcompanantes =
+  signal(false);
+
+protected readonly acompanantes =
+  signal<AcompanantePersonaMayor[]>([]);
+
+protected personaMayorSeleccionada:
+  PersonaMayorOrganizacion | null = null;
 
   protected readonly error = signal<string | null>(null);
   protected readonly mostrandoConfirmacion = signal(false);
@@ -228,4 +241,52 @@ confirmarCancelacion(): void {
       }
     });
 }
+
+mostrarAcompanantes(persona: PersonaMayorOrganizacion): void {
+
+  this.personaMayorSeleccionada = persona;
+
+  this.acompanantes.set([]);
+
+  this.mostrandoAcompanantes.set(true);
+
+  this.cargandoAcompanantes.set(true);
+
+  this.organizacionService
+    .obtenerAcompanantesPersonaMayor(persona.idUsuario)
+    .subscribe({
+
+      next: (acompanantes) => {
+
+        this.acompanantes.set(acompanantes);
+
+        this.cargandoAcompanantes.set(false);
+
+      },
+
+      error: (error) => {
+
+        console.error(
+          'Error al cargar acompañantes:',
+          error
+        );
+
+        this.acompanantes.set([]);
+
+        this.cargandoAcompanantes.set(false);
+
+      }
+
+    });
+}
+
+cerrarAcompanantes(): void {
+
+  this.mostrandoAcompanantes.set(false);
+
+  this.personaMayorSeleccionada = null;
+
+  this.acompanantes.set([]);
+}
+
 }

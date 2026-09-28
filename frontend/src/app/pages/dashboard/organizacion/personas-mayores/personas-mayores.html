@@ -3,148 +3,93 @@
      ========================= -->
 
 @if (mensaje(); as mensajeActual) {
-
   <div class="message message--success">
-
     <app-icon name="check-circle" />
 
     {{ mensajeActual }}
-
   </div>
-
 }
 
 @if (error(); as errorActual) {
-
   <div class="message message--error">
-
     <app-icon name="alert-circle" />
 
     {{ errorActual }}
-
   </div>
-
 }
-
 
 <!-- =========================================================
      PERSONAS MAYORES ASOCIADAS
      ========================================================= -->
 
 <section class="people-section">
-
   <div class="section-title">
-
     <div>
-
       <h2>Personas mayores</h2>
 
-      <p>
-        Consulta las personas mayores que pertenecen
-        a tu organización.
-      </p>
-
+      <p>Consulta las personas mayores que pertenecen a tu organización.</p>
     </div>
 
     <div class="people-section__actions">
-
       <div class="people-count">
-
         {{ personasMayores().length }}
 
-        {{
-          personasMayores().length === 1
-            ? 'persona asociada'
-            : 'personas asociadas'
-        }}
-
+        {{ personasMayores().length === 1 ? 'persona asociada' : 'personas asociadas' }}
       </div>
 
-      <button
-        type="button"
-        class="add-button"
-        (click)="mostrarFormulario()"
-      >
-
+      <button type="button" class="add-button" (click)="mostrarFormulario()">
         <app-icon name="users" />
 
         Asociar persona mayor
-
       </button>
-
     </div>
-
   </div>
-
 
   <!-- =======================================================
        ESTADO VACÍO
        ======================================================= -->
 
   @if (personasMayores().length === 0) {
-
     <div class="empty-state">
-
       <div class="empty-state__icon">
-
         <app-icon name="users" />
-
       </div>
 
-      <h3>
-        No tienes personas mayores asociadas
-      </h3>
+      <h3>No tienes personas mayores asociadas</h3>
 
-      <p>
-        Cuando una persona mayor acepte tu solicitud
-        de asociación, aparecerá aquí.
-      </p>
-
+      <p>Cuando una persona mayor acepte tu solicitud de asociación, aparecerá aquí.</p>
     </div>
-
   } @else {
-
-
     <!-- =====================================================
          LISTA DE PERSONAS
          ===================================================== -->
 
     <div class="people-list">
-
-      @for (
-        persona of personasMayores();
-        track persona.idUsuario
-      ) {
-
-        <div class="person-card">
-
-
+      @for (persona of personasMayores(); track persona.idUsuario) {
+        <div
+          class="person-card"
+          (click)="mostrarAcompanantes(persona)"
+          role="button"
+          tabindex="0"
+          (keydown.enter)="mostrarAcompanantes(persona)"
+        >
           <!-- =================================================
                IDENTIDAD
                ================================================= -->
 
           <div class="person-card__identity">
-
             <div class="person-icon">
-
               <app-icon name="user" />
-
             </div>
 
             <div class="person-card__name">
-
-              <span class="eyebrow">
-                Persona mayor
-              </span>
+              <span class="eyebrow"> Persona mayor </span>
 
               <h3>
                 {{ persona.nombre }}
               </h3>
-
             </div>
-
           </div>
-
 
           <!-- =================================================
                SEPARADOR
@@ -152,29 +97,21 @@
 
           <div class="person-card__divider"></div>
 
-
           <!-- =================================================
                CELULAR
                ================================================= -->
 
           <div class="person-card__detail">
-
             <app-icon name="phone" />
 
             <div>
-
-              <span>
-                Celular
-              </span>
+              <span> Celular </span>
 
               <strong>
                 {{ persona.celular }}
               </strong>
-
             </div>
-
           </div>
-
 
           <!-- =================================================
                SEPARADOR
@@ -182,61 +119,41 @@
 
           <div class="person-card__divider person-card__divider--status"></div>
 
-
           <!-- =================================================
                ESTADO
                ================================================= -->
 
           <div class="person-card__actions">
+            <div class="person-status">
+              <span class="person-status__dot"></span>
+              <span>Asociación activa</span>
+            </div>
 
-  <div class="person-status">
-    <span class="person-status__dot"></span>
-    <span>Asociación activa</span>
-  </div>
-
-<button
-  type="button"
-  class="remove-association-button"
-  (click)="mostrarConfirmacion(persona)"
-  title="Cancelar asociación"
-  aria-label="Cancelar asociación"
->
-  <app-icon name="x" />
-</button>
-
-</div>
-
+            <button
+              type="button"
+              class="remove-association-button"
+              (click)="$event.stopPropagation(); mostrarConfirmacion(persona)"
+              title="Cancelar asociación"
+              aria-label="Cancelar asociación"
+            >
+              <app-icon name="x" />
+            </button>
+          </div>
         </div>
-
       }
-
     </div>
-
   }
-
 </section>
-
 
 <!-- =========================
      MODAL
      ========================= -->
 
 @if (mostrandoFormulario()) {
-
   <div class="modal-overlay">
-
-    <div
-      class="modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modalTitle"
-    >
-
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <div class="modal__header">
-
-        <h2 id="modalTitle">
-          Asociar persona mayor
-        </h2>
+        <h2 id="modalTitle">Asociar persona mayor</h2>
 
         <button
           type="button"
@@ -246,24 +163,15 @@
         >
           ×
         </button>
-
       </div>
 
-
       <p class="modal__description">
-
-        Ingresa el número de celular de la persona mayor
-        que deseas asociar. Se enviará una solicitud que
-        deberá ser aceptada por la persona.
-
+        Ingresa el número de celular de la persona mayor que deseas asociar. Se enviará una
+        solicitud que deberá ser aceptada por la persona.
       </p>
 
-
       <div class="form-group">
-
-        <label for="celularPersonaMayor">
-          Celular de la persona mayor
-        </label>
+        <label for="celularPersonaMayor"> Celular de la persona mayor </label>
 
         <input
           id="celularPersonaMayor"
@@ -271,25 +179,17 @@
           [(ngModel)]="celular"
           placeholder="Ej. 3001234567"
         />
-
       </div>
 
-
       @if (error(); as errorActual) {
-
         <div class="modal__error">
-
           <app-icon name="alert-circle" />
 
           {{ errorActual }}
-
         </div>
-
       }
 
-
       <div class="modal__actions">
-
         <button
           type="button"
           class="btn btn-secondary"
@@ -299,32 +199,21 @@
           Cancelar
         </button>
 
-
         <button
           type="button"
           class="btn btn-gold"
           (click)="asociarPersonaMayor()"
           [disabled]="agregandoPersonaMayor()"
         >
-
           @if (agregandoPersonaMayor()) {
-
             Enviando...
-
           } @else {
-
             Enviar solicitud
-
           }
-
         </button>
-
       </div>
-
     </div>
-
   </div>
-
 }
 
 @if (mostrandoConfirmacion()) {
@@ -345,33 +234,101 @@
 
         <p>
           Estás a punto de cancelar la asociación con
-          <strong>{{ personaSeleccionada?.nombre }}</strong>.
+          <strong>{{ personaSeleccionada?.nombre }}</strong
+          >.
         </p>
 
         <p class="confirmation-modal__warning">
-          La persona mayor dejará de aparecer en la lista de personas
-          asociadas a tu organización.
+          La persona mayor dejará de aparecer en la lista de personas asociadas a tu organización.
         </p>
       </div>
 
       <div class="confirmation-modal__actions">
-        <button
-          type="button"
-          class="confirmation-modal__cancel"
-          (click)="cerrarConfirmacion()"
-        >
+        <button type="button" class="confirmation-modal__cancel" (click)="cerrarConfirmacion()">
           Cancelar
         </button>
 
-        <button
-          type="button"
-          class="confirmation-modal__confirm"
-          (click)="confirmarCancelacion()"
-        >
+        <button type="button" class="confirmation-modal__confirm" (click)="confirmarCancelacion()">
           <app-icon name="x" />
           Cancelar asociación
         </button>
       </div>
+    </div>
+  </div>
+}
+
+@if (mostrandoAcompanantes()) {
+  <div class="modal-overlay" (click)="cerrarAcompanantes()">
+    <div
+      class="modal acompanantes-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="acompanantes-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal__header">
+        <div>
+          <span class="eyebrow"> Acompañamiento </span>
+
+          <h2 id="acompanantes-title">Acompañantes</h2>
+        </div>
+
+        <button
+          type="button"
+          class="modal__close"
+          (click)="cerrarAcompanantes()"
+          aria-label="Cerrar"
+        >
+          ×
+        </button>
+      </div>
+
+      <p class="modal__description">
+        Personas que acompañan a
+        <strong>
+          {{ personaMayorSeleccionada?.nombre }} </strong
+        >.
+      </p>
+
+      @if (cargandoAcompanantes()) {
+        <div class="acompanantes-loading">Cargando acompañantes...</div>
+      } @else if (acompanantes().length === 0) {
+        <div class="acompanantes-empty">
+          <div class="acompanantes-empty__icon">
+            <app-icon name="users" />
+          </div>
+
+          <h3>No tiene acompañantes registrados</h3>
+
+          <p>Esta persona mayor no tiene acompañantes asociados actualmente.</p>
+        </div>
+      } @else {
+        <div class="acompanantes-list">
+          @for (acompanante of acompanantes(); track acompanante.idUsuario) {
+            <div class="acompanante-item">
+              <div class="acompanante-item__icon">
+                <app-icon name="user" />
+              </div>
+
+              <div class="acompanante-item__info">
+                <strong>
+                  {{ acompanante.nombre }}
+                </strong>
+
+                <span>
+                  {{ acompanante.celular }}
+                </span>
+
+                @if (acompanante.relacion) {
+                  <small>
+                    {{ acompanante.relacion }}
+                  </small>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
     </div>
   </div>
 }
