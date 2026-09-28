@@ -1,128 +1,234 @@
 <div class="signos-container">
 
-  <div class="page-header">
+  <div class="encabezado">
     <div>
       <h1>Registro de signos vitales</h1>
       <p>
-        Registra y consulta los signos vitales de las personas mayores
-        pertenecientes a tu organización.
+        Registra los signos vitales de las personas mayores asociadas a tu organización.
       </p>
     </div>
   </div>
 
-  <section class="form-card">
+  <!-- Mensaje de éxito -->
+  @if (mensajeExito) {
+    <div class="mensaje exito">
+      {{ mensajeExito }}
+    </div>
+  }
 
-    <h2>Nuevo registro</h2>
-    <p class="form-description">
-      Ingresa los datos correspondientes a la medición realizada.
-    </p>
+  <!-- Mensaje de error -->
+  @if (mensajeError) {
+    <div class="mensaje error">
+      {{ mensajeError }}
+    </div>
+  }
 
-    <form>
+  <div class="formulario-card">
 
-      <div class="form-grid">
+    <!-- Persona mayor -->
+    <div class="campo campo-completo">
+      <label for="personaMayor">
+        Persona mayor <span class="obligatorio">*</span>
+      </label>
 
-        <div class="form-group">
-          <label for="persona">Persona mayor</label>
-          <select id="persona">
-            <option value="">Selecciona una persona</option>
-          </select>
-        </div>
+      <select
+        id="personaMayor"
+        [(ngModel)]="idPersonaMayor"
+        [disabled]="cargandoPersonas || guardando"
+      >
+        <option [ngValue]="null">
+          @if (cargandoPersonas) {
+            Cargando personas mayores...
+          } @else {
+            Selecciona una persona mayor
+          }
+        </option>
 
-        <div class="form-group">
-          <label for="fecha">Fecha y hora</label>
-          <input
-            id="fecha"
-            type="datetime-local"
-          />
-        </div>
+        @for (persona of personasMayores; track persona.idPersonaMayor) {
+          <option [ngValue]="persona.idPersonaMayor">
+            {{ persona.nombreUsuario }}
+          </option>
+        }
+      </select>
+    </div>
 
-        <div class="form-group">
-          <label for="presion">Presión arterial</label>
-          <input
-            id="presion"
-            type="text"
-            placeholder="Ej. 120/80"
-          />
-          <span class="input-hint">mmHg</span>
-        </div>
+    <!-- Presión arterial -->
+    <div class="campo">
+      <label for="presionSistolica">
+        Presión sistólica
+      </label>
 
-        <div class="form-group">
-          <label for="frecuencia">Frecuencia cardíaca</label>
-          <input
-            id="frecuencia"
-            type="number"
-            placeholder="Ej. 72"
-          />
-          <span class="input-hint">lpm</span>
-        </div>
-
-        <div class="form-group">
-          <label for="respiratoria">Frecuencia respiratoria</label>
-          <input
-            id="respiratoria"
-            type="number"
-            placeholder="Ej. 18"
-          />
-          <span class="input-hint">rpm</span>
-        </div>
-
-        <div class="form-group">
-          <label for="temperatura">Temperatura</label>
-          <input
-            id="temperatura"
-            type="number"
-            step="0.1"
-            placeholder="Ej. 36.5"
-          />
-          <span class="input-hint">°C</span>
-        </div>
-
-        <div class="form-group">
-          <label for="saturacion">Saturación de oxígeno</label>
-          <input
-            id="saturacion"
-            type="number"
-            placeholder="Ej. 98"
-          />
-          <span class="input-hint">%</span>
-        </div>
-
-        <div class="form-group">
-          <label for="peso">Peso</label>
-          <input
-            id="peso"
-            type="number"
-            step="0.1"
-            placeholder="Ej. 65.5"
-          />
-          <span class="input-hint">kg</span>
-        </div>
-
-        <div class="form-group">
-          <label for="talla">Talla</label>
-          <input
-            id="talla"
-            type="number"
-            step="0.01"
-            placeholder="Ej. 1.65"
-          />
-          <span class="input-hint">m</span>
-        </div>
-
+      <div class="input-unidad">
+        <input
+          id="presionSistolica"
+          type="number"
+          min="0"
+          [(ngModel)]="presionSistolica"
+          [disabled]="guardando"
+          placeholder="Ej. 120"
+        />
+        <span>mmHg</span>
       </div>
+    </div>
 
-      <div class="form-actions">
-        <button type="button" class="btn-secondary">
-          Cancelar
-        </button>
+    <div class="campo">
+      <label for="presionDiastolica">
+        Presión diastólica
+      </label>
 
-        <button type="submit" class="btn-primary">
+      <div class="input-unidad">
+        <input
+          id="presionDiastolica"
+          type="number"
+          min="0"
+          [(ngModel)]="presionDiastolica"
+          [disabled]="guardando"
+          placeholder="Ej. 80"
+        />
+        <span>mmHg</span>
+      </div>
+    </div>
+
+    <!-- Frecuencia cardíaca -->
+    <div class="campo">
+      <label for="frecuenciaCardiaca">
+        Frecuencia cardíaca
+      </label>
+
+      <div class="input-unidad">
+        <input
+          id="frecuenciaCardiaca"
+          type="number"
+          min="0"
+          [(ngModel)]="frecuenciaCardiaca"
+          [disabled]="guardando"
+          placeholder="Ej. 72"
+        />
+        <span>lpm</span>
+      </div>
+    </div>
+
+    <!-- Frecuencia respiratoria -->
+    <div class="campo">
+      <label for="frecuenciaRespiratoria">
+        Frecuencia respiratoria
+      </label>
+
+      <div class="input-unidad">
+        <input
+          id="frecuenciaRespiratoria"
+          type="number"
+          min="0"
+          [(ngModel)]="frecuenciaRespiratoria"
+          [disabled]="guardando"
+          placeholder="Ej. 16"
+        />
+        <span>rpm</span>
+      </div>
+    </div>
+
+    <!-- Temperatura -->
+    <div class="campo">
+      <label for="temperatura">
+        Temperatura
+      </label>
+
+      <div class="input-unidad">
+        <input
+          id="temperatura"
+          type="number"
+          step="0.1"
+          min="0"
+          [(ngModel)]="temperatura"
+          [disabled]="guardando"
+          placeholder="Ej. 36.5"
+        />
+        <span>°C</span>
+      </div>
+    </div>
+
+    <!-- Saturación -->
+    <div class="campo">
+      <label for="saturacionOxigeno">
+        Saturación de oxígeno
+      </label>
+
+      <div class="input-unidad">
+        <input
+          id="saturacionOxigeno"
+          type="number"
+          min="0"
+          max="100"
+          [(ngModel)]="saturacionOxigeno"
+          [disabled]="guardando"
+          placeholder="Ej. 98"
+        />
+        <span>%</span>
+      </div>
+    </div>
+
+    <!-- Peso -->
+    <div class="campo">
+      <label for="peso">
+        Peso
+      </label>
+
+      <div class="input-unidad">
+        <input
+          id="peso"
+          type="number"
+          step="0.1"
+          min="0"
+          [(ngModel)]="peso"
+          [disabled]="guardando"
+          placeholder="Ej. 65.5"
+        />
+        <span>kg</span>
+      </div>
+    </div>
+
+    <!-- Observaciones -->
+    <div class="campo campo-completo">
+      <label for="observaciones">
+        Observaciones
+      </label>
+
+      <textarea
+        id="observaciones"
+        [(ngModel)]="observaciones"
+        [disabled]="guardando"
+        rows="4"
+        placeholder="Agrega alguna observación relevante..."
+      ></textarea>
+    </div>
+
+    <!-- Botones -->
+    <div class="acciones campo-completo">
+
+      <button
+        type="button"
+        class="btn-secundario"
+        (click)="limpiarFormulario()"
+        [disabled]="guardando"
+      >
+        Limpiar
+      </button>
+
+      <button
+        type="button"
+        class="btn-principal"
+        (click)="registrarSignosVitales()"
+        [disabled]="guardando || cargandoPersonas"
+      >
+        @if (guardando) {
+          Guardando...
+        } @else {
           Registrar signos vitales
-        </button>
-      </div>
+        }
+      </button>
 
-    </form>
+    </div>
 
-  </section>
+  </div>
 
 </div>

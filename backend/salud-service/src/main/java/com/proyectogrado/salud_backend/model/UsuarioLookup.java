@@ -24,6 +24,9 @@ public class UsuarioLookup {
     @Column(name = "Celular")
     private String celular;
 
+    @Column(name = "id_organizacion")
+private Integer idOrganizacion;
+
     protected UsuarioLookup() {
         // JPA
     }
@@ -39,4 +42,8 @@ public class UsuarioLookup {
     public String getCelular() {
         return celular;
     }
+
+    public Integer getIdOrganizacion() {
+    return idOrganizacion;
+}
 }
