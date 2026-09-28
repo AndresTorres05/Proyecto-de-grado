@@ -68,7 +68,7 @@
             <li>
               <div>
                 <strong>{{ c.nombre }}</strong>
-                <p>{{ c.parentesco }} de {{ c.persona }}</p>
+                <p>{{ c.relacion }} de {{ c.persona }}</p>
               </div>
               <a href="tel:{{ c.celular }}" class="contact-list__call" [attr.aria-label]="'Llamar a ' + c.nombre"><app-icon name="phone" /></a>
             </li>

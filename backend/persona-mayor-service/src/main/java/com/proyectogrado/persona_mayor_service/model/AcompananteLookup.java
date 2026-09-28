@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 /**
  * "Acompanante" tambien es dueno de auth-backend (nace con el registro).
  * personamayor-service solo necesita y solo puede tocar la columna
- * "parentesco", que describe la RELACION (ej: "hijo", "vecina"), no la
+ * "relacion", que describe la RELACION (ej: "hijo", "vecina"), no la
  * identidad del acompanante -> por eso se permite escribirla desde aqui,
  * a diferencia de UsuarioLookup que es 100% solo lectura.
  */
@@ -20,8 +20,8 @@ public class AcompananteLookup {
     @Column(name = "id_usuario")
     private Integer idUsuario;
 
-    @Column(name = "parentesco")
-    private String parentesco;
+    @Column(name = "relacion")
+    private String relacion;
 
     protected AcompananteLookup() {
         // JPA
@@ -31,11 +31,11 @@ public class AcompananteLookup {
         return idUsuario;
     }
 
-    public String getParentesco() {
-        return parentesco;
+    public String getRelacion() {
+        return relacion;
     }
 
-    public void setParentesco(String parentesco) {
-        this.parentesco = parentesco;
+    public void setRelacion(String relacion) {
+        this.relacion = relacion;
     }
 }

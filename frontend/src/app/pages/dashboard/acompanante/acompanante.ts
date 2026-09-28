@@ -34,7 +34,7 @@ interface AlertaConsulta {
 
 interface ContactoEmergencia {
   nombre: string;
-  parentesco: string;
+  relacion: string;
   celular: string;
   persona: string;
 }
@@ -140,13 +140,13 @@ export class AcompananteDashboard implements OnInit {
   protected readonly contactos: ContactoEmergencia[] = [
     {
       nombre: 'Marta Gómez',
-      parentesco: 'Hija',
+      relacion: 'Hija',
       celular: '300 456 7890',
       persona: 'Rosa Elvira Gómez'
     },
     {
       nombre: 'Pedro Méndez',
-      parentesco: 'Hijo',
+      relacion: 'Hijo',
       celular: '311 222 3344',
       persona: 'Carlos Julio Méndez'
     }

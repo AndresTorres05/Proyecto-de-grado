@@ -26,7 +26,7 @@ export class Contactos implements OnInit {
   protected readonly mostrandoFormularioAcompanante = signal(false);
 
   protected celularAcompanante = '';
-  protected parentescoAcompanante = '';
+  protected relacionAcompanante = '';
 
   protected readonly agregandoAcompanante = signal(false);
   protected readonly errorAcompanante = signal<string | null>(null);
@@ -58,7 +58,7 @@ export class Contactos implements OnInit {
     this.mostrandoFormularioAcompanante.set(false);
 
     this.celularAcompanante = '';
-    this.parentescoAcompanante = '';
+    this.relacionAcompanante = '';
 
     this.errorAcompanante.set(null);
 }
@@ -70,7 +70,7 @@ agregarAcompanante(): void {
 
   if (
     !this.celularAcompanante.trim() ||
-    !this.parentescoAcompanante.trim()
+    !this.relacionAcompanante.trim()
   ) {
     this.errorAcompanante.set(
       'Por favor completa todos los campos.'
@@ -95,7 +95,7 @@ this.agregandoAcompanante.set(true);
 
 this.acompananteService.agregarAcompanante({
   celular: celular,
-  parentesco: this.parentescoAcompanante
+  relacion: this.relacionAcompanante
 }).subscribe({
     next: (respuesta) => {
 
@@ -105,7 +105,7 @@ this.acompananteService.agregarAcompanante({
       this.mensajeAcompanante.set(respuesta);
 
       this.celularAcompanante = '';
-      this.parentescoAcompanante = '';
+      this.relacionAcompanante = '';
 
       // Actualizar la tarjeta del acompañante
       this.acompananteService.obtenerAcompanantes().subscribe({

@@ -167,10 +167,10 @@
               {{ ac.celular }}
             </p>
 
-            @if (ac.parentesco) {
+            @if (ac.relacion) {
 
               <p class="companion-card__relationship">
-                {{ ac.parentesco }}
+                {{ ac.relacion }}
               </p>
 
             }
@@ -264,14 +264,14 @@
 
       <div class="add-companion-modal__form-group">
 
-        <label for="parentescoAcompanante">
-          Parentesco
+        <label for="relacionAcompanante">
+          Relacion
         </label>
 
         <input
-          id="parentescoAcompanante"
+          id="relacionAcompanante"
           type="text"
-          [(ngModel)]="parentescoAcompanante"
+          [(ngModel)]="relacionAcompanante"
           placeholder="Ej. Hijo, hija, hermano..."
         />
 

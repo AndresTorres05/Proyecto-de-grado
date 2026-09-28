@@ -15,15 +15,15 @@ public class Acompanante {
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
-    @Column(name = "parentesco")
-    private String parentesco;
+    @Column(name = "relacion")
+    private String relacion;
 
     public Acompanante() {
     }
 
-    public Acompanante(Usuario usuario, String parentesco) {
+    public Acompanante(Usuario usuario, String relacion) {
         this.usuario = usuario;
-        this.parentesco = parentesco;
+        this.relacion = relacion;
     }
 
     public Integer getIdUsuario() {
@@ -42,11 +42,11 @@ public class Acompanante {
         this.usuario = usuario;
     }
 
-    public String getParentesco() {
-        return parentesco;
+    public String getRelacion() {
+        return relacion;
     }
 
-    public void setParentesco(String parentesco) {
-        this.parentesco = parentesco;
+    public void setRelacion(String relacion) {
+        this.relacion = relacion;
     }
 }

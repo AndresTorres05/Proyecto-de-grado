@@ -4,6 +4,6 @@ public record AcompananteResponse(
         Integer idUsuario,
         String nombre,
         String celular,
-        String parentesco
+        String relacion
 ) {
 }

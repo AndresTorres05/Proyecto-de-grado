@@ -7,7 +7,7 @@ import jakarta.persistence.Table;
 
 /**
  * Solo lectura sobre "acompanante" (dueno de auth-backend). Aqui solo
- * se necesita leer el parentesco de OTROS acompanantes (los contactos
+ * se necesita leer el relacion de OTROS acompanantes (los contactos
  * de la persona mayor que se esta consultando) -- por eso es solo
  * lectura, a diferencia de como personamayor-service escribe este mismo
  * campo cuando el propio acompanante es agregado.
@@ -20,8 +20,8 @@ public class AcompananteInfoLookup {
     @Column(name = "id_usuario")
     private Integer idUsuario;
 
-    @Column(name = "parentesco")
-    private String parentesco;
+    @Column(name = "relacion")
+    private String relacion;
 
     protected AcompananteInfoLookup() {
         // JPA
@@ -31,7 +31,7 @@ public class AcompananteInfoLookup {
         return idUsuario;
     }
 
-    public String getParentesco() {
-        return parentesco;
+    public String getRelacion() {
+        return relacion;
     }
 }

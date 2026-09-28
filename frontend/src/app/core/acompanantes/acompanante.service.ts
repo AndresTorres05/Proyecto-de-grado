@@ -10,7 +10,7 @@ export interface Acompanante {
   idUsuario: number;
   nombre: string;
   celular: string;
-  parentesco: string;
+  relacion: string;
 }
 
 // =========================================================
@@ -81,7 +81,7 @@ export interface ContactoEmergencia {
   idUsuario: number;
   nombre: string;
   celular: string;
-  parentesco: string;
+  relacion: string;
 }
 
 // =========================================================
@@ -124,7 +124,7 @@ private readonly authUrl = 'http://localhost:8080/api/auth';
   agregarAcompanante(
     datos: {
       celular: string;
-      parentesco: string;
+      relacion: string;
     }
   ): Observable<string> {
     return this.http.post(

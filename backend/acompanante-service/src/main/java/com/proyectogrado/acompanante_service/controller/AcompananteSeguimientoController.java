@@ -102,15 +102,15 @@ public class AcompananteSeguimientoController {
 
                     UsuarioLookup usuario = usuarioLookupRepository.findById(idOtroAcompanante).orElse(null);
 
-                    String parentesco = acompananteInfoLookupRepository.findById(idOtroAcompanante)
-                            .map(AcompananteInfoLookup::getParentesco)
+                    String relacion = acompananteInfoLookupRepository.findById(idOtroAcompanante)
+                            .map(AcompananteInfoLookup::getRelacion)
                             .orElse(null);
 
                     return new ContactoResponse(
                             idOtroAcompanante,
                             usuario != null ? usuario.getNombreUsuario() : null,
                             usuario != null ? usuario.getCelular() : null,
-                            parentesco
+                            relacion
                     );
                 })
                 .toList();

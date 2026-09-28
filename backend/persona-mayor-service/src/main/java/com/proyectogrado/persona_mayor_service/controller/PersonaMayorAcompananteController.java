@@ -92,7 +92,7 @@ public class PersonaMayorAcompananteController {
         PersonaMayorAcompanante relacionExistente =
                 relacionRepository.findById(idRelacion).orElse(null);
 
-        acompanante.setParentesco(request.parentesco());
+        acompanante.setRelacion(request.relacion());
         acompananteLookupRepository.saveAndFlush(acompanante);
 
         if (relacionExistente != null) {
@@ -126,15 +126,15 @@ public class PersonaMayorAcompananteController {
 
         UsuarioLookup usuario = usuarioLookupRepository.findById(idAcompanante).orElse(null);
 
-        String parentesco = acompananteLookupRepository.findById(idAcompanante)
-                .map(AcompananteLookup::getParentesco)
+        String relacion = acompananteLookupRepository.findById(idAcompanante)
+                .map(AcompananteLookup::getRelacion)
                 .orElse(null);
 
         return new AcompananteResponse(
                 idAcompanante,
                 usuario != null ? usuario.getNombreUsuario() : null,
                 usuario != null ? usuario.getCelular() : null,
-                parentesco
+                relacion
         );
     }
 }

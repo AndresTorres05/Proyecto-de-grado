@@ -11,45 +11,44 @@
     <nav class="shell__nav" aria-label="Navegación del panel">
       <ul>
         @for (item of navItems; track item.label) {
-  <li>
-    @if (item.path) {
-      <a
-        [routerLink]="item.path"
-        routerLinkActive="shell__nav-link--active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        class="shell__nav-link"
-      >
-        <span class="shell__nav-icon" aria-hidden="true">
-          <app-icon [name]="item.icon" />
-        </span>
+          <li>
+            @if (item.path) {
+              <a
+                [routerLink]="item.path"
+                routerLinkActive="shell__nav-link--active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                class="shell__nav-link"
+              >
+                <span class="shell__nav-icon" aria-hidden="true">
+                  <app-icon [name]="item.icon" />
+                </span>
 
-        <span>{{ item.label }}</span>
-      </a>
-    } @else {
-      <a
-        href="#"
-        class="shell__nav-link"
-        [class.shell__nav-link--active]="item.active"
-      >
-        <span class="shell__nav-icon" aria-hidden="true">
-          <app-icon [name]="item.icon" />
-        </span>
+                <span>{{ item.label }}</span>
+              </a>
+            } @else {
+              <a href="#" class="shell__nav-link" [class.shell__nav-link--active]="item.active">
+                <span class="shell__nav-icon" aria-hidden="true">
+                  <app-icon [name]="item.icon" />
+                </span>
 
-        <span>{{ item.label }}</span>
-      </a>
-    }
-  </li>
-}
+                <span>{{ item.label }}</span>
+              </a>
+            }
+          </li>
+        }
       </ul>
     </nav>
-
-    
   </aside>
 
   <div class="shell__main">
     <header class="shell__topbar">
       <div class="shell__topbar-left">
-        <span class="shell__role-pill">{{ roleLabel }}</span>
+        <div class="shell__role-info">
+          <span class="shell__role-pill">{{ roleLabel }}</span>
+          <span class="shell__privacy-message">
+            Tus datos son privados, solo serán accesibles para ti y las personas autorizadas.
+          </span>
+        </div>
       </div>
 
       <div class="shell__topbar-right">
@@ -61,7 +60,6 @@
         </button>
 
         <div class="shell__user">
-
           <button
             type="button"
             class="shell__user-button"
@@ -74,26 +72,12 @@
 
           @if (menuUsuarioAbierto) {
             <div class="shell__user-menu">
+              <button type="button" (click)="irAMiInformacion()">Perfil</button>
 
-              <button
-                type="button"
-                (click)="irAMiInformacion()"
-              >
-                Perfil
-              </button>
-
-              <button
-                type="button"
-                (click)="cerrarSesion()"
-              >
-                Cerrar sesión
-              </button>
-
+              <button type="button" (click)="cerrarSesion()">Cerrar sesión</button>
             </div>
-        }
-
-      </div>
-
+          }
+        </div>
       </div>
     </header>
 

@@ -5,13 +5,13 @@ public class ContactoResponse {
     private Integer idUsuario;
     private String nombre;
     private String celular;
-    private String parentesco;
+    private String relacion;
 
-    public ContactoResponse(Integer idUsuario, String nombre, String celular, String parentesco) {
+    public ContactoResponse(Integer idUsuario, String nombre, String celular, String relacion) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.celular = celular;
-        this.parentesco = parentesco;
+        this.relacion = relacion;
     }
 
     public Integer getIdUsuario() {
@@ -26,7 +26,7 @@ public class ContactoResponse {
         return celular;
     }
 
-    public String getParentesco() {
-        return parentesco;
+    public String getRelacion() {
+        return relacion;
     }
 }
