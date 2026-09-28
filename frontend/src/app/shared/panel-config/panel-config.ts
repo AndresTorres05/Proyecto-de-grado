@@ -17,7 +17,7 @@ export const PANEL_CONFIG: Record<string, PanelConfig> = {
       { icon: 'clock', label: 'Mis recordatorios', path: '/panel/persona-mayor/recordatorios' },
       { icon: 'phone', label: 'Mis contactos', path: '/panel/persona-mayor/contactos' },
       { icon: 'building', label: 'Mis organizaciones', path: '/panel/persona-mayor/organizaciones' },
-      { icon: 'user', label: 'Mi información', path: '/panel/persona-mayor/informacion' }      
+      { icon: 'user', label: 'Perfil', path: '/panel/persona-mayor/perfil' }
     ]
   },
 
@@ -35,7 +35,7 @@ export const PANEL_CONFIG: Record<string, PanelConfig> = {
       //{ icon: 'bell', label: 'Alertas', path: '/panel/organizacion/alertas' },
       //{ icon: 'bar-chart', label: 'Analítica', path: '/panel/organizacion/analitica' },
       //{ icon: 'map', label: 'Mapa', path: '/panel/organizacion/mapa' },
-      { icon: 'settings', label: 'Administración', path: '/panel/organizacion/administracion' }
+      { icon: 'settings', label: 'Perfil', path: '/panel/organizacion/perfil' }
     ]
   },
 
@@ -48,7 +48,7 @@ export const PANEL_CONFIG: Record<string, PanelConfig> = {
       { icon: 'clipboard', label: 'Seguimiento', path: '/panel/acompanante/seguimiento' },
       { icon: 'phone', label: 'Contactos de emergencia', path: '/panel/acompanante/contactos-emergencia' },
       { icon: 'activity', label: 'Actividades', path: '/panel/acompanante/actividades' },
-      { icon: 'user', label: 'Mi perfil', path: '/panel/acompanante/perfil' }
+      { icon: 'user', label: 'Perfil', path: '/panel/acompanante/perfil' }
     ]
   },
 
@@ -61,7 +61,7 @@ export const PANEL_CONFIG: Record<string, PanelConfig> = {
       { icon: 'calendar', label: 'Disponibilidad', path: '/panel/voluntario/disponibilidad' },
       { icon: 'bell', label: 'Alertas', path: '/panel/voluntario/alertas' },
       { icon: 'users', label: 'Personas que acompaño', path: '/panel/voluntario/personas' },
-      { icon: 'user', label: 'Mi perfil', path: '/panel/voluntario/perfil' }
+      { icon: 'user', label: 'Perfil', path: '/panel/voluntario/perfil' }
     ]
   }
 };

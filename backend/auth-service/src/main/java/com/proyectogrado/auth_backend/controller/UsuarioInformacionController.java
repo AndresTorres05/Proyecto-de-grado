@@ -89,10 +89,13 @@ public class UsuarioInformacionController {
             }
         }
 
-        usuario.setNombreUsuario(request.getNombre().trim());
-        usuario.setCorreo(correo);
+usuario.setNombreUsuario(request.getNombre().trim());
+usuario.setCorreo(correo);
+usuario.setFechaNacimiento(request.getFechaNacimiento());
+usuario.setGenero(request.getGenero());
+usuario.setDireccion(request.getDireccion());
 
-        usuario = usuarioRepository.save(usuario);
+usuario = usuarioRepository.save(usuario);
 
         return ResponseEntity.ok(aRespuesta(usuario));
     }
@@ -114,6 +117,9 @@ public class UsuarioInformacionController {
                 usuario.getNombreUsuario(),
                 usuario.getCelular(),
                 usuario.getCorreo(),
+                usuario.getFechaNacimiento(),
+                usuario.getGenero(),
+                usuario.getDireccion(),
                 tieneContrasena
         );
     }

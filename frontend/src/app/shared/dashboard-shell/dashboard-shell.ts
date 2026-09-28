@@ -13,9 +13,9 @@ export interface ShellNavItem {
 
 // Página de "Mi información" de cada rol (no todas se llaman igual).
 const RUTA_MI_INFORMACION: Record<string, string> = {
-  PERSONA_MAYOR: '/panel/persona-mayor/informacion',
+  PERSONA_MAYOR: '/panel/persona-mayor/perfil',
   ACOMPANANTE: '/panel/acompanante/perfil',
-  ORGANIZACION: '/panel/organizacion/administracion',
+  ORGANIZACION: '/panel/organizacion/perfil',
   VOLUNTARIO: '/panel/voluntario/perfil'
 };
 

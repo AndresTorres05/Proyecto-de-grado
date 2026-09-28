@@ -22,7 +22,7 @@ export interface CambiarContrasenaRequest {
 export class PersonaMayorService {
 
   private readonly authUrl = 'http://localhost:8080/api/auth/informacion';
-  private readonly perfilUrl = 'http://localhost:8080/api/persona-mayor/informacion';
+  private readonly perfilUrl = 'http://localhost:8080/api/persona-mayor/perfil';
   private readonly contrasenaUrl = 'http://localhost:8080/api/auth/contrasena';
 
   constructor(private http: HttpClient) {}

@@ -55,9 +55,9 @@ confirmarContrasena = '';
   ];
 
   generos = [
-    { valor: 'FEMENINO', etiqueta: 'Femenino' },
-    { valor: 'MASCULINO', etiqueta: 'Masculino' },
-    { valor: 'OTRO', etiqueta: 'Otro' }
+    { valor: 'Femenino', etiqueta: 'Femenino' },
+    { valor: 'Masculino', etiqueta: 'Masculino' },
+    { valor: 'Otro', etiqueta: 'Otro' }
   ];
 
   // =========================================================

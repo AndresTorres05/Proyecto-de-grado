@@ -38,7 +38,7 @@ spring:
             - id: personamayor-service
               uri: http://localhost:8085
               predicates:
-                - Path=/api/persona-mayor/acompanantes/**,/api/persona-mayor/organizaciones/**,/api/persona-mayor/emergencia,/api/persona-mayor/*/gustos,/api/persona-mayor/informacion,/api/gustos/**
+                - Path=/api/persona-mayor/acompanantes/**,/api/persona-mayor/organizaciones/**,/api/persona-mayor/emergencia,/api/persona-mayor/*/gustos,/api/persona-mayor/perfil,/api/gustos/**
               filters:
                 - JwtAuth
 

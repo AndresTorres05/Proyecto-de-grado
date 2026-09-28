@@ -121,13 +121,16 @@ export const routes: Routes = [
         data: { titulo: 'Mapa' }
       },
 
-      {
-        path: 'administracion',
-        loadComponent: () =>
-          import('./pages/dashboard/organizacion/administracion/administracion')
-            .then((m) => m.Administracion),
-        data: { titulo: 'Administración' }
-      }
+{
+  path: 'perfil',
+  loadComponent: () =>
+    import('./shared/perfil/perfil')
+      .then((m) => m.Perfil),
+  data: {
+    titulo: 'Perfil',
+    tipoPerfil: 'ORGANIZACION'
+  }
+}
 
     ]
   },
@@ -187,13 +190,16 @@ export const routes: Routes = [
         data: { titulo: 'Personas que acompaño' }
       },
 
-      {
-        path: 'perfil',
-        loadComponent: () =>
-          import('./shared/en-construccion/en-construccion')
-            .then((m) => m.EnConstruccion),
-        data: { titulo: 'Mi perfil' }
-      }
+{
+  path: 'perfil',
+  loadComponent: () =>
+    import('./shared/perfil/perfil')
+      .then((m) => m.Perfil),
+  data: {
+    titulo: 'Perfil',
+    tipoPerfil: 'VOLUNTARIO'
+  }
+}
 
     ]
   },
@@ -249,12 +255,13 @@ export const routes: Routes = [
             .then((m) => m.ActividadesComponent),
       },
 
-      {
-        path: 'perfil',
-        loadComponent: () =>
-          import('./pages/dashboard/acompanante/informacion/informacion')
-            .then((m) => m.Informacion)
-      },
+{
+  path: 'perfil',
+  loadComponent: () =>
+    import('./shared/perfil/perfil')
+      .then((m) => m.Perfil),
+  data: { tipoPerfil: 'ACOMPANANTE' }
+},
 
     ]
   },
@@ -302,12 +309,13 @@ export const routes: Routes = [
     import('./pages/dashboard/persona-mayor/recordatorios/recordatorios').then((m) => m.Recordatorios)
 },
 
-      {
-        path: 'informacion',
-        loadComponent: () =>
-          import('./pages/dashboard/persona-mayor/informacion/informacion')
-            .then((m) => m.Informacion)
-      },
+{
+  path: 'perfil',
+  loadComponent: () =>
+    import('./shared/perfil/perfil')
+      .then((m) => m.Perfil),
+  data: { tipoPerfil: 'PERSONA_MAYOR' }
+},
       {
         path: 'contactos',
         loadComponent: () =>

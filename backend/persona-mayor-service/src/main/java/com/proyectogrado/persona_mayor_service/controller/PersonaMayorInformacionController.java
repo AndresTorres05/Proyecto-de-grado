@@ -24,7 +24,7 @@ import java.time.LocalDate;
  * aqui (UsuarioLookup); NO se editan desde este servicio.
  */
 @RestController
-@RequestMapping("/api/persona-mayor/informacion")
+@RequestMapping("/api/persona-mayor/perfil")
 public class PersonaMayorInformacionController {
 
     private final PersonaMayorLookupRepository personaMayorLookupRepository;
