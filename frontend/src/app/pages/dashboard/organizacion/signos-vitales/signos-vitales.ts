@@ -8,7 +8,6 @@ import {
   PersonaMayor,
 } from '../../../../core/signos-vitales/signos-vitales.services';
 
-import { AuthService } from '../../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-signos-vitales',
@@ -19,7 +18,6 @@ import { AuthService } from '../../../../core/auth/auth.service';
 })
 export class SignosVitales implements OnInit {
   private signosVitalesService = inject(SignosVitalesService);
-  private authService = inject(AuthService);
 
   personasMayores: PersonaMayor[] = [];
 
@@ -49,17 +47,10 @@ export class SignosVitales implements OnInit {
   }
 
   cargarPersonasMayores(): void {
-    const idUsuario = this.authService.getIdUsuario();
-
-    if (!idUsuario) {
-      this.mensajeError = 'No se pudo identificar al usuario.';
-      return;
-    }
-
     this.cargandoPersonas = true;
     this.mensajeError = '';
 
-    this.signosVitalesService.listarPersonasMayores(idUsuario).subscribe({
+    this.signosVitalesService.listarPersonasMayores().subscribe({
       next: (personas) => {
         this.personasMayores = personas;
         this.cargandoPersonas = false;
@@ -78,13 +69,6 @@ export class SignosVitales implements OnInit {
 registrarSignosVitales(): void {
   this.mensajeExito = '';
   this.mensajeError = '';
-
-  const idUsuario = this.authService.getIdUsuario();
-
-  if (!idUsuario) {
-    this.mensajeError = 'No se pudo identificar al usuario.';
-    return;
-  }
 
   if (this.idPersonaMayor === null) {
     this.mensajeError = 'Debes seleccionar una persona mayor.';
@@ -113,9 +97,7 @@ registrarSignosVitales(): void {
 confirmarRegistro(): void {
   if (this.guardando) return;
 
-  const idUsuario = this.authService.getIdUsuario();
-
-  if (!idUsuario || this.idPersonaMayor === null) {
+  if (this.idPersonaMayor === null) {
     this.mensajeError =
       'No se pudo identificar la persona mayor.';
     this.mostrarConfirmacion = false;
@@ -138,8 +120,7 @@ confirmarRegistro(): void {
   this.signosVitalesService
     .registrar(
       this.idPersonaMayor,
-      datos,
-      idUsuario
+      datos
     )
     .pipe(timeout(20000))
     .subscribe({
