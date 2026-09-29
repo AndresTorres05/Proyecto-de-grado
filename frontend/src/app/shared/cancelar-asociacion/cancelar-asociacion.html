@@ -1,0 +1,39 @@
+<div class="confirmation-overlay" (click)="cerrar.emit()">
+  <div
+    class="confirmation-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="confirmation-title"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="confirmation-modal__icon">
+      <app-icon name="alert-triangle" />
+    </div>
+
+    <div class="confirmation-modal__content">
+      <h2 id="confirmation-title">¿Cancelar asociación?</h2>
+
+      <p>
+        Estás a punto de cancelar la asociación con
+        <strong>{{ nombre() }}</strong>.
+      </p>
+
+      @if (advertencia()) {
+        <p class="confirmation-modal__warning">
+          {{ advertencia() }}
+        </p>
+      }
+    </div>
+
+    <div class="confirmation-modal__actions">
+      <button type="button" class="confirmation-modal__cancel" (click)="cerrar.emit()">
+        Cancelar
+      </button>
+
+      <button type="button" class="confirmation-modal__confirm" (click)="confirmar.emit()">
+        <app-icon name="x" />
+        Cancelar asociación
+      </button>
+    </div>
+  </div>
+</div>

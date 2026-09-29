@@ -137,6 +137,24 @@
        LISTA DE ACOMPAÑANTES
        ========================= -->
 
+  @if (mensajeCancelacion(); as mensaje) {
+
+    <div class="emergency-success">
+      <app-icon name="check-circle" />
+      {{ mensaje }}
+    </div>
+
+  }
+
+  @if (errorCancelacion(); as error) {
+
+    <div class="emergency-error">
+      <app-icon name="alert-circle" />
+      {{ error }}
+    </div>
+
+  }
+
   @if (acompanantes().length > 0) {
 
     <div class="companions-list">
@@ -148,8 +166,19 @@
           [nombre]="ac.nombre"
           [celular]="ac.celular"
           [relacion]="ac.relacion"
-          [llamar]="true"
-        />
+        >
+          <div card-actions class="person-card-actions">
+            <button
+              type="button"
+              class="person-card-remove"
+              (click)="mostrarConfirmacionCancelacion(ac)"
+              title="Cancelar asociación"
+              aria-label="Cancelar asociación"
+            >
+              <app-icon name="x" />
+            </button>
+          </div>
+        </app-person-card>
 
       }
 
@@ -291,4 +320,12 @@
 
   </div>
 
+}
+@if (acompananteACancelar(); as acompanante) {
+  <app-cancelar-asociacion
+    [nombre]="acompanante.nombre"
+    advertencia="Esta persona dejará de ser tu acompañante y ya no podrá ver tu seguimiento."
+    (confirmar)="confirmarCancelacion()"
+    (cerrar)="cerrarConfirmacionCancelacion()"
+  />
 }

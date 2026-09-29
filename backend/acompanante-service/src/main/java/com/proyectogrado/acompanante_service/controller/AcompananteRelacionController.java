@@ -2,11 +2,14 @@ package com.proyectogrado.acompanante_service.controller;
 
 import com.proyectogrado.acompanante_service.dto.PersonaMayorResponse;
 import com.proyectogrado.acompanante_service.model.PersonaMayorAcompanante;
+import com.proyectogrado.acompanante_service.model.PersonaMayorAcompananteId;
 import com.proyectogrado.acompanante_service.model.UsuarioLookup;
 import com.proyectogrado.acompanante_service.repository.PersonaMayorAcompananteRepository;
 import com.proyectogrado.acompanante_service.repository.UsuarioLookupRepository;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -18,7 +21,8 @@ import java.util.List;
 
 /**
  * Lado "acompanante" de la relacion con personas mayores:
- * ver sus personas mayores, ver solicitudes pendientes, aceptar/rechazar.
+ * ver sus personas mayores, ver solicitudes pendientes, aceptar/rechazar,
+ * cancelar la asociación.
  *
  * El id del usuario autenticado llega en el header X-User-Id, puesto
  * por el api-gateway despues de validar el JWT. Este servicio no valida
@@ -67,6 +71,28 @@ public class AcompananteRelacionController {
             @PathVariable Integer idPersonaMayor
     ) {
         return cambiarEstado(idAcompanante, idPersonaMayor, "RECHAZADA", "rechazada");
+    }
+
+    @DeleteMapping("/{idPersonaMayor}")
+    public ResponseEntity<String> cancelarAsociacion(
+            @RequestHeader("X-User-Id") Integer idAcompanante,
+            @PathVariable Integer idPersonaMayor
+    ) {
+        PersonaMayorAcompananteId idRelacion =
+                new PersonaMayorAcompananteId(idPersonaMayor, idAcompanante);
+
+        PersonaMayorAcompanante relacion =
+                relacionRepository.findById(idRelacion).orElse(null);
+
+        if (relacion == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No existe una asociación registrada");
+        }
+
+        relacionRepository.delete(relacion);
+        relacionRepository.flush();
+
+        return ResponseEntity.ok("Asociación cancelada correctamente");
     }
 
     private ResponseEntity<String> cambiarEstado(

@@ -2,6 +2,7 @@ package com.proyectogrado.acompanante_service.controller;
 
 import com.proyectogrado.acompanante_service.dto.ContactoResponse;
 import com.proyectogrado.acompanante_service.dto.MedicamentoSeguimientoResponse;
+import com.proyectogrado.acompanante_service.dto.SignoVitalSeguimientoResponse;
 import com.proyectogrado.acompanante_service.model.AcompananteInfoLookup;
 import com.proyectogrado.acompanante_service.model.MedicamentoLookup;
 import com.proyectogrado.acompanante_service.model.PersonaMayorAcompanante;
@@ -9,6 +10,7 @@ import com.proyectogrado.acompanante_service.model.UsuarioLookup;
 import com.proyectogrado.acompanante_service.repository.AcompananteInfoLookupRepository;
 import com.proyectogrado.acompanante_service.repository.MedicamentoLookupRepository;
 import com.proyectogrado.acompanante_service.repository.PersonaMayorAcompananteRepository;
+import com.proyectogrado.acompanante_service.repository.SignoVitalLookupRepository;
 import com.proyectogrado.acompanante_service.repository.UsuarioLookupRepository;
 
 import org.springframework.http.HttpStatus;
@@ -38,17 +40,53 @@ public class AcompananteSeguimientoController {
     private final UsuarioLookupRepository usuarioLookupRepository;
     private final AcompananteInfoLookupRepository acompananteInfoLookupRepository;
     private final MedicamentoLookupRepository medicamentoLookupRepository;
+    private final SignoVitalLookupRepository signoVitalLookupRepository;
 
     public AcompananteSeguimientoController(
             PersonaMayorAcompananteRepository relacionRepository,
             UsuarioLookupRepository usuarioLookupRepository,
             AcompananteInfoLookupRepository acompananteInfoLookupRepository,
-            MedicamentoLookupRepository medicamentoLookupRepository
+            MedicamentoLookupRepository medicamentoLookupRepository,
+            SignoVitalLookupRepository signoVitalLookupRepository
     ) {
         this.relacionRepository = relacionRepository;
         this.usuarioLookupRepository = usuarioLookupRepository;
         this.acompananteInfoLookupRepository = acompananteInfoLookupRepository;
         this.medicamentoLookupRepository = medicamentoLookupRepository;
+        this.signoVitalLookupRepository = signoVitalLookupRepository;
+    }
+
+    // Últimos 10 registros de la persona mayor, del más reciente al más antiguo.
+    @GetMapping("/{idPersonaMayor}/signos-vitales")
+    public ResponseEntity<?> obtenerSignosVitales(
+            @RequestHeader("X-User-Id") Integer idAcompanante,
+            @PathVariable Integer idPersonaMayor
+    ) {
+        if (!tieneRelacionAceptada(idAcompanante, idPersonaMayor)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("No tienes autorización para consultar a esta persona mayor");
+        }
+
+        DateTimeFormatter formatoFechaHora = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+        List<SignoVitalSeguimientoResponse> respuesta = signoVitalLookupRepository
+                .findTop10ByIdPersonaMayorOrderByFechaHoraDesc(idPersonaMayor)
+                .stream()
+                .map(s -> new SignoVitalSeguimientoResponse(
+                        s.getIdSignoVital(),
+                        s.getFechaHora() != null ? s.getFechaHora().format(formatoFechaHora) : null,
+                        s.getPresionSistolica(),
+                        s.getPresionDiastolica(),
+                        s.getFrecuenciaCardiaca(),
+                        s.getTemperatura(),
+                        s.getSaturacionOxigeno(),
+                        s.getFrecuenciaRespiratoria(),
+                        s.getPeso(),
+                        s.getObservaciones()
+                ))
+                .toList();
+
+        return ResponseEntity.ok(respuesta);
     }
 
     @GetMapping("/{idPersonaMayor}/medicamentos")

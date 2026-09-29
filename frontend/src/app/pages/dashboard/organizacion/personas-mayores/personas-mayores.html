@@ -71,10 +71,10 @@
           [nombre]="persona.nombre"
           [celular]="persona.celular"
         >
-          <div card-actions class="person-actions">
+          <div card-actions class="person-card-actions">
             <button
               type="button"
-              class="person-action-button"
+              class="person-card-action"
               (click)="mostrarAcompanantes(persona)"
             >
               <app-icon name="users" />
@@ -83,7 +83,7 @@
 
             <button
               type="button"
-              class="person-action-button"
+              class="person-card-action"
               (click)="mostrarSignosVitales(persona)"
             >
               <app-icon name="heart" />
@@ -92,7 +92,7 @@
 
             <button
               type="button"
-              class="remove-association-button"
+              class="person-card-remove"
               (click)="mostrarConfirmacion(persona)"
               title="Cancelar asociación"
               aria-label="Cancelar asociación"
@@ -178,44 +178,12 @@
 }
 
 @if (mostrandoConfirmacion()) {
-  <div class="confirmation-overlay" (click)="cerrarConfirmacion()">
-    <div
-      class="confirmation-modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="confirmation-title"
-      (click)="$event.stopPropagation()"
-    >
-      <div class="confirmation-modal__icon">
-        <app-icon name="alert-triangle" />
-      </div>
-
-      <div class="confirmation-modal__content">
-        <h2 id="confirmation-title">¿Cancelar asociación?</h2>
-
-        <p>
-          Estás a punto de cancelar la asociación con
-          <strong>{{ personaSeleccionada?.nombre }}</strong
-          >.
-        </p>
-
-        <p class="confirmation-modal__warning">
-          La persona mayor dejará de aparecer en la lista de personas asociadas a tu organización.
-        </p>
-      </div>
-
-      <div class="confirmation-modal__actions">
-        <button type="button" class="confirmation-modal__cancel" (click)="cerrarConfirmacion()">
-          Cancelar
-        </button>
-
-        <button type="button" class="confirmation-modal__confirm" (click)="confirmarCancelacion()">
-          <app-icon name="x" />
-          Cancelar asociación
-        </button>
-      </div>
-    </div>
-  </div>
+  <app-cancelar-asociacion
+    [nombre]="personaSeleccionada?.nombre"
+    advertencia="La persona mayor dejará de aparecer en la lista de personas asociadas a tu organización."
+    (confirmar)="confirmarCancelacion()"
+    (cerrar)="cerrarConfirmacion()"
+  />
 }
 
 @if (mostrandoAcompanantes()) {
@@ -295,120 +263,11 @@
 }
 
 @if (mostrandoSignosVitales()) {
-  <div class="modal-overlay" (click)="cerrarSignosVitales()">
-    <div
-      class="modal acompanantes-modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="signos-title"
-      (click)="$event.stopPropagation()"
-    >
-      <div class="modal__header">
-        <div>
-          <span class="eyebrow"> Salud </span>
-
-          <h2 id="signos-title">Últimos signos vitales</h2>
-        </div>
-
-        <button
-          type="button"
-          class="modal__close"
-          (click)="cerrarSignosVitales()"
-          aria-label="Cerrar"
-        >
-          ×
-        </button>
-      </div>
-
-      <p class="modal__description">
-        Registros más recientes de
-        <strong>
-          {{ personaMayorSeleccionada?.nombre }} </strong
-        >.
-      </p>
-
-      @if (cargandoSignosVitales()) {
-        <div class="acompanantes-loading">Cargando signos vitales...</div>
-      } @else if (errorSignosVitales(); as errorActual) {
-        <div class="modal__error">
-          <app-icon name="alert-circle" />
-
-          {{ errorActual }}
-        </div>
-      } @else if (signosVitales().length === 0) {
-        <div class="acompanantes-empty">
-          <div class="acompanantes-empty__icon">
-            <app-icon name="heart" />
-          </div>
-
-          <h3>No tiene signos vitales registrados</h3>
-
-          <p>Cuando registres signos vitales de esta persona mayor, aparecerán aquí.</p>
-        </div>
-      } @else {
-        <div class="acompanantes-list">
-          @for (registro of signosVitales(); track registro.idSignoVital) {
-            <div class="signo-item">
-              <div class="signo-item__fecha">
-                <app-icon name="calendar" />
-                {{ registro.fechaHora | date: "d 'de' MMMM yyyy, h:mm a" }}
-              </div>
-
-              <div class="signo-item__valores">
-                @if (registro.presionSistolica !== null || registro.presionDiastolica !== null) {
-                  <div>
-                    <span>Presión arterial</span>
-                    <strong>
-                      {{ registro.presionSistolica ?? '-' }} / {{ registro.presionDiastolica ?? '-' }} mmHg
-                    </strong>
-                  </div>
-                }
-
-                @if (registro.frecuenciaCardiaca !== null) {
-                  <div>
-                    <span>Frecuencia cardíaca</span>
-                    <strong>{{ registro.frecuenciaCardiaca }} lpm</strong>
-                  </div>
-                }
-
-                @if (registro.frecuenciaRespiratoria !== null) {
-                  <div>
-                    <span>Frecuencia respiratoria</span>
-                    <strong>{{ registro.frecuenciaRespiratoria }} rpm</strong>
-                  </div>
-                }
-
-                @if (registro.temperatura !== null) {
-                  <div>
-                    <span>Temperatura</span>
-                    <strong>{{ registro.temperatura }} °C</strong>
-                  </div>
-                }
-
-                @if (registro.saturacionOxigeno !== null) {
-                  <div>
-                    <span>Saturación de oxígeno</span>
-                    <strong>{{ registro.saturacionOxigeno }} %</strong>
-                  </div>
-                }
-
-                @if (registro.peso !== null) {
-                  <div>
-                    <span>Peso</span>
-                    <strong>{{ registro.peso }} kg</strong>
-                  </div>
-                }
-              </div>
-
-              @if (registro.observaciones) {
-                <p class="signo-item__observaciones">
-                  {{ registro.observaciones }}
-                </p>
-              }
-            </div>
-          }
-        </div>
-      }
-    </div>
-  </div>
+  <app-signos-vitales-modal
+    [nombre]="personaMayorSeleccionada?.nombre"
+    [registros]="signosVitales()"
+    [cargando]="cargandoSignosVitales()"
+    [error]="errorSignosVitales()"
+    (cerrar)="cerrarSignosVitales()"
+  />
 }

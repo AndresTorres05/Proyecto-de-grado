@@ -1,5 +1,4 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -16,11 +15,13 @@ import {
 
 import { Icon } from '../../../../shared/icon/icon';
 import { PersonCard } from '../../../../shared/person-card/person-card';
+import { CancelarAsociacion } from '../../../../shared/cancelar-asociacion/cancelar-asociacion';
+import { SignosVitalesModal } from '../../../../shared/signos-vitales-modal/signos-vitales-modal';
 
 @Component({
   selector: 'app-personas-mayores',
   standalone: true,
-  imports: [Icon, FormsModule, PersonCard, DatePipe],
+  imports: [Icon, FormsModule, PersonCard, CancelarAsociacion, SignosVitalesModal],
   templateUrl: './personas-mayores.html',
   styleUrl: './personas-mayores.css'
 })

@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import { SignoVitalResponse } from '../signos-vitales/signos-vitales.services';
+
 // =========================================================
 // ACOMPAÑANTE
 // =========================================================
@@ -136,6 +138,17 @@ private readonly authUrl = 'http://localhost:8080/api/auth';
     );
   }
 
+  cancelarAcompanante(
+    idAcompanante: number
+  ): Observable<string> {
+    return this.http.delete(
+      `${this.apiUrl}/persona-mayor/acompanantes/${idAcompanante}`,
+      {
+        responseType: 'text'
+      }
+    );
+  }
+
   // =========================================================
   // PERSONAS MAYORES DEL ACOMPAÑANTE
   // =========================================================
@@ -143,6 +156,17 @@ private readonly authUrl = 'http://localhost:8080/api/auth';
   obtenerPersonasMayores(): Observable<PersonaMayorAcompanada[]> {
     return this.http.get<PersonaMayorAcompanada[]>(
       `${this.apiUrl}/acompanante/personas-mayores`
+    );
+  }
+
+  cancelarAsociacionPersonaMayor(
+    idPersonaMayor: number
+  ): Observable<string> {
+    return this.http.delete(
+      `${this.apiUrl}/acompanante/personas-mayores/${idPersonaMayor}`,
+      {
+        responseType: 'text'
+      }
     );
   }
 
@@ -224,6 +248,19 @@ actualizarInformacion(
   ): Observable<MedicamentoSeguimiento[]> {
     return this.http.get<MedicamentoSeguimiento[]>(
       `${this.apiUrl}/acompanante/seguimiento/${idPersonaMayor}/medicamentos`
+    );
+  }
+
+  // =========================================================
+  // SEGUIMIENTO - SIGNOS VITALES
+  // =========================================================
+
+  /** Últimos 10 registros de la persona mayor, del más reciente al más antiguo. */
+  obtenerSignosVitalesSeguimiento(
+    idPersonaMayor: number
+  ): Observable<SignoVitalResponse[]> {
+    return this.http.get<SignoVitalResponse[]>(
+      `${this.apiUrl}/acompanante/seguimiento/${idPersonaMayor}/signos-vitales`
     );
   }
 

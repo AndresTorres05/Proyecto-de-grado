@@ -11,7 +11,9 @@ import com.proyectogrado.persona_mayor_service.repository.PersonaMayorAcompanant
 import com.proyectogrado.persona_mayor_service.repository.UsuarioLookupRepository;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -120,6 +122,27 @@ public class PersonaMayorAcompananteController {
         relacionRepository.saveAndFlush(relacion);
 
         return ResponseEntity.ok("Solicitud de acompañamiento enviada correctamente");
+    }
+
+    @DeleteMapping("/{idAcompanante}")
+    public ResponseEntity<String> cancelarAsociacion(
+            @RequestHeader("X-User-Id") Integer idPersonaMayor,
+            @PathVariable Integer idAcompanante
+    ) {
+        PersonaMayorAcompananteId idRelacion =
+                new PersonaMayorAcompananteId(idPersonaMayor, idAcompanante);
+
+        PersonaMayorAcompanante relacion =
+                relacionRepository.findById(idRelacion).orElse(null);
+
+        if (relacion == null) {
+            return ResponseEntity.status(404).body("No existe una asociación registrada");
+        }
+
+        relacionRepository.delete(relacion);
+        relacionRepository.flush();
+
+        return ResponseEntity.ok("Asociación cancelada correctamente");
     }
 
     private AcompananteResponse construirRespuesta(Integer idAcompanante) {

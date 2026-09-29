@@ -7,11 +7,12 @@ import {
 import { EmergenciaService } from '../../../../core/emergencia/emergencia.service';
 import { Icon } from '../../../../shared/icon/icon';
 import { PersonCard } from '../../../../shared/person-card/person-card';
+import { CancelarAsociacion } from '../../../../shared/cancelar-asociacion/cancelar-asociacion';
 
 @Component({
   selector: 'app-contactos',
   standalone: true,
-  imports: [Icon, FormsModule, PersonCard],
+  imports: [Icon, FormsModule, PersonCard, CancelarAsociacion],
   templateUrl: './contactos.html',
   styleUrl: './contactos.css'
 })
@@ -33,18 +34,56 @@ export class Contactos implements OnInit {
   protected readonly errorAcompanante = signal<string | null>(null);
   protected readonly mensajeAcompanante = signal<string | null>(null);
 
+  protected readonly acompananteACancelar = signal<Acompanante | null>(null);
+  protected readonly mensajeCancelacion = signal<string | null>(null);
+  protected readonly errorCancelacion = signal<string | null>(null);
+
   constructor(
     private acompananteService: AcompananteService,
     private emergenciaService: EmergenciaService
   ) {}
 
   ngOnInit(): void {
+    this.cargarAcompanantes();
+  }
+
+  cargarAcompanantes(): void {
     this.acompananteService.obtenerAcompanantes().subscribe({
       next: (acompanantes) => {
         this.acompanantes.set(acompanantes);
       },
       error: () => {
         this.acompanantes.set([]);
+      }
+    });
+  }
+
+  mostrarConfirmacionCancelacion(acompanante: Acompanante): void {
+    this.acompananteACancelar.set(acompanante);
+    this.mensajeCancelacion.set(null);
+    this.errorCancelacion.set(null);
+  }
+
+  cerrarConfirmacionCancelacion(): void {
+    this.acompananteACancelar.set(null);
+  }
+
+  confirmarCancelacion(): void {
+    const acompanante = this.acompananteACancelar();
+
+    if (!acompanante) return;
+
+    this.acompananteACancelar.set(null);
+
+    this.acompananteService.cancelarAcompanante(acompanante.idUsuario).subscribe({
+      next: (respuesta) => {
+        this.mensajeCancelacion.set(respuesta);
+        this.cargarAcompanantes();
+      },
+      error: (error) => {
+        this.errorCancelacion.set(
+          error?.error || 'No se pudo cancelar la asociación.'
+        );
       }
     });
   }

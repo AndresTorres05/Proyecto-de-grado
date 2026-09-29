@@ -111,8 +111,28 @@
             etiqueta="Persona mayor"
             [nombre]="persona.nombre"
             [celular]="persona.celular"
-            estado="Acompañamiento activo"
-          />
+          >
+            <div card-actions class="person-card-actions">
+              <button
+                type="button"
+                class="person-card-action"
+                (click)="mostrarSignosVitales(persona)"
+              >
+                <app-icon name="heart" />
+                Signos vitales
+              </button>
+
+              <button
+                type="button"
+                class="person-card-remove"
+                (click)="mostrarConfirmacionCancelacion(persona)"
+                title="Cancelar asociación"
+                aria-label="Cancelar asociación"
+              >
+                <app-icon name="x" />
+              </button>
+            </div>
+          </app-person-card>
 
         }
 
@@ -123,3 +143,22 @@
   </section>
 
 </div>
+
+@if (personaACancelar) {
+  <app-cancelar-asociacion
+    [nombre]="personaACancelar.nombre"
+    advertencia="Dejarás de acompañar a esta persona mayor y ya no podrás ver su seguimiento."
+    (confirmar)="confirmarCancelacion()"
+    (cerrar)="cerrarConfirmacionCancelacion()"
+  />
+}
+
+@if (personaSignosVitales) {
+  <app-signos-vitales-modal
+    [nombre]="personaSignosVitales.nombre"
+    [registros]="signosVitales"
+    [cargando]="cargandoSignosVitales"
+    [error]="errorSignosVitales"
+    (cerrar)="cerrarSignosVitales()"
+  />
+}
