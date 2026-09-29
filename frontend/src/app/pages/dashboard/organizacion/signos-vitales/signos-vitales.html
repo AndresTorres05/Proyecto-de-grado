@@ -1,34 +1,17 @@
 <div class="signos-container">
-
   <div class="encabezado">
     <div>
       <h1>Registro de signos vitales</h1>
-      <p>
-        Registra los signos vitales de las personas mayores asociadas a tu organización.
-      </p>
+      <p>Registra los signos vitales de las personas mayores asociadas a tu organización.</p>
     </div>
   </div>
 
-  <!-- Mensaje de éxito -->
-  @if (mensajeExito) {
-    <div class="mensaje exito">
-      {{ mensajeExito }}
-    </div>
-  }
-
-  <!-- Mensaje de error -->
-  @if (mensajeError) {
-    <div class="mensaje error">
-      {{ mensajeError }}
-    </div>
-  }
-
   <div class="formulario-card">
-
     <!-- Persona mayor -->
     <div class="campo campo-completo">
       <label for="personaMayor">
-        Persona mayor <span class="obligatorio">*</span>
+        Persona mayor
+        <span class="obligatorio">*</span>
       </label>
 
       <select
@@ -36,17 +19,11 @@
         [(ngModel)]="idPersonaMayor"
         [disabled]="cargandoPersonas || guardando"
       >
-        <option [ngValue]="null">
-          @if (cargandoPersonas) {
-            Cargando personas mayores...
-          } @else {
-            Selecciona una persona mayor
-          }
-        </option>
+        <option [ngValue]="null" disabled>Selecciona una persona mayor</option>
 
-        @for (persona of personasMayores; track persona.idPersonaMayor) {
-          <option [ngValue]="persona.idPersonaMayor">
-            {{ persona.nombreUsuario }}
+        @for (persona of personasMayores; track persona.idUsuario) {
+          <option [ngValue]="persona.idUsuario">
+            {{ persona.nombre }}
           </option>
         }
       </select>
@@ -54,9 +31,7 @@
 
     <!-- Presión arterial -->
     <div class="campo">
-      <label for="presionSistolica">
-        Presión sistólica
-      </label>
+      <label for="presionSistolica"> Presión sistólica </label>
 
       <div class="input-unidad">
         <input
@@ -72,9 +47,7 @@
     </div>
 
     <div class="campo">
-      <label for="presionDiastolica">
-        Presión diastólica
-      </label>
+      <label for="presionDiastolica"> Presión diastólica </label>
 
       <div class="input-unidad">
         <input
@@ -91,9 +64,7 @@
 
     <!-- Frecuencia cardíaca -->
     <div class="campo">
-      <label for="frecuenciaCardiaca">
-        Frecuencia cardíaca
-      </label>
+      <label for="frecuenciaCardiaca"> Frecuencia cardíaca </label>
 
       <div class="input-unidad">
         <input
@@ -110,9 +81,7 @@
 
     <!-- Frecuencia respiratoria -->
     <div class="campo">
-      <label for="frecuenciaRespiratoria">
-        Frecuencia respiratoria
-      </label>
+      <label for="frecuenciaRespiratoria"> Frecuencia respiratoria </label>
 
       <div class="input-unidad">
         <input
@@ -129,9 +98,7 @@
 
     <!-- Temperatura -->
     <div class="campo">
-      <label for="temperatura">
-        Temperatura
-      </label>
+      <label for="temperatura"> Temperatura </label>
 
       <div class="input-unidad">
         <input
@@ -149,9 +116,7 @@
 
     <!-- Saturación -->
     <div class="campo">
-      <label for="saturacionOxigeno">
-        Saturación de oxígeno
-      </label>
+      <label for="saturacionOxigeno"> Saturación de oxígeno </label>
 
       <div class="input-unidad">
         <input
@@ -169,9 +134,7 @@
 
     <!-- Peso -->
     <div class="campo">
-      <label for="peso">
-        Peso
-      </label>
+      <label for="peso"> Peso </label>
 
       <div class="input-unidad">
         <input
@@ -189,9 +152,7 @@
 
     <!-- Observaciones -->
     <div class="campo campo-completo">
-      <label for="observaciones">
-        Observaciones
-      </label>
+      <label for="observaciones"> Observaciones </label>
 
       <textarea
         id="observaciones"
@@ -202,9 +163,22 @@
       ></textarea>
     </div>
 
+    <!-- Mensaje de éxito -->
+    @if (mensajeExito) {
+      <div class="mensaje exito campo-completo">
+        {{ mensajeExito }}
+      </div>
+    }
+
+    <!-- Mensaje de error -->
+    @if (mensajeError) {
+      <div class="mensaje error campo-completo">
+        {{ mensajeError }}
+      </div>
+    }
+
     <!-- Botones -->
     <div class="acciones campo-completo">
-
       <button
         type="button"
         class="btn-secundario"
@@ -226,9 +200,89 @@
           Registrar signos vitales
         }
       </button>
-
     </div>
-
   </div>
-
 </div>
+@if (mostrarConfirmacion) {
+  <div class="modal-overlay">
+    <div class="modal-confirmacion">
+      <div class="modal-icono">♥</div>
+
+      <h2>Confirmar registro</h2>
+
+      <p class="modal-descripcion">¿Deseas registrar estos signos vitales?</p>
+
+      @if (personaSeleccionada) {
+        <div class="persona-confirmacion">
+          <span class="persona-label"> Persona mayor </span>
+
+          <strong>
+            {{ personaSeleccionada.nombre }}
+          </strong>
+
+          @if (personaSeleccionada.celular) {
+            <span>
+              {{ personaSeleccionada.celular }}
+            </span>
+          }
+        </div>
+      }
+
+      <div class="resumen-signos">
+        <div class="resumen-item">
+          <span>Presión arterial</span>
+          <strong> {{ presionSistolica ?? '-' }} / {{ presionDiastolica ?? '-' }} mmHg </strong>
+        </div>
+
+        <div class="resumen-item">
+          <span>Frecuencia cardíaca</span>
+          <strong> {{ frecuenciaCardiaca ?? '-' }} lpm </strong>
+        </div>
+
+        <div class="resumen-item">
+          <span>Frecuencia respiratoria</span>
+          <strong> {{ frecuenciaRespiratoria ?? '-' }} rpm </strong>
+        </div>
+
+        <div class="resumen-item">
+          <span>Temperatura</span>
+          <strong> {{ temperatura ?? '-' }} °C </strong>
+        </div>
+
+        <div class="resumen-item">
+          <span>Saturación de oxígeno</span>
+          <strong> {{ saturacionOxigeno ?? '-' }} % </strong>
+        </div>
+
+        <div class="resumen-item">
+          <span>Peso</span>
+          <strong> {{ peso ?? '-' }} kg </strong>
+        </div>
+      </div>
+
+      <div class="modal-acciones">
+        <button
+          type="button"
+          class="btn-secundario"
+          (click)="cancelarConfirmacion()"
+          [disabled]="guardando"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="btn-principal"
+          (click)="confirmarRegistro()"
+          [disabled]="guardando"
+        >
+          @if (guardando) {
+            Guardando...
+          } @else {
+            Confirmar registro
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}

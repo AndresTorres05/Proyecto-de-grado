@@ -27,8 +27,8 @@ export interface SignoVitalResponse {
 }
 
 export interface PersonaMayor {
-  idPersonaMayor: number;
-  nombreUsuario: string;
+  idUsuario: number;
+  nombre: string;
   celular: string | null;
   correo: string | null;
 }

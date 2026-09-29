@@ -102,8 +102,7 @@ if (idOrganizacion == null) {
         signoVital.setObservaciones(
                 request.getObservaciones()
         );
-
-        signoVital = signoVitalRepository.save(signoVital);
+signoVital = signoVitalRepository.saveAndFlush(signoVital);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
