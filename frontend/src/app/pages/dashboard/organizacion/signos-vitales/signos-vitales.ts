@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { timeout } from 'rxjs';
 
@@ -18,6 +18,7 @@ import {
 })
 export class SignosVitales implements OnInit {
   private signosVitalesService = inject(SignosVitalesService);
+  private cdr = inject(ChangeDetectorRef);
 
   personasMayores: PersonaMayor[] = [];
 
@@ -54,6 +55,7 @@ export class SignosVitales implements OnInit {
       next: (personas) => {
         this.personasMayores = personas;
         this.cargandoPersonas = false;
+        this.cdr.markForCheck();
       },
 
       error: (error) => {
@@ -62,6 +64,7 @@ export class SignosVitales implements OnInit {
         this.mensajeError = 'No se pudieron cargar las personas mayores.';
 
         this.cargandoPersonas = false;
+        this.cdr.markForCheck();
       },
     });
   }
@@ -132,6 +135,7 @@ confirmarRegistro(): void {
           'Los signos vitales se registraron correctamente.';
 
         this.limpiarFormulario();
+        this.cdr.markForCheck();
       },
 
       error: (error) => {
@@ -161,6 +165,8 @@ confirmarRegistro(): void {
           this.mensajeError =
             'No se pudieron registrar los signos vitales.';
         }
+
+        this.cdr.markForCheck();
       }
     });
 }
