@@ -5,6 +5,8 @@ import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
+import java.time.LocalDateTime;
+
 /**
  * Inscripcion de una persona mayor en una actividad.
  *
@@ -24,6 +26,12 @@ public class Participacion {
 
     @Column(name = "asistio")
     private Boolean asistio;
+
+    // Fecha/hora de inicio de la actividad para la que ya se envio el
+    // recordatorio de 1 hora antes. Si la organizacion cambia la hora,
+    // deja de coincidir y se vuelve a avisar para la nueva.
+    @Column(name = "recordatorio_enviado_para")
+    private LocalDateTime recordatorioEnviadoPara;
 
     public Participacion() {
     }
@@ -46,5 +54,13 @@ public class Participacion {
 
     public void setAsistio(Boolean asistio) {
         this.asistio = asistio;
+    }
+
+    public LocalDateTime getRecordatorioEnviadoPara() {
+        return recordatorioEnviadoPara;
+    }
+
+    public void setRecordatorioEnviadoPara(LocalDateTime recordatorioEnviadoPara) {
+        this.recordatorioEnviadoPara = recordatorioEnviadoPara;
     }
 }
