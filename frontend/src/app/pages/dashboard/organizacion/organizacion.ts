@@ -171,9 +171,9 @@ protected readonly accionesRapidas: AccionRapida[] = [
     abrirFormulario: true
   },
   {
-    icon: 'gift',
-    label: 'Registrar donación',
-    route: '/panel/organizacion/donaciones'
+    icon: 'heart',
+    label: 'Registrar signos vitales',
+    route: '/panel/organizacion/signos-vitales'
   },
   {
     icon: 'clipboard',
