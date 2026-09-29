@@ -1,0 +1,72 @@
+<!-- IDENTIDAD -->
+
+<div class="person-card__identity">
+  <div class="person-card__avatar" aria-hidden="true">
+    <app-icon [name]="icono()" />
+  </div>
+
+  <div class="person-card__name">
+    @if (etiqueta()) {
+      <span class="person-card__eyebrow">{{ etiqueta() }}</span>
+    }
+
+    <h3>{{ nombre() }}</h3>
+  </div>
+</div>
+
+<div class="person-card__divider"></div>
+
+<!-- DETALLES -->
+
+<div class="person-card__details">
+  @if (celular()) {
+    <div class="person-card__detail">
+      <app-icon name="phone" />
+
+      <div>
+        <span>Celular</span>
+        <strong>{{ celular() }}</strong>
+      </div>
+    </div>
+  }
+
+  @if (relacion()) {
+    <div class="person-card__detail">
+      <app-icon name="users" />
+
+      <div>
+        <span>Relación</span>
+        <strong>{{ relacion() }}</strong>
+      </div>
+    </div>
+  }
+</div>
+
+<div class="person-card__divider person-card__divider--short"></div>
+
+<!-- ESTADO Y ACCIONES -->
+
+<div class="person-card__actions">
+  @if (estado()) {
+    <div
+      class="person-card__status"
+      [class.person-card__status--pending]="estadoTipo() === 'pendiente'"
+    >
+      <span class="person-card__status-dot"></span>
+      <span>{{ estado() }}</span>
+    </div>
+  }
+
+  @if (llamar() && celular()) {
+    <a
+      class="btn btn-gold person-card__call"
+      [href]="'tel:' + celular()"
+      (click)="$event.stopPropagation()"
+    >
+      <app-icon name="phone" />
+      Llamar
+    </a>
+  }
+
+  <ng-content select="[card-actions]" />
+</div>

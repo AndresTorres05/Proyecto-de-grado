@@ -6,11 +6,13 @@ import {
   PersonaMayorAcompanada,
   MedicamentoSeguimiento
 } from '../../../../core/acompanantes/acompanante.service';
+import { Icon } from '../../../../shared/icon/icon';
+import { PersonCard } from '../../../../shared/person-card/person-card';
 
 @Component({
   selector: 'app-seguimiento',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, Icon, PersonCard],
   templateUrl: './seguimiento.html',
   styleUrl: './seguimiento.css'
 })

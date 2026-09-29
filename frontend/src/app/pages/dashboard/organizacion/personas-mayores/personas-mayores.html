@@ -66,80 +66,26 @@
 
     <div class="people-list">
       @for (persona of personasMayores(); track persona.idUsuario) {
-        <div
-          class="person-card"
-          (click)="mostrarAcompanantes(persona)"
-          role="button"
-          tabindex="0"
-          (keydown.enter)="mostrarAcompanantes(persona)"
+        <app-person-card
+          etiqueta="Persona mayor"
+          [nombre]="persona.nombre"
+          [celular]="persona.celular"
+          estado="Asociación activa"
+          [clickable]="true"
+          (cardClick)="mostrarAcompanantes(persona)"
         >
-          <!-- =================================================
-               IDENTIDAD
-               ================================================= -->
-
-          <div class="person-card__identity">
-            <div class="person-icon">
-              <app-icon name="user" />
-            </div>
-
-            <div class="person-card__name">
-              <span class="eyebrow"> Persona mayor </span>
-
-              <h3>
-                {{ persona.nombre }}
-              </h3>
-            </div>
-          </div>
-
-          <!-- =================================================
-               SEPARADOR
-               ================================================= -->
-
-          <div class="person-card__divider"></div>
-
-          <!-- =================================================
-               CELULAR
-               ================================================= -->
-
-          <div class="person-card__detail">
-            <app-icon name="phone" />
-
-            <div>
-              <span> Celular </span>
-
-              <strong>
-                {{ persona.celular }}
-              </strong>
-            </div>
-          </div>
-
-          <!-- =================================================
-               SEPARADOR
-               ================================================= -->
-
-          <div class="person-card__divider person-card__divider--status"></div>
-
-          <!-- =================================================
-               ESTADO
-               ================================================= -->
-
-          <div class="person-card__actions">
-            <div class="person-status">
-              <span class="person-status__dot"></span>
-              <span>Asociación activa</span>
-            </div>
-
-            <button
-              type="button"
-              class="remove-association-button"
-              (click)="$event.stopPropagation(); mostrarConfirmacion(persona)"
-              title="Cancelar asociación"
-              aria-label="Cancelar asociación"
-            >
-              <app-icon name="x" />
-            </button>
-          </div>
-        </div>
+          <button
+            card-actions
+            type="button"
+            class="remove-association-button"
+            (click)="$event.stopPropagation(); mostrarConfirmacion(persona)"
+            (keydown.enter)="$event.stopPropagation()"
+            title="Cancelar asociación"
+            aria-label="Cancelar asociación"
+          >
+            <app-icon name="x" />
+          </button>
+        </app-person-card>
       }
     </div>
   }

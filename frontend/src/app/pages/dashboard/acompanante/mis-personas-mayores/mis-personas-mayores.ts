@@ -4,9 +4,12 @@ import {
   PersonaMayorAcompanada,
   SolicitudAcompanamiento
 } from '../../../../core/acompanantes/acompanante.service';
+import { Icon } from '../../../../shared/icon/icon';
+import { PersonCard } from '../../../../shared/person-card/person-card';
 
 @Component({
   selector: 'app-mis-personas-mayores',
+  imports: [Icon, PersonCard],
   templateUrl: './mis-personas-mayores.html',
   styleUrl: './mis-personas-mayores.css'
 })

@@ -9,11 +9,12 @@ import {
 } from '../../../../core/organizacion/organizacion.service';
 
 import { Icon } from '../../../../shared/icon/icon';
+import { PersonCard } from '../../../../shared/person-card/person-card';
 
 @Component({
   selector: 'app-personas-mayores',
   standalone: true,
-  imports: [Icon, FormsModule],
+  imports: [Icon, FormsModule, PersonCard],
   templateUrl: './personas-mayores.html',
   styleUrl: './personas-mayores.css'
 })

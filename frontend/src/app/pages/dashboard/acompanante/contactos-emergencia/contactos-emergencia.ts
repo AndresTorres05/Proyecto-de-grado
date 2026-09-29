@@ -5,11 +5,13 @@ import {
   PersonaMayorAcompanada,
   ContactoEmergencia
 } from '../../../../core/acompanantes/acompanante.service';
+import { Icon } from '../../../../shared/icon/icon';
+import { PersonCard } from '../../../../shared/person-card/person-card';
 
 @Component({
   selector: 'app-contactos-emergencia',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, Icon, PersonCard],
   templateUrl: './contactos-emergencia.html',
   styleUrl: './contactos-emergencia.css'
 })

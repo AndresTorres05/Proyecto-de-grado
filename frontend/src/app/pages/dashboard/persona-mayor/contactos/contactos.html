@@ -143,49 +143,13 @@
 
       @for (ac of acompanantes(); track ac.idUsuario) {
 
-        <div class="companion-card card">
-
-          <span
-            class="companion-card__avatar"
-            aria-hidden="true"
-          >
-            <app-icon name="users" />
-          </span>
-
-          <div class="companion-card__info">
-
-            <p class="companion-card__label">
-              Acompañante
-            </p>
-
-            <h2>
-              {{ ac.nombre }}
-            </h2>
-
-            <p class="companion-card__phone">
-              <app-icon name="phone" />
-              {{ ac.celular }}
-            </p>
-
-            @if (ac.relacion) {
-
-              <p class="companion-card__relationship">
-                {{ ac.relacion }}
-              </p>
-
-            }
-
-          </div>
-
-          <a
-            [href]="'tel:' + ac.celular"
-            class="btn btn-gold companion-card__call"
-          >
-            <app-icon name="phone" />
-            Llamar
-          </a>
-
-        </div>
+        <app-person-card
+          etiqueta="Acompañante"
+          [nombre]="ac.nombre"
+          [celular]="ac.celular"
+          [relacion]="ac.relacion"
+          [llamar]="true"
+        />
 
       }
 

@@ -40,37 +40,29 @@
     *ngIf="!cargandoPersonas && !errorPersonas"
   >
 
-    <h2>Personas mayores</h2>
+    <div class="section-header">
+      <h2>Personas mayores</h2>
+
+      <p *ngIf="personasMayores.length > 1">
+        Selecciona una persona mayor para ver sus contactos.
+      </p>
+    </div>
 
     <div
-      class="personas-grid"
+      class="cards-list"
       *ngIf="personasMayores.length > 0"
     >
 
-      <button
-        class="persona-card"
+      <app-person-card
         *ngFor="let persona of personasMayores"
-        [class.selected]="personaSeleccionada?.idUsuario === persona.idUsuario"
-        (click)="seleccionarPersona(persona)"
-      >
-
-        <div class="persona-icon">
-          👤
-        </div>
-
-        <div class="persona-info">
-
-          <h3>
-            {{ persona.nombre }}
-          </h3>
-
-          <p>
-            📱 {{ persona.celular }}
-          </p>
-
-        </div>
-
-      </button>
+        etiqueta="Persona mayor"
+        [nombre]="persona.nombre"
+        [celular]="persona.celular"
+        estado="Acompañamiento activo"
+        [clickable]="true"
+        [seleccionada]="personaSeleccionada?.idUsuario === persona.idUsuario"
+        (cardClick)="seleccionarPersona(persona)"
+      />
 
     </div>
 
@@ -82,7 +74,7 @@
     >
 
       <div class="empty-icon">
-        👤
+        <app-icon name="user" />
       </div>
 
       <h3>No tienes personas mayores asociadas</h3>
@@ -104,18 +96,14 @@
   >
 
     <div class="section-header">
+      <h2>Contactos</h2>
 
-      <div>
-        <h2>Contactos</h2>
-
-        <p>
-          Contactos de
-          <strong>
-            {{ personaSeleccionada.nombre }}
-          </strong>
-        </p>
-      </div>
-
+      <p>
+        Contactos de
+        <strong>
+          {{ personaSeleccionada.nombre }}
+        </strong>
+      </p>
     </div>
 
 
@@ -143,7 +131,7 @@
 
     <!-- LISTA DE CONTACTOS -->
     <div
-      class="contactos-grid"
+      class="cards-list"
       *ngIf="
         !cargandoContactos &&
         !errorContactos &&
@@ -151,39 +139,14 @@
       "
     >
 
-      <article
-        class="contacto-card"
+      <app-person-card
         *ngFor="let contacto of contactos"
-      >
-
-        <div class="contacto-icon">
-          📞
-        </div>
-
-        <div class="contacto-info">
-
-          <h3>
-            {{ contacto.nombre }}
-          </h3>
-
-          <span class="relacion">
-            {{ contacto.relacion }}
-          </span>
-
-          <p class="celular">
-            {{ contacto.celular }}
-          </p>
-
-        </div>
-
-        <a
-          class="llamar-button"
-          [href]="'tel:' + contacto.celular"
-        >
-          📞 Llamar
-        </a>
-
-      </article>
+        etiqueta="Contacto de emergencia"
+        [nombre]="contacto.nombre"
+        [celular]="contacto.celular"
+        [relacion]="contacto.relacion"
+        [llamar]="true"
+      />
 
     </div>
 
@@ -199,7 +162,7 @@
     >
 
       <div class="empty-icon">
-        📞
+        <app-icon name="phone" />
       </div>
 
       <h3>No hay contactos registrados</h3>

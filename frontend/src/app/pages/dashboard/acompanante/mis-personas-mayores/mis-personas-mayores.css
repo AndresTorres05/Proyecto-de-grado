@@ -22,7 +22,7 @@
 
 .mis-personas__header p {
   margin: 0;
-  color: var(--vita-text-muted);
+  color: var(--vita-text-gray);
   font-size: 1rem;
 }
 
@@ -45,17 +45,13 @@
 
 .mis-personas__section {
   margin-bottom: 32px;
-  padding: 28px;
-  background: var(--vita-white);
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .mis-personas__section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .mis-personas__section-header h2 {
@@ -66,7 +62,7 @@
 
 .mis-personas__section-header p {
   margin: 0;
-  color: var(--vita-text-muted);
+  color: var(--vita-text-gray);
 }
 
 .mis-personas__badge {
@@ -83,58 +79,11 @@
   font-weight: 700;
 }
 
-.mis-personas__requests {
+.mis-personas__requests,
+.mis-personas__list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-}
-
-.mis-personas__request {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 24px;
-  padding: 20px;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-}
-
-.mis-personas__request-info {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.mis-personas__avatar {
-  width: 50px;
-  height: 50px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: var(--vita-cream-soft);
-  color: var(--vita-navy);
-  font-size: 1.2rem;
-  font-weight: 700;
-}
-
-.mis-personas__request h3,
-.mis-personas__card h3 {
-  margin: 0 0 6px;
-  color: var(--vita-navy);
-  font-size: 1.05rem;
-}
-
-.mis-personas__request p {
-  margin: 0 0 6px;
-  color: var(--vita-text-muted);
-}
-
-.mis-personas__pending {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #b26a00;
+  gap: 18px;
 }
 
 .mis-personas__actions {
@@ -167,68 +116,12 @@
   color: white;
 }
 
-.mis-personas__grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
-}
-
-.mis-personas__card {
-  padding: 22px;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-}
-
-.mis-personas__card-top {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 20px;
-}
-
-.mis-personas__card-top span {
-  color: var(--vita-text-muted);
-  font-size: 0.9rem;
-}
-
-.mis-personas__card-info {
-  padding-top: 16px;
-  border-top: 1px solid #eeeeee;
-}
-
-.mis-personas__card-info span {
-  display: block;
-  margin-bottom: 4px;
-  color: var(--vita-text-muted);
-  font-size: 0.8rem;
-}
-
-.mis-personas__card-info p {
-  margin: 0;
-  color: var(--vita-navy);
-  font-weight: 600;
-}
-
-.mis-personas__status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 18px;
-  color: #2e7d32;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.mis-personas__status span {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #43a047;
-}
-
 .mis-personas__empty {
   padding: 40px 20px;
   text-align: center;
+  border-radius: 18px;
+  background: var(--vita-white);
+  box-shadow: 0 7px 22px rgba(20, 46, 78, 0.06);
 }
 
 .mis-personas__empty-icon {
@@ -244,28 +137,19 @@
 .mis-personas__empty p {
   max-width: 450px;
   margin: 0 auto;
-  color: var(--vita-text-muted);
+  color: var(--vita-text-gray);
   line-height: 1.5;
 }
 
 .mis-personas__loading {
   padding: 30px;
   text-align: center;
-  color: var(--vita-text-muted);
+  color: var(--vita-text-gray);
 }
 
 @media (max-width: 768px) {
   .mis-personas {
     padding: 20px;
-  }
-
-  .mis-personas__section {
-    padding: 20px;
-  }
-
-  .mis-personas__request {
-    flex-direction: column;
-    align-items: flex-start;
   }
 
   .mis-personas__actions {
@@ -274,9 +158,5 @@
 
   .mis-personas__actions button {
     flex: 1;
-  }
-
-  .mis-personas__grid {
-    grid-template-columns: 1fr;
   }
 }

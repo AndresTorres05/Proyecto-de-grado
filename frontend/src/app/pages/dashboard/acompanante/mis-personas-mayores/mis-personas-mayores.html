@@ -42,30 +42,14 @@
 
         @for (solicitud of solicitudes; track solicitud.idUsuario) {
 
-          <div class="mis-personas__request">
-
-            <div class="mis-personas__request-info">
-
-              <div class="mis-personas__avatar">
-                {{ solicitud.nombre.charAt(0).toUpperCase() }}
-              </div>
-
-              <div>
-                <h3>{{ solicitud.nombre }}</h3>
-
-                <p>
-                  <strong>Celular:</strong>
-                  {{ solicitud.celular }}
-                </p>
-
-                <span class="mis-personas__pending">
-                  Solicitud pendiente
-                </span>
-              </div>
-
-            </div>
-
-            <div class="mis-personas__actions">
+          <app-person-card
+            etiqueta="Persona mayor"
+            [nombre]="solicitud.nombre"
+            [celular]="solicitud.celular"
+            estado="Solicitud pendiente"
+            estadoTipo="pendiente"
+          >
+            <div card-actions class="mis-personas__actions">
 
               <button
                 type="button"
@@ -84,8 +68,7 @@
               </button>
 
             </div>
-
-          </div>
+          </app-person-card>
 
         }
 
@@ -116,7 +99,7 @@
 
       <div class="mis-personas__empty">
         <div class="mis-personas__empty-icon">
-          👥
+          <app-icon name="users" />
         </div>
 
         <h3>No tienes personas mayores asociadas</h3>
@@ -129,40 +112,16 @@
 
     } @else {
 
-      <div class="mis-personas__grid">
+      <div class="mis-personas__list">
 
         @for (persona of personasMayores; track persona.idUsuario) {
 
-          <div class="mis-personas__card">
-
-            <div class="mis-personas__card-top">
-
-              <div class="mis-personas__avatar">
-                {{ persona.nombre.charAt(0).toUpperCase() }}
-              </div>
-
-              <div>
-                <h3>{{ persona.nombre }}</h3>
-                <span>Persona mayor</span>
-              </div>
-
-            </div>
-
-            <div class="mis-personas__card-info">
-
-              <div>
-                <span>Celular</span>
-                <p>{{ persona.celular }}</p>
-              </div>
-
-            </div>
-
-            <div class="mis-personas__status">
-              <span></span>
-              Acompañamiento activo
-            </div>
-
-          </div>
+          <app-person-card
+            etiqueta="Persona mayor"
+            [nombre]="persona.nombre"
+            [celular]="persona.celular"
+            estado="Acompañamiento activo"
+          />
 
         }
 

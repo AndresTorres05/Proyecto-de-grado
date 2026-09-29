@@ -1,289 +1,298 @@
 .seguimiento {
-  padding: 2rem;
+  padding: 32px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
+/* =========================================================
+   ENCABEZADO
+   ========================================================= */
+
 .seguimiento__header {
-  margin-bottom: 2rem;
+  margin-bottom: 32px;
 }
 
 .seguimiento__header h1 {
-  margin: 0 0 0.5rem;
+  margin: 0 0 8px;
+  color: var(--vita-navy);
   font-size: 2rem;
+  font-weight: 700;
 }
 
 .seguimiento__header p {
   margin: 0;
-  color: #666;
-}
-
-
-/* MENSAJES */
-
-.seguimiento__mensaje,
-.seguimiento__error,
-.seguimiento__vacio {
-  padding: 2rem;
-  border-radius: 16px;
-  text-align: center;
-  background: #fff;
-  border: 1px solid #e5e5e5;
-}
-
-.seguimiento__error {
-  color: #b42318;
-  background: #fff5f5;
-  border-color: #f5c2c2;
-}
-
-.seguimiento__vacio-icono {
-  font-size: 2.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.seguimiento__vacio h2,
-.seguimiento__vacio h3 {
-  margin: 0 0 0.5rem;
-}
-
-.seguimiento__vacio p {
-  margin: 0;
-  color: #666;
-}
-
-.seguimiento__vacio--pequeno {
-  padding: 1.5rem;
-}
-
-
-/* PERSONAS */
-
-.seguimiento__personas {
-  margin-bottom: 2rem;
-}
-
-.seguimiento__personas h2 {
-  margin-bottom: 1rem;
-}
-
-.personas__lista {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
-}
-
-.persona-card {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  border: 2px solid #e5e5e5;
-  border-radius: 16px;
-  background: white;
-  cursor: pointer;
-  text-align: left;
-  transition: 0.2s ease;
-}
-
-.persona-card:hover {
-  border-color: #999;
-  transform: translateY(-2px);
-}
-
-.persona-card--seleccionada {
-  border-color: #2563eb;
-  background: #f5f8ff;
-}
-
-.persona-card__icono {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #eef2ff;
-  font-size: 1.5rem;
-}
-
-.persona-card__info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.persona-card__info strong {
+  color: var(--vita-text-gray);
   font-size: 1rem;
 }
 
-.persona-card__info span {
-  color: #666;
-  font-size: 0.9rem;
-}
 
-
-/* CONTENIDO */
-
-.seguimiento__contenido {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.seguimiento__persona-header {
-  padding: 1.5rem;
-  border-radius: 18px;
-  background: #f5f8ff;
-  border: 1px solid #dbe5ff;
-}
-
-.seguimiento__etiqueta {
-  display: block;
-  margin-bottom: 0.4rem;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #666;
-}
-
-.seguimiento__persona-header h2 {
-  margin: 0;
-}
-
-.seguimiento__persona-header p {
-  margin: 0.4rem 0 0;
-  color: #666;
-}
-
-
-/* SECCIONES */
+/* =========================================================
+   SECCIONES
+   ========================================================= */
 
 .seguimiento__seccion {
-  background: white;
-  border: 1px solid #e5e5e5;
-  border-radius: 18px;
-  padding: 1.5rem;
+  margin-bottom: 40px;
 }
 
-.seccion__titulo {
-  margin-bottom: 1.5rem;
+.seccion__header {
+  margin-bottom: 20px;
 }
 
-.seccion__titulo > div {
+.seccion__header h2 {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 10px;
+
+  margin: 0 0 6px;
+
+  color: var(--vita-navy);
+  font-size: 1.35rem;
+  font-weight: 700;
 }
 
-.seccion__icono {
-  font-size: 2rem;
-}
-
-.seccion__titulo h2 {
+.seccion__header p {
   margin: 0;
+  color: var(--vita-text-gray);
 }
 
-.seccion__titulo p {
-  margin: 0.25rem 0 0;
-  color: #666;
+.seguimiento__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
 
-/* MEDICAMENTOS */
+/* =========================================================
+   MENSAJES
+   ========================================================= */
+
+.seguimiento__mensaje {
+  padding: 30px;
+  text-align: center;
+  color: var(--vita-text-gray);
+}
+
+.seguimiento__error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 14px 18px;
+  margin-bottom: 20px;
+
+  border: 1px solid #d64545;
+  border-radius: 10px;
+  background: color-mix(in srgb, #d64545 10%, white);
+  color: #9e2929;
+  font-weight: 600;
+}
+
+.seguimiento__vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  padding: 40px 24px;
+
+  border-radius: 18px;
+  background: var(--vita-white);
+  box-shadow: 0 7px 22px rgba(20, 46, 78, 0.06);
+}
+
+.seguimiento__vacio-icono {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 16px;
+  background: #edf5fc;
+  color: var(--vita-navy);
+  font-size: 1.7rem;
+}
+
+.seguimiento__vacio h3 {
+  margin: 0 0 8px;
+  color: var(--vita-navy);
+  font-size: 1.1rem;
+}
+
+.seguimiento__vacio p {
+  max-width: 500px;
+  margin: 0;
+  color: var(--vita-text-gray);
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   MEDICAMENTOS
+   ========================================================= */
 
 .medicamentos {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
 }
 
 .medicamento-card {
-  padding: 1.25rem;
-  border: 1px solid #e5e5e5;
-  border-radius: 16px;
+  padding: 24px;
+
+  border-radius: 20px;
+  background: var(--vita-white);
+  box-shadow: 0 8px 26px rgba(20, 46, 78, 0.07);
 }
 
 .medicamento-card__header {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
+  gap: 14px;
+
+  padding-bottom: 18px;
+  margin-bottom: 18px;
+
+  border-bottom: 1px solid var(--vita-border);
 }
 
 .medicamento-card__icono {
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
+  width: 52px;
+  height: 52px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f3f4f6;
-  font-size: 1.4rem;
+  flex-shrink: 0;
+
+  border-radius: 15px;
+  background: #edf5fc;
+  color: var(--vita-navy);
+  font-size: 1.5rem;
 }
 
-.medicamento-card__header h3 {
-  margin: 0 0 0.35rem;
+.medicamento-card__titulo {
+  flex: 1;
+  min-width: 0;
+}
+
+.medicamento-card__eyebrow {
+  display: block;
+  margin-bottom: 4px;
+
+  color: var(--vita-text-gray);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.medicamento-card__titulo h3 {
+  margin: 0;
+
+  color: var(--vita-navy);
+  font-size: 1.1rem;
+  font-weight: 700;
+
+  overflow-wrap: anywhere;
 }
 
 .medicamento-card__estado {
-  display: inline-block;
-  padding: 0.2rem 0.55rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  background: #e8f7ee;
-  color: #18794e;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 14px;
+
+  border-radius: 25px;
+  background: rgba(45, 197, 191, 0.10);
+  color: var(--vita-green);
+
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
-.medicamento-card__estado.inactivo {
-  background: #f1f1f1;
-  color: #666;
+.medicamento-card__estado-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.medicamento-card__estado--inactivo {
+  background: color-mix(in srgb, var(--vita-text-gray) 10%, white);
+  color: var(--vita-text-gray);
 }
 
 .medicamento-card__datos {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 16px;
 }
 
-.dato {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
+.dato span {
+  display: block;
+  margin-bottom: 5px;
 
-.dato__label {
+  color: var(--vita-text-gray);
   font-size: 0.8rem;
-  color: #777;
 }
 
 .dato strong {
-  font-size: 0.95rem;
+  display: block;
+
+  color: var(--vita-navy);
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .medicamento-card__ultima {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  margin-top: 18px;
+  padding-top: 16px;
+
+  border-top: 1px solid var(--vita-border);
+
+  color: var(--vita-text-gray);
   font-size: 0.85rem;
-  color: #666;
 }
 
 .medicamento-card__ultima strong {
-  margin-left: 0.25rem;
+  color: var(--vita-navy);
 }
 
 
-/* RESPONSIVE */
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
 @media (max-width: 700px) {
 
   .seguimiento {
-    padding: 1rem;
+    padding: 20px;
   }
 
   .seguimiento__header h1 {
     font-size: 1.6rem;
+  }
+
+  .medicamentos {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 420px) {
+
+  .medicamento-card__header {
+    flex-wrap: wrap;
   }
 
   .medicamento-card__datos {
