@@ -48,6 +48,11 @@ export class SignosVitalesService {
     return this.http.post<SignoVitalResponse>(`${this.apiUrl}/${idPersonaMayor}`, datos);
   }
 
+  /** Últimos 10 registros de la persona mayor, del más reciente al más antiguo. */
+  listarUltimos(idPersonaMayor: number): Observable<SignoVitalResponse[]> {
+    return this.http.get<SignoVitalResponse[]>(`${this.apiUrl}/${idPersonaMayor}`);
+  }
+
   listarPersonasMayores(): Observable<PersonaMayor[]> {
     return this.http.get<PersonaMayor[]>(this.personasApiUrl);
   }

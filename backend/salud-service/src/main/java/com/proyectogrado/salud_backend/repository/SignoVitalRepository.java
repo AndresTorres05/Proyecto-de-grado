@@ -8,4 +8,6 @@ import java.util.List;
 public interface SignoVitalRepository extends JpaRepository<SignoVital, Integer> {
 
     List<SignoVital> findByIdPersonaMayorOrderByFechaHoraDesc(Integer idPersonaMayor);
+
+    List<SignoVital> findTop10ByIdPersonaMayorOrderByFechaHoraDesc(Integer idPersonaMayor);
 }

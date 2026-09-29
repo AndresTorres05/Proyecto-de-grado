@@ -15,6 +15,7 @@ import com.proyectogrado.salud_backend.repository.UsuarioLookupRepository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/organizacion/signos-vitales")
@@ -34,36 +35,39 @@ public class SignoVitalOrganizacionController {
         this.usuarioLookupRepository = usuarioLookupRepository;
     }
 
+    // Últimos 10 registros de la persona mayor, del más reciente al más antiguo.
+    @GetMapping("/{idPersonaMayor}")
+    public ResponseEntity<?> listarUltimos(
+            @RequestHeader("X-User-Id") Integer idUsuarioOrganizacion,
+            @PathVariable Integer idPersonaMayor
+    ) {
+        ResponseEntity<?> accesoDenegado =
+                validarAcceso(idUsuarioOrganizacion, idPersonaMayor);
+
+        if (accesoDenegado != null) {
+            return accesoDenegado;
+        }
+
+        List<SignoVitalResponse> respuesta = signoVitalRepository
+                .findTop10ByIdPersonaMayorOrderByFechaHoraDesc(idPersonaMayor)
+                .stream()
+                .map(this::aRespuesta)
+                .toList();
+
+        return ResponseEntity.ok(respuesta);
+    }
+
     @PostMapping("/{idPersonaMayor}")
     public ResponseEntity<?> crear(
             @RequestHeader("X-User-Id") Integer idUsuarioOrganizacion,
             @PathVariable Integer idPersonaMayor,
             @RequestBody SignoVitalRequest request
     ) {
+        ResponseEntity<?> accesoDenegado =
+                validarAcceso(idUsuarioOrganizacion, idPersonaMayor);
 
-        Integer idOrganizacion = usuarioLookupRepository
-        .findById(idUsuarioOrganizacion)
-        .map(UsuarioLookup::getIdOrganizacion)
-        .orElse(null);
-
-if (idOrganizacion == null) {
-    return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body("El usuario no tiene una organización asociada");
-}
-
-        // Verificar que la persona mayor pertenece a la organización
-        PersonaMayorOrganizacion relacion =
-                personaMayorOrganizacionRepository
-                        .findById_IdPersonaMayorAndId_IdOrganizacionAndEstado(
-                                idPersonaMayor,
-                                idOrganizacion,
-                                "ACEPTADA"
-                        )
-                        .orElse(null);
-
-        if (relacion == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("La persona mayor no está asociada a esta organización");
+        if (accesoDenegado != null) {
+            return accesoDenegado;
         }
 
         SignoVital signoVital = new SignoVital();
@@ -107,6 +111,39 @@ signoVital = signoVitalRepository.saveAndFlush(signoVital);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(aRespuesta(signoVital));
+    }
+
+    // Devuelve la respuesta de error si la organización no puede acceder a
+    // la persona mayor, o null si la persona está asociada y aceptada.
+    private ResponseEntity<?> validarAcceso(
+            Integer idUsuarioOrganizacion,
+            Integer idPersonaMayor
+    ) {
+        Integer idOrganizacion = usuarioLookupRepository
+                .findById(idUsuarioOrganizacion)
+                .map(UsuarioLookup::getIdOrganizacion)
+                .orElse(null);
+
+        if (idOrganizacion == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("El usuario no tiene una organización asociada");
+        }
+
+        PersonaMayorOrganizacion relacion =
+                personaMayorOrganizacionRepository
+                        .findById_IdPersonaMayorAndId_IdOrganizacionAndEstado(
+                                idPersonaMayor,
+                                idOrganizacion,
+                                "ACEPTADA"
+                        )
+                        .orElse(null);
+
+        if (relacion == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("La persona mayor no está asociada a esta organización");
+        }
+
+        return null;
     }
 
     private SignoVitalResponse aRespuesta(SignoVital signoVital) {

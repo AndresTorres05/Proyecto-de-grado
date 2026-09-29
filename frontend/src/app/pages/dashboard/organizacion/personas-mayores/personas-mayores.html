@@ -70,21 +70,36 @@
           etiqueta="Persona mayor"
           [nombre]="persona.nombre"
           [celular]="persona.celular"
-          estado="Asociación activa"
-          [clickable]="true"
-          (cardClick)="mostrarAcompanantes(persona)"
         >
-          <button
-            card-actions
-            type="button"
-            class="remove-association-button"
-            (click)="$event.stopPropagation(); mostrarConfirmacion(persona)"
-            (keydown.enter)="$event.stopPropagation()"
-            title="Cancelar asociación"
-            aria-label="Cancelar asociación"
-          >
-            <app-icon name="x" />
-          </button>
+          <div card-actions class="person-actions">
+            <button
+              type="button"
+              class="person-action-button"
+              (click)="mostrarAcompanantes(persona)"
+            >
+              <app-icon name="users" />
+              Acompañantes
+            </button>
+
+            <button
+              type="button"
+              class="person-action-button"
+              (click)="mostrarSignosVitales(persona)"
+            >
+              <app-icon name="heart" />
+              Signos vitales
+            </button>
+
+            <button
+              type="button"
+              class="remove-association-button"
+              (click)="mostrarConfirmacion(persona)"
+              title="Cancelar asociación"
+              aria-label="Cancelar asociación"
+            >
+              <app-icon name="x" />
+            </button>
+          </div>
         </app-person-card>
       }
     </div>
@@ -271,6 +286,125 @@
                   </small>
                 }
               </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+}
+
+@if (mostrandoSignosVitales()) {
+  <div class="modal-overlay" (click)="cerrarSignosVitales()">
+    <div
+      class="modal acompanantes-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="signos-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal__header">
+        <div>
+          <span class="eyebrow"> Salud </span>
+
+          <h2 id="signos-title">Últimos signos vitales</h2>
+        </div>
+
+        <button
+          type="button"
+          class="modal__close"
+          (click)="cerrarSignosVitales()"
+          aria-label="Cerrar"
+        >
+          ×
+        </button>
+      </div>
+
+      <p class="modal__description">
+        Registros más recientes de
+        <strong>
+          {{ personaMayorSeleccionada?.nombre }} </strong
+        >.
+      </p>
+
+      @if (cargandoSignosVitales()) {
+        <div class="acompanantes-loading">Cargando signos vitales...</div>
+      } @else if (errorSignosVitales(); as errorActual) {
+        <div class="modal__error">
+          <app-icon name="alert-circle" />
+
+          {{ errorActual }}
+        </div>
+      } @else if (signosVitales().length === 0) {
+        <div class="acompanantes-empty">
+          <div class="acompanantes-empty__icon">
+            <app-icon name="heart" />
+          </div>
+
+          <h3>No tiene signos vitales registrados</h3>
+
+          <p>Cuando registres signos vitales de esta persona mayor, aparecerán aquí.</p>
+        </div>
+      } @else {
+        <div class="acompanantes-list">
+          @for (registro of signosVitales(); track registro.idSignoVital) {
+            <div class="signo-item">
+              <div class="signo-item__fecha">
+                <app-icon name="calendar" />
+                {{ registro.fechaHora | date: "d 'de' MMMM yyyy, h:mm a" }}
+              </div>
+
+              <div class="signo-item__valores">
+                @if (registro.presionSistolica !== null || registro.presionDiastolica !== null) {
+                  <div>
+                    <span>Presión arterial</span>
+                    <strong>
+                      {{ registro.presionSistolica ?? '-' }} / {{ registro.presionDiastolica ?? '-' }} mmHg
+                    </strong>
+                  </div>
+                }
+
+                @if (registro.frecuenciaCardiaca !== null) {
+                  <div>
+                    <span>Frecuencia cardíaca</span>
+                    <strong>{{ registro.frecuenciaCardiaca }} lpm</strong>
+                  </div>
+                }
+
+                @if (registro.frecuenciaRespiratoria !== null) {
+                  <div>
+                    <span>Frecuencia respiratoria</span>
+                    <strong>{{ registro.frecuenciaRespiratoria }} rpm</strong>
+                  </div>
+                }
+
+                @if (registro.temperatura !== null) {
+                  <div>
+                    <span>Temperatura</span>
+                    <strong>{{ registro.temperatura }} °C</strong>
+                  </div>
+                }
+
+                @if (registro.saturacionOxigeno !== null) {
+                  <div>
+                    <span>Saturación de oxígeno</span>
+                    <strong>{{ registro.saturacionOxigeno }} %</strong>
+                  </div>
+                }
+
+                @if (registro.peso !== null) {
+                  <div>
+                    <span>Peso</span>
+                    <strong>{{ registro.peso }} kg</strong>
+                  </div>
+                }
+              </div>
+
+              @if (registro.observaciones) {
+                <p class="signo-item__observaciones">
+                  {{ registro.observaciones }}
+                </p>
+              }
             </div>
           }
         </div>

@@ -1,4 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -8,13 +9,18 @@ import {
   AcompanantePersonaMayor
 } from '../../../../core/organizacion/organizacion.service';
 
+import {
+  SignosVitalesService,
+  SignoVitalResponse
+} from '../../../../core/signos-vitales/signos-vitales.services';
+
 import { Icon } from '../../../../shared/icon/icon';
 import { PersonCard } from '../../../../shared/person-card/person-card';
 
 @Component({
   selector: 'app-personas-mayores',
   standalone: true,
-  imports: [Icon, FormsModule, PersonCard],
+  imports: [Icon, FormsModule, PersonCard, DatePipe],
   templateUrl: './personas-mayores.html',
   styleUrl: './personas-mayores.css'
 })
@@ -44,6 +50,18 @@ protected readonly acompanantes =
 protected personaMayorSeleccionada:
   PersonaMayorOrganizacion | null = null;
 
+protected readonly mostrandoSignosVitales =
+  signal(false);
+
+protected readonly cargandoSignosVitales =
+  signal(false);
+
+protected readonly errorSignosVitales =
+  signal<string | null>(null);
+
+protected readonly signosVitales =
+  signal<SignoVitalResponse[]>([]);
+
   protected readonly error = signal<string | null>(null);
   protected readonly mostrandoConfirmacion = signal(false);
   protected personaSeleccionada: PersonaMayorOrganizacion | null = null;
@@ -51,6 +69,7 @@ protected personaMayorSeleccionada:
 
 constructor(
   private organizacionService: OrganizacionService,
+  private signosVitalesService: SignosVitalesService,
   private route: ActivatedRoute
 ) {}
 
@@ -288,6 +307,57 @@ cerrarAcompanantes(): void {
   this.personaMayorSeleccionada = null;
 
   this.acompanantes.set([]);
+}
+
+mostrarSignosVitales(persona: PersonaMayorOrganizacion): void {
+
+  this.personaMayorSeleccionada = persona;
+
+  this.signosVitales.set([]);
+
+  this.errorSignosVitales.set(null);
+
+  this.mostrandoSignosVitales.set(true);
+
+  this.cargandoSignosVitales.set(true);
+
+  this.signosVitalesService
+    .listarUltimos(persona.idUsuario)
+    .subscribe({
+
+      next: (registros) => {
+
+        this.signosVitales.set(registros);
+
+        this.cargandoSignosVitales.set(false);
+
+      },
+
+      error: (error) => {
+
+        console.error(
+          'Error al cargar signos vitales:',
+          error
+        );
+
+        this.errorSignosVitales.set(
+          'No se pudieron cargar los signos vitales.'
+        );
+
+        this.cargandoSignosVitales.set(false);
+
+      }
+
+    });
+}
+
+cerrarSignosVitales(): void {
+
+  this.mostrandoSignosVitales.set(false);
+
+  this.personaMayorSeleccionada = null;
+
+  this.signosVitales.set([]);
 }
 
 }
