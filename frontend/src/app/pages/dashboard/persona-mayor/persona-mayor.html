@@ -5,29 +5,22 @@
 
 @if (!cargandoMedicamentos() && proximoMedicamento(); as medicamento) {
   <section class="reminder-card card">
-    <span class="reminder-card__tag">
-      {{ estaVencido(medicamento) ? 'Te toca ahora' : 'Tu próximo medicamento' }}
-    </span>
+    <span class="reminder-card__tag">Tu próximo medicamento</span>
     <div class="reminder-card__body">
       <span class="reminder-card__icon" aria-hidden="true"><app-icon name="pill" /></span>
       <div>
         <h2>{{ medicamento.nombre }}</h2>
         <p class="reminder-card__time">
-          {{ estaVencido(medicamento) ? 'Ya es hora' : formatearProximaToma(medicamento) }}
+          {{ formatearProximaToma(medicamento.proximaToma) }}
         </p>
         @if (medicamento.dosis) {
           <p>{{ medicamento.dosis }}</p>
         }
+        <p class="reminder-card__aviso">
+          Te avisaremos {{ minutosAvisoPrevio }} minutos antes y a la hora exacta.
+        </p>
       </div>
     </div>
-    <button
-      type="button"
-      class="btn btn-primary reminder-card__btn"
-      [disabled]="confirmandoToma()"
-      (click)="confirmarTomaProximoMedicamento()"
-    >
-      {{ confirmandoToma() ? 'Confirmando...' : 'Ya lo tomé' }}
-    </button>
   </section>
 } @else if (!cargandoMedicamentos()) {
   <section class="reminder-card card">

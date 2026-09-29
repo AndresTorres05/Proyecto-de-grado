@@ -1,23 +1,31 @@
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MedicamentoService, Medicamento, MedicamentoRequest } from '../../../../core/medicamentos/medicamento.service';
+import {
+  MedicamentoService,
+  Medicamento,
+  MedicamentoRequest,
+  MINUTOS_AVISO_PREVIO,
+  formatearHora,
+  formatearProximaToma
+} from '../../../../core/medicamentos/medicamento.service';
+import { Icon } from '../../../../shared/icon/icon';
 
-// Cuánto antes de la hora de la toma se habilita "Ya la tomé".
-// Debe coincidir con MINUTOS_ANTES_PARA_CONFIRMAR de salud-service.
-const MINUTOS_ANTES_PARA_CONFIRMAR = 15;
+// Opciones de "Cada cuántas horas": de 1 a 12, más una vez al día.
+const INTERVALOS_HORAS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24];
 
 @Component({
   selector: 'app-recordatorios',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, Icon],
   templateUrl: './recordatorios.html',
   styleUrl: './recordatorios.css'
 })
 export class Recordatorios implements OnInit, OnDestroy {
 
-  // Hora actual, se refresca sola para que el botón "Ya la tomé"
-  // se habilite a la hora correspondiente sin recargar la página.
-  protected readonly ahora = signal(Date.now());
+  protected readonly minutosAvisoPrevio = MINUTOS_AVISO_PREVIO;
+  protected readonly formatearHora = formatearHora;
+  protected readonly formatearProximaToma = formatearProximaToma;
+
   private intervaloReloj?: ReturnType<typeof setInterval>;
 
   protected readonly medicamentos = signal<Medicamento[]>([]);
@@ -28,7 +36,6 @@ export class Recordatorios implements OnInit, OnDestroy {
   protected readonly guardando = signal(false);
   protected readonly errorFormulario = signal<string | null>(null);
   protected readonly idEditando = signal<number | null>(null);
-  protected readonly confirmandoId = signal<number | null>(null);
 
   // Campos del formulario
   nombre = '';
@@ -41,17 +48,50 @@ export class Recordatorios implements OnInit, OnDestroy {
 
   constructor(private medicamentoService: MedicamentoService) {}
 
+  // Si un medicamento ya guardado tiene un intervalo fuera de la lista,
+  // se agrega para no perderlo al editar.
+  protected opcionesIntervalo(): number[] {
+    const actual = this.intervaloHoras;
+    if (actual && !INTERVALOS_HORAS.includes(actual)) {
+      return [...INTERVALOS_HORAS, actual].sort((a, b) => a - b);
+    }
+    return INTERVALOS_HORAS;
+  }
+
+  // Abre el selector de hora al hacer clic en cualquier parte del campo,
+  // no solo en el iconito del reloj.
+  protected abrirSelectorHora(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    try {
+      input.showPicker();
+    } catch {
+      // Navegadores sin showPicker(): se deja el comportamiento normal.
+    }
+  }
+
   ngOnInit(): void {
     this.cargar();
-    this.intervaloReloj = setInterval(() => this.ahora.set(Date.now()), 30_000);
+    // Cuando pasa la hora de una toma, el backend la avanza sola a la
+    // siguiente; se recarga la lista para mostrar la nueva "Próxima toma".
+    this.intervaloReloj = setInterval(() => {
+      const ahora = Date.now();
+      const hayTomaPasada = this.medicamentos().some(
+        (m) => new Date(m.proximaToma).getTime() <= ahora
+      );
+      if (hayTomaPasada) {
+        this.cargar(false);
+      }
+    }, 60_000);
   }
 
   ngOnDestroy(): void {
     clearInterval(this.intervaloReloj);
   }
 
-  private cargar(): void {
-    this.cargando.set(true);
+  private cargar(mostrarCargando = true): void {
+    if (mostrarCargando) {
+      this.cargando.set(true);
+    }
     this.error.set(null);
 
     this.medicamentoService.listar().subscribe({
@@ -66,28 +106,22 @@ export class Recordatorios implements OnInit, OnDestroy {
     });
   }
 
-  estaVencido(medicamento: Medicamento): boolean {
-    return new Date(medicamento.proximaToma).getTime() <= this.ahora();
-  }
+  // Horas del día en que toca el medicamento, p. ej. cada 8 horas desde
+  // las 8:00 -> "8:00 a. m. · 4:00 p. m. · 12:00 a. m.". Solo cuando el
+  // intervalo cabe exacto en el día y no son demasiadas horas para leer.
+  protected horarioDelDia(medicamento: Medicamento): string | null {
+    const intervalo = medicamento.intervaloHoras;
+    if (!medicamento.hora || !intervalo || 24 % intervalo !== 0 || 24 / intervalo > 6) {
+      return null;
+    }
 
-  // Solo se puede confirmar a la hora de la toma o poco antes.
-  puedeConfirmar(medicamento: Medicamento): boolean {
-    return this.ahora() >= this.habilitadoDesde(medicamento);
-  }
-
-  formatearHabilitadoDesde(medicamento: Medicamento): string {
-    return new Date(this.habilitadoDesde(medicamento))
-      .toLocaleTimeString('es-CO', { timeStyle: 'short' });
-  }
-
-  private habilitadoDesde(medicamento: Medicamento): number {
-    return new Date(medicamento.proximaToma).getTime()
-      - MINUTOS_ANTES_PARA_CONFIRMAR * 60_000;
-  }
-
-  formatearProximaToma(medicamento: Medicamento): string {
-    const fecha = new Date(medicamento.proximaToma);
-    return fecha.toLocaleString('es-CO', { dateStyle: 'short', timeStyle: 'short' });
+    const [h, m] = medicamento.hora.split(':').map(Number);
+    const tomas: string[] = [];
+    for (let i = 0; i < 24 / intervalo; i++) {
+      const hora = (h + i * intervalo) % 24;
+      tomas.push(formatearHora(`${hora}:${m}`));
+    }
+    return tomas.join(' · ');
   }
 
   abrirFormularioNuevo(): void {
@@ -126,7 +160,7 @@ export class Recordatorios implements OnInit, OnDestroy {
 
   guardar(): void {
     if (!this.nombre.trim() || !this.hora.trim() || !this.intervaloHoras) {
-      this.errorFormulario.set('Nombre, hora de la primera toma e intervalo son obligatorios.');
+      this.errorFormulario.set('Escribe el nombre, cada cuántas horas y a qué hora te lo tomas.');
       return;
     }
 
@@ -158,21 +192,6 @@ export class Recordatorios implements OnInit, OnDestroy {
       error: () => {
         this.guardando.set(false);
         this.errorFormulario.set('No se pudo guardar el medicamento.');
-      }
-    });
-  }
-
-  confirmarToma(medicamento: Medicamento): void {
-    this.confirmandoId.set(medicamento.idMedicamento);
-
-    this.medicamentoService.confirmarToma(medicamento.idMedicamento).subscribe({
-      next: () => {
-        this.confirmandoId.set(null);
-        this.cargar();
-      },
-      error: () => {
-        this.confirmandoId.set(null);
-        this.error.set('No se pudo confirmar la toma.');
       }
     });
   }

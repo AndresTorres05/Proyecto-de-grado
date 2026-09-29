@@ -1,5 +1,6 @@
 package com.proyectogrado.salud_backend.controller;
 
+import com.proyectogrado.salud_backend.config.ZonaHoraria;
 import com.proyectogrado.salud_backend.dto.MedicamentoRequest;
 import com.proyectogrado.salud_backend.dto.MedicamentoResponse;
 import com.proyectogrado.salud_backend.model.Medicamento;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -26,10 +28,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/persona-mayor/medicamentos")
 public class MedicamentoController {
-
-    // Cuanto antes de la hora de la toma se habilita "Ya la tomé".
-    // Debe coincidir con MINUTOS_ANTES_PARA_CONFIRMAR del frontend.
-    private static final long MINUTOS_ANTES_PARA_CONFIRMAR = 15;
 
     private final MedicamentoRepository medicamentoRepository;
 
@@ -85,37 +83,6 @@ public class MedicamentoController {
         return ResponseEntity.ok(aRespuesta(medicamento));
     }
 
-    @PostMapping("/{id}/confirmar-toma")
-    public ResponseEntity<?> confirmarToma(
-            @RequestHeader("X-User-Id") Integer idPersonaMayor,
-            @PathVariable Integer id
-    ) {
-        Medicamento medicamento = obtenerPropio(id, idPersonaMayor);
-        if (medicamento == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Este medicamento no pertenece a este usuario");
-        }
-
-        // Solo se puede confirmar a la hora de la toma o poco antes;
-        // si no, se podria "adelantar" la siguiente dosis.
-        LocalDateTime ahora = LocalDateTime.now();
-        LocalDateTime habilitadoDesde = medicamento.getProximaToma()
-                .minusMinutes(MINUTOS_ANTES_PARA_CONFIRMAR);
-
-        if (ahora.isBefore(habilitadoDesde)) {
-            return ResponseEntity.badRequest()
-                    .body("Todavía no es la hora de tomar este medicamento");
-        }
-
-        medicamento.setUltimaToma(ahora);
-        medicamento.setProximaToma(ahora.plusHours(medicamento.getIntervaloHoras()));
-        medicamento.setUltimoRecordatorioEnviado(null);
-
-        medicamento = medicamentoRepository.save(medicamento);
-
-        return ResponseEntity.ok(aRespuesta(medicamento));
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(
             @RequestHeader("X-User-Id") Integer idPersonaMayor,
@@ -164,10 +131,22 @@ public class MedicamentoController {
     }
 
     private void recalcularProximaToma(Medicamento medicamento) {
-        LocalDate fecha = medicamento.getFechaInicio() != null ? medicamento.getFechaInicio() : LocalDate.now();
-        LocalTime hora = medicamento.getHora() != null ? medicamento.getHora() : LocalTime.now();
+        LocalDate fecha = medicamento.getFechaInicio() != null ? medicamento.getFechaInicio() : ZonaHoraria.hoy();
+        LocalTime hora = medicamento.getHora() != null ? medicamento.getHora() : ZonaHoraria.ahora().toLocalTime();
 
-        medicamento.setProximaToma(LocalDateTime.of(fecha, hora));
+        LocalDateTime proximaToma = LocalDateTime.of(fecha, hora);
+
+        // La hora puede ser la de la ultima toma (ya pasada): se avanza en
+        // saltos del intervalo hasta la siguiente toma pendiente.
+        Integer intervalo = medicamento.getIntervaloHoras();
+        LocalDateTime ahora = ZonaHoraria.ahora();
+        if (intervalo != null && intervalo > 0 && proximaToma.isBefore(ahora)) {
+            long horasAtrasadas = Duration.between(proximaToma, ahora).toHours();
+            long saltos = horasAtrasadas / intervalo + 1;
+            proximaToma = proximaToma.plusHours(saltos * intervalo);
+        }
+
+        medicamento.setProximaToma(proximaToma);
         medicamento.setUltimoRecordatorioEnviado(null);
     }
 

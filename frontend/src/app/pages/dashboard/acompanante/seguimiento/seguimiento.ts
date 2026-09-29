@@ -6,6 +6,10 @@ import {
   PersonaMayorAcompanada,
   MedicamentoSeguimiento
 } from '../../../../core/acompanantes/acompanante.service';
+import {
+  formatearHora,
+  formatearProximaToma
+} from '../../../../core/medicamentos/medicamento.service';
 import { Icon } from '../../../../shared/icon/icon';
 import { PersonCard } from '../../../../shared/person-card/person-card';
 
@@ -141,15 +145,13 @@ export class Seguimiento implements OnInit {
       return 'No programada';
     }
 
-    const fecha = new Date(medicamento.proximaToma);
+    return formatearProximaToma(medicamento.proximaToma);
+  }
 
-    return fecha.toLocaleString('es-CO', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+  obtenerPrimeraToma(
+    medicamento: MedicamentoSeguimiento
+  ): string {
+    return formatearHora(medicamento.hora);
   }
 
   // =========================================================

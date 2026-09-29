@@ -1,6 +1,7 @@
 package com.proyectogrado.salud_backend.scheduler;
 
 import com.proyectogrado.salud_backend.client.MessagingClient;
+import com.proyectogrado.salud_backend.config.ZonaHoraria;
 import com.proyectogrado.salud_backend.model.Medicamento;
 import com.proyectogrado.salud_backend.model.RelacionAcompananteLookup;
 import com.proyectogrado.salud_backend.model.UsuarioLookup;
@@ -11,25 +12,38 @@ import com.proyectogrado.salud_backend.repository.UsuarioLookupRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Duration;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
- * Portado del monolito (MedicamentoReminderScheduler), con un ajuste:
- * el original avisaba a TODOS los vinculos de PersonaMayorAcompanante sin
- * mirar el estado (incluia solicitudes pendientes/rechazadas). Aqui solo
- * se avisa a los ACEPTADOS.
+ * Recordatorios de medicamentos. Por cada toma se envian exactamente dos
+ * mensajes, a la persona mayor y a sus acompanantes aceptados:
+ *
+ *   1. MINUTOS_AVISO_PREVIO minutos antes de la hora.
+ *   2. A la hora exacta. En ese momento la toma se da por hecha y la
+ *      proxima toma avanza sola segun el intervalo del medicamento.
+ *
+ * No hay reintentos ni confirmacion manual: cada aviso se "reserva" en la
+ * base de datos antes de enviarlo (ver MedicamentoRepository), asi que no
+ * se repite aunque el scheduler corra varias veces o haya dos instancias.
  */
 @Component
 public class MedicamentoReminderScheduler {
 
-    private static final long MINUTOS_ENTRE_REINTENTOS = 15;
-    private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    public static final long MINUTOS_AVISO_PREVIO = 15;
+
+    // Si el servicio estuvo apagado y la hora de la toma ya paso hace mas
+    // de esto, no se envia un aviso tardio: solo se avanza a la siguiente.
+    private static final long MINUTOS_TOLERANCIA_ATRASO = 10;
+
+    private static final DateTimeFormatter FORMATO_LOG = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter FORMATO_HORA = DateTimeFormatter.ofPattern("h:mm a", Locale.forLanguageTag("es-CO"));
 
     // Identificador unico por arranque, util para detectar si hay dos
     // instancias de este backend corriendo a la vez (dos schedulers).
@@ -57,38 +71,109 @@ public class MedicamentoReminderScheduler {
         System.out.println("[SCHEDULER " + instanciaId + "] Instancia creada al arrancar salud-backend.");
     }
 
-    @Scheduled(cron = "0 * * * * *") // cada minuto, en el segundo 0
-    @Transactional
+    @Scheduled(cron = "0 * * * * *", zone = "America/Bogota") // cada minuto, en el segundo 0
     public void revisarRecordatorios() {
-        LocalDateTime ahora = LocalDateTime.now();
-        LocalDate hoy = LocalDate.now();
+        revisarRecordatorios(ZonaHoraria.ahora());
+    }
 
-        System.out.println("[SCHEDULER " + instanciaId + "] Ejecutando revisarRecordatorios a las "
-                + ahora.format(FORMATO));
+    // Separado para poder probar el flujo simulando el paso del tiempo.
+    void revisarRecordatorios(LocalDateTime momento) {
+        // El scheduler puede dispararse unos milisegundos antes o despues del
+        // segundo 0 (en Windows pasa a menudo). Si corre a las 12:36:59.998
+        // la toma de las 12:37 "aun no ha llegado" y el aviso saldria un
+        // minuto tarde. Las tomas siempre caen en minutos exactos, asi que se
+        // redondea al minuto mas cercano.
+        LocalDateTime ahora = momento.plusSeconds(30).truncatedTo(ChronoUnit.MINUTES);
 
-        List<Medicamento> vencidos = medicamentoRepository.findByActivoTrueAndProximaTomaLessThanEqual(ahora);
+        List<Medicamento> proximos = medicamentoRepository
+                .findByActivoTrueAndProximaTomaLessThanEqual(ahora.plusMinutes(MINUTOS_AVISO_PREVIO));
 
-        System.out.println("[SCHEDULER " + instanciaId + "] Medicamentos vencidos encontrados: " + vencidos.size());
+        if (!proximos.isEmpty()) {
+            System.out.println("[SCHEDULER " + instanciaId + "] " + ahora.format(FORMATO_LOG)
+                    + " - medicamentos por avisar: " + proximos.size());
+        }
 
-        for (Medicamento medicamento : vencidos) {
-
-            if (medicamento.getFechaFin() != null && hoy.isAfter(medicamento.getFechaFin())) {
-                continue;
-            }
-
-            LocalDateTime ultimoEnviado = medicamento.getUltimoRecordatorioEnviado();
-            boolean debeReenviar = ultimoEnviado == null
-                    || ultimoEnviado.isBefore(ahora.minusMinutes(MINUTOS_ENTRE_REINTENTOS));
-
-            if (debeReenviar) {
-                enviarRecordatorio(medicamento);
-                medicamento.setUltimoRecordatorioEnviado(ahora);
-                medicamentoRepository.save(medicamento);
+        for (Medicamento medicamento : proximos) {
+            try {
+                procesar(medicamento, ahora);
+            } catch (Exception e) {
+                System.out.println("[SCHEDULER " + instanciaId + "] Error con medicamento "
+                        + medicamento.getIdMedicamento() + ": " + e.getMessage());
             }
         }
     }
 
-    private void enviarRecordatorio(Medicamento medicamento) {
+    private void procesar(Medicamento medicamento, LocalDateTime ahora) {
+        LocalDateTime toma = medicamento.getProximaToma();
+
+        // Tratamiento terminado: no se avisa mas.
+        if (medicamento.getFechaFin() != null
+                && toma.toLocalDate().isAfter(medicamento.getFechaFin())) {
+            return;
+        }
+
+        if (ahora.isBefore(toma)) {
+            // Ventana del aviso previo: [toma - 15 min, toma)
+            LocalDateTime inicioVentana = toma.minusMinutes(MINUTOS_AVISO_PREVIO);
+
+            int reservado = medicamentoRepository.reservarAvisoPrevio(
+                    medicamento.getIdMedicamento(), toma, inicioVentana, ahora);
+
+            if (reservado == 1) {
+                // Normalmente 15; menos si el medicamento se creo dentro de la ventana.
+                long minutosFaltantes = Duration.between(ahora, toma).toMinutes();
+                log("Aviso previo (" + minutosFaltantes + " min) de medicamento "
+                        + medicamento.getIdMedicamento() + " para la toma de las " + toma.format(FORMATO_LOG));
+                enviarAvisos(medicamento, toma, minutosFaltantes);
+            }
+            return;
+        }
+
+        // Ya es la hora (o paso): avanzar a la siguiente toma futura.
+        LocalDateTime siguiente = calcularSiguienteToma(toma, medicamento.getIntervaloHoras(), ahora);
+
+        int reservado = medicamentoRepository.avanzarToma(
+                medicamento.getIdMedicamento(), toma, siguiente, ahora);
+
+        if (reservado != 1) {
+            return;
+        }
+
+        boolean aTiempo = !ahora.isAfter(toma.plusMinutes(MINUTOS_TOLERANCIA_ATRASO));
+
+        if (aTiempo) {
+            log("Aviso de hora exacta de medicamento " + medicamento.getIdMedicamento()
+                    + " para la toma de las " + toma.format(FORMATO_LOG)
+                    + ". Siguiente toma: " + siguiente.format(FORMATO_LOG));
+            enviarAvisos(medicamento, toma, 0);
+        } else {
+            log("Toma de las " + toma.format(FORMATO_LOG) + " del medicamento "
+                    + medicamento.getIdMedicamento() + " ya habia pasado, no se avisa. Siguiente toma: "
+                    + siguiente.format(FORMATO_LOG));
+        }
+    }
+
+    private LocalDateTime calcularSiguienteToma(LocalDateTime toma, Integer intervaloHoras, LocalDateTime ahora) {
+        int intervalo = intervaloHoras != null && intervaloHoras > 0 ? intervaloHoras : 24;
+
+        LocalDateTime siguiente = toma.plusHours(intervalo);
+        while (!siguiente.isAfter(ahora)) {
+            siguiente = siguiente.plusHours(intervalo);
+        }
+        return siguiente;
+    }
+
+    // minutosFaltantes == 0 -> aviso de la hora exacta.
+    private void enviarAvisos(Medicamento medicamento, LocalDateTime toma, long minutosFaltantes) {
+
+        boolean esLaHora = minutosFaltantes <= 0;
+        String enMinutos = "En " + minutosFaltantes + (minutosFaltantes == 1 ? " minuto" : " minutos");
+
+        String medicina = medicamento.getNombre()
+                + (medicamento.getDosis() != null && !medicamento.getDosis().isBlank()
+                    ? " (" + medicamento.getDosis() + ")" : "");
+        // Java usa espacios no separables en "a. m."; en un SMS se ven raros.
+        String hora = toma.format(FORMATO_HORA).replace(' ', ' ').replace(' ', ' ');
 
         UsuarioLookup personaMayor = usuarioLookupRepository
                 .findById(medicamento.getIdPersonaMayor())
@@ -97,8 +182,9 @@ public class MedicamentoReminderScheduler {
         String nombrePersona = personaMayor != null ? personaMayor.getNombreUsuario() : "la persona mayor";
 
         if (personaMayor != null && personaMayor.getCelular() != null) {
-            String mensaje = "Recordatorio: es hora de tomar " + medicamento.getNombre()
-                    + (medicamento.getDosis() != null ? " (" + medicamento.getDosis() + ")" : "") + ".";
+            String mensaje = esLaHora
+                    ? "Es hora de tomar " + medicina + "."
+                    : enMinutos + ", a las " + hora + ", te toca tomar " + medicina + ".";
             intentarEnviar(personaMayor.getCelular(), mensaje);
         }
 
@@ -114,9 +200,9 @@ public class MedicamentoReminderScheduler {
                     .orElse(null);
 
             if (celularAcompanante != null) {
-                String mensaje = "Recordatorio para " + nombrePersona + ": aún no ha tomado "
-                        + medicamento.getNombre()
-                        + (medicamento.getDosis() != null ? " (" + medicamento.getDosis() + ")" : "") + ".";
+                String mensaje = esLaHora
+                        ? "Es hora de que " + nombrePersona + " tome " + medicina + "."
+                        : enMinutos + ", a las " + hora + ", " + nombrePersona + " debe tomar " + medicina + ".";
                 intentarEnviar(celularAcompanante, mensaje);
             }
         }
@@ -124,7 +210,10 @@ public class MedicamentoReminderScheduler {
 
     private void intentarEnviar(String celular, String mensaje) {
         boolean enviado = messagingClient.enviarMensaje(celular, mensaje);
-        System.out.println("[SCHEDULER " + instanciaId + "] Envio a " + celular + ": "
-                + (enviado ? "OK" : "FALLO"));
+        log("  Envio a " + celular + ": " + (enviado ? "OK" : "FALLO") + " -> \"" + mensaje + "\"");
+    }
+
+    private void log(String texto) {
+        System.out.println("[SCHEDULER " + instanciaId + "] " + texto);
     }
 }

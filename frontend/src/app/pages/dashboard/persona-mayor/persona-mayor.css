@@ -68,11 +68,9 @@
   margin-top: 4px;
 }
 
-.reminder-card__btn {
-  margin-top: 22px;
-  font-size: 1.05rem;
-  padding: 16px 28px;
-  width: 100%;
+.reminder-card__body .reminder-card__aviso {
+  margin-top: 10px;
+  font-size: 0.9rem;
 }
 
 /* ---------- Actividades ---------- */

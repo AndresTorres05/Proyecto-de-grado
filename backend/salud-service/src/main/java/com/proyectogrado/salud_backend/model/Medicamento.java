@@ -1,5 +1,6 @@
 package com.proyectogrado.salud_backend.model;
 
+import com.proyectogrado.salud_backend.config.ZonaHoraria;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -73,7 +74,7 @@ public class Medicamento {
             this.activo = true;
         }
         if (this.fechaInicio == null) {
-            this.fechaInicio = LocalDate.now();
+            this.fechaInicio = ZonaHoraria.hoy();
         }
     }
 

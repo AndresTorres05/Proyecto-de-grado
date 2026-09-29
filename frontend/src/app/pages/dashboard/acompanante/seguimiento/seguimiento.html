@@ -207,17 +207,19 @@
                     </div>
                   }
 
-                  @if (medicamento.frecuencia) {
+                  @if (medicamento.intervaloHoras) {
                     <div class="dato">
-                      <span>Frecuencia</span>
-                      <strong>{{ medicamento.frecuencia }}</strong>
+                      <span>Cada cuánto</span>
+                      <strong>
+                        Cada {{ medicamento.intervaloHoras }} {{ medicamento.intervaloHoras === 1 ? 'hora' : 'horas' }}
+                      </strong>
                     </div>
                   }
 
                   @if (medicamento.hora) {
                     <div class="dato">
-                      <span>Hora</span>
-                      <strong>{{ medicamento.hora }}</strong>
+                      <span>Primera toma</span>
+                      <strong>{{ obtenerPrimeraToma(medicamento) }}</strong>
                     </div>
                   }
 
@@ -226,18 +228,20 @@
                     <strong>{{ obtenerProximaToma(medicamento) }}</strong>
                   </div>
 
+                  @if (medicamento.frecuencia) {
+                    <div class="dato dato--ancho">
+                      <span>Descripción</span>
+                      <strong>{{ medicamento.frecuencia }}</strong>
+                    </div>
+                  }
+
                 </div>
 
 
-                @if (medicamento.ultimaToma) {
-
-                  <div class="medicamento-card__ultima">
-                    <app-icon name="clock" />
-                    Última toma:
-                    <strong>{{ medicamento.ultimaToma }}</strong>
-                  </div>
-
-                }
+                <div class="medicamento-card__ultima">
+                  <app-icon name="bell" />
+                  Se avisa 15 minutos antes y a la hora exacta.
+                </div>
 
               </article>
 

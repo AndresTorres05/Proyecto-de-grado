@@ -6,7 +6,12 @@ import { ActividadService, ActividadDisponible } from '../../../core/actividades
 import { GustoService, Gusto, CategoriaGusto } from '../../../core/gustos/gusto.service';
 import { AcompananteService, Acompanante } from '../../../core/acompanantes/acompanante.service';
 import { EmergenciaService } from '../../../core/emergencia/emergencia.service';
-import { MedicamentoService, Medicamento } from '../../../core/medicamentos/medicamento.service';
+import {
+  MedicamentoService,
+  Medicamento,
+  MINUTOS_AVISO_PREVIO,
+  formatearProximaToma
+} from '../../../core/medicamentos/medicamento.service';
 import { DatePipe, registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es-CO';
 
@@ -36,7 +41,8 @@ export class PersonaMayorDashboard implements OnInit {
 
   protected readonly medicamentos = signal<Medicamento[]>([]);
   protected readonly cargandoMedicamentos = signal(true);
-  protected readonly confirmandoToma = signal(false);
+  protected readonly minutosAvisoPrevio = MINUTOS_AVISO_PREVIO;
+  protected readonly formatearProximaToma = formatearProximaToma;
 
   protected readonly proximoMedicamento = computed(() => {
     const lista = this.medicamentos();
@@ -134,33 +140,6 @@ export class PersonaMayorDashboard implements OnInit {
     });
   }
 
-  estaVencido(medicamento: Medicamento): boolean {
-    return new Date(medicamento.proximaToma).getTime() <= Date.now();
-  }
-
-  formatearProximaToma(medicamento: Medicamento): string {
-    const fecha = new Date(medicamento.proximaToma);
-    return fecha.toLocaleString('es-CO', { dateStyle: 'short', timeStyle: 'short' });
-  }
-
-  confirmarTomaProximoMedicamento(): void {
-    const medicamento = this.proximoMedicamento();
-    if (!medicamento) {
-      return;
-    }
-
-    this.confirmandoToma.set(true);
-
-    this.medicamentoService.confirmarToma(medicamento.idMedicamento).subscribe({
-      next: () => {
-        this.confirmandoToma.set(false);
-        this.cargarMedicamentos();
-      },
-      error: () => {
-        this.confirmandoToma.set(false);
-      }
-    });
-  }
 
   cambiarCategoria(categoria: CategoriaGusto): void {
     this.categoriaActiva.set(categoria);
