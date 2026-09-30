@@ -1,10 +1,34 @@
 # Plataforma Web para Apoyar la Gestión de Información mediante Analítica de Datos en Organizaciones que Asisten a Personas Mayores
 
+## Comandos rápidos
+
+**Frontend** (desde la carpeta `frontend`):
+
+```bash
+npm start
+```
+
+**Backend** (desde la carpeta `backend`), para prender todos los servicios a la vez:
+
+```bash
+.\start-backend.bat
+```
+
+**Backend** (desde la carpeta de un servicio, por ejemplo `backend/auth-service`), para prender solo ese servicio:
+
+```bash
+.\mvnw.cmd spring-boot:run
+```
+
+Luego abrir en el navegador: [http://localhost:4200](http://localhost:4200)
+
+---
+
 ## Descripción
 
 Este proyecto corresponde al trabajo de grado del programa de **Ingeniería de Sistemas de la Pontificia Universidad Javeriana**.
 
-La solución consiste en una plataforma web orientada a apoyar la gestión de información de organizaciones que trabajan con personas mayores en la **UPL Entrenubes (Usme, Bogotá)**, permitiendo centralizar información, fortalecer el seguimiento de beneficiarios y generar indicadores mediante técnicas de analítica de datos.
+La solución consiste en una plataforma web, **VITA+**, orientada a apoyar la gestión de información de organizaciones que trabajan con personas mayores en la **UPL Entrenubes (Usme, Bogotá)**, permitiendo centralizar información y fortalecer el seguimiento de las personas mayores.
 
 ---
 
@@ -12,211 +36,140 @@ La solución consiste en una plataforma web orientada a apoyar la gestión de in
 
 ## Backend
 
-* Java 21 LTS
-* Spring Boot
-* Spring Security
-* JWT Authentication
-* Maven
-* PostgreSQL
+* Java 17
+* Spring Boot 4
+* Spring Cloud Gateway (API Gateway)
+* Spring Security + JWT
+* Spring Data JPA
+* Maven (Maven Wrapper incluido en cada servicio)
 
 ## Frontend
 
-* Angular
+* Angular 22
 * TypeScript
-* Bootstrap / Angular Material
+
+## Base de datos y servicios externos
+
+* PostgreSQL alojado en **Supabase** (base de datos compartida por todos los servicios)
+* **TextBee** para el envío de SMS (códigos de inicio de sesión, alertas y recordatorios)
 
 ## Herramientas adicionales
 
 * Git
 * GitHub
-* Docker
-* Docker Compose
 
 ---
 
 # Arquitectura del Proyecto
 
-La plataforma está organizada en tres componentes principales:
-
-1. **Frontend:** interfaz web desarrollada en Angular.
-2. **Backend:** API REST desarrollada con Spring Boot y Java.
-3. **Base de datos:** PostgreSQL para la persistencia de la información.
+El backend está dividido en **microservicios**. El frontend nunca habla directamente con ellos: todas las peticiones pasan por el **API Gateway**, que valida el token JWT y las redirige al servicio correspondiente.
 
 ```text
 ┌──────────────────────┐
-│       Usuario        │
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────┐
 │       Frontend       │
-│       Angular        │
-│     TypeScript       │
+│  Angular (:4200)     │
 └──────────┬───────────┘
-           │
            │ HTTP / REST
            ▼
 ┌──────────────────────┐
-│       Backend        │
-│     Spring Boot      │
-│        Java 21       │
+│     API Gateway      │
+│       (:8080)        │
+│   Validación JWT     │
 └──────────┬───────────┘
            │
-           │ JPA / SQL
            ▼
-┌──────────────────────┐
-│      PostgreSQL      │
-│      Base de datos   │
-└──────────────────────┘
+┌──────────────────────────────────────────┐
+│             Microservicios               │
+│  auth · messaging · persona-mayor ·      │
+│  acompañante · organización · voluntario │
+│  salud · actividad                       │
+└──────────┬───────────────────┬───────────┘
+           │ JPA / SQL         │ HTTPS
+           ▼                   ▼
+┌──────────────────────┐ ┌──────────────────┐
+│ PostgreSQL (Supabase)│ │   TextBee (SMS)  │
+└──────────────────────┘ └──────────────────┘
 ```
 
-Esta separación permite mantener independientes la **interfaz de usuario**, la **lógica de negocio** y la **persistencia de los datos**, facilitando el mantenimiento, escalabilidad y evolución de la plataforma.
+## Servicios y puertos
+
+| Servicio                | Puerto | Responsabilidad                                                  |
+| ----------------------- | :----: | ---------------------------------------------------------------- |
+| `api-gateway`           |  8080  | Punto de entrada único; valida el JWT y enruta las peticiones    |
+| `auth-service`          |  8081  | Registro, inicio de sesión (contraseña u OTP), cuenta y JWT      |
+| `messaging-service`     |  8082  | Envío de SMS y códigos OTP (TextBee) y notificaciones del panel  |
+| `salud-service`         |  8084  | Medicamentos, recordatorios y signos vitales                     |
+| `persona-mayor-service` |  8085  | Perfil, gustos, contactos y emergencias de la persona mayor      |
+| `acompanante-service`   |  8086  | Personas mayores a cargo, seguimiento y contactos de emergencia  |
+| `voluntario-service`    |  8087  | Panel del voluntario                                             |
+| `organizacion-service`  |  8088  | Personas mayores vinculadas a la organización                    |
+| `actividad-service`     |  8089  | Actividades de la organización y participación en ellas         |
 
 ---
 
 # Estructura del Proyecto
 
-El proyecto está organizado en dos componentes principales, **Frontend** y **Backend**, junto con los archivos de configuración necesarios para la ejecución de la aplicación y la gestión de la base de datos.
-
 ```text
 Proyecto-de-grado/
 │
 ├── backend/
-│   ├── src/
-│   │   ├── main/
-│   │   │   ├── java/
-│   │   │   └── resources/
-│   │   │
-│   │   └── test/
-│   │
-│   ├── mvnw
-│   ├── mvnw.cmd
-│   └── pom.xml
+│   ├── api-gateway/
+│   ├── auth-service/
+│   ├── messaging-service/
+│   ├── persona-mayor-service/
+│   ├── acompanante-service/
+│   ├── organizacion-service/
+│   ├── voluntario-service/
+│   ├── salud-service/
+│   ├── actividad-service/
+│   ├── scripts/
+│   └── start-backend.bat      ← prende todos los servicios a la vez
 │
 ├── frontend/
 │   ├── public/
 │   ├── src/
 │   │   ├── app/
+│   │   │   ├── core/          ← autenticación, interceptores y servicios
+│   │   │   ├── pages/         ← landing, login, registro y paneles por rol
+│   │   │   └── shared/        ← navbar, footer, shell de los paneles, iconos
 │   │   ├── index.html
 │   │   ├── main.ts
 │   │   └── styles.css
-│   │
 │   ├── angular.json
-│   ├── package.json
-│   ├── package-lock.json
-│   ├── tsconfig.json
-│   ├── tsconfig.app.json
-│   └── tsconfig.spec.json
+│   └── package.json
 │
-├── docker-compose.yml
 └── README.md
 ```
+
+Cada servicio del backend es un proyecto Spring Boot independiente con su propio `pom.xml`, `mvnw.cmd` y `src/main/resources/application.properties` (o `application.yml` en el gateway).
 
 ---
 
 # Requisitos Previos
 
-Antes de ejecutar el proyecto, es necesario contar con las siguientes herramientas instaladas:
-
-## Java
-
-Verificar la instalación:
+## Java 17 o superior
 
 ```bash
 java -version
 ```
 
-Versión requerida:
-
-```text
-Java 21 LTS
-```
-
----
-
-## Node.js
-
-Verificar la instalación:
+## Node.js y npm
 
 ```bash
 node -v
-```
-
-Se recomienda utilizar una versión compatible con la versión de Angular utilizada en el proyecto.
-
----
-
-## npm
-
-Verificar la instalación:
-
-```bash
 npm -v
 ```
 
-npm se instala automáticamente junto con Node.js.
+npm se instala automáticamente junto con Node.js. Se recomienda una versión de Node.js compatible con Angular 22.
 
----
-
-## Angular CLI
-
-Verificar la instalación:
-
-```bash
-ng version
-```
-
-En caso de no tener Angular CLI instalado:
-
-```bash
-npm install -g @angular/cli
-```
-
----
-
-## PostgreSQL
-
-Verificar la instalación:
-
-```bash
-psql --version
-```
-
-Crear la base de datos:
-
-```sql
-CREATE DATABASE proyectogrado;
-```
-
----
-
-## Docker
-
-Verificar la instalación:
-
-```bash
-docker --version
-```
-
-Verificar Docker Compose:
-
-```bash
-docker compose version
-```
+> No es necesario instalar Maven ni PostgreSQL: cada servicio trae su Maven Wrapper (`mvnw.cmd`) y la base de datos está alojada en Supabase.
 
 ---
 
 # Clonar el Repositorio
 
-Clonar el repositorio utilizando Git:
-
 ```bash
 git clone https://github.com/JuanDGarridoR/Proyecto-de-grado.git
-```
-
-Ingresar al directorio del proyecto:
-
-```bash
 cd Proyecto-de-grado
 ```
 
@@ -224,245 +177,89 @@ cd Proyecto-de-grado
 
 # Ejecución del Proyecto
 
-Para ejecutar correctamente la plataforma se deben iniciar el **Backend** y el **Frontend**.
+Se deben iniciar el **Backend** y el **Frontend**, cada uno en su propia terminal.
 
-Se recomienda abrir **dos terminales**, una para cada componente.
+## 1. Backend
 
----
-
-# 1. Ejecución del Backend
-
-Abrir una terminal y dirigirse al directorio del backend:
+### Todos los servicios a la vez
 
 ```bash
 cd backend
+.\start-backend.bat
 ```
 
-Ejecutar la aplicación utilizando el Maven Wrapper:
+Se abre una ventana por cada servicio. Cuando todos terminan de arrancar, el backend queda disponible a través del gateway en `http://localhost:8080`.
 
-### Windows
+### Un solo servicio
+
+Útil cuando solo se está trabajando en un servicio o se necesita reiniciarlo:
 
 ```bash
-mvnw.cmd spring-boot:run
+cd backend/auth-service
+.\mvnw.cmd spring-boot:run
 ```
 
-El backend quedará disponible en:
-
-```text
-http://localhost:8080
-```
-
-> **Nota:** El archivo `mvnw.cmd` permite ejecutar Maven utilizando la configuración incluida en el proyecto, sin necesidad de tener Maven instalado globalmente.
-
----
-
-# 2. Ejecución del Frontend
-
-Abrir una **segunda terminal** y dirigirse al directorio del frontend:
+## 2. Frontend
 
 ```bash
 cd frontend
 ```
 
-## Instalación de dependencias
-
-Después de **clonar el repositorio por primera vez**, instalar las dependencias del proyecto:
+La **primera vez** después de clonar el repositorio (o cuando cambie `package.json`), instalar las dependencias:
 
 ```bash
 npm install
 ```
 
-### ¿Cuándo se debe ejecutar `npm install`?
-
-`npm install` **no es necesario ejecutarlo cada vez que se inicia el proyecto**.
-
-Se debe ejecutar principalmente:
-
-* La primera vez después de clonar el repositorio.
-* Cuando se agreguen nuevas dependencias al proyecto.
-* Cuando se modifique el archivo `package.json` o `package-lock.json`.
-* Cuando se elimine la carpeta `node_modules`.
-
-Una vez instaladas las dependencias, no es necesario repetir este comando en cada ejecución.
-
----
-
-## Iniciar el Frontend
-
-Para iniciar la aplicación Angular:
+Iniciar la aplicación:
 
 ```bash
 npm start
 ```
 
-La aplicación quedará disponible en:
-
-```text
-http://localhost:4200
-```
-
-También es posible abrirla automáticamente en el navegador:
-
-```bash
-npm start -- --open
-```
-
-> **Nota:** `npm start` debe ejecutarse cada vez que se quiera **levantar el frontend**. Una vez iniciado, Angular detectará automáticamente los cambios realizados en el código y actualizará la aplicación mediante *hot reload*, por lo que **no es necesario detener y volver a ejecutar `npm start` después de cada cambio**.
+La aplicación queda disponible en [http://localhost:4200](http://localhost:4200). Angular recarga automáticamente la página al guardar cambios en el código, por lo que no es necesario reiniciar `npm start` después de cada cambio.
 
 ---
 
-# Flujo Rápido de Ejecución
+# Configuración
 
-Una vez que el repositorio ya fue clonado y las dependencias fueron instaladas, para ejecutar nuevamente el proyecto:
-
-### Terminal 1 — Backend
-
-```bash
-cd backend
-mvnw.cmd spring-boot:run
-```
-
-### Terminal 2 — Frontend
-
-```bash
-cd frontend
-npm start
-```
-
-Luego acceder desde el navegador a:
+La conexión a la base de datos y las demás credenciales de cada servicio se configuran en su archivo:
 
 ```text
-http://localhost:4200
+backend/<servicio>/src/main/resources/application.properties
 ```
 
-El frontend se comunicará con el backend mediante la API REST disponible en:
+Todos los servicios apuntan a la misma base de datos PostgreSQL en Supabase. Las tablas se crean y actualizan automáticamente al arrancar (`spring.jpa.hibernate.ddl-auto=update`).
+
+Las rutas del gateway, el CORS del frontend y la clave del JWT están en:
 
 ```text
-http://localhost:8080
+backend/api-gateway/src/main/resources/application.yml
 ```
 
 ---
 
-# Configuración de la Base de Datos
+# Funcionalidades Implementadas
 
-Las credenciales y parámetros de conexión se configuran en:
-
-```text
-backend/src/main/resources/application.properties
-```
-
-Ejemplo:
-
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/proyectogrado
-spring.datasource.username=postgres
-spring.datasource.password=password
-
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-```
-
-> **Nota:** Se recomienda utilizar variables de entorno para las credenciales en entornos de desarrollo compartidos o de producción.
-
----
-
-# Build de Producción
-
-## Frontend
-
-Para generar el build de producción:
-
-```bash
-ng build --configuration production
-```
-
-Los archivos generados estarán disponibles en el directorio:
-
-```text
-dist/
-```
-
----
-
-## Backend
-
-Para generar el paquete de producción:
-
-```bash
-mvnw.cmd clean package
-```
-
-El archivo `.jar` se generará dentro del directorio:
-
-```text
-target/
-```
-
-Posteriormente, puede ejecutarse mediante:
-
-```bash
-java -jar target/backend.jar
-```
-
-> El nombre exacto del archivo `.jar` puede variar dependiendo de la configuración y versión del proyecto.
-
----
-
-# Docker
-
-Si se utiliza Docker Compose para ejecutar los servicios del proyecto:
-
-## Construir los contenedores
-
-```bash
-docker compose build
-```
-
-## Levantar los servicios
-
-```bash
-docker compose up -d
-```
-
-## Verificar los servicios activos
-
-```bash
-docker compose ps
-```
-
-## Detener los servicios
-
-```bash
-docker compose down
-```
-
----
-
-# Funcionalidades Principales
-
-La plataforma contempla las siguientes funcionalidades:
-
-* Gestión de usuarios.
-* Gestión de personas mayores.
-* Gestión de acompañantes.
-* Gestión de voluntarios.
-* Gestión de organizaciones.
-* Gestión de actividades comunitarias.
-* Gestión de redes de apoyo.
-* Seguimiento de beneficiarios.
-* Generación de indicadores.
-* Analítica de datos.
-* Visualización de reportes.
+* Registro e inicio de sesión con correo y contraseña, o con celular y código OTP por SMS.
+* Restablecimiento de contraseña por código OTP.
+* Paneles por rol: **persona mayor**, **acompañante**, **organización** y **voluntario**.
+* Gestión del perfil de cada usuario ("Mi información"), incluyendo EPS e IPS de la persona mayor.
+* Vinculación de personas mayores con acompañantes y organizaciones.
+* Contactos y botón de emergencia con aviso por SMS.
+* Medicamentos y recordatorios con aviso por SMS.
+* Registro e historial de signos vitales.
+* Actividades de la organización y participación de personas mayores y acompañantes.
+* Gustos e intereses de la persona mayor.
+* Notificaciones en el panel (campanita) con los SMS recibidos.
 
 ---
 
 # Metodología de Desarrollo
 
-La solución fue desarrollada utilizando un enfoque ágil y metodologías orientadas al desarrollo de software y al análisis de datos:
-
 * **Scrum:** organización y seguimiento del desarrollo del proyecto.
 * **Kanban:** gestión y visualización del flujo de trabajo.
-* **CRISP-DM:** metodología utilizada para el componente de analítica de datos.
+* **CRISP-DM:** metodología para el componente de analítica de datos.
 
 ---
 
