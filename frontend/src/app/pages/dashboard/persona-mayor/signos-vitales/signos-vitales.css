@@ -1,0 +1,29 @@
+:host {
+  display: block;
+}
+
+.page-header {
+  margin-bottom: 28px;
+}
+
+.page-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--vita-navy);
+}
+
+.page-header p {
+  margin-top: 4px;
+  color: var(--vita-text-gray);
+  font-size: 0.9rem;
+}
+
+.historial {
+  padding: 24px;
+}
+
+@media (max-width: 600px) {
+  .historial {
+    padding: 16px;
+  }
+}

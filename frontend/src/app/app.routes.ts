@@ -292,6 +292,14 @@ export const routes: Routes = [
       },
 
       {
+        path: 'signos-vitales',
+        loadComponent: () =>
+          import('./pages/dashboard/persona-mayor/signos-vitales/signos-vitales').then(
+            (m) => m.SignosVitalesPersonaMayor,
+          ),
+      },
+
+      {
         path: 'perfil',
         loadComponent: () => import('./shared/perfil/perfil').then((m) => m.Perfil),
         data: { tipoPerfil: 'PERSONA_MAYOR' },

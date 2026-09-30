@@ -1,0 +1,156 @@
+/* =========================================================
+   LISTA DE SIGNOS VITALES (compartida)
+   ========================================================= */
+
+/* ---------- Error ---------- */
+
+.signos-error {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  padding: 12px 15px;
+
+  border: 1px solid #d64545;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, #d64545 10%, white);
+  color: #9e2929;
+
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+
+/* ---------- Cargando ---------- */
+
+.signos-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 120px;
+
+  color: var(--vita-text-gray);
+  font-size: 0.9rem;
+}
+
+
+/* ---------- Estado vacío ---------- */
+
+.signos-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 28px 20px;
+
+  text-align: center;
+}
+
+.signos-empty__icon {
+  width: 52px;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 12px;
+
+  border-radius: 14px;
+  background: #edf5fc;
+  color: var(--vita-navy);
+
+  font-size: 1.35rem;
+}
+
+.signos-empty h3 {
+  margin: 0;
+
+  color: var(--vita-navy);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.signos-empty p {
+  max-width: 400px;
+  margin: 7px 0 0;
+
+  color: var(--vita-text-gray);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+
+/* ---------- Lista de registros ---------- */
+
+.signos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* En el modal: altura máxima con scroll */
+.signos-list--compacta {
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.signo-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  padding: 14px 16px;
+
+  border: 1px solid var(--vita-border);
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.signo-item__fecha {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: var(--vita-navy);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.signo-item__valores {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px 16px;
+}
+
+.signo-item__valores span {
+  display: block;
+  margin-bottom: 2px;
+
+  color: var(--vita-text-gray);
+  font-size: 0.78rem;
+}
+
+.signo-item__valores strong {
+  color: var(--vita-navy);
+  font-size: 0.9rem;
+}
+
+.signo-item__observaciones {
+  margin: 0;
+
+  color: var(--vita-text-gray);
+  font-size: 0.85rem;
+}
+
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 600px) {
+
+  .signos-list--compacta {
+    max-height: 350px;
+  }
+
+}

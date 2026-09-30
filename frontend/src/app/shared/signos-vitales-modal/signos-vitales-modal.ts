@@ -1,17 +1,17 @@
 import { Component, input, output } from '@angular/core';
-import { DatePipe } from '@angular/common';
 
 import { SignoVitalResponse } from '../../core/signos-vitales/signos-vitales.services';
-import { Icon } from '../icon/icon';
+import { SignosVitalesLista } from '../signos-vitales-lista/signos-vitales-lista';
 
 /**
  * Modal estandar con los ultimos registros de signos vitales de una
  * persona mayor. Solo presenta: cada pagina carga los registros con el
- * endpoint que le corresponde a su rol.
+ * endpoint que le corresponde a su rol. La lista en si es
+ * SignosVitalesLista, la misma que usa el historial de la persona mayor.
  */
 @Component({
   selector: 'app-signos-vitales-modal',
-  imports: [Icon, DatePipe],
+  imports: [SignosVitalesLista],
   templateUrl: './signos-vitales-modal.html',
   styleUrl: './signos-vitales-modal.css'
 })

@@ -1,0 +1,15 @@
+<div class="page-header">
+  <h1>Mis signos vitales</h1>
+  <p>Historial de los signos vitales que ha registrado tu organización, del más reciente al más antiguo.</p>
+</div>
+
+<section class="historial card">
+  <app-signos-vitales-lista
+    [registros]="registros()"
+    [cargando]="cargando()"
+    [error]="error()"
+    [compacta]="false"
+    tituloVacio="Aún no tienes signos vitales registrados"
+    textoVacio="Cuando tu organización registre tus signos vitales, aparecerán aquí."
+  />
+</section>

@@ -43,6 +43,12 @@ export class SignosVitalesService {
 
   private apiUrl = 'http://localhost:8080/api/organizacion/signos-vitales';
   private personasApiUrl = 'http://localhost:8080/api/organizacion/personas-mayores';
+  private personaMayorApiUrl = 'http://localhost:8080/api/persona-mayor/signos-vitales';
+
+  /** Historial completo de la persona mayor autenticada, del más reciente al más antiguo. */
+  listarPropios(): Observable<SignoVitalResponse[]> {
+    return this.http.get<SignoVitalResponse[]>(this.personaMayorApiUrl);
+  }
 
   registrar(idPersonaMayor: number, datos: SignoVitalRequest): Observable<SignoVitalResponse> {
     return this.http.post<SignoVitalResponse>(`${this.apiUrl}/${idPersonaMayor}`, datos);
