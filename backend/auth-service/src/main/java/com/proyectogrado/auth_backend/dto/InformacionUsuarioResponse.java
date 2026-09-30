@@ -11,6 +11,9 @@ public class InformacionUsuarioResponse {
     private LocalDate fechaNacimiento;
     private String genero;
     private String direccion;
+    // Solo personas mayores (null para los demás roles)
+    private String eps;
+    private String ips;
     private boolean tieneContrasena;
 
     public InformacionUsuarioResponse(
@@ -21,6 +24,8 @@ public class InformacionUsuarioResponse {
             LocalDate fechaNacimiento,
             String genero,
             String direccion,
+            String eps,
+            String ips,
             boolean tieneContrasena
     ) {
         this.idUsuario = idUsuario;
@@ -30,6 +35,8 @@ public class InformacionUsuarioResponse {
         this.fechaNacimiento = fechaNacimiento;
         this.genero = genero;
         this.direccion = direccion;
+        this.eps = eps;
+        this.ips = ips;
         this.tieneContrasena = tieneContrasena;
     }
 
@@ -59,6 +66,14 @@ public class InformacionUsuarioResponse {
 
     public String getDireccion() {
         return direccion;
+    }
+
+    public String getEps() {
+        return eps;
+    }
+
+    public String getIps() {
+        return ips;
     }
 
     public boolean isTieneContrasena() {

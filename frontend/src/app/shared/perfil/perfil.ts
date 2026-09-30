@@ -29,6 +29,9 @@ interface PerfilInformacion {
   fechaNacimiento?: string;
   genero?: string;
   direccion?: string;
+  // Solo persona mayor
+  eps?: string;
+  ips?: string;
   tieneContrasena: boolean;
 }
 
@@ -136,6 +139,8 @@ export class Perfil implements OnInit {
             fechaNacimiento: data.fechaNacimiento,
             genero: data.genero,
             direccion: data.direccion,
+            eps: data.eps,
+            ips: data.ips,
             tieneContrasena: data.tieneContrasena,
           };
 
@@ -269,6 +274,8 @@ export class Perfil implements OnInit {
           fechaNacimiento: this.formulario.fechaNacimiento || null,
           genero: this.formulario.genero || null,
           direccion: this.formulario.direccion || null,
+          eps: this.formulario.eps || null,
+          ips: this.formulario.ips || null,
         })
         .pipe(timeout(10000))
         .subscribe({
@@ -281,6 +288,8 @@ export class Perfil implements OnInit {
               fechaNacimiento: data.fechaNacimiento,
               genero: data.genero,
               direccion: data.direccion,
+              eps: data.eps,
+              ips: data.ips,
               tieneContrasena: data.tieneContrasena,
             };
 

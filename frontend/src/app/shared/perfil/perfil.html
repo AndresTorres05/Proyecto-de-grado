@@ -69,6 +69,17 @@
               <p>{{ informacion?.direccion || 'No registrada' }}</p>
             </div>
           }
+          <!-- EPS / IPS (solo persona mayor) -->
+          @if (esPersonaMayor) {
+            <div class="informacion__field">
+              <label> EPS </label>
+              <p>{{ informacion?.eps || 'No registrada' }}</p>
+            </div>
+            <div class="informacion__field">
+              <label> IPS </label>
+              <p>{{ informacion?.ips || 'No registrada' }}</p>
+            </div>
+          }
         </div>
       </div>
       <!-- =========================
@@ -185,6 +196,29 @@
                 type="text"
                 [(ngModel)]="formulario.direccion"
                 placeholder="Ingresa tu dirección"
+              />
+            </div>
+          }
+          <!-- EPS / IPS (solo persona mayor) -->
+          @if (esPersonaMayor) {
+            <div class="informacion__field">
+              <label for="eps"> EPS </label>
+              <input
+                id="eps"
+                type="text"
+                maxlength="120"
+                [(ngModel)]="formulario.eps"
+                placeholder="Ej.: Sanitas, Nueva EPS, Compensar"
+              />
+            </div>
+            <div class="informacion__field">
+              <label for="ips"> IPS </label>
+              <input
+                id="ips"
+                type="text"
+                maxlength="120"
+                [(ngModel)]="formulario.ips"
+                placeholder="Ej.: Hospital San Ignacio"
               />
             </div>
           }

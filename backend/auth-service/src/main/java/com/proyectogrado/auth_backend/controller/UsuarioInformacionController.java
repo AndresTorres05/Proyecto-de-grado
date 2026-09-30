@@ -2,7 +2,9 @@ package com.proyectogrado.auth_backend.controller;
 
 import com.proyectogrado.auth_backend.dto.ActualizarInformacionRequest;
 import com.proyectogrado.auth_backend.dto.InformacionUsuarioResponse;
+import com.proyectogrado.auth_backend.model.PersonaMayor;
 import com.proyectogrado.auth_backend.model.Usuario;
+import com.proyectogrado.auth_backend.repository.PersonaMayorRepository;
 import com.proyectogrado.auth_backend.repository.UsuarioRepository;
 import com.proyectogrado.auth_backend.security.JwtService;
 import com.proyectogrado.auth_backend.service.EmailValidationService;
@@ -29,16 +31,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth/informacion")
 public class UsuarioInformacionController {
 
+    // Largo máximo del nombre de la EPS / IPS
+    private static final int MAX_SALUD = 120;
+
     private final UsuarioRepository usuarioRepository;
+    private final PersonaMayorRepository personaMayorRepository;
     private final JwtService jwtService;
     private final EmailValidationService emailValidationService;
 
     public UsuarioInformacionController(
             UsuarioRepository usuarioRepository,
+            PersonaMayorRepository personaMayorRepository,
             JwtService jwtService,
             EmailValidationService emailValidationService
     ) {
         this.usuarioRepository = usuarioRepository;
+        this.personaMayorRepository = personaMayorRepository;
         this.jwtService = jwtService;
         this.emailValidationService = emailValidationService;
     }
@@ -61,6 +69,14 @@ public class UsuarioInformacionController {
 
         if (request.getNombre() == null || request.getNombre().isBlank()) {
             return ResponseEntity.badRequest().body("El nombre es obligatorio");
+        }
+
+        String eps = textoOpcional(request.getEps());
+        String ips = textoOpcional(request.getIps());
+
+        if ((eps != null && eps.length() > MAX_SALUD) || (ips != null && ips.length() > MAX_SALUD)) {
+            return ResponseEntity.badRequest()
+                    .body("El nombre de la EPS o IPS no puede tener más de " + MAX_SALUD + " caracteres");
         }
 
         String correo = request.getCorreo() == null || request.getCorreo().isBlank()
@@ -97,6 +113,14 @@ usuario.setDireccion(request.getDireccion());
 
 usuario = usuarioRepository.save(usuario);
 
+        // EPS e IPS viven en la tabla persona_mayor: solo se guardan si el
+        // usuario es persona mayor (para los demás roles se ignoran).
+        personaMayorRepository.findById(usuario.getIdUsuario()).ifPresent(personaMayor -> {
+            personaMayor.setEps(eps);
+            personaMayor.setIps(ips);
+            personaMayorRepository.save(personaMayor);
+        });
+
         return ResponseEntity.ok(aRespuesta(usuario));
     }
 
@@ -112,6 +136,9 @@ usuario = usuarioRepository.save(usuario);
         boolean tieneContrasena = usuario.getContrasenaHash() != null
                 && !usuario.getContrasenaHash().isBlank();
 
+        PersonaMayor personaMayor =
+                personaMayorRepository.findById(usuario.getIdUsuario()).orElse(null);
+
         return new InformacionUsuarioResponse(
                 usuario.getIdUsuario(),
                 usuario.getNombreUsuario(),
@@ -120,7 +147,13 @@ usuario = usuarioRepository.save(usuario);
                 usuario.getFechaNacimiento(),
                 usuario.getGenero(),
                 usuario.getDireccion(),
+                personaMayor != null ? personaMayor.getEps() : null,
+                personaMayor != null ? personaMayor.getIps() : null,
                 tieneContrasena
         );
+    }
+
+    private static String textoOpcional(String valor) {
+        return valor == null || valor.isBlank() ? null : valor.trim();
     }
 }

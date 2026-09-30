@@ -16,6 +16,14 @@ public class PersonaMayor {
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
+    // Entidad promotora de salud (afiliación)
+    @Column(name = "eps")
+    private String eps;
+
+    // Institución prestadora de salud (donde lo atienden)
+    @Column(name = "ips")
+    private String ips;
+
     public PersonaMayor() {
     }
 
@@ -37,5 +45,21 @@ public class PersonaMayor {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public String getEps() {
+        return eps;
+    }
+
+    public void setEps(String eps) {
+        this.eps = eps;
+    }
+
+    public String getIps() {
+        return ips;
+    }
+
+    public void setIps(String ips) {
+        this.ips = ips;
     }
 }

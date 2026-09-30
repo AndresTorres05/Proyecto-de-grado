@@ -10,6 +10,10 @@ public class ActualizarInformacionRequest {
     private String genero;
     private String direccion;
 
+    // Solo aplican a personas mayores
+    private String eps;
+    private String ips;
+
     public String getNombre() {
         return nombre;
     }
@@ -48,5 +52,21 @@ public class ActualizarInformacionRequest {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    public String getEps() {
+        return eps;
+    }
+
+    public void setEps(String eps) {
+        this.eps = eps;
+    }
+
+    public String getIps() {
+        return ips;
+    }
+
+    public void setIps(String ips) {
+        this.ips = ips;
     }
 }
