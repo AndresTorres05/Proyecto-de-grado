@@ -1,23 +1,27 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import {
   ActividadService,
-  Actividad
+  Actividad,
+  separarPorFecha
 } from '../../../../core/actividades/actividad.service';
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
+import { ActividadCard } from '../../../../shared/actividad-card/actividad-card';
 import { Icon } from '../../../../shared/icon/icon';
 
 @Component({
   selector: 'app-actividades-acompanante',
   standalone: true,
-  imports: [CommonModule, Icon],
+  imports: [ActividadCard, Icon],
   templateUrl: './actividades.html',
-  styleUrl: './actividades.css'
+  styleUrls: ['../../../../shared/actividad-card/actividades-pagina.css']
 })
 export class ActividadesComponent implements OnInit {
 
-  actividades: Actividad[] = [];
+  // Próximas (de la más cercana a la más lejana) e historial (de la más reciente a la más antigua)
+  proximas: Actividad[] = [];
+  pasadas: Actividad[] = [];
+
   cargando = true;
   error = '';
 
@@ -29,13 +33,10 @@ export class ActividadesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('ACTIVIDADES COMPONENTE CREADO');
     this.cargarActividades();
   }
 
   cargarActividades(mostrarCargando = true): void {
-    console.log('1. Entrando a cargarActividades');
-
     if (mostrarCargando) {
       this.cargando = true;
     }
@@ -43,41 +44,22 @@ export class ActividadesComponent implements OnInit {
 
     this.actividadService.listar().subscribe({
       next: (actividades) => {
-
-        console.log('2. RESPUESTA RECIBIDA:', actividades);
-
-        this.actividades = actividades;
+        const { proximas, pasadas } = separarPorFecha(actividades);
+        this.proximas = proximas;
+        this.pasadas = pasadas;
         this.cargando = false;
 
-        console.log('Estado actualizado:', {
-          cantidad: this.actividades.length,
-          cargando: this.cargando
-        });
-
-        // Forzar actualización de la vista
         this.cdr.detectChanges();
       },
 
       error: (error) => {
-        console.error('ERROR:', error);
+        console.error('Error al cargar actividades:', error);
 
         this.error = 'No se pudieron cargar las actividades.';
         this.cargando = false;
 
         this.cdr.detectChanges();
       }
-    });
-  }
-
-  formatearFecha(fecha: string | null): string {
-    if (!fecha) return 'Fecha no disponible';
-
-    const fechaObj = new Date(fecha + 'T00:00:00');
-
-    return fechaObj.toLocaleDateString('es-CO', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric'
     });
   }
 }

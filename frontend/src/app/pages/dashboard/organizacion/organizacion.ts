@@ -10,6 +10,7 @@ import { RouterLink } from '@angular/router';
 import {
   ActividadService,
   Actividad,
+  separarPorFecha,
   ActividadRequest
 } from '../../../core/actividades/actividad.service';
 
@@ -271,7 +272,9 @@ private cargarInformacionOrganizacion(): void {
   private cargarActividades(): void {
     this.actividadService.listarMias().subscribe({
       next: (actividades) => {
-        this.actividades.set(actividades);
+        // Próximas primero (más cercana arriba) y luego las ya realizadas
+        const { proximas, pasadas } = separarPorFecha(actividades);
+        this.actividades.set([...proximas, ...pasadas]);
       },
       error: () => {
         this.errorActividades.set(

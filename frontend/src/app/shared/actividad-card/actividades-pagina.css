@@ -1,0 +1,106 @@
+/*
+ * Estructura común de las páginas de actividades (organización, persona
+ * mayor y acompañante): contenedor, título, secciones "Próximas
+ * actividades" / "Historial" y estados vacíos. Cada página la incluye en
+ * su styleUrls; la tarjeta vive en actividad-card.
+ */
+
+.activities-page {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.page-header p {
+  margin: 0.5rem 0 0;
+  color: #6b7280;
+}
+
+.activities-section {
+  margin-bottom: 1.5rem;
+}
+
+.section-header {
+  margin-top: 0;
+  margin-bottom: 0.9rem;
+}
+
+.section-header h2 {
+  margin: 0;
+  font-size: 1.45rem;
+  font-weight: 700;
+}
+
+.section-header p {
+  margin: 0.35rem 0 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.activities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.empty-state {
+  padding: 3rem 2rem;
+  text-align: center;
+  background: #f9fafb;
+  border: 1px dashed #d1d5db;
+  border-radius: 14px;
+}
+
+.empty-state.compact {
+  padding: 2rem;
+}
+
+.empty-icon {
+  margin-bottom: 0.75rem;
+  font-size: 2.5rem;
+}
+
+.empty-state h3 {
+  margin: 0 0 0.5rem;
+}
+
+.empty-state p {
+  margin: 0;
+  color: #6b7280;
+}
+
+.error-message {
+  margin-bottom: 1.5rem;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+@media (max-width: 850px) {
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 600px) {
+  .activities-page {
+    padding: 1rem;
+  }
+}

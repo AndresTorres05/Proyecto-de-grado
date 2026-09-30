@@ -1,0 +1,141 @@
+:host {
+  display: block;
+}
+
+.activity-card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: 0.2s ease;
+}
+
+.activity-card:hover {
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.07);
+}
+
+.activity-card.past {
+  opacity: 0.82;
+}
+
+.activity-date {
+  width: 70px;
+  min-width: 70px;
+  height: 75px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #eff6ff;
+  border-radius: 12px;
+}
+
+.past .activity-date {
+  background: #f3f4f6;
+}
+
+.date-day {
+  font-size: 1.65rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.date-month {
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.activity-content {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.activity-info {
+  min-width: 0;
+}
+
+.activity-info h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 650;
+}
+
+.activity-description {
+  margin: 0.55rem 0 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  max-width: 700px;
+}
+
+.activity-type {
+  display: inline-block;
+  margin-top: 0.45rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: #f3f4f6;
+  color: #4b5563;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.activity-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 0.65rem;
+  color: #6b7280;
+  font-size: 0.88rem;
+}
+
+.activity-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Perfiles sin botones (p. ej. acompañante) */
+.activity-actions:empty {
+  display: none;
+}
+
+@media (max-width: 850px) {
+  .activity-content {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .activity-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 600px) {
+  .activity-card {
+    gap: 0.8rem;
+    padding: 1rem;
+  }
+
+  .activity-date {
+    width: 58px;
+    min-width: 58px;
+    height: 65px;
+  }
+
+  .date-day {
+    font-size: 1.35rem;
+  }
+}

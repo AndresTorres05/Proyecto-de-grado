@@ -12,7 +12,7 @@ export const PANEL_CONFIG: Record<string, PanelConfig> = {
     roleAccent: 'var(--vita-green)',
     navItems: [
       { icon: 'home', label: 'Inicio', path: '/panel/persona-mayor' },
-      { icon: 'activity', label: 'Mis actividades', path: '/panel/persona-mayor/actividades' },
+      { icon: 'calendar', label: 'Actividades', path: '/panel/persona-mayor/actividades' },
       { icon: 'heart', label: 'Mis intereses', path: '/panel/persona-mayor/intereses' },
       { icon: 'clock', label: 'Mis recordatorios', path: '/panel/persona-mayor/recordatorios' },
       { icon: 'clipboard', label: 'Mis signos vitales', path: '/panel/persona-mayor/signos-vitales' },
@@ -49,7 +49,7 @@ export const PANEL_CONFIG: Record<string, PanelConfig> = {
       { icon: 'users', label: 'Mis personas mayores', path: '/panel/acompanante/personas-mayores' },
       { icon: 'clipboard', label: 'Seguimiento', path: '/panel/acompanante/seguimiento' },
       { icon: 'phone', label: 'Contactos de emergencia', path: '/panel/acompanante/contactos-emergencia' },
-      { icon: 'activity', label: 'Actividades', path: '/panel/acompanante/actividades' },
+      { icon: 'calendar', label: 'Actividades', path: '/panel/acompanante/actividades' },
       { icon: 'user', label: 'Perfil', path: '/panel/acompanante/perfil' }
     ]
   },
@@ -59,8 +59,8 @@ export const PANEL_CONFIG: Record<string, PanelConfig> = {
     roleAccent: 'var(--vita-gold)',
     navItems: [
       { icon: 'home', label: 'Inicio', path: '/panel/voluntario' },
-      { icon: 'activity', label: 'Mis actividades', path: '/panel/voluntario/actividades' },
-      { icon: 'calendar', label: 'Disponibilidad', path: '/panel/voluntario/disponibilidad' },
+      { icon: 'calendar', label: 'Actividades', path: '/panel/voluntario/actividades' },
+      { icon: 'clock', label: 'Disponibilidad', path: '/panel/voluntario/disponibilidad' },
       { icon: 'bell', label: 'Alertas', path: '/panel/voluntario/alertas' },
       { icon: 'users', label: 'Personas que acompaño', path: '/panel/voluntario/personas' },
       { icon: 'user', label: 'Perfil', path: '/panel/voluntario/perfil' }

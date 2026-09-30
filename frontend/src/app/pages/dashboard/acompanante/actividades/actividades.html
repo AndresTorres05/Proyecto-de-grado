@@ -1,94 +1,85 @@
-<main class="actividades-container">
+<div class="activities-page">
 
-  <div class="encabezado">
+  <!-- Encabezado -->
+  <header class="page-header">
     <div>
       <h1>Actividades</h1>
-      <p>
-        Consulta las actividades disponibles para las personas mayores que acompañas.
-      </p>
+      <p>Consulta las actividades disponibles para las personas mayores que acompañas.</p>
     </div>
-  </div>
+  </header>
 
-  <div class="estado" *ngIf="cargando">
-    <p>Cargando actividades...</p>
-  </div>
+  @if (error) {
+    <div class="error-message">
+      <app-icon name="alert-triangle" />
+      {{ error }}
+    </div>
+  }
 
-  <div class="estado error" *ngIf="!cargando && error">
-    <p>{{ error }}</p>
+  <!-- Cargando -->
+  @if (cargando) {
+    <div class="empty-state">
+      <p>Cargando actividades...</p>
+    </div>
+  }
 
-    <button (click)="cargarActividades()">
-      Intentar nuevamente
-    </button>
-  </div>
+  @if (!cargando && !error) {
 
-  <div
-    class="estado"
-    *ngIf="!cargando && !error && actividades.length === 0"
-  >
-    <h2>No hay actividades disponibles</h2>
+    <!-- =========================
+         PRÓXIMAS ACTIVIDADES
+         ========================= -->
 
-    <p>
-      Actualmente no hay actividades de las organizaciones a las que
-      pertenecen las personas mayores que acompañas.
-    </p>
-  </div>
+    <section class="activities-section">
 
-  <section
-    class="actividades-grid"
-    *ngIf="!cargando && !error && actividades.length > 0"
-  >
-
-    <article
-      class="actividad-card"
-      *ngFor="let actividad of actividades"
-    >
-
-      <div class="actividad-icono">
-        <app-icon name="calendar" />
+      <div class="section-header">
+        <div>
+          <h2>Próximas actividades</h2>
+          <p>Actividades de las organizaciones de las personas mayores que acompañas.</p>
+        </div>
       </div>
 
-      <div class="actividad-contenido">
-
-        <h2>{{ actividad.nombre }}</h2>
-
-        <div class="dato">
-          <strong>Fecha:</strong>
-          <span>
-            {{ formatearFecha(actividad.fecha) }}
-          </span>
+      @if (proximas.length === 0) {
+        <div class="empty-state">
+          <div class="empty-icon"><app-icon name="calendar" /></div>
+          <h3>No hay próximas actividades</h3>
+          <p>Cuando una de esas organizaciones publique una actividad, la verás aquí.</p>
         </div>
-
-        <div class="dato" *ngIf="actividad.hora">
-          <strong>Hora:</strong>
-          <span>{{ actividad.hora }}</span>
+      } @else {
+        <div class="activities-list">
+          @for (actividad of proximas; track actividad.idActividad) {
+            <app-actividad-card [actividad]="actividad" />
+          }
         </div>
+      }
 
-        <div class="dato" *ngIf="actividad.lugar">
-          <strong>Lugar:</strong>
-          <span>{{ actividad.lugar }}</span>
+    </section>
+
+    <!-- =========================
+         HISTORIAL
+         ========================= -->
+
+    <section class="activities-section history-section">
+
+      <div class="section-header">
+        <div>
+          <h2>Historial</h2>
+          <p>Actividades que ya se realizaron.</p>
         </div>
-
-        <div class="dato" *ngIf="actividad.tipo">
-          <strong>Tipo:</strong>
-          <span>{{ actividad.tipo }}</span>
-        </div>
-
-        <div class="dato" *ngIf="actividad.cupos !== null">
-          <strong>Cupos:</strong>
-          <span>{{ actividad.cupos }}</span>
-        </div>
-
-        <p
-          class="descripcion"
-          *ngIf="actividad.descripcion"
-        >
-          {{ actividad.descripcion }}
-        </p>
-
       </div>
 
-    </article>
+      @if (pasadas.length === 0) {
+        <div class="empty-state compact">
+          <p>Aún no hay actividades en el historial.</p>
+        </div>
+      } @else {
+        <div class="activities-list">
+          @for (actividad of pasadas; track actividad.idActividad) {
+            <app-actividad-card [actividad]="actividad" />
+          }
+        </div>
+      }
 
-  </section>
+    </section>
 
-</main>
+  }
+
+</div>

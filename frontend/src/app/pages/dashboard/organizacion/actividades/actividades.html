@@ -65,137 +65,31 @@
             track actividad.idActividad
           ) {
 
-            <article class="activity-card">
+            <app-actividad-card [actividad]="actividad">
+              <button
+                class="btn-secondary"
+                type="button"
+                (click)="verParticipantes(actividad)"
+              >
+                Ver asistentes
+              </button>
 
-              <!-- Fecha -->
-              <div class="activity-date">
+              <button
+                class="btn-edit"
+                type="button"
+                (click)="editarActividad(actividad)"
+              >
+                Editar
+              </button>
 
-                @if (actividad.fecha) {
-
-                  <span class="date-day">
-                    {{ actividad.fecha | date:'d' }}
-                  </span>
-
-                  <span class="date-month">
-                    {{ actividad.fecha | date:'MMM':'':'es-CO' }}
-                  </span>
-
-                } @else {
-
-                  <span class="date-day">—</span>
-
-                  <span class="date-month">
-                    Sin fecha
-                  </span>
-
-                }
-
-              </div>
-
-
-              <!-- Información -->
-              <div class="activity-content">
-
-                <div class="activity-info">
-
-                  <h3>
-                    {{ actividad.nombre }}
-                  </h3>
-
-
-                  @if (actividad.descripcion) {
-
-                    <p class="activity-description">
-                      {{ actividad.descripcion }}
-                    </p>
-
-                  }
-
-
-                  @if (actividad.tipo) {
-
-                    <span class="activity-type">
-                      {{ actividad.tipo }}
-                    </span>
-
-                  }
-
-
-                  <div class="activity-details">
-
-                    @if (actividad.fecha) {
-
-                      <span>
-                        <app-icon name="calendar" />
-                        {{ actividad.fecha | date:'EEEE, d \'de\' MMMM':'':'es-CO' }}
-                      </span>
-
-                    }
-
-
-                    @if (actividad.hora) {
-
-                      <span>
-                        <app-icon name="clock" /> {{ actividad.hora }}
-                      </span>
-
-                    }
-
-
-                    @if (actividad.lugar) {
-
-                      <span>
-                        <app-icon name="map-pin" /> {{ actividad.lugar }}
-                      </span>
-
-                    }
-
-
-                    @if (actividad.cupos !== null) {
-
-                      <span>
-                        <app-icon name="users" /> {{ actividad.cupos }} cupos
-                      </span>
-
-                    }
-
-                  </div>
-
-                </div>
-
-
-                <!-- Acciones -->
-                <div class="activity-actions">
-
-                  <button
-                    class="btn-secondary"
-                    type="button"
-                    (click)="verParticipantes(actividad)"
-                  >
-                    Ver asistentes
-                  </button>
-
-                  <button
-                    class="btn-edit"
-                    type="button"
-                    (click)="editarActividad(actividad)"
-                  >
-                    Editar
-                  </button>
-
-                  <button
-                    class="btn-delete"
-                    type="button"
-                    (click)="eliminarActividad(actividad)"
-                  >
-                    Eliminar
-                  </button>
-
-                </div>
-
-              </div>
-
-            </article>
+              <button
+                class="btn-delete"
+                type="button"
+                (click)="eliminarActividad(actividad)"
+              >
+                Eliminar
+              </button>
+            </app-actividad-card>
 
           }
 
@@ -246,113 +140,15 @@
             track actividad.idActividad
           ) {
 
-            <article class="activity-card past">
-
-              <!-- Fecha -->
-              <div class="activity-date">
-
-                @if (actividad.fecha) {
-
-                  <span class="date-day">
-                    {{ actividad.fecha | date:'d' }}
-                  </span>
-
-                  <span class="date-month">
-                    {{ actividad.fecha | date:'MMM':'':'es-CO' }}
-                  </span>
-
-                }
-
-              </div>
-
-
-              <!-- Información -->
-              <div class="activity-content">
-
-                <div class="activity-info">
-
-                  <h3>
-                    {{ actividad.nombre }}
-                  </h3>
-
-
-                  @if (actividad.descripcion) {
-
-                    <p class="activity-description">
-                      {{ actividad.descripcion }}
-                    </p>
-
-                  }
-
-
-                  @if (actividad.tipo) {
-
-                    <span class="activity-type">
-                      {{ actividad.tipo }}
-                    </span>
-
-                  }
-
-
-                  <div class="activity-details">
-
-                    @if (actividad.fecha) {
-
-                      <span>
-                        <app-icon name="calendar" />
-                        {{ actividad.fecha | date:'EEEE, d \'de\' MMMM':'':'es-CO' }}
-                      </span>
-
-                    }
-
-
-                    @if (actividad.hora) {
-
-                      <span>
-                        <app-icon name="clock" /> {{ actividad.hora }}
-                      </span>
-
-                    }
-
-
-                    @if (actividad.lugar) {
-
-                      <span>
-                        <app-icon name="map-pin" /> {{ actividad.lugar }}
-                      </span>
-
-                    }
-
-
-                    @if (actividad.cupos !== null) {
-
-                      <span>
-                        <app-icon name="users" /> {{ actividad.cupos }} cupos
-                      </span>
-
-                    }
-
-                  </div>
-
-                </div>
-
-
-                <!-- Acciones -->
-                <div class="activity-actions">
-
-                  <button
-                    class="btn-secondary"
-                    type="button"
-                    (click)="verParticipantes(actividad)"
-                  >
-                    Ver asistentes
-                  </button>
-
-                </div>
-
-              </div>
-
-            </article>
+            <app-actividad-card [actividad]="actividad">
+              <button
+                class="btn-secondary"
+                type="button"
+                (click)="verParticipantes(actividad)"
+              >
+                Ver asistentes
+              </button>
+            </app-actividad-card>
 
           }
 

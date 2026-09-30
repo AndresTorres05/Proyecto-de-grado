@@ -7,12 +7,15 @@ import {
   ActividadService,
   Actividad,
   ActividadRequest,
-  ParticipanteActividad
+  ParticipanteActividad,
+  fechaHoy,
+  separarPorFecha
 } from '../../../../core/actividades/actividad.service';
 
 import { AuthService } from '../../../../core/auth/auth.service';
 import { OrganizacionService } from '../../../../core/organizacion/organizacion.service';
 import { Icon } from '../../../../shared/icon/icon';
+import { ActividadCard } from '../../../../shared/actividad-card/actividad-card';
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
 @Component({
@@ -22,10 +25,11 @@ import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
     CommonModule,
     FormsModule,
     DatePipe,
-    Icon
+    Icon,
+    ActividadCard
   ],
   templateUrl: './actividades.html',
-  styleUrl: './actividades.css'
+  styleUrls: ['../../../../shared/actividad-card/actividades-pagina.css', './actividades.css']
 })
 export class Actividades implements OnInit {
 
@@ -153,31 +157,15 @@ ngOnInit(): void {
   }
 
   protected actividadesProximas(): Actividad[] {
-    const hoy = this.fechaHoy();
-
-    return this.actividades().filter(
-      actividad => actividad.fecha !== null && actividad.fecha >= hoy
-    );
+    return separarPorFecha(this.actividades()).proximas;
   }
 
   protected actividadesPasadas(): Actividad[] {
-    const hoy = this.fechaHoy();
-
-    return this.actividades()
-      .filter(
-        actividad => actividad.fecha !== null && actividad.fecha < hoy
-      )
-      .reverse();
+    return separarPorFecha(this.actividades()).pasadas;
   }
 
   protected fechaHoy(): string {
-    const ahora = new Date();
-
-    const year = ahora.getFullYear();
-    const month = String(ahora.getMonth() + 1).padStart(2, '0');
-    const day = String(ahora.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
+    return fechaHoy();
   }
 
   protected abrirFormulario(): void {

@@ -1,5 +1,6 @@
 package com.proyectogrado.actividad_service.controller;
 
+import com.proyectogrado.actividad_service.config.ZonaHoraria;
 import com.proyectogrado.actividad_service.dto.ActividadDisponibleResponse;
 import com.proyectogrado.actividad_service.dto.ActividadRequest;
 import com.proyectogrado.actividad_service.dto.ActividadResponse;
@@ -319,6 +320,11 @@ public class ActividadController {
                     .body("No puedes inscribirte en actividades de una organización a la que no estás asociado");
         }
 
+        if (yaPaso(actividad)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("No puedes inscribirte en una actividad que ya pasó");
+        }
+
         boolean yaInscrito =
                 participacionRepository
                         .findById_IdPersonaMayorAndId_IdActividad(idPersonaMayor, id)
@@ -369,9 +375,23 @@ public class ActividadController {
             return ResponseEntity.notFound().build();
         }
 
+        Actividad actividad = actividadRepository.findById(id).orElse(null);
+
+        if (actividad != null && yaPaso(actividad)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("No puedes cancelar la inscripción de una actividad que ya pasó");
+        }
+
         participacionRepository.delete(participacion);
 
         return ResponseEntity.noContent().build();
+    }
+
+    // Una actividad de hoy todavía cuenta como próxima; se usa la fecha de
+    // Colombia para que no cambie según la zona horaria del servidor.
+    private boolean yaPaso(Actividad actividad) {
+        return actividad.getFecha() != null
+                && actividad.getFecha().isBefore(ZonaHoraria.ahora().toLocalDate());
     }
 
     // =========================================================

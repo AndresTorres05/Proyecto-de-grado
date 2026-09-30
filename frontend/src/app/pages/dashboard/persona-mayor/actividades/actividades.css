@@ -1,127 +1,14 @@
-:host {
-  display: block;
-}
+/* Contenedor, título y secciones: shared/actividad-card/actividades-pagina.css */
 
-.page-header {
-  margin-bottom: 28px;
-}
-
-.page-header h1 {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--gema-navy);
-}
-
-.page-header p {
-  margin-top: 4px;
-  color: var(--gema-text-gray);
-  font-size: 0.9rem;
-}
-
-.estado-card {
-  display: flex;
+.estado-inscrito {
+  display: inline-flex;
   align-items: center;
-  gap: 14px;
-  padding: 20px;
-  border: 1px solid var(--gema-border);
-  border-radius: var(--radius-md);
-  margin-bottom: 20px;
-}
-
-.estado-card__icon {
-  font-size: 1.5rem;
-}
-
-.error-message {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #c23b3b;
-  background: color-mix(in srgb, #d64545 12%, white);
-  border-radius: var(--radius-sm);
-  padding: 10px 14px;
-  font-size: 0.85rem;
-  margin-bottom: 16px;
-}
-
-.actividades-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 18px;
-}
-
-.actividad-card {
-  padding: 20px;
-  border-top: 3px solid var(--gema-navy-light);
-}
-
-.actividad-card--inscrito {
-  border-top-color: var(--gema-green);
-}
-
-.actividad-card__top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.actividad-card__icon {
-  font-size: 1.4rem;
-}
-
-.actividad-card__badge {
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 4px 10px;
+  gap: 6px;
+  padding: 0.35rem 0.75rem;
   border-radius: var(--radius-pill);
-  background: var(--gema-cream-soft);
-  color: var(--gema-navy);
-  white-space: nowrap;
-}
-
-.actividad-card__badge--inscrito {
-  background: color-mix(in srgb, var(--gema-green) 15%, white);
-  color: var(--gema-green);
-}
-
-.actividad-card h3 {
-  font-size: 1.05rem;
+  background: color-mix(in srgb, var(--vita-green) 15%, white);
+  color: var(--vita-green);
+  font-size: 0.85rem;
   font-weight: 700;
-  color: var(--gema-navy);
-}
-
-.actividad-card p {
-  margin-top: 4px;
-  font-size: 0.85rem;
-  color: var(--gema-text-gray);
-}
-
-.actividad-card__accion {
-  width: 100%;
-  margin-top: 16px;
-  font-size: 0.85rem;
-  padding: 9px 0;
-}
-
-.empty-card {
-  grid-column: 1 / -1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 40px 20px;
-  border: 1px dashed var(--gema-border);
-  border-radius: var(--radius-md);
-  color: var(--gema-text-gray);
-}
-
-.empty-card span {
-  font-size: 2rem;
-  margin-bottom: 8px;
-}
-
-.empty-card h3 {
-  color: var(--gema-navy);
-  margin-bottom: 4px;
+  white-space: nowrap;
 }

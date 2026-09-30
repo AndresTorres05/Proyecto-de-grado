@@ -5,7 +5,8 @@ import { Icon } from '../../../shared/icon/icon';
 
 import {
   ActividadService,
-  Actividad
+  Actividad,
+  separarPorFecha
 } from '../../../core/actividades/actividad.service';
 
 import {
@@ -90,7 +91,8 @@ export class AcompananteDashboard implements OnInit {
 
   private cargarActividades(): void {
     this.actividadService.listar().subscribe((actividades) =>
-      this.actividades.set(actividades)
+      // Solo las próximas, de la más cercana a la más lejana
+      this.actividades.set(separarPorFecha(actividades).proximas)
     );
   }
 
