@@ -8,6 +8,7 @@ import {
   PersonaMayor,
 } from '../../../../core/signos-vitales/signos-vitales.services';
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
+import { validarMedicion } from '../../../../core/signos-vitales/rangos';
 import { Icon } from '../../../../shared/icon/icon';
 
 
@@ -97,6 +98,22 @@ registrarSignosVitales(): void {
     return;
   }
 
+  // Valores posibles y presión completa (sistólica + diastólica)
+  const errorMedicion = validarMedicion({
+    presionSistolica: this.presionSistolica,
+    presionDiastolica: this.presionDiastolica,
+    frecuenciaCardiaca: this.frecuenciaCardiaca,
+    temperatura: this.temperatura,
+    saturacionOxigeno: this.saturacionOxigeno,
+    frecuenciaRespiratoria: this.frecuenciaRespiratoria,
+    peso: this.peso
+  });
+
+  if (errorMedicion) {
+    this.mensajeError = errorMedicion;
+    return;
+  }
+
   this.personaSeleccionada = persona;
 
   // En este punto todavía NO se está guardando.
@@ -161,7 +178,10 @@ confirmarRegistro(): void {
         this.guardando = false;
         this.mostrarConfirmacion = false;
 
-        if (error.status === 403) {
+        if (error.status === 400 && typeof error.error === 'string') {
+          // Valores imposibles o presión incompleta (validación del servidor)
+          this.mensajeError = error.error;
+        } else if (error.status === 403) {
           this.mensajeError =
             'La persona mayor no está asociada a esta organización.';
         } else if (error.status === 404) {

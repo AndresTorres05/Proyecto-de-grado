@@ -35,6 +35,16 @@ public class SignoVitalOrganizacionController {
         this.usuarioLookupRepository = usuarioLookupRepository;
     }
 
+    // Límites de lo físicamente posible (fuera de esto es un error al
+    // digitar). Deben coincidir con LIMITES de frontend/core/signos-vitales/rangos.ts.
+    private static final double[] SISTOLICA = {60, 260};
+    private static final double[] DIASTOLICA = {30, 160};
+    private static final double[] PULSO = {30, 220};
+    private static final double[] TEMPERATURA = {32, 43};
+    private static final double[] OXIGENO = {50, 100};
+    private static final double[] RESPIRACION = {5, 60};
+    private static final double[] PESO = {20, 250};
+
     // Últimos 10 registros de la persona mayor, del más reciente al más antiguo.
     @GetMapping("/{idPersonaMayor}")
     public ResponseEntity<?> listarUltimos(
@@ -68,6 +78,11 @@ public class SignoVitalOrganizacionController {
 
         if (accesoDenegado != null) {
             return accesoDenegado;
+        }
+
+        String errorMedicion = validarMedicion(request);
+        if (errorMedicion != null) {
+            return ResponseEntity.badRequest().body(errorMedicion);
         }
 
         SignoVital signoVital = new SignoVital();
@@ -115,6 +130,55 @@ signoVital = signoVitalRepository.saveAndFlush(signoVital);
 
     // Devuelve la respuesta de error si la organización no puede acceder a
     // la persona mayor, o null si la persona está asociada y aceptada.
+    /** Mensaje de error si la medición no es válida; null si está bien. */
+    private String validarMedicion(SignoVitalRequest r) {
+        Integer sis = r.getPresionSistolica();
+        Integer dia = r.getPresionDiastolica();
+
+        if (sis == null && dia == null && r.getFrecuenciaCardiaca() == null
+                && r.getTemperatura() == null && r.getSaturacionOxigeno() == null
+                && r.getFrecuenciaRespiratoria() == null && r.getPeso() == null) {
+            return "Ingresa al menos un signo vital.";
+        }
+
+        if ((sis == null) != (dia == null)) {
+            return "La presión arterial se registra completa: sistólica y diastólica.";
+        }
+
+        String error = fueraDeLimite("Presión sistólica", sis, SISTOLICA, "mmHg");
+        if (error == null) error = fueraDeLimite("Presión diastólica", dia, DIASTOLICA, "mmHg");
+        if (error == null) error = fueraDeLimite("Frecuencia cardíaca", r.getFrecuenciaCardiaca(), PULSO, "lpm");
+        if (error == null) error = fueraDeLimite("Temperatura", r.getTemperatura(), TEMPERATURA, "°C");
+        if (error == null) error = fueraDeLimite("Saturación de oxígeno", r.getSaturacionOxigeno(), OXIGENO, "%");
+        if (error == null) error = fueraDeLimite("Frecuencia respiratoria", r.getFrecuenciaRespiratoria(), RESPIRACION, "rpm");
+        if (error == null) error = fueraDeLimite("Peso", r.getPeso(), PESO, "kg");
+        if (error != null) {
+            return error;
+        }
+
+        if (sis != null && sis <= dia) {
+            return "La presión sistólica debe ser mayor que la diastólica.";
+        }
+
+        return null;
+    }
+
+    private String fueraDeLimite(String nombre, Number valor, double[] limite, String unidad) {
+        if (valor == null) {
+            return null;
+        }
+        double v = valor.doubleValue();
+        if (v < limite[0] || v > limite[1]) {
+            return String.format("%s: %s %s no es un valor posible (debe estar entre %s y %s).",
+                    nombre, valor, unidad, formatear(limite[0]), formatear(limite[1]));
+        }
+        return null;
+    }
+
+    private String formatear(double valor) {
+        return valor == Math.floor(valor) ? String.valueOf((long) valor) : String.valueOf(valor);
+    }
+
     private ResponseEntity<?> validarAcceso(
             Integer idUsuarioOrganizacion,
             Integer idPersonaMayor

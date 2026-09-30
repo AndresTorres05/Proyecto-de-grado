@@ -13,6 +13,7 @@ import {
   SignosVitalesService,
   SignoVitalResponse
 } from '../../../core/signos-vitales/signos-vitales.services';
+import { RANGOS, evaluarIndicador } from '../../../core/signos-vitales/rangos';
 import {
   MedicamentoService,
   Medicamento,
@@ -281,7 +282,8 @@ export class PersonaMayorDashboard implements OnInit, OnDestroy {
   // SALUD
   // =========================================================
 
-  // Rangos de referencia generales para adultos; solo orientativos.
+  // Rangos de referencia en core/signos-vitales/rangos.ts (los mismos que
+  // usa la analítica de la organización).
   protected readonly signosResumen = computed<SignoResumen[]>(() => {
     const s = this.ultimoSignoVital();
     if (!s) {
@@ -290,27 +292,25 @@ export class PersonaMayorDashboard implements OnInit, OnDestroy {
 
     const lista: SignoResumen[] = [];
 
-    if (s.presionSistolica !== null || s.presionDiastolica !== null) {
-      const sis = s.presionSistolica;
-      const dia = s.presionDiastolica;
+    if (evaluarIndicador(s, 'presion') !== null) {
       lista.push({
         etiqueta: 'Presión',
-        valor: `${sis ?? '-'}/${dia ?? '-'}`,
-        unidad: 'mmHg',
-        normal: (sis === null || (sis >= 90 && sis < 140)) && (dia === null || (dia >= 60 && dia < 90))
+        valor: `${s.presionSistolica ?? '-'}/${s.presionDiastolica ?? '-'}`,
+        unidad: RANGOS.sistolica.unidad,
+        normal: evaluarIndicador(s, 'presion')!
       });
     }
     if (s.frecuenciaCardiaca !== null) {
-      lista.push({ etiqueta: 'Pulso', valor: `${s.frecuenciaCardiaca}`, unidad: 'lpm',
-        normal: s.frecuenciaCardiaca >= 60 && s.frecuenciaCardiaca <= 100 });
+      lista.push({ etiqueta: 'Pulso', valor: `${s.frecuenciaCardiaca}`, unidad: RANGOS.pulso.unidad,
+        normal: evaluarIndicador(s, 'pulso')! });
     }
     if (s.temperatura !== null) {
-      lista.push({ etiqueta: 'Temperatura', valor: `${s.temperatura}`, unidad: '°C',
-        normal: s.temperatura >= 36 && s.temperatura <= 37.5 });
+      lista.push({ etiqueta: 'Temperatura', valor: `${s.temperatura}`, unidad: RANGOS.temperatura.unidad,
+        normal: evaluarIndicador(s, 'temperatura')! });
     }
     if (s.saturacionOxigeno !== null) {
-      lista.push({ etiqueta: 'Oxígeno', valor: `${s.saturacionOxigeno}`, unidad: '%',
-        normal: s.saturacionOxigeno >= 95 });
+      lista.push({ etiqueta: 'Oxígeno', valor: `${s.saturacionOxigeno}`, unidad: RANGOS.oxigeno.unidad,
+        normal: evaluarIndicador(s, 'oxigeno')! });
     }
 
     return lista;
