@@ -15,6 +15,7 @@ import {
 
 import { AuthService } from '../../../core/auth/auth.service';
 import { OrganizacionService } from '../../../core/organizacion/organizacion.service';
+import { alCambiar } from '../../../core/tiempo-real/tiempo-real.service';
 
 import { PANEL_CONFIG } from '../../../shared/panel-config/panel-config';
 
@@ -224,6 +225,9 @@ constructor(
   private organizacionService: OrganizacionService
 ) {
   this.nombreUsuario.set(this.authService.getNombreUsuario());
+
+  alCambiar(['actividades'], () => this.cargarActividades());
+  alCambiar(['usuarios'], () => this.cargarInformacionOrganizacion());
 }
 
   // =========================================================

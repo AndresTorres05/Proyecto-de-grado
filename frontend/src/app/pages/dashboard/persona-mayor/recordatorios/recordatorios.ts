@@ -8,6 +8,7 @@ import {
   formatearHora,
   formatearProximaToma
 } from '../../../../core/medicamentos/medicamento.service';
+import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 import { Icon } from '../../../../shared/icon/icon';
 
 // Opciones de "Cada cuántas horas": de 1 a 12, más una vez al día.
@@ -46,7 +47,9 @@ export class Recordatorios implements OnInit, OnDestroy {
   fechaInicio = '';
   fechaFin = '';
 
-  constructor(private medicamentoService: MedicamentoService) {}
+  constructor(private medicamentoService: MedicamentoService) {
+    alCambiar(['medicamentos'], () => this.cargar(false));
+  }
 
   // Si un medicamento ya guardado tiene un intervalo fuera de la lista,
   // se agrega para no perderlo al editar.

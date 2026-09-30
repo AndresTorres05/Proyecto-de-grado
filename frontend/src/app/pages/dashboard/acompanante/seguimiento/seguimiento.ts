@@ -12,6 +12,7 @@ import {
 } from '../../../../core/medicamentos/medicamento.service';
 import { Icon } from '../../../../shared/icon/icon';
 import { PersonCard } from '../../../../shared/person-card/person-card';
+import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
 @Component({
   selector: 'app-seguimiento',
@@ -36,7 +37,9 @@ export class Seguimiento implements OnInit {
   constructor(
     private acompananteService: AcompananteService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    alCambiar(['acompanamientos', 'usuarios', 'medicamentos'], () => this.recargar());
+  }
 
   ngOnInit(): void {
     this.cargarPersonasMayores();
@@ -79,6 +82,29 @@ export class Seguimiento implements OnInit {
     });
   }
 
+  // Recarga por cambios de otros usuarios, sin perder la selección
+  private recargar(): void {
+    this.acompananteService.obtenerPersonasMayores().subscribe({
+      next: (data) => {
+        this.personasMayores = data;
+
+        const idSeleccionada = this.personaSeleccionada?.idUsuario;
+        this.personaSeleccionada =
+          data.find((p) => p.idUsuario === idSeleccionada)
+          ?? (data.length === 1 ? data[0] : null);
+
+        if (this.personaSeleccionada) {
+          this.cargarMedicamentos(this.personaSeleccionada.idUsuario, false);
+        } else {
+          this.medicamentos = [];
+        }
+
+        this.cdr.detectChanges();
+      },
+      error: (error) => console.error('Error al recargar personas mayores:', error)
+    });
+  }
+
   // =========================================================
   // SELECCIONAR PERSONA MAYOR
   // =========================================================
@@ -97,9 +123,12 @@ export class Seguimiento implements OnInit {
   // =========================================================
 
   cargarMedicamentos(
-    idPersonaMayor: number
+    idPersonaMayor: number,
+    mostrarCargando = true
   ): void {
-    this.cargandoMedicamentos = true;
+    if (mostrarCargando) {
+      this.cargandoMedicamentos = true;
+    }
     this.errorMedicamentos = '';
 
     this.acompananteService

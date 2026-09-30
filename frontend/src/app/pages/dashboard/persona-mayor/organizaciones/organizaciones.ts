@@ -6,6 +6,7 @@ import {
   OrganizacionSolicitud
 } from '../../../../core/organizacion/organizacion.service';
 
+import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 import { Icon } from '../../../../shared/icon/icon';
 
 @Component({
@@ -43,7 +44,12 @@ protected readonly accionPendiente =
 
   constructor(
     private organizacionService: OrganizacionService
-  ) {}
+  ) {
+    alCambiar(['organizaciones', 'usuarios'], () => {
+      this.cargarOrganizaciones();
+      this.cargarSolicitudes();
+    });
+  }
 
   ngOnInit(): void {
     this.cargarOrganizaciones();

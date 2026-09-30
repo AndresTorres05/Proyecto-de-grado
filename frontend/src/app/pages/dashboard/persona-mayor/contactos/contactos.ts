@@ -5,6 +5,7 @@ import {
   Acompanante
 } from '../../../../core/acompanantes/acompanante.service';
 import { EmergenciaService } from '../../../../core/emergencia/emergencia.service';
+import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 import { Icon } from '../../../../shared/icon/icon';
 import { PersonCard } from '../../../../shared/person-card/person-card';
 import { CancelarAsociacion } from '../../../../shared/cancelar-asociacion/cancelar-asociacion';
@@ -41,7 +42,9 @@ export class Contactos implements OnInit {
   constructor(
     private acompananteService: AcompananteService,
     private emergenciaService: EmergenciaService
-  ) {}
+  ) {
+    alCambiar(['acompanamientos', 'usuarios'], () => this.cargarAcompanantes());
+  }
 
   ngOnInit(): void {
     this.cargarAcompanantes();

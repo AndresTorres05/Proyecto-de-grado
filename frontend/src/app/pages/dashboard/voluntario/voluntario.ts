@@ -9,6 +9,7 @@ import {
 } from '../../../core/actividades/actividad.service';
 
 import { AuthService } from '../../../core/auth/auth.service';
+import { alCambiar } from '../../../core/tiempo-real/tiempo-real.service';
 
 import { PANEL_CONFIG } from '../../../shared/panel-config/panel-config';
 
@@ -67,6 +68,8 @@ export class VoluntarioDashboard implements OnInit {
     private authService: AuthService
   ) {
     this.nombreUsuario = this.authService.getNombreUsuario();
+
+    alCambiar(['actividades'], () => this.cargarActividades());
   }
 
   // =========================================================
@@ -74,6 +77,10 @@ export class VoluntarioDashboard implements OnInit {
   // =========================================================
 
   ngOnInit(): void {
+    this.cargarActividades();
+  }
+
+  private cargarActividades(): void {
     this.actividadService.listar().subscribe((actividades) =>
       this.actividades.set(actividades)
     );

@@ -13,6 +13,7 @@ import {
 import { AuthService } from '../../../../core/auth/auth.service';
 import { OrganizacionService } from '../../../../core/organizacion/organizacion.service';
 import { Icon } from '../../../../shared/icon/icon';
+import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
 @Component({
   selector: 'app-actividades',
@@ -81,6 +82,22 @@ constructor(
   private route: ActivatedRoute
 ) {
     this.nombreUsuario.set(this.authService.getNombreUsuario());
+
+    // Inscripciones nuevas, cambios en otra pestaña, etc. Si el modal de
+    // participantes está abierto, también se actualiza.
+    alCambiar(['actividades'], () => {
+      this.cargarActividades(false);
+
+      const actividad = this.actividadParticipantes();
+      if (actividad) {
+        this.actividadService.listarParticipantes(actividad.idActividad).subscribe({
+          next: (participantes) => this.participantes.set(participantes),
+          error: (error) => console.error('Error al recargar participantes:', error)
+        });
+      }
+    });
+
+    alCambiar(['usuarios'], () => this.cargarInformacionOrganizacion());
   }
 
 ngOnInit(): void {
@@ -108,8 +125,10 @@ ngOnInit(): void {
     });
   }
 
-  private cargarActividades(): void {
-    this.cargando.set(true);
+  private cargarActividades(mostrarCargando = true): void {
+    if (mostrarCargando) {
+      this.cargando.set(true);
+    }
     this.error.set(null);
 
     this.actividadService.listarMias().subscribe({

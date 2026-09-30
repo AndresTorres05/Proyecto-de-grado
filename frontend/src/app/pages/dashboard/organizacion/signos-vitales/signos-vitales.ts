@@ -7,6 +7,7 @@ import {
   SignoVitalRequest,
   PersonaMayor,
 } from '../../../../core/signos-vitales/signos-vitales.services';
+import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
 
 @Component({
@@ -43,12 +44,19 @@ export class SignosVitales implements OnInit {
   mostrarConfirmacion = false;
   personaSeleccionada: PersonaMayor | null = null;
 
+  constructor() {
+    // Personas asociadas/desasociadas o que cambiaron de nombre
+    alCambiar(['organizaciones', 'usuarios'], () => this.cargarPersonasMayores(false));
+  }
+
   ngOnInit(): void {
     this.cargarPersonasMayores();
   }
 
-  cargarPersonasMayores(): void {
-    this.cargandoPersonas = true;
+  cargarPersonasMayores(mostrarCargando = true): void {
+    if (mostrarCargando) {
+      this.cargandoPersonas = true;
+    }
     this.mensajeError = '';
 
     this.signosVitalesService.listarPersonasMayores().subscribe({

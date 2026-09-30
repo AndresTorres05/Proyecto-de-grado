@@ -17,6 +17,7 @@ import { Icon } from '../../../../shared/icon/icon';
 import { PersonCard } from '../../../../shared/person-card/person-card';
 import { CancelarAsociacion } from '../../../../shared/cancelar-asociacion/cancelar-asociacion';
 import { SignosVitalesModal } from '../../../../shared/signos-vitales-modal/signos-vitales-modal';
+import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
 @Component({
   selector: 'app-personas-mayores',
@@ -72,7 +73,30 @@ constructor(
   private organizacionService: OrganizacionService,
   private signosVitalesService: SignosVitalesService,
   private route: ActivatedRoute
-) {}
+) {
+  alCambiar(['organizaciones', 'usuarios'], () => this.cargarPersonasMayores());
+
+  // Modales abiertos: se actualizan en vivo sin mostrar "cargando"
+  alCambiar(['acompanamientos', 'usuarios'], () => {
+    const persona = this.personaMayorSeleccionada;
+    if (this.mostrandoAcompanantes() && persona) {
+      this.organizacionService.obtenerAcompanantesPersonaMayor(persona.idUsuario).subscribe({
+        next: (acompanantes) => this.acompanantes.set(acompanantes),
+        error: (error) => console.error('Error al recargar acompañantes:', error)
+      });
+    }
+  });
+
+  alCambiar(['signos-vitales'], () => {
+    const persona = this.personaMayorSeleccionada;
+    if (this.mostrandoSignosVitales() && persona) {
+      this.signosVitalesService.listarUltimos(persona.idUsuario).subscribe({
+        next: (registros) => this.signosVitales.set(registros),
+        error: (error) => console.error('Error al recargar signos vitales:', error)
+      });
+    }
+  });
+}
 
 ngOnInit(): void {
   this.cargarPersonasMayores();

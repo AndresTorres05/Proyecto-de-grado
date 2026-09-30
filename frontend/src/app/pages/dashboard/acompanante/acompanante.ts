@@ -14,6 +14,7 @@ import {
 } from '../../../core/acompanantes/acompanante.service';
 
 import { AuthService } from '../../../core/auth/auth.service';
+import { alCambiar } from '../../../core/tiempo-real/tiempo-real.service';
 
 import { PANEL_CONFIG } from '../../../shared/panel-config/panel-config';
 
@@ -73,6 +74,9 @@ export class AcompananteDashboard implements OnInit {
     private authService: AuthService
   ) {
     this.nombreUsuario = this.authService.getNombreUsuario();
+
+    alCambiar(['actividades'], () => this.cargarActividades());
+    alCambiar(['acompanamientos', 'usuarios'], () => this.cargarPersonasMayores());
   }
 
   // =========================================================
@@ -80,11 +84,17 @@ export class AcompananteDashboard implements OnInit {
   // =========================================================
 
   ngOnInit(): void {
+    this.cargarActividades();
+    this.cargarPersonasMayores();
+  }
 
+  private cargarActividades(): void {
     this.actividadService.listar().subscribe((actividades) =>
       this.actividades.set(actividades)
     );
+  }
 
+  private cargarPersonasMayores(): void {
     this.acompananteService.obtenerPersonasMayores().subscribe(
       (personasMayores) =>
         this.personasMayores.set(personasMayores)

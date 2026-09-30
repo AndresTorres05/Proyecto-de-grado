@@ -5,6 +5,7 @@ import {
   ActividadService,
   Actividad
 } from '../../../../core/actividades/actividad.service';
+import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
 @Component({
   selector: 'app-actividades-acompanante',
@@ -22,17 +23,21 @@ export class ActividadesComponent implements OnInit {
   constructor(
     private actividadService: ActividadService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    alCambiar(['actividades'], () => this.cargarActividades(false));
+  }
 
   ngOnInit(): void {
     console.log('🚀 ACTIVIDADES COMPONENTE CREADO');
     this.cargarActividades();
   }
 
-  cargarActividades(): void {
+  cargarActividades(mostrarCargando = true): void {
     console.log('🟡 1. Entrando a cargarActividades');
 
-    this.cargando = true;
+    if (mostrarCargando) {
+      this.cargando = true;
+    }
     this.error = '';
 
     this.actividadService.listar().subscribe({

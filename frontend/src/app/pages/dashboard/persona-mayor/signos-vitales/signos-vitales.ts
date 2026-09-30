@@ -5,6 +5,7 @@ import {
   SignoVitalResponse
 } from '../../../../core/signos-vitales/signos-vitales.services';
 import { SignosVitalesLista } from '../../../../shared/signos-vitales-lista/signos-vitales-lista';
+import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
 /**
  * Historial de signos vitales de la persona mayor. Usa la misma lista
@@ -24,10 +25,19 @@ export class SignosVitalesPersonaMayor implements OnInit {
   protected readonly cargando = signal(true);
   protected readonly error = signal<string | null>(null);
 
+  constructor() {
+    alCambiar(['signos-vitales'], () => this.cargar());
+  }
+
   ngOnInit(): void {
+    this.cargar();
+  }
+
+  private cargar(): void {
     this.signosVitalesService.listarPropios().subscribe({
       next: (registros) => {
         this.registros.set(registros);
+        this.error.set(null);
         this.cargando.set(false);
       },
       error: (error) => {

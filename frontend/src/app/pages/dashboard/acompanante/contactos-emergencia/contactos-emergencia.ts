@@ -7,6 +7,7 @@ import {
 } from '../../../../core/acompanantes/acompanante.service';
 import { Icon } from '../../../../shared/icon/icon';
 import { PersonCard } from '../../../../shared/person-card/person-card';
+import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
 @Component({
   selector: 'app-contactos-emergencia',
@@ -32,7 +33,9 @@ export class ContactosEmergencia implements OnInit {
   constructor(
     private acompananteService: AcompananteService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    alCambiar(['acompanamientos', 'usuarios'], () => this.recargar());
+  }
 
   ngOnInit(): void {
     this.cargarPersonasMayores();
@@ -82,6 +85,32 @@ export class ContactosEmergencia implements OnInit {
   }
 
   // =========================================================
+  // RECARGAR SIN PERDER LA SELECCIÓN (cambios de otros usuarios)
+  // =========================================================
+
+  private recargar(): void {
+    this.acompananteService.obtenerPersonasMayores().subscribe({
+      next: (data) => {
+        this.personasMayores = data;
+
+        const idSeleccionada = this.personaSeleccionada?.idUsuario;
+        this.personaSeleccionada =
+          data.find((p) => p.idUsuario === idSeleccionada)
+          ?? (data.length === 1 ? data[0] : null);
+
+        if (this.personaSeleccionada) {
+          this.cargarContactos(this.personaSeleccionada.idUsuario, false);
+        } else {
+          this.contactos = [];
+        }
+
+        this.cdr.detectChanges();
+      },
+      error: (error) => console.error('Error al recargar las personas mayores:', error)
+    });
+  }
+
+  // =========================================================
   // SELECCIONAR PERSONA MAYOR
   // =========================================================
 
@@ -101,10 +130,13 @@ export class ContactosEmergencia implements OnInit {
   // =========================================================
 
   cargarContactos(
-    idPersonaMayor: number
+    idPersonaMayor: number,
+    mostrarCargando = true
   ): void {
 
-    this.cargandoContactos = true;
+    if (mostrarCargando) {
+      this.cargandoContactos = true;
+    }
     this.errorContactos = '';
 
     this.acompananteService

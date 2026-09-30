@@ -9,6 +9,7 @@ import { Icon } from '../../../../shared/icon/icon';
 import { PersonCard } from '../../../../shared/person-card/person-card';
 import { CancelarAsociacion } from '../../../../shared/cancelar-asociacion/cancelar-asociacion';
 import { SignosVitalesModal } from '../../../../shared/signos-vitales-modal/signos-vitales-modal';
+import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
 @Component({
   selector: 'app-mis-personas-mayores',
@@ -35,7 +36,19 @@ export class MisPersonasMayores implements OnInit {
   constructor(
     private acompananteService: AcompananteService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    alCambiar(['acompanamientos', 'usuarios'], () => {
+      this.cargarPersonasMayores();
+      this.cargarSolicitudes();
+    });
+
+    // Si el modal de signos vitales está abierto, se actualiza en vivo
+    alCambiar(['signos-vitales'], () => {
+      if (this.personaSignosVitales) {
+        this.cargarSignosVitales(this.personaSignosVitales.idUsuario);
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.cargarPersonasMayores();
@@ -138,7 +151,11 @@ export class MisPersonasMayores implements OnInit {
     this.errorSignosVitales = null;
     this.cargandoSignosVitales = true;
 
-    this.acompananteService.obtenerSignosVitalesSeguimiento(persona.idUsuario).subscribe({
+    this.cargarSignosVitales(persona.idUsuario);
+  }
+
+  private cargarSignosVitales(idPersonaMayor: number): void {
+    this.acompananteService.obtenerSignosVitalesSeguimiento(idPersonaMayor).subscribe({
       next: (registros) => {
         this.signosVitales = registros;
         this.cargandoSignosVitales = false;

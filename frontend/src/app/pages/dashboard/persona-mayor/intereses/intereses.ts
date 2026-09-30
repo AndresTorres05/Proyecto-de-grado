@@ -7,6 +7,7 @@ import {
   Gusto,
   CategoriaGusto
 } from '../../../../core/gustos/gusto.service';
+import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 import { Icon } from '../../../../shared/icon/icon';
 
 interface CategoriaTab {
@@ -93,7 +94,13 @@ export class Intereses implements OnInit {
   constructor(
     private authService: AuthService,
     private gustoService: GustoService
-  ) {}
+  ) {
+    // Solo se refresca el catálogo: la selección puede tener cambios
+    // sin guardar que no se deben perder.
+    alCambiar(['gustos'], () =>
+      this.gustoService.listar().subscribe((gustos) => this.gustosDisponibles.set(gustos))
+    );
+  }
 
   ngOnInit(): void {
     const idPersonaMayor = this.authService.getIdUsuario();

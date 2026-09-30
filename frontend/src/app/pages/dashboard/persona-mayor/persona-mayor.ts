@@ -8,6 +8,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { ActividadService, ActividadDisponible } from '../../../core/actividades/actividad.service';
 import { AcompananteService, Acompanante } from '../../../core/acompanantes/acompanante.service';
 import { EmergenciaService } from '../../../core/emergencia/emergencia.service';
+import { alCambiar } from '../../../core/tiempo-real/tiempo-real.service';
 import {
   SignosVitalesService,
   SignoVitalResponse
@@ -100,38 +101,56 @@ export class PersonaMayorDashboard implements OnInit, OnDestroy {
     private signosVitalesService: SignosVitalesService
   ) {
     this.nombreUsuario = this.authService.getNombreUsuario();
+
+    alCambiar(['medicamentos'], () => this.cargarMedicamentos());
+    alCambiar(['actividades'], () => this.cargarActividades());
+    alCambiar(['acompanamientos', 'usuarios'], () => this.cargarAcompanante());
+    alCambiar(['signos-vitales'], () => this.cargarSignosVitales());
   }
 
   ngOnInit(): void {
     this.intervaloReloj = setInterval(() => this.ahora.set(new Date()), MINUTO);
 
+    this.cargarMedicamentos();
+    this.cargarActividades();
+    this.cargarAcompanante();
+    this.cargarSignosVitales();
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.intervaloReloj);
+  }
+
+  private cargarMedicamentos(): void {
     this.medicamentoService.listar().subscribe({
       next: (medicamentos) => this.medicamentos.set(medicamentos),
       complete: () => this.terminarCargaAgenda(),
       error: () => this.terminarCargaAgenda()
     });
+  }
 
+  private cargarActividades(): void {
     this.actividadService.listarDisponibles().subscribe({
       next: (actividades) => this.actividades.set(actividades.filter((a) => a.inscrito)),
       complete: () => this.terminarCargaAgenda(),
       error: () => this.terminarCargaAgenda()
     });
+  }
 
+  private cargarAcompanante(): void {
     this.acompananteService.obtenerAcompanantes().subscribe({
       next: (acompanantes) => this.acompanante.set(acompanantes[0] ?? null),
       complete: () => this.cargandoAcompanante.set(false),
       error: () => this.cargandoAcompanante.set(false)
     });
+  }
 
+  private cargarSignosVitales(): void {
     this.signosVitalesService.listarPropios().subscribe({
       next: (registros) => this.ultimoSignoVital.set(registros[0] ?? null),
       complete: () => this.cargandoSignos.set(false),
       error: () => this.cargandoSignos.set(false)
     });
-  }
-
-  ngOnDestroy(): void {
-    clearInterval(this.intervaloReloj);
   }
 
   private terminarCargaAgenda(): void {
