@@ -63,18 +63,6 @@ const ICONS: Record<string, string> = {
   plus: '<path d="M12 5v14M5 12h14"/>',
   'map-pin':
     '<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z"/><circle cx="12" cy="10" r="2.3"/>',
-  'file-text':
-    '<path d="M14.5 3H7a1.5 1.5 0 0 0-1.5 1.5v15A1.5 1.5 0 0 0 7 21h10a1.5 1.5 0 0 0 1.5-1.5V7Z"/><path d="M14 3v4.5h4.5"/><path d="M9 9h2M9 13h6M9 17h6"/>',
-  'trending-down': '<path d="m3 7 6.5 6.5 4-4L21 17"/><path d="M15 17h6v-6"/>',
-  lightbulb:
-    '<path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/>',
-  handshake:
-    '<path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/>',
-  smartphone: '<rect x="6.5" y="2.5" width="11" height="19" rx="2"/><path d="M11 18h2"/>',
-  monitor:
-    '<rect x="2.5" y="4" width="19" height="12.5" rx="1.5"/><path d="M8 20.5h8"/><path d="M12 16.5v4"/>',
-  frown:
-    '<circle cx="12" cy="12" r="8.5"/><path d="M8.5 16a4.5 4.5 0 0 1 7 0"/><path d="M9 9.5h.01M15 9.5h.01"/>',
 
   // ---------- Íconos de gustos / talentos / hobbies ----------
   book: '<path d="M3.5 5.5c2-1 5-1 7 .5v13c-2-1.5-5-1.5-7-.5Z"/><path d="M20.5 5.5c-2-1-5-1-7 .5v13c2-1.5 5-1.5 7-.5Z"/>',
