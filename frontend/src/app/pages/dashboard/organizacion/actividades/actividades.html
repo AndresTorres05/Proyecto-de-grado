@@ -45,7 +45,7 @@
 
         <div class="empty-state">
 
-          <div class="empty-icon">📅</div>
+          <div class="empty-icon"><app-icon name="calendar" /></div>
 
           <h3>No hay próximas actividades</h3>
 
@@ -126,7 +126,7 @@
                     @if (actividad.fecha) {
 
                       <span>
-                        📅
+                        <app-icon name="calendar" />
                         {{ actividad.fecha | date:'EEEE, d \'de\' MMMM':'':'es-CO' }}
                       </span>
 
@@ -136,7 +136,7 @@
                     @if (actividad.hora) {
 
                       <span>
-                        🕐 {{ actividad.hora }}
+                        <app-icon name="clock" /> {{ actividad.hora }}
                       </span>
 
                     }
@@ -145,7 +145,7 @@
                     @if (actividad.lugar) {
 
                       <span>
-                        📍 {{ actividad.lugar }}
+                        <app-icon name="map-pin" /> {{ actividad.lugar }}
                       </span>
 
                     }
@@ -154,7 +154,7 @@
                     @if (actividad.cupos !== null) {
 
                       <span>
-                        👥 {{ actividad.cupos }} cupos
+                        <app-icon name="users" /> {{ actividad.cupos }} cupos
                       </span>
 
                     }
@@ -299,7 +299,7 @@
                     @if (actividad.fecha) {
 
                       <span>
-                        📅
+                        <app-icon name="calendar" />
                         {{ actividad.fecha | date:'EEEE, d \'de\' MMMM':'':'es-CO' }}
                       </span>
 
@@ -309,7 +309,7 @@
                     @if (actividad.hora) {
 
                       <span>
-                        🕐 {{ actividad.hora }}
+                        <app-icon name="clock" /> {{ actividad.hora }}
                       </span>
 
                     }
@@ -318,7 +318,7 @@
                     @if (actividad.lugar) {
 
                       <span>
-                        📍 {{ actividad.lugar }}
+                        <app-icon name="map-pin" /> {{ actividad.lugar }}
                       </span>
 
                     }
@@ -327,7 +327,7 @@
                     @if (actividad.cupos !== null) {
 
                       <span>
-                        👥 {{ actividad.cupos }} cupos
+                        <app-icon name="users" /> {{ actividad.cupos }} cupos
                       </span>
 
                     }
@@ -940,7 +940,7 @@
   <div class="empty-state compact">
 
     <div class="empty-icon">
-      👥
+      <app-icon name="users" />
     </div>
 
     <h3>
@@ -999,7 +999,7 @@
     @if (participante.asistio === true) {
 
       <span class="attendance-status attended">
-        ✓ Asistió
+        <app-icon name="check" /> Asistió
       </span>
 
     } @else if (participante.asistio === false) {
@@ -1021,7 +1021,7 @@
     @if (participante.asistio === true) {
 
       <span class="attendance-status attended">
-        ✓ Asistió
+        <app-icon name="check" /> Asistió
       </span>
 
       <button
@@ -1057,7 +1057,7 @@
         class="attendance-button attended"
         (click)="registrarAsistencia(participante, true)"
       >
-        ✓ Asistió
+        <app-icon name="check" /> Asistió
       </button>
 
       <button
@@ -1118,7 +1118,7 @@
 
   <div class="confirmation-message">
     <div class="confirmation-icon">
-      ✓
+      <app-icon name="check" />
     </div>
 
     <div>

@@ -6,11 +6,12 @@ import {
   Actividad
 } from '../../../../core/actividades/actividad.service';
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
+import { Icon } from '../../../../shared/icon/icon';
 
 @Component({
   selector: 'app-actividades-acompanante',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, Icon],
   templateUrl: './actividades.html',
   styleUrl: './actividades.css'
 })
@@ -28,12 +29,12 @@ export class ActividadesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('🚀 ACTIVIDADES COMPONENTE CREADO');
+    console.log('ACTIVIDADES COMPONENTE CREADO');
     this.cargarActividades();
   }
 
   cargarActividades(mostrarCargando = true): void {
-    console.log('🟡 1. Entrando a cargarActividades');
+    console.log('1. Entrando a cargarActividades');
 
     if (mostrarCargando) {
       this.cargando = true;
@@ -43,12 +44,12 @@ export class ActividadesComponent implements OnInit {
     this.actividadService.listar().subscribe({
       next: (actividades) => {
 
-        console.log('🔵 2. RESPUESTA RECIBIDA:', actividades);
+        console.log('2. RESPUESTA RECIBIDA:', actividades);
 
         this.actividades = actividades;
         this.cargando = false;
 
-        console.log('🟢 Estado actualizado:', {
+        console.log('Estado actualizado:', {
           cantidad: this.actividades.length,
           cargando: this.cargando
         });
@@ -58,7 +59,7 @@ export class ActividadesComponent implements OnInit {
       },
 
       error: (error) => {
-        console.error('🔴 ERROR:', error);
+        console.error('ERROR:', error);
 
         this.error = 'No se pudieron cargar las actividades.';
         this.cargando = false;

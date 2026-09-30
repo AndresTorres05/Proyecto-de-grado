@@ -3,12 +3,14 @@ import { CommonModule, DatePipe, registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es-CO';
 import { ActividadService, ActividadDisponible } from '../../../../core/actividades/actividad.service';
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
+import { Icon } from '../../../../shared/icon/icon';
 
 registerLocaleData(localeEs);
 
 @Component({
   selector: 'app-actividades',
   standalone: true,
+  imports: [Icon],
   templateUrl: './actividades.html',
   styleUrl: './actividades.css'
 })

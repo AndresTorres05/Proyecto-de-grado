@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { Icon } from '../../../../shared/icon/icon';
 
 @Component({
   selector: 'app-hero',
-  imports: [],
+  imports: [Icon],
   templateUrl: './hero.html',
   styleUrl: './hero.css'
 })
@@ -14,11 +15,11 @@ export class Hero {
   ];
 
   protected readonly floatCards = [
-    { icon: '🔔', label: 'Recordatorio', text: 'Medicación 14:00', accent: false },
-    { icon: '🏃', label: 'Actividad', text: 'Fisioterapia', accent: true },
-    { icon: '📊', label: 'Indicador', text: 'Todo en orden', accent: false },
-    { icon: '🖥️', label: 'Dashboard', text: 'Ver en vivo', accent: false },
-    { icon: '⚠️', label: 'Alerta', text: 'Revisar visita', accent: true }
+    { icon: 'bell', label: 'Recordatorio', text: 'Medicación 14:00', accent: false },
+    { icon: 'activity', label: 'Actividad', text: 'Fisioterapia', accent: true },
+    { icon: 'bar-chart', label: 'Indicador', text: 'Todo en orden', accent: false },
+    { icon: 'monitor', label: 'Dashboard', text: 'Ver en vivo', accent: false },
+    { icon: 'alert-triangle', label: 'Alerta', text: 'Revisar visita', accent: true }
   ];
 
   protected readonly rolePills = [

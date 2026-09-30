@@ -93,7 +93,7 @@
             </span>
 
             <span class="opcion-card__check">
-              @if (estaSeleccionado(gusto.idGusto)) { ✓ } @else { + }
+              @if (estaSeleccionado(gusto.idGusto)) { <app-icon name="check" /> } @else { <app-icon name="plus" /> }
             </span>
           </button>
         } @empty {

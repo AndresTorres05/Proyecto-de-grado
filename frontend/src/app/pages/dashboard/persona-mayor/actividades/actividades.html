@@ -5,7 +5,7 @@
 
 @if (cargando()) {
   <div class="estado-card">
-    <span class="estado-card__icon">⏳</span>
+    <span class="estado-card__icon"><app-icon name="hourglass" /></span>
     <div>
       <h2>Cargando actividades...</h2>
     </div>
@@ -14,7 +14,7 @@
 
 @if (error()) {
   <div class="error-message">
-    <span>⚠️</span>
+    <app-icon name="alert-triangle" />
     {{ error() }}
   </div>
 }
@@ -24,7 +24,7 @@
     @for (actividad of actividades(); track actividad.idActividad) {
       <div class="actividad-card card" [class.actividad-card--inscrito]="actividad.inscrito">
         <div class="actividad-card__top">
-          <span class="actividad-card__icon" aria-hidden="true">🏃</span>
+          <span class="actividad-card__icon" aria-hidden="true"><app-icon name="activity" /></span>
           @if (actividad.inscrito) {
             <span class="actividad-card__badge actividad-card__badge--inscrito">Inscrito</span>
           } @else if (actividad.tipo) {
@@ -58,7 +58,7 @@
       </div>
     } @empty {
       <div class="empty-card">
-        <span>🏃</span>
+        <span><app-icon name="activity" /></span>
         <h3>Aún no hay actividades disponibles</h3>
         <p>Cuando una organización publique una actividad, la verás aquí.</p>
       </div>

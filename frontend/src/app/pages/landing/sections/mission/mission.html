@@ -14,7 +14,7 @@
     <div class="mission-grid">
       @for (pillar of pillars; track pillar.title) {
         <div class="mission-card">
-          <div class="mission-card__icon">{{ pillar.icon }}</div>
+          <div class="mission-card__icon"><app-icon [name]="pillar.icon" /></div>
           <h3>{{ pillar.title }}</h3>
           <p>{{ pillar.text }}</p>
         </div>

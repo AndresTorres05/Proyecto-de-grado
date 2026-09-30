@@ -8,12 +8,13 @@ import {
   PersonaMayor,
 } from '../../../../core/signos-vitales/signos-vitales.services';
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
+import { Icon } from '../../../../shared/icon/icon';
 
 
 @Component({
   selector: 'app-signos-vitales',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, Icon],
   templateUrl: './signos-vitales.html',
   styleUrl: './signos-vitales.css',
 })
