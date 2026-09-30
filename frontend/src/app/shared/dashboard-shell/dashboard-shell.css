@@ -385,6 +385,11 @@
   color: var(--vita-orange);
 }
 
+.shell__user-menu .shell__menu-logout,
+.shell__user-menu .shell__menu-logout:hover {
+  color: #dc2626;
+}
+
 .shell__user-menu button + button {
   border-top: 1px solid var(--vita-border);
 }

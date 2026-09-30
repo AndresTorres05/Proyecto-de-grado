@@ -101,9 +101,16 @@ export class DashboardShell implements OnInit, OnDestroy {
     }
   }
 
-  // Cierra el panel al hacer clic fuera de la campanita
+  // Cierra el panel de la campanita o el menú del usuario al hacer clic fuera
   @HostListener('document:click', ['$event'])
   protected cerrarPanelSiClicFuera(evento: MouseEvent): void {
+    if (this.menuUsuarioAbierto) {
+      const usuario = this.elementRef.nativeElement.querySelector('.shell__user');
+      if (usuario && !usuario.contains(evento.target as Node)) {
+        this.menuUsuarioAbierto = false;
+      }
+    }
+
     if (!this.panelNotificacionesAbierto()) {
       return;
     }
