@@ -15,7 +15,6 @@ import { PANEL_CONFIG } from '../panel-config/panel-config';
       [userName]="nombreUsuario()"
       [userInitials]="iniciales()"
       [navItems]="navItems"
-      [notifCount]="1"
       [accessible]="true"
     >
       <router-outlet></router-outlet>

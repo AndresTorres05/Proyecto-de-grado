@@ -15,6 +15,7 @@ export type Recurso =
   | 'acompanamientos'   // persona mayor <-> acompañante, solicitudes, contactos
   | 'organizaciones'    // persona mayor <-> organización, solicitudes
   | 'gustos'
+  | 'notificaciones'    // SMS de emergencia enviados, notificaciones leídas
   | 'usuarios';         // nombres/datos de perfil, registros nuevos
 
 // "*" = recargar todo (cuenta eliminada o reconexión tras un corte).

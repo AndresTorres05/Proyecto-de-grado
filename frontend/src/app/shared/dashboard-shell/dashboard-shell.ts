@@ -1,7 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnDestroy, OnInit, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 import { Icon } from '../icon/icon';
+import { alCambiar } from '../../core/tiempo-real/tiempo-real.service';
+import { Notificacion, NotificacionService } from '../../core/notificaciones/notificacion.service';
 
 export interface ShellNavItem {
   /** Nombre de icono (ver set en shared/icon/icon.ts). */
@@ -29,25 +31,106 @@ const RUTA_MI_INFORMACION: Record<string, string> = {
     '[class.shell-host--accessible]': 'accessible'
   }
 })
-export class DashboardShell {
+export class DashboardShell implements OnInit, OnDestroy {
 
   @Input() roleLabel = '';
   @Input() roleAccent = 'var(--vita-navy)';
   @Input() userName = '';
   @Input() userInitials = '';
   @Input() navItems: ShellNavItem[] = [];
-  @Input() notifCount = 0;
   @Input() accessible = false;
 
   menuUsuarioAbierto = false;
 
+  // ---------- Notificaciones (campanita) ----------
+  protected readonly notificaciones = signal<Notificacion[]>([]);
+  protected readonly noLeidas = signal(0);
+  protected readonly panelNotificacionesAbierto = signal(false);
+  protected readonly errorNotificaciones = signal(false);
+  private intervaloNotificaciones?: ReturnType<typeof setInterval>;
+
   constructor(
     private authService: AuthService,
-    private router: Router
-  ) {}
+    private notificacionService: NotificacionService,
+    private router: Router,
+    private elementRef: ElementRef<HTMLElement>
+  ) {
+    // Emergencias y notificaciones leídas en otra pestaña llegan al instante
+    alCambiar(['notificaciones'], () => this.cargarNotificaciones());
+  }
+
+  ngOnInit(): void {
+    this.cargarNotificaciones();
+
+    // Los recordatorios los envían tareas programadas del backend, que no
+    // generan aviso en tiempo real: se consultan cada minuto.
+    this.intervaloNotificaciones = setInterval(() => this.cargarNotificaciones(), 60_000);
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.intervaloNotificaciones);
+  }
+
+  private cargarNotificaciones(): void {
+    this.notificacionService.listar().subscribe({
+      next: (respuesta) => {
+        this.notificaciones.set(respuesta.notificaciones);
+        this.noLeidas.set(respuesta.noLeidas);
+        this.errorNotificaciones.set(false);
+      },
+      error: () => this.errorNotificaciones.set(true)
+    });
+  }
+
+  toggleNotificaciones(): void {
+    const abrir = !this.panelNotificacionesAbierto();
+    this.panelNotificacionesAbierto.set(abrir);
+    this.menuUsuarioAbierto = false;
+
+    // Al abrir, todas quedan leídas. La lista conserva su marca de "nueva"
+    // mientras el panel siga abierto, para que se vea cuáles eran.
+    if (abrir && this.noLeidas() > 0) {
+      this.noLeidas.set(0);
+      this.notificacionService.marcarLeidas().subscribe({
+        error: () => this.cargarNotificaciones()
+      });
+    }
+
+    if (!abrir) {
+      this.notificaciones.update((lista) => lista.map((n) => ({ ...n, leida: true })));
+    }
+  }
+
+  // Cierra el panel al hacer clic fuera de la campanita
+  @HostListener('document:click', ['$event'])
+  protected cerrarPanelSiClicFuera(evento: MouseEvent): void {
+    if (!this.panelNotificacionesAbierto()) {
+      return;
+    }
+
+    const campanita = this.elementRef.nativeElement.querySelector('.shell__notif');
+    if (campanita && !campanita.contains(evento.target as Node)) {
+      this.toggleNotificaciones();
+    }
+  }
+
+  // "Hoy, 3:05 p. m.", "Ayer, 8:00 a. m." o "12 sep, 8:00 a. m."
+  protected formatearFecha(fechaIso: string): string {
+    const fecha = new Date(fechaIso);
+    const hora = fecha.toLocaleTimeString('es-CO', { hour: 'numeric', minute: '2-digit' });
+
+    const hoy = new Date();
+    const ayer = new Date(hoy.getTime() - 24 * 60 * 60 * 1000);
+
+    if (fecha.toDateString() === hoy.toDateString()) return `Hoy, ${hora}`;
+    if (fecha.toDateString() === ayer.toDateString()) return `Ayer, ${hora}`;
+
+    return `${fecha.toLocaleDateString('es-CO', { day: 'numeric', month: 'short' })}, ${hora}`;
+  }
 
   toggleMenuUsuario(): void {
     this.menuUsuarioAbierto = !this.menuUsuarioAbierto;
+    this.panelNotificacionesAbierto.set(false);
   }
 
   cerrarSesion(): void {

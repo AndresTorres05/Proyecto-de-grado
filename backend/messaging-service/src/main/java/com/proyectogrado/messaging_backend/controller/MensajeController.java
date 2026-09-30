@@ -1,5 +1,7 @@
 package com.proyectogrado.messaging_backend.controller;
 
+import com.proyectogrado.messaging_backend.model.Notificacion;
+import com.proyectogrado.messaging_backend.repository.NotificacionRepository;
 import com.proyectogrado.messaging_backend.security.TextBeeOtpService;
 
 import org.springframework.http.HttpStatus;
@@ -27,9 +29,14 @@ import java.util.Map;
 public class MensajeController {
 
     private final TextBeeOtpService textBeeOtpService;
+    private final NotificacionRepository notificacionRepository;
 
-    public MensajeController(TextBeeOtpService textBeeOtpService) {
+    public MensajeController(
+            TextBeeOtpService textBeeOtpService,
+            NotificacionRepository notificacionRepository
+    ) {
         this.textBeeOtpService = textBeeOtpService;
+        this.notificacionRepository = notificacionRepository;
     }
 
     @PostMapping("/enviar")
@@ -40,6 +47,15 @@ public class MensajeController {
 
         try {
             textBeeOtpService.enviarMensaje(celular, mensaje);
+
+            // Se guarda para la campanita del panel. Si falla el guardado,
+            // el SMS ya salió: no se reporta como error del envío.
+            try {
+                notificacionRepository.save(new Notificacion(celular, mensaje));
+            } catch (Exception e) {
+                System.out.println("No se pudo guardar la notificacion: " + e.getMessage());
+            }
+
             return ResponseEntity.ok(Map.of("success", true));
 
         } catch (IllegalArgumentException e) {

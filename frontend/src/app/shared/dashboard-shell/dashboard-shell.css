@@ -201,6 +201,106 @@
   justify-content: center;
 }
 
+/* ---------- Notificaciones (campanita) ---------- */
+
+.shell__notif {
+  position: relative;
+}
+
+.shell__notif .shell__icon-btn {
+  cursor: pointer;
+}
+
+.shell__notif-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: min(360px, calc(100vw - 32px));
+  background: var(--vita-white);
+  border: 1px solid var(--vita-border);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  z-index: 100;
+}
+
+.shell__notif-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--vita-border);
+}
+
+.shell__notif-header h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--vita-navy);
+}
+
+.shell__notif-header p {
+  margin: 2px 0 0;
+  font-size: 0.8rem;
+  color: var(--vita-text-gray);
+}
+
+.shell__notif-lista {
+  max-height: 380px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shell__notif-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--vita-border);
+}
+
+.shell__notif-item:last-child {
+  border-bottom: none;
+}
+
+.shell__notif-item--nueva {
+  background: color-mix(in srgb, var(--vita-secundario) 10%, white);
+}
+
+.shell__notif-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--vita-cream);
+  color: var(--vita-navy);
+}
+
+.shell__notif-mensaje {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: var(--vita-navy);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.shell__notif-fecha {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: var(--vita-text-gray-light);
+}
+
+.shell__notif-vacio {
+  margin: 0;
+  padding: 24px 16px;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--vita-text-gray);
+}
+
 .shell__user {
   position: relative;
   display: flex;

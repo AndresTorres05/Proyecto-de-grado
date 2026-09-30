@@ -31,7 +31,7 @@ public class PublicarCambiosGlobalFilter implements GlobalFilter, Ordered {
             Set.of(HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.PATCH);
 
     // Se usa la primera coincidencia. Las rutas que no aparecen (login,
-    // OTP, contrasena, emergencia) no cambian datos que vean otros.
+    // OTP, contrasena) no cambian datos que vean otros.
     // "*" = cambia de todo (al borrar una cuenta se borran sus relaciones).
     private static final Map<String, String> RECURSOS_POR_RUTA = new LinkedHashMap<>();
 
@@ -58,6 +58,13 @@ public class PublicarCambiosGlobalFilter implements GlobalFilter, Ordered {
 
         RECURSOS_POR_RUTA.put("/api/gustos/**", "gustos");
         RECURSOS_POR_RUTA.put("/api/persona-mayor/*/gustos", "gustos");
+
+        // La emergencia envía SMS a los acompañantes: se avisa para que su
+        // campanita se actualice al instante. Los recordatorios los envían
+        // tareas programadas (no pasan por aquí); el frontend los consulta
+        // cada minuto.
+        RECURSOS_POR_RUTA.put("/api/persona-mayor/emergencia", "notificaciones");
+        RECURSOS_POR_RUTA.put("/api/notificaciones/**", "notificaciones");
     }
 
     private final AntPathMatcher matcher = new AntPathMatcher();

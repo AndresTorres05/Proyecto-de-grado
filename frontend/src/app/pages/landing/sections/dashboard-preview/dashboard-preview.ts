@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Icon } from '../../../../shared/icon/icon';
 
 interface DashboardStat {
   icon: string;
@@ -10,32 +9,32 @@ interface DashboardStat {
 
 @Component({
   selector: 'app-dashboard-preview',
-  imports: [Icon],
+  imports: [],
   templateUrl: './dashboard-preview.html',
   styleUrl: './dashboard-preview.css'
 })
 export class DashboardPreview {
   protected readonly stats: DashboardStat[] = [
     {
-      icon: 'users',
+      icon: '👥',
       value: '2,210',
       delta: '+12%',
       label: 'Personas mayores registradas'
     },
     {
-      icon: 'handshake',
+      icon: '🤝',
       value: '740',
       delta: '+8%',
       label: 'Acompañantes activos'
     },
     {
-      icon: 'star',
+      icon: '⭐',
       value: '460',
       delta: '+15%',
       label: 'Voluntarios en programa'
     },
     {
-      icon: 'building',
+      icon: '🏥',
       value: '38',
       delta: '+3%',
       label: 'Instituciones aliadas'

@@ -34,7 +34,7 @@
         @for (stat of stats; track stat.label) {
           <div class="dashboard-stats__card">
             <div class="dashboard-stats__top">
-              <span class="dashboard-stats__icon"><app-icon [name]="stat.icon" /></span>
+              <span class="dashboard-stats__icon">{{ stat.icon }}</span>
               <span class="dashboard-stats__delta">{{ stat.delta }}</span>
             </div>
             <div class="dashboard-stats__value">{{ stat.value }}</div>

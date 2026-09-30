@@ -52,12 +52,49 @@
       </div>
 
       <div class="shell__topbar-right">
-        <button class="shell__icon-btn" type="button" aria-label="Notificaciones">
-          <span aria-hidden="true"><app-icon name="bell" /></span>
-          @if (notifCount > 0) {
-            <span class="shell__badge">{{ notifCount }}</span>
+        <div class="shell__notif">
+          <button
+            class="shell__icon-btn"
+            type="button"
+            [attr.aria-label]="noLeidas() > 0 ? 'Notificaciones, ' + noLeidas() + ' sin leer' : 'Notificaciones'"
+            [attr.aria-expanded]="panelNotificacionesAbierto()"
+            (click)="toggleNotificaciones()"
+          >
+            <span aria-hidden="true"><app-icon name="bell" /></span>
+            @if (noLeidas() > 0) {
+              <span class="shell__badge">{{ noLeidas() > 9 ? '9+' : noLeidas() }}</span>
+            }
+          </button>
+
+          @if (panelNotificacionesAbierto()) {
+            <div class="shell__notif-panel" role="dialog" aria-label="Notificaciones">
+              <div class="shell__notif-header">
+                <h2>Notificaciones</h2>
+                <p>Mensajes enviados a tu celular</p>
+              </div>
+
+              @if (errorNotificaciones()) {
+                <p class="shell__notif-vacio">No se pudieron cargar las notificaciones.</p>
+              } @else {
+                <ul class="shell__notif-lista">
+                  @for (notificacion of notificaciones(); track notificacion.id) {
+                    <li class="shell__notif-item" [class.shell__notif-item--nueva]="!notificacion.leida">
+                      <span class="shell__notif-icono" aria-hidden="true">
+                        <app-icon name="mail" />
+                      </span>
+                      <div>
+                        <p class="shell__notif-mensaje">{{ notificacion.mensaje }}</p>
+                        <span class="shell__notif-fecha">{{ formatearFecha(notificacion.fechaEnvio) }}</span>
+                      </div>
+                    </li>
+                  } @empty {
+                    <li class="shell__notif-vacio">Aún no tienes notificaciones.</li>
+                  }
+                </ul>
+              }
+            </div>
           }
-        </button>
+        </div>
 
         <div class="shell__user">
           <button
