@@ -21,6 +21,7 @@ import com.proyectogrado.actividad_service.repository.UsuarioLookupRepository;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -470,6 +471,7 @@ public class ActividadController {
     // =========================================================
 
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<?> eliminar(
             @PathVariable Integer id,
             @RequestHeader("X-User-Id") Integer idUsuario
@@ -487,6 +489,14 @@ public class ActividadController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("Esta actividad no pertenece a tu organización");
         }
+
+        // Primero las inscripciones: si la llave foranea de participacion
+        // no borra en cascada, el DELETE de la actividad fallaria cuando
+        // hay personas mayores inscritas y la actividad les seguiria
+        // apareciendo. En una transaccion: o se borra todo o nada.
+        participacionRepository.deleteAllInBatch(
+                participacionRepository.findById_IdActividad(id)
+        );
 
         actividadRepository.deleteById(id);
 
