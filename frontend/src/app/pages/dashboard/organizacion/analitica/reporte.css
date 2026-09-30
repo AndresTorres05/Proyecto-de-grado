@@ -1,0 +1,44 @@
+/* Estructura común de los reportes de analítica */
+
+:host {
+  display: block;
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.graficas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.graficas .ancho-completo {
+  grid-column: 1 / -1;
+}
+
+.selector {
+  padding: 6px 10px;
+  border: 1px solid var(--vita-border);
+  border-radius: var(--radius-sm);
+  background: var(--vita-white);
+  color: var(--vita-navy);
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+.nota {
+  margin: 16px 0 0;
+  font-size: 0.8rem;
+  color: var(--vita-text-gray);
+}
+
+@media (max-width: 900px) {
+  .graficas {
+    grid-template-columns: 1fr;
+  }
+}

@@ -35,7 +35,7 @@ export const PANEL_CONFIG: Record<string, PanelConfig> = {
       //{ icon: 'pill', label: 'Medicamentos', path: '/panel/organizacion/medicamentos' },
       //{ icon: 'gift', label: 'Donaciones', path: '/panel/organizacion/donaciones' },
       //{ icon: 'bell', label: 'Alertas', path: '/panel/organizacion/alertas' },
-      //{ icon: 'bar-chart', label: 'Analítica', path: '/panel/organizacion/analitica' },
+      { icon: 'bar-chart', label: 'Analítica', path: '/panel/organizacion/analitica' },
       //{ icon: 'map', label: 'Mapa', path: '/panel/organizacion/mapa' },
       { icon: 'settings', label: 'Perfil', path: '/panel/organizacion/perfil' }
     ]

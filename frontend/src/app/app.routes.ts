@@ -108,8 +108,7 @@ export const routes: Routes = [
       {
         path: 'analitica',
         loadComponent: () =>
-          import('./shared/en-construccion/en-construccion').then((m) => m.EnConstruccion),
-        data: { titulo: 'Analítica' },
+          import('./pages/dashboard/organizacion/analitica/analitica').then((m) => m.Analitica),
       },
 
       {

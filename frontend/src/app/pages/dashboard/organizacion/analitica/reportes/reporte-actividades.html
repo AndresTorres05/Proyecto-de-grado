@@ -1,0 +1,54 @@
+<div class="kpis">
+  <app-kpi
+    etiqueta="Actividades"
+    icono="activity"
+    [valor]="kpis().actividades.toString()"
+    detalle="Con fecha dentro del período"
+  />
+  <app-kpi
+    etiqueta="Inscripciones"
+    icono="users"
+    [valor]="kpis().inscritos.toString()"
+    [detalle]="formatoNumero(kpis().promedio) + ' por actividad en promedio'"
+  />
+  <app-kpi
+    etiqueta="Asistencia"
+    icono="check-circle"
+    [valor]="kpis().asistencia"
+    [detalle]="kpis().detalleAsistencia"
+  />
+  <app-kpi
+    etiqueta="Ocupación de cupos"
+    icono="bar-chart"
+    [valor]="kpis().ocupacion"
+    [detalle]="kpis().detalleOcupacion"
+  />
+</div>
+
+<div class="graficas">
+  <app-grafica-card
+    class="ancho-completo"
+    titulo="Inscritos y asistentes por mes"
+    descripcion="Cuántas personas mayores se inscribieron a las actividades de cada mes y cuántas asistieron."
+    [opciones]="graficaMeses()"
+    [tabla]="tablaMeses()"
+    [vacio]="actividades().length === 0"
+  />
+
+  <app-grafica-card
+    titulo="Participación por tipo de actividad"
+    descripcion="Inscripciones según el tipo de actividad. Muestra qué tipo de actividades atrae más."
+    [opciones]="graficaTipos()"
+    [tabla]="tablaTipos()"
+    [vacio]="actividades().length === 0"
+  />
+
+  <app-grafica-card
+    titulo="Ocupación de cupos"
+    descripcion="Actividades con cupos definidos, de la más llena a la menos llena (máx. 10)."
+    [opciones]="graficaOcupacion()"
+    [tabla]="tablaOcupacion()"
+    [vacio]="tablaOcupacion().filas.length === 0"
+    textoVacio="Ninguna actividad del período tiene cupos definidos."
+  />
+</div>

@@ -1,0 +1,119 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.grafica {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+  padding: 20px 22px;
+  box-sizing: border-box;
+}
+
+.grafica__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* El texto se ajusta y los controles se quedan arriba a la derecha */
+.grafica__header > div:first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.grafica__header h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--vita-navy);
+}
+
+.grafica__header p {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  color: var(--vita-text-gray);
+}
+
+.grafica__controles {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* En pantallas angostas los controles (selectores) bajan a su propia fila */
+@media (max-width: 700px) {
+  .grafica__header {
+    flex-wrap: wrap;
+  }
+}
+
+.grafica__vista {
+  padding: 6px 12px;
+  border: 1px solid var(--vita-border);
+  border-radius: var(--radius-pill);
+  background: var(--vita-white);
+  color: var(--vita-navy);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.grafica__vista:hover {
+  background: var(--vita-cream);
+}
+
+.grafica__vacio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  color: var(--vita-text-gray);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Vista de tabla */
+
+.grafica__tabla {
+  overflow: auto;
+  border: 1px solid var(--vita-border);
+  border-radius: var(--radius-sm);
+}
+
+.grafica__tabla table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.grafica__tabla th,
+.grafica__tabla td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--vita-border);
+}
+
+.grafica__tabla th {
+  position: sticky;
+  top: 0;
+  background: var(--vita-cream-soft);
+  color: var(--vita-navy);
+  font-weight: 700;
+}
+
+.grafica__tabla td {
+  color: var(--vita-text-gray);
+}
+
+.grafica__tabla .numero {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}

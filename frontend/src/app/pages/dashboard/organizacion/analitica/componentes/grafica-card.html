@@ -1,0 +1,57 @@
+<section class="grafica card">
+  <header class="grafica__header">
+    <div>
+      <h3>{{ titulo() }}</h3>
+      @if (descripcion()) {
+        <p>{{ descripcion() }}</p>
+      }
+    </div>
+
+    <div class="grafica__controles">
+      <ng-content select="[acciones]" />
+
+      @if (!vacio()) {
+        <button
+          type="button"
+          class="grafica__vista"
+          (click)="verTabla.set(!verTabla())"
+          [attr.aria-pressed]="verTabla()"
+        >
+          {{ verTabla() ? 'Ver gráfica' : 'Ver tabla' }}
+        </button>
+      }
+    </div>
+  </header>
+
+  @if (vacio()) {
+    <p class="grafica__vacio" [style.min-height.px]="alto() / 2">{{ textoVacio() }}</p>
+  } @else if (verTabla()) {
+    <div class="grafica__tabla" [style.max-height.px]="alto()">
+      <table>
+        <thead>
+          <tr>
+            @for (columna of tabla().columnas; track $index) {
+              <th scope="col">{{ columna }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (fila of tabla().filas; track $index) {
+            <tr>
+              @for (celda of fila; track $index) {
+                <td [class.numero]="$index > 0">{{ celda }}</td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <app-echart
+      [opciones]="opciones()"
+      [alto]="alto()"
+      [descripcion]="titulo()"
+      (clic)="clic.emit($event)"
+    />
+  }
+</section>
