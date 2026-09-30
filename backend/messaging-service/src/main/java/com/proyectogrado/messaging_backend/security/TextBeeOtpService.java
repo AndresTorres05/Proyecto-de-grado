@@ -8,12 +8,17 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 @Service
 public class TextBeeOtpService {
@@ -26,7 +31,20 @@ public class TextBeeOtpService {
 
     private static final long MINUTOS_EXPIRACION = 10;
 
+    // Tras estos intentos fallidos el código se invalida y hay que pedir
+    // otro; sin este límite un código de 6 dígitos se adivina por fuerza bruta.
+    private static final int MAX_INTENTOS = 5;
+
+    // Igual al contador de reenvío del login en el frontend.
+    private static final long SEGUNDOS_ENTRE_ENVIOS = 30;
+
     private final SecureRandom random = new SecureRandom();
+
+    // Los códigos nunca se guardan en claro: solo su HMAC-SHA256 con esta
+    // clave, que se genera al arrancar y no sale de la memoria. Como los
+    // códigos pendientes también viven solo en memoria, al reiniciar el
+    // servicio ambos se pierden a la vez.
+    private final SecretKeySpec claveHmac = generarClaveHmac();
 
     private final Map<String, CodigoOtp> codigosPendientes =
             new ConcurrentHashMap<>();
@@ -50,6 +68,19 @@ public class TextBeeOtpService {
 
         validarCelular(celular);
 
+        String celularNormalizado = normalizarCelular(celular);
+
+        CodigoOtp anterior = codigosPendientes.get(celularNormalizado);
+
+        if (anterior != null
+                && Instant.now().isBefore(
+                        anterior.enviado().plusSeconds(SEGUNDOS_ENTRE_ENVIOS))) {
+
+            throw new IllegalStateException(
+                    "Espera unos segundos antes de pedir otro código"
+            );
+        }
+
         String codigo = generarCodigo();
 
         String mensaje = "Tu código de verificación de Vita+ es: "
@@ -58,12 +89,16 @@ public class TextBeeOtpService {
                 + MINUTOS_EXPIRACION
                 + " minutos.";
 
-        Instant expiracion = Instant.now()
-                .plusSeconds(MINUTOS_EXPIRACION * 60);
+        Instant ahora = Instant.now();
 
         codigosPendientes.put(
-                normalizarCelular(celular),
-                new CodigoOtp(codigo, expiracion)
+                celularNormalizado,
+                new CodigoOtp(
+                        hmac(celularNormalizado, codigo),
+                        ahora,
+                        ahora.plusSeconds(MINUTOS_EXPIRACION * 60),
+                        0
+                )
         );
 
         enviarSms(celular, mensaje);
@@ -112,14 +147,29 @@ public class TextBeeOtpService {
             return false;
         }
 
-        boolean coincide =
-                guardado.codigo().equals(codigo.trim());
+        boolean coincide = MessageDigest.isEqual(
+                guardado.hash(),
+                hmac(celularNormalizado, codigo.trim())
+        );
 
         if (coincide) {
             codigosPendientes.remove(celularNormalizado);
+            return true;
         }
 
-        return coincide;
+        // Solo se cuenta el intento si nadie cambió el código mientras
+        // tanto (p. ej. un reenvío); tras el último fallo se descarta.
+        if (guardado.intentosFallidos() + 1 >= MAX_INTENTOS) {
+            codigosPendientes.remove(celularNormalizado, guardado);
+        } else {
+            codigosPendientes.replace(
+                    celularNormalizado,
+                    guardado,
+                    guardado.conIntentoFallido()
+            );
+        }
+
+        return false;
     }
 
     /**
@@ -151,12 +201,10 @@ public class TextBeeOtpService {
                     HttpResponse.BodyHandlers.ofString()
             );
 
+            // No se imprime el cuerpo de la respuesta: TextBee puede
+            // devolver el texto del SMS, que incluye el código OTP.
             System.out.println(
                     "TEXTBEE STATUS: " + response.statusCode()
-            );
-
-            System.out.println(
-                    "TEXTBEE RESPONSE: " + response.body()
             );
 
             if (response.statusCode() >= 300) {
@@ -198,6 +246,34 @@ public class TextBeeOtpService {
         return String.valueOf(numero);
     }
 
+    private static SecretKeySpec generarClaveHmac() {
+
+        byte[] clave = new byte[32];
+        new SecureRandom().nextBytes(clave);
+
+        return new SecretKeySpec(clave, "HmacSHA256");
+    }
+
+    /**
+     * HMAC del código ligado al celular: el mismo código enviado a otro
+     * número produce un hash distinto.
+     */
+    private byte[] hmac(String celularNormalizado, String codigo) {
+
+        try {
+            Mac mac = Mac.getInstance("HmacSHA256");
+            mac.init(claveHmac);
+
+            return mac.doFinal(
+                    (celularNormalizado + ":" + codigo)
+                            .getBytes(StandardCharsets.UTF_8)
+            );
+
+        } catch (Exception e) {
+            throw new IllegalStateException("No se pudo calcular el HMAC del código", e);
+        }
+    }
+
     /**
      * Valida que el celular tenga un valor válido.
      */
@@ -220,8 +296,13 @@ public class TextBeeOtpService {
     }
 
     private record CodigoOtp(
-            String codigo,
-            Instant expiracion
+            byte[] hash,
+            Instant enviado,
+            Instant expiracion,
+            int intentosFallidos
     ) {
+        CodigoOtp conIntentoFallido() {
+            return new CodigoOtp(hash, enviado, expiracion, intentosFallidos + 1);
+        }
     }
 }

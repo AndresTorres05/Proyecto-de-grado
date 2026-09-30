@@ -30,10 +30,13 @@ spring:
               predicates:
                 - Path=/api/auth/**
 
+            # Solo el envío es público. /api/otp/verify NO se expone: lo
+            # llama auth-backend directo al servicio, y abierto permitiria
+            # adivinar codigos de otros celulares sin pasar por el login.
             - id: messaging-otp
               uri: http://localhost:8082
               predicates:
-                - Path=/api/otp/**
+                - Path=/api/otp/send
 
             # Campanita del panel: SMS enviados al usuario autenticado
             - id: messaging-notificaciones

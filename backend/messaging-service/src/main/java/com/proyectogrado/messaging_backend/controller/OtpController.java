@@ -55,19 +55,28 @@ public class OtpController {
                     )
             );
 
+        } catch (IllegalStateException exception) {
+            return ResponseEntity
+                    .status(HttpStatus.TOO_MANY_REQUESTS)
+                    .body(Map.of(
+                            "success", false,
+                            "message", exception.getMessage()
+                    ));
+
         } catch (Exception exception) {
+            System.out.println("ERROR ENVIANDO OTP: " + exception.getMessage());
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of(
                             "success", false,
-                            "message", "No fue posible enviar el código OTP",
-                            "error", exception.getMessage()
+                            "message", "No fue posible enviar el código OTP"
                     ));
         }
     }
 
     /**
-     * Verifica un código OTP.
+     * Verifica un código OTP. Solo lo llama auth-backend directamente
+     * (localhost:8082); el api-gateway NO lo expone al público.
      *
      * Ejemplo de petición:
      *
@@ -131,8 +140,7 @@ public class OtpController {
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of(
                             "success", false,
-                            "message", "No fue posible verificar el código OTP",
-                            "error", exception.getMessage()
+                            "message", "No fue posible verificar el código OTP"
                     ));
         }
     }

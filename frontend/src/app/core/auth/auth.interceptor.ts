@@ -6,8 +6,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     '/api/auth/login',
     '/api/auth/login-otp',
     '/api/auth/registro',
-    '/api/otp/send',
-    '/api/otp/verify'
+    '/api/otp/send'
   ];
 
   const esRutaPublica = rutasPublicas.some(ruta =>
