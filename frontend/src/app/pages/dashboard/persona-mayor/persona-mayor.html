@@ -1,139 +1,237 @@
-<div class="page-header">
-  <h1>¡Hola, {{ nombreUsuario }}! 😊</h1>
-  <p>Hoy es {{ fechaActual | date:'EEEE, d' }} de {{ fechaActual | date:'MMMM' }}</p>
-</div>
+<!-- =====================================================
+     SALUDO + EMERGENCIA (lo más urgente, siempre arriba)
+     ===================================================== -->
 
-@if (!cargandoMedicamentos() && proximoMedicamento(); as medicamento) {
-  <section class="reminder-card card">
-    <span class="reminder-card__tag">Tu próximo medicamento</span>
-    <div class="reminder-card__body">
-      <span class="reminder-card__icon" aria-hidden="true"><app-icon name="pill" /></span>
-      <div>
-        <h2>{{ medicamento.nombre }}</h2>
-        <p class="reminder-card__time">
-          {{ formatearProximaToma(medicamento.proximaToma) }}
-        </p>
-        @if (medicamento.dosis) {
-          <p>{{ medicamento.dosis }}</p>
-        }
-        <p class="reminder-card__aviso">
-          Te avisaremos {{ minutosAvisoPrevio }} minutos antes y a la hora exacta.
-        </p>
-      </div>
+<header class="inicio-header">
+  <div>
+    <h1>¡Hola, {{ nombreUsuario }}! 😊</h1>
+    <p class="inicio-header__fecha">{{ ahora() | date:'EEEE, d' }} de {{ ahora() | date:'MMMM' }}</p>
+  </div>
+
+  @if (!mostrandoConfirmacionEmergencia()) {
+    <button
+      type="button"
+      class="btn emergencia-boton"
+      (click)="activarConfirmacionEmergencia()"
+    >
+      <app-icon name="alert-triangle" />
+      Emergencia
+    </button>
+  }
+</header>
+
+@if (mostrandoConfirmacionEmergencia()) {
+  <section class="emergencia-confirmacion card" role="alertdialog" aria-labelledby="emergenciaTitulo">
+    <div class="emergencia-confirmacion__icono" aria-hidden="true">
+      <app-icon name="alert-triangle" />
     </div>
-  </section>
-} @else if (!cargandoMedicamentos()) {
-  <section class="reminder-card card">
-    <span class="reminder-card__tag">Medicamentos</span>
-    <div class="reminder-card__body">
-      <span class="reminder-card__icon" aria-hidden="true"><app-icon name="pill" /></span>
-      <div>
-        <h2>No tienes medicamentos registrados</h2>
-        <p>Agrégalos desde "Mis recordatorios" para recibir avisos.</p>
-      </div>
+
+    <div class="emergencia-confirmacion__texto">
+      <h2 id="emergenciaTitulo">¿Pedir ayuda de emergencia?</h2>
+      <p>Se enviará una alerta a tus acompañantes para que sepan que necesitas ayuda.</p>
+    </div>
+
+    <div class="emergencia-confirmacion__acciones">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="cancelarEmergencia()"
+        [disabled]="enviandoEmergencia()"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="btn emergencia-boton"
+        (click)="confirmarEmergencia()"
+        [disabled]="enviandoEmergencia()"
+      >
+        @if (enviandoEmergencia()) {
+          Enviando...
+        } @else {
+          Sí, enviar alerta
+        }
+      </button>
     </div>
   </section>
 }
 
-<section class="section-block">
-  <h2 class="section-block__title">Mis próximas actividades</h2>
-  <div class="activities-grid">
-    @for (act of actividades(); track act.idActividad) {
-      <div class="activity-card card">
-        <span class="activity-card__icon" aria-hidden="true"><app-icon name="activity" /></span>
+@if (mensajeEmergencia(); as mensaje) {
+  <div class="aviso aviso--exito">
+    <app-icon name="check-circle" /> {{ mensaje }}
+  </div>
+}
+
+@if (errorEmergencia(); as error) {
+  <div class="aviso aviso--error">
+    <app-icon name="alert-circle" /> {{ error }}
+  </div>
+}
+
+<!-- =====================================================
+     TU DÍA DE HOY
+     ===================================================== -->
+
+<section class="agenda card" aria-labelledby="agendaTitulo">
+  <h2 id="agendaTitulo" class="bloque-titulo">
+    <app-icon name="calendar" /> Tu día de hoy
+  </h2>
+
+  @if (cargandoAgenda()) {
+    <p class="texto-suave">Cargando tu día...</p>
+  } @else if (agendaHoy().length > 0) {
+    <ol class="agenda__lista">
+      @for (evento of agendaHoy(); track evento.clave) {
+        <li [class]="'evento evento--' + evento.estado">
+          <span class="evento__marca" aria-hidden="true">
+            @switch (evento.estado) {
+              @case ('hecho') { <app-icon name="check" /> }
+              @case ('atrasado') { <app-icon name="alert-circle" /> }
+              @default { <app-icon [name]="evento.tipo === 'medicamento' ? 'pill' : 'activity'" /> }
+            }
+          </span>
+
+          <span class="evento__hora">{{ horaDe(evento.momento) }}</span>
+
+          <a class="evento__cuerpo" [routerLink]="evento.enlace">
+            <strong>{{ evento.titulo }}</strong>
+            @if (evento.detalle) {
+              <span class="evento__detalle">{{ evento.detalle }}</span>
+            }
+          </a>
+
+          <span class="evento__estado">
+            @switch (evento.estado) {
+              @case ('hecho') { Tomado }
+              @case ('pasado') { Ya pasó }
+              @case ('atrasado') { Aún no lo tomas }
+              @case ('siguiente') { Siguiente }
+            }
+          </span>
+        </li>
+      }
+    </ol>
+  } @else {
+    <div class="agenda__vacia">
+      <p class="agenda__vacia-titulo">Hoy no tienes nada programado. ¡Disfruta tu día!</p>
+      @if (loProximo(); as proximo) {
+        <p class="texto-suave">
+          Lo próximo: <strong>{{ proximo.titulo }}</strong> — {{ proximo.cuando }}
+        </p>
+      }
+    </div>
+  }
+</section>
+
+<!-- =====================================================
+     ACOMPAÑANTE Y SALUD
+     ===================================================== -->
+
+<div class="resumen-grid">
+
+  <!-- Acompañante -->
+  <section class="resumen card" aria-labelledby="acompananteTitulo">
+    <div class="resumen__header">
+      <h2 id="acompananteTitulo" class="bloque-titulo">
+        <app-icon name="users" /> Tu acompañante
+      </h2>
+      <a routerLink="/panel/persona-mayor/contactos" class="resumen__link">Ver contactos</a>
+    </div>
+
+    @if (cargandoAcompanante()) {
+      <p class="texto-suave">Cargando...</p>
+    } @else if (acompanante(); as ac) {
+      <div class="acompanante">
+        <span class="acompanante__avatar" aria-hidden="true">{{ ac.nombre.charAt(0).toUpperCase() }}</span>
         <div>
-          <h3>{{ act.nombre }}</h3>
-          <p>{{ act.fecha || 'Sin fecha' }}</p>
-          <p>{{ act.lugar || 'Sin lugar' }}</p>
+          <p class="acompanante__nombre">{{ ac.nombre }}</p>
+          @if (ac.relacion) {
+            <p class="texto-suave">{{ ac.relacion }}</p>
+          }
         </div>
       </div>
-    } @empty {
-      <p>Aún no has confirmado asistencia a ninguna actividad.</p>
+
+      <a [href]="'tel:' + ac.celular" class="btn btn-gold resumen__boton">
+        <app-icon name="phone" /> Llamar a {{ ac.nombre }}
+      </a>
+    } @else {
+      <p class="texto-suave">Aún no tienes acompañantes. Agrega a un familiar o amigo para que reciba tus alertas.</p>
+      <a routerLink="/panel/persona-mayor/contactos" class="btn btn-secondary resumen__boton">
+        Añadir acompañante
+      </a>
     }
-  </div>
-</section>
+  </section>
 
-<section class="emergency-section section-block">
-  <div class="emergency-card card">
-    <div class="emergency-card__icon" aria-hidden="true"><app-icon name="alert-triangle" /></div>
-
-    <div class="emergency-card__content">
-      <h2>¿Necesitas ayuda?</h2>
-      <p>
-        Envía una alerta de emergencia a tus acompañantes.
-      </p>
+  <!-- Salud -->
+  <section class="resumen card" aria-labelledby="saludTitulo">
+    <div class="resumen__header">
+      <h2 id="saludTitulo" class="bloque-titulo">
+        <app-icon name="heart" /> Tu salud
+      </h2>
+      <a routerLink="/panel/persona-mayor/signos-vitales" class="resumen__link">Ver historial</a>
     </div>
 
-    <button
-      type="button"
-      class="btn emergency-card__button"
-      (click)="activarConfirmacionEmergencia()"
-    >
-      <app-icon name="alert-triangle" /> Activar emergencia
-    </button>
+    @if (cargandoSignos()) {
+      <p class="texto-suave">Cargando...</p>
+    } @else if (ultimoSignoVital(); as signo) {
+      <p class="texto-suave">Última medición: {{ hace(signo.fechaHora) }}</p>
 
-    @if (mostrandoConfirmacionEmergencia()) {
-      <div class="emergency-confirmation">
-        <div class="emergency-confirmation__icon" aria-hidden="true">
-          <app-icon name="alert-triangle" />
-        </div>
-
-        <div class="emergency-confirmation__content">
-          <h3>¿Confirmar emergencia?</h3>
-
-          <p>
-            Se enviará una alerta a tus acompañantes para informarles
-            que necesitas ayuda.
-          </p>
-
-          <div class="emergency-confirmation__actions">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              (click)="cancelarEmergencia()"
-              [disabled]="enviandoEmergencia()"
-            >
-              Cancelar
-            </button>
-
-            <button
-              type="button"
-              class="btn emergency-confirmation__confirm"
-              (click)="confirmarEmergencia()"
-              [disabled]="enviandoEmergencia()"
-            >
-              @if (enviandoEmergencia()) {
-                Enviando...
+      <ul class="signos">
+        @for (s of signosResumen(); track s.etiqueta) {
+          <li class="signo" [class.signo--revisar]="!s.normal">
+            <span class="signo__etiqueta">{{ s.etiqueta }}</span>
+            <span class="signo__valor">{{ s.valor }} <small>{{ s.unidad }}</small></span>
+            <span class="signo__estado">
+              @if (s.normal) {
+                <app-icon name="check-circle" /> Normal
               } @else {
-                Sí, enviar alerta
+                <app-icon name="alert-circle" /> Revisar
               }
-            </button>
-          </div>
-        </div>
-      </div>
+            </span>
+          </li>
+        }
+      </ul>
+
+      @if (hayValoresFueraDeRango()) {
+        <p class="signos__nota">
+          Algún valor está fuera de lo habitual. Coméntalo con tu médico o tu organización.
+        </p>
+      }
+    } @else {
+      <p class="texto-suave">
+        Aún no tienes signos vitales registrados. Cuando tu organización los registre, verás aquí la última medición.
+      </p>
     }
-  </div>
+  </section>
 
-  @if (mensajeEmergencia(); as mensaje) {
-    <div class="emergency-success">
-      <app-icon name="check-circle" /> {{ mensaje }}
+</div>
+
+<!-- =====================================================
+     PRÓXIMAMENTE
+     ===================================================== -->
+
+@if (proximasActividades().length > 0) {
+  <section class="resumen card proximamente" aria-labelledby="proximamenteTitulo">
+    <div class="resumen__header">
+      <h2 id="proximamenteTitulo" class="bloque-titulo">
+        <app-icon name="activity" /> Próximamente
+      </h2>
+      <a routerLink="/panel/persona-mayor/actividades" class="resumen__link">Ver actividades</a>
     </div>
-  }
 
-  @if (errorEmergencia(); as error) {
-    <div class="emergency-error">
-      <app-icon name="alert-circle" /> {{ error }}
-    </div>
-  }
-</section>
-
-<!--
-<section class="access-grid">
-  @for (a of accesos; track a.label) {
-    <button type="button" class="access-tile card">
-      <span aria-hidden="true"><app-icon [name]="a.icon" /></span>
-      {{ a.label }}
-    </button>
-  }
-</section>
--->
+    <ul class="proximamente__lista">
+      @for (act of proximasActividades(); track act.idActividad) {
+        <li>
+          <span class="proximamente__dia">{{ formatearDia(act.fecha) }}</span>
+          <strong>{{ act.nombre }}</strong>
+          <span class="texto-suave">
+            @if (act.hora) { {{ formatearHora(act.hora) }} }
+            @if (act.hora && act.lugar) { · }
+            @if (act.lugar) { {{ act.lugar }} }
+          </span>
+        </li>
+      }
+    </ul>
+  </section>
+}
