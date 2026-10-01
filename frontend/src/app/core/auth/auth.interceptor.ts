@@ -1,4 +1,6 @@
+import { inject } from '@angular/core';
 import { HttpInterceptorFn } from '@angular/common/http';
+import { AuthService } from './auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
@@ -19,7 +21,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   // Para las demás peticiones sí enviamos el token
-  const token = sessionStorage.getItem('token');
+  // Se lee a través de AuthService para que antes se haya restaurado
+  // la sesión recordada (si esta pestaña se acaba de abrir).
+  const token = inject(AuthService).getToken();
 
   if (!token) {
     return next(req);

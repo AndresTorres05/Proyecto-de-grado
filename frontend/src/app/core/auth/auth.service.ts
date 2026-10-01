@@ -61,6 +61,73 @@ export interface RestablecerContrasenaRequest {
   confirmarContrasena: string;
 }
 
+// Cada pestaña guarda su sesión en sessionStorage (así se pueden tener
+// varias cuentas abiertas a la vez). Además se guarda una copia de la
+// última sesión iniciada en localStorage, que sobrevive al cerrar el
+// navegador: al abrir una ventana nueva sin sesión se restaura esa copia.
+const CLAVES_SESION = ['token', 'rol', 'idUsuario', 'nombreUsuario'] as const;
+const CLAVE_SESION_RECORDADA = 'sesionRecordada';
+
+type Sesion = Record<(typeof CLAVES_SESION)[number], string>;
+
+function tokenVigente(token: string): boolean {
+  try {
+    const payload = JSON.parse(
+      atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))
+    );
+    return typeof payload.exp !== 'number' || payload.exp * 1000 > Date.now();
+  } catch {
+    return false;
+  }
+}
+
+function leerSesionRecordada(): Sesion | null {
+  try {
+    const guardada = localStorage.getItem(CLAVE_SESION_RECORDADA);
+    return guardada ? (JSON.parse(guardada) as Sesion) : null;
+  } catch {
+    return null;
+  }
+}
+
+function escribirSesionRecordada(sesion: Sesion | null): void {
+  try {
+    if (sesion) {
+      localStorage.setItem(CLAVE_SESION_RECORDADA, JSON.stringify(sesion));
+    } else {
+      localStorage.removeItem(CLAVE_SESION_RECORDADA);
+    }
+  } catch {
+    // Sin acceso a localStorage (p. ej. modo privado estricto): la sesión
+    // simplemente no se recuerda al cerrar la ventana.
+  }
+}
+
+// Si esta pestaña no tiene sesión, intenta recuperar la última recordada.
+// Devuelve si la pestaña quedó con sesión.
+function restaurarSesion(): boolean {
+  if (sessionStorage.getItem('token')) {
+    return true;
+  }
+
+  const recordada = leerSesionRecordada();
+
+  if (!recordada?.token) {
+    return false;
+  }
+
+  if (!tokenVigente(recordada.token)) {
+    escribirSesionRecordada(null);
+    return false;
+  }
+
+  for (const clave of CLAVES_SESION) {
+    sessionStorage.setItem(clave, recordada[clave]);
+  }
+
+  return true;
+}
+
 const RUTAS_POR_ROL: Record<string, string> = {
   ORGANIZACION: '/panel/organizacion',
   VOLUNTARIO: '/panel/voluntario',
@@ -74,9 +141,7 @@ export class AuthService {
   private readonly apiUrl = 'http://localhost:8080/api/auth';
   private readonly otpApiUrl = 'http://localhost:8080/api/otp';
 
-  private readonly autenticadoSignal = signal(
-    !!sessionStorage.getItem('token')
-  );
+  private readonly autenticadoSignal = signal(restaurarSesion());
 
   // Nombre mostrado en el panel (arriba a la derecha). Es un signal
   // para que al editarlo en "Mi información" se vea al instante.
@@ -173,6 +238,13 @@ restablecerContrasena(
     sessionStorage.setItem('nombreUsuario', response.nombreUsuario);
     this.nombreUsuarioSignal.set(response.nombreUsuario);
 
+    escribirSesionRecordada({
+      token: response.token,
+      rol: response.rol,
+      idUsuario: String(response.idUsuario),
+      nombreUsuario: response.nombreUsuario
+    });
+
     // Avisar a toda la aplicación que hay una sesión
     this.autenticadoSignal.set(true);
   }
@@ -183,6 +255,12 @@ restablecerContrasena(
   }
 
   logout(): void {
+    // Solo se olvida la sesión recordada si es la de esta pestaña;
+    // así cerrar sesión aquí no afecta a otra cuenta abierta en otra.
+    if (leerSesionRecordada()?.token === sessionStorage.getItem('token')) {
+      escribirSesionRecordada(null);
+    }
+
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('rol');
     sessionStorage.removeItem('idUsuario');
@@ -214,6 +292,11 @@ restablecerContrasena(
   actualizarNombreUsuario(nombre: string): void {
     sessionStorage.setItem('nombreUsuario', nombre);
     this.nombreUsuarioSignal.set(nombre);
+
+    const recordada = leerSesionRecordada();
+    if (recordada && recordada.token === sessionStorage.getItem('token')) {
+      escribirSesionRecordada({ ...recordada, nombreUsuario: nombre });
+    }
   }
 
   getRol(): string | null {
