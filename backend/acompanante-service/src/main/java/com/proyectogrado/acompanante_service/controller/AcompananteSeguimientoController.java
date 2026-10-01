@@ -4,7 +4,6 @@ import com.proyectogrado.acompanante_service.dto.ContactoResponse;
 import com.proyectogrado.acompanante_service.dto.MedicamentoSeguimientoResponse;
 import com.proyectogrado.acompanante_service.dto.SignoVitalSeguimientoResponse;
 import com.proyectogrado.acompanante_service.model.AcompananteInfoLookup;
-import com.proyectogrado.acompanante_service.model.MedicamentoLookup;
 import com.proyectogrado.acompanante_service.model.PersonaMayorAcompanante;
 import com.proyectogrado.acompanante_service.model.UsuarioLookup;
 import com.proyectogrado.acompanante_service.repository.AcompananteInfoLookupRepository;

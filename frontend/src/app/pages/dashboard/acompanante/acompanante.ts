@@ -1,6 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
 
-import { DashboardShell } from '../../../shared/dashboard-shell/dashboard-shell';
 import { Icon } from '../../../shared/icon/icon';
 
 import {
@@ -43,7 +42,7 @@ interface ContactoEmergencia {
 
 @Component({
   selector: 'app-acompanante-dashboard',
-  imports: [DashboardShell, Icon, DatePipe],
+  imports: [Icon, DatePipe],
   templateUrl: './acompanante.html',
   styleUrl: './acompanante.css'
 })

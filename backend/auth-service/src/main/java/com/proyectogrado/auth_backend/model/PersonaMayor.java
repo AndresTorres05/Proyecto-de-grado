@@ -1,7 +1,6 @@
 package com.proyectogrado.auth_backend.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "persona_mayor")

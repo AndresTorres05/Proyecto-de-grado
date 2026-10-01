@@ -1,11 +1,10 @@
 import { Component, HostListener } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
-import { Icon } from '../icon/icon';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, Icon],
+  imports: [RouterLink],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css'
 })

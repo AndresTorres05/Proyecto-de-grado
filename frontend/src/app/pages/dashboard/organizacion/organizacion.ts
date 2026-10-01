@@ -2,7 +2,6 @@ import { Component, OnInit, signal } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 
-import { DashboardShell } from '../../../shared/dashboard-shell/dashboard-shell';
 import { Icon } from '../../../shared/icon/icon';
 
 import { RouterLink } from '@angular/router';
@@ -67,7 +66,7 @@ interface Bitacora {
 
 @Component({
   selector: 'app-organizacion-dashboard',
-  imports: [DashboardShell, FormsModule, Icon, DatePipe, RouterLink],
+  imports: [FormsModule, Icon, DatePipe, RouterLink],
   templateUrl: './organizacion.html',
   styleUrl: './organizacion.css'
 })
