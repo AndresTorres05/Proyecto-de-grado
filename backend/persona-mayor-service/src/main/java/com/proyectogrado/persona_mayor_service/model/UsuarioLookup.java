@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import java.time.LocalDate;
+
 /**
  * Vista de SOLO LECTURA sobre la tabla "usuario", que es dueno de
  * auth-backend. personamayor-service NUNCA crea, edita ni borra usuarios;
@@ -33,6 +35,9 @@ public class UsuarioLookup {
     @Column(name = "id_organizacion")
     private Integer idOrganizacion;
 
+    @Column(name = "fecha_nacimiento")
+    private LocalDate fechaNacimiento;
+
     protected UsuarioLookup() {
         // JPA
     }
@@ -55,5 +60,9 @@ public class UsuarioLookup {
 
     public Integer getIdOrganizacion() {
         return idOrganizacion;
+    }
+
+    public LocalDate getFechaNacimiento() {
+        return fechaNacimiento;
     }
 }
