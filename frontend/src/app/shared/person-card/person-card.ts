@@ -6,7 +6,7 @@ export type PersonCardEstado = 'activo' | 'pendiente';
 /**
  * Tarjeta estandar para mostrar una persona (persona mayor, acompanante o
  * contacto de emergencia) en los listados de los paneles. Muestra identidad,
- * celular, relacion opcional, un estado y, si se pide, el boton "Llamar".
+ * celular, relacion opcional, y un estado.
  * Las acciones propias de cada pagina (aceptar, cancelar asociacion...) se
  * proyectan con el atributo `card-actions`.
  */
@@ -35,9 +35,6 @@ export class PersonCard {
 
   readonly estado = input<string | null>(null);
   readonly estadoTipo = input<PersonCardEstado>('activo');
-
-  /** Muestra el boton "Llamar" que marca al celular de la persona. */
-  readonly llamar = input(false);
 
   readonly clickable = input(false);
   readonly seleccionada = input(false);

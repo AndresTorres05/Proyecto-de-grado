@@ -56,7 +56,7 @@ const HORA = 60 * MINUTO;
  * Inicio de la persona mayor, en forma de "agenda del día":
  *  1. Saludo + botón de emergencia (lo más urgente, siempre arriba).
  *  2. Tu día de hoy: medicamentos y actividades de hoy en orden de hora.
- *  3. Tu acompañante (llamar) y tu salud (última medición).
+ *  3. Tu acompañante y tu salud (última medición).
  *  4. Próximamente: actividades de los siguientes días.
  */
 @Component({

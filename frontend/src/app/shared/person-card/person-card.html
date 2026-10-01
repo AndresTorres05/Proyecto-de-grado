@@ -57,16 +57,5 @@
     </div>
   }
 
-  @if (llamar() && celular()) {
-    <a
-      class="btn btn-gold person-card__call"
-      [href]="'tel:' + celular()"
-      (click)="$event.stopPropagation()"
-    >
-      <app-icon name="phone" />
-      Llamar
-    </a>
-  }
-
   <ng-content select="[card-actions]" />
 </div>

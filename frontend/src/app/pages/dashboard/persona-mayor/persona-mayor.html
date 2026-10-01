@@ -152,9 +152,6 @@
         </div>
       </div>
 
-      <a [href]="'tel:' + ac.celular" class="btn btn-gold resumen__boton">
-        <app-icon name="phone" /> Llamar a {{ ac.nombre }}
-      </a>
     } @else {
       <p class="texto-suave">Aún no tienes acompañantes. Agrega a un familiar o amigo para que reciba tus alertas.</p>
       <a routerLink="/panel/persona-mayor/contactos" class="btn btn-secondary resumen__boton">

@@ -204,20 +204,6 @@
   color: #b26a00;
 }
 
-.person-card__call {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-
-  min-width: 130px;
-  padding: 14px 22px;
-
-  font-size: 1rem;
-  white-space: nowrap;
-  text-decoration: none;
-}
-
 
 /* ---------- Responsive ---------- */
 
@@ -274,10 +260,6 @@
 
   .person-card__actions {
     justify-content: flex-start;
-  }
-
-  .person-card__call {
-    width: 100%;
   }
 
 }
