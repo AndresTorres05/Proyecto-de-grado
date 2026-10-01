@@ -52,6 +52,7 @@ La solución consiste en una plataforma web, **VITA+**, orientada a apoyar la ge
 
 * PostgreSQL alojado en **Supabase** (base de datos compartida por todos los servicios)
 * **TextBee** para el envío de SMS (códigos de inicio de sesión, alertas y recordatorios)
+* **Hunter** ([Email Verifier API](https://hunter.io/api/email-verifier)) para validar que los correos electrónicos existan y puedan recibir mensajes
 
 ## Herramientas adicionales
 
@@ -79,16 +80,17 @@ El backend está dividido en **Servicios**. El frontend nunca habla directamente
            │
            ▼
 ┌──────────────────────────────────────────┐
-│             Servicios               │
+│                Servicios                 │
 │  auth · messaging · persona-mayor ·      │
 │  acompañante · organización · voluntario │
 │  salud · actividad                       │
 └──────────┬───────────────────┬───────────┘
            │ JPA / SQL         │ HTTPS
            ▼                   ▼
-┌──────────────────────┐ ┌──────────────────┐
-│ PostgreSQL (Supabase)│ │   TextBee (SMS)  │
-└──────────────────────┘ └──────────────────┘
+┌──────────────────────┐ ┌──────────────────────────┐
+│ PostgreSQL (Supabase)│ │ TextBee (SMS)            │
+│                      │ │ Hunter (validar correos) │
+└──────────────────────┘ └──────────────────────────┘
 ```
 
 ## Servicios y puertos
@@ -96,7 +98,7 @@ El backend está dividido en **Servicios**. El frontend nunca habla directamente
 | Servicio                | Puerto | Responsabilidad                                                  |
 | ----------------------- | :----: | ---------------------------------------------------------------- |
 | `api-gateway`           |  8080  | Punto de entrada único; valida el JWT y enruta las peticiones    |
-| `auth-service`          |  8081  | Registro, inicio de sesión (contraseña u OTP), cuenta y JWT      |
+| `auth-service`          |  8081  | Registro, inicio de sesión (contraseña u OTP), cuenta, JWT y validación de correos (Hunter) |
 | `messaging-service`     |  8082  | Envío de SMS y códigos OTP (TextBee) y notificaciones del panel  |
 | `salud-service`         |  8084  | Medicamentos, recordatorios y signos vitales                     |
 | `persona-mayor-service` |  8085  | Perfil, gustos, contactos y emergencias de la persona mayor      |
@@ -231,6 +233,22 @@ backend/<servicio>/src/main/resources/application.properties
 
 Todos los servicios apuntan a la misma base de datos PostgreSQL en Supabase. Las tablas se crean y actualizan automáticamente al arrancar (`spring.jpa.hibernate.ddl-auto=update`).
 
+## Validación de correos con Hunter
+
+`auth-service` consulta la [Email Verifier API de Hunter](https://hunter.io/api/email-verifier) (`GET https://api.hunter.io/v2/email-verifier`) para comprobar que un correo existe y puede recibir mensajes. Un correo solo se acepta si Hunter responde con estado `valid`. Se valida en:
+
+* **Registro** con correo: si el correo no es válido, la cuenta no se crea.
+* **"Mi información"**: solo cuando el usuario cambia su correo, para no gastar consultas al editar otros datos.
+* **`GET /api/auth/validar-correo?correo=...`**: devuelve la respuesta completa de Hunter.
+
+La clave de la API se configura en `backend/auth-service/src/main/resources/application.properties`:
+
+```properties
+hunter.api-key=<tu-clave-de-hunter>
+```
+
+Si la clave no está definida, `auth-service` no arranca. El plan gratuito de Hunter tiene un número limitado de verificaciones al mes.
+
 Las rutas del gateway, el CORS del frontend y la clave del JWT están en:
 
 ```text
@@ -243,6 +261,7 @@ backend/api-gateway/src/main/resources/application.yml
 
 * Registro e inicio de sesión con correo y contraseña, o con celular y código OTP por SMS.
 * Restablecimiento de contraseña por código OTP.
+* Validación de que los correos existen y pueden recibir mensajes (Hunter), al registrarse y al cambiar el correo.
 * Paneles por rol: **persona mayor**, **acompañante**, **organización** y **voluntario**.
 * Gestión del perfil de cada usuario ("Mi información"), incluyendo EPS e IPS de la persona mayor.
 * Vinculación de personas mayores con acompañantes y organizaciones.
