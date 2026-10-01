@@ -1,0 +1,347 @@
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+:host {
+  display: block;
+  padding-top: 20px;
+  padding-bottom: 0;
+}
+
+/* =========================================================
+   CONTENEDOR PRINCIPAL
+   ========================================================= */
+
+.footer-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* =========================================================
+   GRID PRINCIPAL
+   ========================================================= */
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
+  gap: 40px;
+  align-items: start;
+  margin-bottom: 20px;
+}
+
+/* ---------- Tablets ---------- */
+
+@media (max-width: 960px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---------- Móviles ---------- */
+
+@media (max-width: 600px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   MARCA / INFORMACIÓN PRINCIPAL
+   ========================================================= */
+
+/* ---------- Logo ---------- */
+
+.footer-brand .footer-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.footer-brand .footer-logo-row .logo-mark {
+  height: 36px;
+  width: 36px;
+  object-fit: contain;
+  padding: 6px;
+  border-radius: 12px;
+  background: var(--vita-white);
+  box-sizing: content-box;
+}
+
+.footer-brand .footer-logo-row .footer-brand-title {
+  color: #ffffff;
+  font-family: var(--font-heading, sans-serif);
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- Descripción ---------- */
+
+.footer-brand .footer-description {
+  color: rgba(255, 255, 255, 0.80);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  max-width: 280px;
+}
+
+/* ---------- Redes sociales ---------- */
+
+.footer-brand .social-links-row {
+  display: flex;
+  gap: 12px;
+}
+
+/* =========================================================
+   TÍTULOS DEL FOOTER
+   ========================================================= */
+
+.footer-heading {
+  color: #ffffff;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+/* =========================================================
+   ENLACES
+   ========================================================= */
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-links a {
+  color: rgba(255, 255, 255, 0.80);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: inline-block;
+}
+
+.footer-links a:hover {
+  color: #ffffff;
+  transform: translateX(4px);
+}
+
+/* =========================================================
+   REDES SOCIALES
+   ========================================================= */
+
+.social-link {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.social-link:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* ---------- Icono de GitHub ---------- */
+
+.social-link .social-icon-img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  filter: grayscale(1) brightness(0) invert(1);
+}
+
+/* =========================================================
+   CONTACTO
+   ========================================================= */
+
+.footer-contact-col .contact-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.footer-contact-col .contact-info-list .contact-link,
+.footer-contact-col .contact-info-list .contact-text {
+  color: rgba(255, 255, 255, 0.80);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-contact-col .contact-info-list .contact-link:hover,
+.footer-contact-col .contact-info-list .contact-text:hover {
+  color: #ffffff;
+}
+
+.footer-contact-col .newsletter-wrapper {
+  margin-top: 10px;
+}
+
+/* =========================================================
+   NEWSLETTER
+   ========================================================= */
+
+.newsletter-form {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50px;
+  padding: 4px 4px 4px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  transition: border-color 0.2s ease;
+}
+
+.newsletter-form:focus-within {
+  border-color: var(--vita-gold, #f6c95e);
+}
+
+/* ---------- Campo ---------- */
+
+.newsletter-form .newsletter-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 0.85rem;
+}
+
+.newsletter-form .newsletter-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* ---------- Botón ---------- */
+
+.newsletter-form .newsletter-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--vita-gold, #f6c95e);
+  color: var(--vita-navy-darker, #0c2b54);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.newsletter-form .newsletter-btn:hover {
+  transform: scale(1.08);
+}
+
+/* =========================================================
+   ALIANZAS INSTITUCIONALES
+   ========================================================= */
+
+.footer-partners-bar {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 20px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ---------- Etiqueta ---------- */
+
+.footer-partners-bar .partners-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.80);
+  font-weight: 600;
+}
+
+/* ---------- Logos ---------- */
+
+.footer-partners-bar .partners-logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 45px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.footer-partners-bar .partners-logos .inst-logo {
+  height: 70px;
+  object-fit: contain;
+  transition: opacity 0.2s ease;
+  opacity: 0.70;
+}
+
+.footer-partners-bar .partners-logos .inst-logo:hover {
+  opacity: 1;
+}
+
+/* Logo Javeriana */
+
+.footer-partners-bar .partners-logos .inst-logo.javeriana-logo {
+  filter: brightness(0) invert(1);
+}
+
+/* Logo ProSofi */
+
+.footer-partners-bar .partners-logos .inst-logo.original-color {
+  filter: none;
+}
+
+/* =========================================================
+   ENLACE AL REPOSITORIO
+   ========================================================= */
+
+.repository-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.repository-link .footer-repository-text {
+  color: rgba(255, 255, 255, 0.80);
+  font-size: 0.9rem;
+  font-family: inherit;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* =========================================================
+   PARTE INFERIOR
+   ========================================================= */
+
+.footer-bottom {
+  margin-top: 40px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  text-align: center;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.80);
+}
+
+/* =========================================================
+   CONFIGURACIÓN DEL FOOTER OSCURO
+   ========================================================= */
+
+footer.section--darker {
+  padding-top: 30px !important;
+}

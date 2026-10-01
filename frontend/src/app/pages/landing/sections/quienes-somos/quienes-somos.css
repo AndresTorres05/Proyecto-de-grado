@@ -1,0 +1,174 @@
+/* =========================================================
+   SECCIÓN "SOBRE NOSOTROS"
+   ========================================================= */
+
+.about-us-section {
+  padding: 6rem 1rem;
+  font-family: 'Sora', sans-serif;
+}
+
+/* =========================================================
+   CONTENEDOR PRINCIPAL
+   ========================================================= */
+
+.about-us-section .container {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* =========================================================
+   ENCABEZADO DE LA SECCIÓN
+   ========================================================= */
+
+.about-us-section .section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+/* ---------- Etiqueta ---------- */
+
+.about-us-section .section-header .tagline {
+  background-color: rgba(91, 113, 138, 0.05);
+  color: var(--vita-navy, #5b718a);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  border: 1px solid rgba(91, 113, 138, 0.2);
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+/* ---------- Título principal ---------- */
+
+.about-us-section .section-header .main-title {
+  color: var(--vita-navy, #0e3b68);
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.04em;
+}
+
+/* ---------- Descripción ---------- */
+
+.about-us-section .section-header .description-text {
+  color: var(--vita-text-gray, #666666);
+  font-size: 1.15rem;
+  max-width: 60ch;
+  margin: 0 auto;
+}
+
+/* =========================================================
+   CONTENEDOR DE TARJETAS
+   ========================================================= */
+
+.about-us-section .cards-container {
+  display: flex;
+  gap: 2rem;
+  width: 100%;
+  justify-content: center;
+}
+
+/* ---------- Tablets ---------- */
+
+@media (max-width: 991px) {
+  .about-us-section .cards-container {
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+}
+
+/* =========================================================
+   TARJETAS DE INFORMACIÓN
+   ========================================================= */
+
+.about-us-section .info-card {
+  flex: 1;
+  background-color: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 12px 35px rgba(14, 59, 104, 0.06);
+  padding: 2.25rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(14, 59, 104, 0.03);
+}
+
+/* ---------- Efecto hover ---------- */
+
+.about-us-section .info-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 45px rgba(14, 59, 104, 0.1);
+}
+
+/* ---------- Tablets ---------- */
+
+@media (max-width: 991px) {
+  .about-us-section .info-card {
+    flex: 1 1 calc(50% - 1rem);
+  }
+}
+
+/* ---------- Móviles ---------- */
+
+@media (max-width: 650px) {
+  .about-us-section .info-card {
+    flex: 1 1 100%;
+  }
+}
+
+/* =========================================================
+   CONTENIDO DE LA TARJETA
+   ========================================================= */
+
+.about-us-section .card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Fila de ícono y título ---------- */
+
+.about-us-section .card-header-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+/* ---------- Ícono ---------- */
+
+.about-us-section .card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.about-us-section .card-icon img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+/* ---------- Título de la tarjeta ---------- */
+
+.about-us-section .card-title {
+  color: var(--vita-navy, #0e3b68);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- Descripción de la tarjeta ---------- */
+
+.about-us-section .card-description {
+  color: var(--vita-text-gray, #666666);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}

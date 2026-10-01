@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './quienes-somos.html',
-  styleUrls: ['./quienes-somos.scss'],
+  styleUrls: ['./quienes-somos.css'],
   encapsulation: ViewEncapsulation.None 
 })
 export class QuienesSomosComponent {

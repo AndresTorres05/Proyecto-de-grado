@@ -1,0 +1,187 @@
+.reto-section {
+  background-color: var(--vita-navy, #0c2b54); /* Fondo azul oscuro institucional */
+  color: #ffffff;
+  padding: 6rem 1.5rem;
+  font-family: 'Sora', sans-serif;
+  overflow-x: hidden; /* Evita desbordamientos generales en la página */
+}
+
+.reto-section .reto-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Divide estrictamente la pantalla en dos columnas iguales */
+  gap: 50px;
+  align-items: flex-start;
+}
+
+@media (max-width: 968px) {
+  .reto-section .reto-container {
+    grid-template-columns: 1fr; /* Se vuelve una sola columna en pantallas pequeñas */
+    gap: 3rem;
+  }
+}
+
+/* CONTENEDOR IZQUIERDO: Agrupa texto y carrusel exclusivamente en la columna izquierda */
+.reto-section .reto-left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem; /* Espacio entre el texto y el carrusel debajo de él */
+  min-width: 0; /* CRÍTICO: Evita que el carrusel desborde el ancho de la columna izquierda */
+  width: 100%;
+  overflow: hidden; /* Contiene el carrusel dentro de su mitad de pantalla */
+}
+
+/* Texto de la izquierda */
+.reto-section .reto-left-column .reto-intro .reto-badge {
+  display: inline-flex;
+  padding: 0.4rem 1rem;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--vita-cream-soft, #f7efe5);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.reto-section .reto-left-column .reto-intro .reto-title {
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+}
+
+.reto-section .reto-left-column .reto-intro .reto-title .accent-gold {
+  color: var(--vita-gold, #f6c95e);
+}
+
+.reto-section .reto-left-column .reto-intro .reto-description {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+/* CARRUSEL: Ubicado exactamente debajo del texto, confinado a la izquierda */
+.reto-section .reto-left-column .carousel-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+}
+
+.reto-section .reto-left-column .carousel-container .carousel-track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  animation: scrollSlides 30s linear infinite;
+}
+
+.reto-section .reto-left-column .carousel-container .carousel-track:hover {
+  animation-play-state: paused; /* Pausa el movimiento al pasar el cursor */
+}
+
+.reto-section .reto-left-column .carousel-container .carousel-slide {
+  width: 220px;
+  height: 140px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.reto-section .reto-left-column .carousel-container .carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.reto-section .reto-left-column .carousel-container .carousel-slide img:hover {
+  transform: scale(1.06);
+}
+
+@keyframes scrollSlides {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-50% - 10px));
+  }
+}
+
+/* COLUMNA DERECHA: Flujo de tarjetas con flechas */
+.reto-section .reto-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.reto-section .reto-flow .flow-arrow {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 1.25rem;
+  line-height: 1;
+  margin: 0.15rem 0;
+}
+
+.reto-section .reto-flow .reto-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.25rem 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.reto-section .reto-flow .reto-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+  transform: translateX(4px);
+}
+
+.reto-section .reto-flow .reto-card .card-icon {
+  font-size: 1.75rem;
+  flex-shrink: 0;
+}
+
+.reto-section .reto-flow .reto-card .card-text h3 {
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+}
+
+.reto-section .reto-flow .reto-card .card-text p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Tarjeta final destacada (Solución) */
+.reto-section .reto-flow .reto-card.highlight-card {
+  background: var(--vita-gold, #f6c95e);
+  border-color: var(--vita-gold, #f6c95e);
+  color: #1a1a1a;
+}
+
+.reto-section .reto-flow .reto-card.highlight-card:hover {
+  background: #f8d16d;
+  transform: translateX(4px);
+}
+
+.reto-section .reto-flow .reto-card.highlight-card .card-text h3 {
+  color: #0e3b68;
+}
+
+.reto-section .reto-flow .reto-card.highlight-card .card-text p {
+  color: rgba(14, 59, 104, 0.85);
+}

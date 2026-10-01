@@ -4,6 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-reto',
   imports: [],
   templateUrl: './reto.html',
-  styleUrl: './reto.scss',
+  styleUrl: './reto.css',
 })
 export class Reto {}
