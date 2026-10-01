@@ -116,6 +116,15 @@
               <button
                 type="button"
                 class="person-card-action"
+                (click)="mostrarAcompanantes(persona)"
+              >
+                <app-icon name="users" />
+                Acompañantes
+              </button>
+
+              <button
+                type="button"
+                class="person-card-action"
                 (click)="mostrarSignosVitales(persona)"
               >
                 <app-icon name="heart" />
@@ -160,5 +169,15 @@
     [cargando]="cargandoSignosVitales"
     [error]="errorSignosVitales"
     (cerrar)="cerrarSignosVitales()"
+  />
+}
+
+@if (personaAcompanantes) {
+  <app-acompanantes-modal
+    [nombre]="personaAcompanantes.nombre"
+    [acompanantes]="acompanantes"
+    [cargando]="cargandoAcompanantes"
+    [error]="errorAcompanantes"
+    (cerrar)="cerrarAcompanantes()"
   />
 }

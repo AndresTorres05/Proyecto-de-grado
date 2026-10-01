@@ -17,12 +17,13 @@ import { Icon } from '../../../../shared/icon/icon';
 import { PersonCard } from '../../../../shared/person-card/person-card';
 import { CancelarAsociacion } from '../../../../shared/cancelar-asociacion/cancelar-asociacion';
 import { SignosVitalesModal } from '../../../../shared/signos-vitales-modal/signos-vitales-modal';
+import { AcompanantesModal } from '../../../../shared/acompanantes-modal/acompanantes-modal';
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
 @Component({
   selector: 'app-personas-mayores',
   standalone: true,
-  imports: [Icon, FormsModule, PersonCard, CancelarAsociacion, SignosVitalesModal],
+  imports: [Icon, FormsModule, PersonCard, CancelarAsociacion, SignosVitalesModal, AcompanantesModal],
   templateUrl: './personas-mayores.html',
   styleUrl: './personas-mayores.css'
 })

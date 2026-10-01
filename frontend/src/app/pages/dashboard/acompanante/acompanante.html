@@ -61,22 +61,6 @@
     <div class="col">
       <div class="panel card">
         <div class="panel__header">
-          <h2>Contactos de emergencia</h2>
-        </div>
-        <ul class="contact-list">
-          @for (c of contactos; track c.nombre) {
-            <li>
-              <div>
-                <strong>{{ c.nombre }}</strong>
-                <p>{{ c.relacion }} de {{ c.persona }}</p>
-              </div>
-            </li>
-          }
-        </ul>
-      </div>
-
-      <div class="panel card">
-        <div class="panel__header">
           <h2>Próximas actividades</h2>
         </div>
         <ul class="mini-activity-list">

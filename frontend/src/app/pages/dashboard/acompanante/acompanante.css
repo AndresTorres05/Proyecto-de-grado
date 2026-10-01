@@ -212,38 +212,6 @@
   color: color-mix(in srgb, var(--vita-gold) 60%, var(--vita-navy));
 }
 
-/* ---------- Contactos ---------- */
-
-.contact-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.contact-list li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px;
-  border: 1px solid var(--vita-border);
-  border-radius: var(--radius-md);
-}
-
-.contact-list strong {
-  font-size: 0.88rem;
-  color: var(--vita-navy);
-}
-
-.contact-list p {
-  margin-top: 2px;
-  font-size: 0.78rem;
-  color: var(--vita-text-gray);
-}
-
 /* ---------- Actividades ---------- */
 
 .mini-activity-list {

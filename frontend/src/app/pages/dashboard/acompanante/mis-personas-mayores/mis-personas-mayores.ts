@@ -9,11 +9,12 @@ import { Icon } from '../../../../shared/icon/icon';
 import { PersonCard } from '../../../../shared/person-card/person-card';
 import { CancelarAsociacion } from '../../../../shared/cancelar-asociacion/cancelar-asociacion';
 import { SignosVitalesModal } from '../../../../shared/signos-vitales-modal/signos-vitales-modal';
+import { AcompanantesModal, AcompananteResumen } from '../../../../shared/acompanantes-modal/acompanantes-modal';
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
 @Component({
   selector: 'app-mis-personas-mayores',
-  imports: [Icon, PersonCard, CancelarAsociacion, SignosVitalesModal],
+  imports: [Icon, PersonCard, CancelarAsociacion, SignosVitalesModal, AcompanantesModal],
   templateUrl: './mis-personas-mayores.html',
   styleUrl: './mis-personas-mayores.css'
 })
@@ -33,6 +34,11 @@ export class MisPersonasMayores implements OnInit {
   cargandoSignosVitales = false;
   errorSignosVitales: string | null = null;
 
+  personaAcompanantes: PersonaMayorAcompanada | null = null;
+  acompanantes: AcompananteResumen[] = [];
+  cargandoAcompanantes = false;
+  errorAcompanantes: string | null = null;
+
   constructor(
     private acompananteService: AcompananteService,
     private cdr: ChangeDetectorRef
@@ -40,6 +46,11 @@ export class MisPersonasMayores implements OnInit {
     alCambiar(['acompanamientos', 'usuarios'], () => {
       this.cargarPersonasMayores();
       this.cargarSolicitudes();
+
+      // Si el modal de acompañantes está abierto, se actualiza en vivo
+      if (this.personaAcompanantes) {
+        this.cargarAcompanantes(this.personaAcompanantes.idUsuario);
+      }
     });
 
     // Si el modal de signos vitales está abierto, se actualiza en vivo
@@ -173,5 +184,35 @@ export class MisPersonasMayores implements OnInit {
   cerrarSignosVitales(): void {
     this.personaSignosVitales = null;
     this.signosVitales = [];
+  }
+
+  mostrarAcompanantes(persona: PersonaMayorAcompanada): void {
+    this.personaAcompanantes = persona;
+    this.acompanantes = [];
+    this.errorAcompanantes = null;
+    this.cargandoAcompanantes = true;
+
+    this.cargarAcompanantes(persona.idUsuario);
+  }
+
+  private cargarAcompanantes(idPersonaMayor: number): void {
+    this.acompananteService.obtenerAcompanantesSeguimiento(idPersonaMayor).subscribe({
+      next: (acompanantes) => {
+        this.acompanantes = acompanantes;
+        this.cargandoAcompanantes = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error al cargar acompañantes:', error);
+        this.errorAcompanantes = 'No se pudieron cargar los acompañantes.';
+        this.cargandoAcompanantes = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  cerrarAcompanantes(): void {
+    this.personaAcompanantes = null;
+    this.acompanantes = [];
   }
 }

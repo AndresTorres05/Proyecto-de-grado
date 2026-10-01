@@ -223,14 +223,6 @@ export const routes: Routes = [
       },
 
       {
-        path: 'contactos-emergencia',
-        loadComponent: () =>
-          import('./pages/dashboard/acompanante/contactos-emergencia/contactos-emergencia').then(
-            (m) => m.ContactosEmergencia,
-          ),
-      },
-
-      {
         path: 'actividades',
         loadComponent: () =>
           import('./pages/dashboard/acompanante/actividades/actividades').then(

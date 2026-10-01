@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { SignoVitalResponse } from '../signos-vitales/signos-vitales.services';
+import { AcompananteResumen } from '../../shared/acompanantes-modal/acompanantes-modal';
 
 // =========================================================
 // ACOMPAÑANTE
@@ -73,17 +74,6 @@ export interface MedicamentoSeguimiento {
   proximaToma: string | null;
   ultimaToma: string | null;
   activo: boolean;
-}
-
-// =========================================================
-// CONTACTOS DE EMERGENCIA
-// =========================================================
-
-export interface ContactoEmergencia {
-  idUsuario: number;
-  nombre: string;
-  celular: string;
-  relacion: string;
 }
 
 // =========================================================
@@ -265,13 +255,14 @@ actualizarInformacion(
   }
 
   // =========================================================
-  // CONTACTOS DE EMERGENCIA
+  // SEGUIMIENTO - ACOMPAÑANTES
   // =========================================================
 
-  obtenerContactosEmergencia(
+  /** Acompañantes con relación aceptada de la persona mayor. */
+  obtenerAcompanantesSeguimiento(
     idPersonaMayor: number
-  ): Observable<ContactoEmergencia[]> {
-    return this.http.get<ContactoEmergencia[]>(
+  ): Observable<AcompananteResumen[]> {
+    return this.http.get<AcompananteResumen[]>(
       `${this.apiUrl}/acompanante/seguimiento/${idPersonaMayor}/contactos`
     );
   }

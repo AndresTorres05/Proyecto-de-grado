@@ -48,7 +48,6 @@ export const PANEL_CONFIG: Record<string, PanelConfig> = {
       { icon: 'home', label: 'Inicio', path: '/panel/acompanante' },
       { icon: 'users', label: 'Mis personas mayores', path: '/panel/acompanante/personas-mayores' },
       { icon: 'clipboard', label: 'Seguimiento', path: '/panel/acompanante/seguimiento' },
-      { icon: 'phone', label: 'Contactos de emergencia', path: '/panel/acompanante/contactos-emergencia' },
       { icon: 'calendar', label: 'Actividades', path: '/panel/acompanante/actividades' },
       { icon: 'user', label: 'Perfil', path: '/panel/acompanante/perfil' }
     ]

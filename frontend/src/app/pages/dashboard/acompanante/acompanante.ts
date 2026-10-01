@@ -33,13 +33,6 @@ interface AlertaConsulta {
   prioridad: 'Alta' | 'Media' | 'Baja';
 }
 
-interface ContactoEmergencia {
-  nombre: string;
-  relacion: string;
-  celular: string;
-  persona: string;
-}
-
 @Component({
   selector: 'app-acompanante-dashboard',
   imports: [Icon, DatePipe],
@@ -141,25 +134,6 @@ export class AcompananteDashboard implements OnInit {
       descripcion:
         'Sin registro de visita hace 15 días. Requiere seguimiento prioritario.',
       prioridad: 'Alta'
-    }
-  ];
-
-  // =========================================================
-  // CONTACTOS DE EMERGENCIA
-  // =========================================================
-
-  protected readonly contactos: ContactoEmergencia[] = [
-    {
-      nombre: 'Marta Gómez',
-      relacion: 'Hija',
-      celular: '300 456 7890',
-      persona: 'Rosa Elvira Gómez'
-    },
-    {
-      nombre: 'Pedro Méndez',
-      relacion: 'Hijo',
-      celular: '311 222 3344',
-      persona: 'Carlos Julio Méndez'
     }
   ];
 
