@@ -2,28 +2,213 @@
   display: block;
 }
 
+/* ---------- Encabezado ---------- */
+
 .page-header {
   margin-bottom: 28px;
 }
 
 .page-header h1 {
-  font-size: 1.75rem;
-  font-weight: 700;
+  margin: 0;
+
   color: var(--vita-navy);
+  font-size: 2rem;
+  font-weight: 700;
 }
 
 .page-header p {
-  margin-top: 4px;
+  margin: 6px 0 0;
+  max-width: 640px;
+
   color: var(--vita-text-gray);
-  font-size: 0.9rem;
+  font-size: 1.05rem;
+  line-height: 1.5;
 }
+
+
+/* ---------- Encabezado de sección ---------- */
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+
+  margin-bottom: 22px;
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 4px;
+
+  color: var(--vita-text-gray);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.section-header h2 {
+  margin: 0;
+
+  color: var(--vita-navy);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+
+/* ---------- Último registro ---------- */
+
+.ultimo {
+  margin-bottom: 24px;
+  padding: 28px;
+}
+
+.ultimo__fecha {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 14px;
+
+  border-radius: var(--radius-pill);
+  background: var(--vita-cream);
+  color: var(--vita-navy);
+
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.ultimo__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.valor {
+  --valor-color: var(--vita-navy);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  padding: 20px 16px;
+
+  text-align: center;
+
+  border: 1px solid var(--vita-border);
+  border-top: 4px solid var(--valor-color);
+  border-radius: var(--radius-md);
+  background: var(--vita-cream-soft);
+}
+
+.valor--presion     { --valor-color: var(--vita-navy-light); }
+.valor--corazon     { --valor-color: #d64545; }
+.valor--temperatura { --valor-color: #e0a419; }
+.valor--oxigeno     { --valor-color: var(--vita-secundario); }
+.valor--respiracion { --valor-color: var(--vita-complemento); }
+.valor--peso        { --valor-color: var(--vita-navy); }
+
+.valor__icon {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 8px;
+
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--valor-color) 15%, white);
+  color: var(--valor-color);
+
+  font-size: 1.2rem;
+}
+
+.valor__label {
+  color: var(--vita-text-gray);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.valor__numero {
+  color: var(--vita-navy);
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.valor__unidad {
+  color: var(--vita-text-gray);
+  font-size: 0.95rem;
+}
+
+.ultimo__observaciones {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  margin-top: 18px;
+  padding: 14px 16px;
+
+  border-radius: var(--radius-sm);
+  background: var(--vita-cream);
+  color: var(--vita-navy);
+
+  font-size: 1.05rem;
+}
+
+.ultimo__observaciones p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+
+/* ---------- Historial ---------- */
 
 .historial {
-  padding: 24px;
+  padding: 28px;
 }
 
+.historial__total {
+  padding: 6px 14px;
+
+  border-radius: var(--radius-pill);
+  background: var(--vita-cream);
+  color: var(--vita-navy);
+
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+
+/* ---------- Responsive ---------- */
+
 @media (max-width: 600px) {
-  .historial {
-    padding: 16px;
+
+  .page-header h1 {
+    font-size: 1.6rem;
   }
+
+  .ultimo,
+  .historial {
+    padding: 18px 16px;
+  }
+
+  .ultimo__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .valor {
+    padding: 14px;
+  }
+
+  .valor__numero {
+    font-size: 1.7rem;
+  }
+
 }

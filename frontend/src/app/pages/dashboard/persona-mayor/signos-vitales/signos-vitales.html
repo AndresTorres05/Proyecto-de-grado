@@ -1,15 +1,122 @@
-<div class="page-header">
+<header class="page-header">
   <h1>Mis signos vitales</h1>
   <p>Historial de los signos vitales que ha registrado tu organización, del más reciente al más antiguo.</p>
-</div>
+</header>
 
-<section class="historial card">
+@if (!cargando() && !error() && registros().length > 0) {
+  @let ultimo = registros()[0];
+
+  <section class="ultimo card" aria-labelledby="ultimo-title">
+    <div class="section-header">
+      <div>
+        <span class="eyebrow">Último registro</span>
+        <h2 id="ultimo-title">Tus valores más recientes</h2>
+      </div>
+
+      <span class="ultimo__fecha">
+        <app-icon name="calendar" />
+        {{ ultimo.fechaHora | date: "d 'de' MMMM yyyy, h:mm a" }}
+      </span>
+    </div>
+
+    <div class="ultimo__grid">
+      @if (ultimo.presionSistolica !== null || ultimo.presionDiastolica !== null) {
+        <div class="valor valor--presion">
+          <div class="valor__icon"><app-icon name="activity" /></div>
+          <span class="valor__label">Presión arterial</span>
+          <strong class="valor__numero">
+            {{ ultimo.presionSistolica ?? '-' }}/{{ ultimo.presionDiastolica ?? '-' }}
+          </strong>
+          <span class="valor__unidad">mmHg</span>
+        </div>
+      }
+
+      @if (ultimo.frecuenciaCardiaca !== null) {
+        <div class="valor valor--corazon">
+          <div class="valor__icon"><app-icon name="heart" /></div>
+          <span class="valor__label">Frecuencia cardíaca</span>
+          <strong class="valor__numero">{{ ultimo.frecuenciaCardiaca }}</strong>
+          <span class="valor__unidad">latidos por minuto</span>
+        </div>
+      }
+
+      @if (ultimo.temperatura !== null) {
+        <div class="valor valor--temperatura">
+          <div class="valor__icon"><app-icon name="sun" /></div>
+          <span class="valor__label">Temperatura</span>
+          <strong class="valor__numero">{{ ultimo.temperatura }}</strong>
+          <span class="valor__unidad">°C</span>
+        </div>
+      }
+
+      @if (ultimo.saturacionOxigeno !== null) {
+        <div class="valor valor--oxigeno">
+          <div class="valor__icon"><app-icon name="sparkles" /></div>
+          <span class="valor__label">Saturación de oxígeno</span>
+          <strong class="valor__numero">{{ ultimo.saturacionOxigeno }}</strong>
+          <span class="valor__unidad">%</span>
+        </div>
+      }
+
+      @if (ultimo.frecuenciaRespiratoria !== null) {
+        <div class="valor valor--respiracion">
+          <div class="valor__icon"><app-icon name="clock" /></div>
+          <span class="valor__label">Frecuencia respiratoria</span>
+          <strong class="valor__numero">{{ ultimo.frecuenciaRespiratoria }}</strong>
+          <span class="valor__unidad">respiraciones por minuto</span>
+        </div>
+      }
+
+      @if (ultimo.peso !== null) {
+        <div class="valor valor--peso">
+          <div class="valor__icon"><app-icon name="user" /></div>
+          <span class="valor__label">Peso</span>
+          <strong class="valor__numero">{{ ultimo.peso }}</strong>
+          <span class="valor__unidad">kg</span>
+        </div>
+      }
+    </div>
+
+    @if (ultimo.observaciones) {
+      <div class="ultimo__observaciones">
+        <app-icon name="info" />
+        <p>
+          <strong>Observaciones:</strong>
+          {{ ultimo.observaciones }}
+        </p>
+      </div>
+    }
+  </section>
+}
+
+<!-- El último registro ya se muestra arriba; aquí solo van los anteriores -->
+@let anteriores = registros().slice(1);
+
+<section class="historial card" aria-labelledby="historial-title">
+  <div class="section-header">
+    <div>
+      <span class="eyebrow">Historial</span>
+      <h2 id="historial-title">Registros anteriores</h2>
+    </div>
+
+    @if (!cargando() && !error() && anteriores.length > 0) {
+      <span class="historial__total">
+        {{ anteriores.length }} {{ anteriores.length === 1 ? 'registro' : 'registros' }}
+      </span>
+    }
+  </div>
+
   <app-signos-vitales-lista
-    [registros]="registros()"
+    class="pagina"
+    [registros]="anteriores"
     [cargando]="cargando()"
     [error]="error()"
     [compacta]="false"
-    tituloVacio="Aún no tienes signos vitales registrados"
-    textoVacio="Cuando tu organización registre tus signos vitales, aparecerán aquí."
+    [tituloVacio]="registros().length > 0
+      ? 'Aún no tienes registros anteriores'
+      : 'Aún no tienes signos vitales registrados'"
+    [textoVacio]="registros().length > 0
+      ? 'Cuando tu organización haga un nuevo registro, el actual pasará a esta lista.'
+      : 'Cuando tu organización registre tus signos vitales, aparecerán aquí.'"
   />
 </section>

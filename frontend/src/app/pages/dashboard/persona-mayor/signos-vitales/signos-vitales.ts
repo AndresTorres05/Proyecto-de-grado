@@ -1,10 +1,12 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 
 import {
   SignosVitalesService,
   SignoVitalResponse
 } from '../../../../core/signos-vitales/signos-vitales.services';
 import { SignosVitalesLista } from '../../../../shared/signos-vitales-lista/signos-vitales-lista';
+import { Icon } from '../../../../shared/icon/icon';
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
 /**
@@ -13,7 +15,7 @@ import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
  */
 @Component({
   selector: 'app-persona-mayor-signos-vitales',
-  imports: [SignosVitalesLista],
+  imports: [SignosVitalesLista, Icon, DatePipe],
   templateUrl: './signos-vitales.html',
   styleUrl: './signos-vitales.css'
 })

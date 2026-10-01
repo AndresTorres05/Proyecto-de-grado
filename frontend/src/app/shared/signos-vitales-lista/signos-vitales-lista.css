@@ -154,3 +154,106 @@
   }
 
 }
+
+
+/* ---------- Variante de página (historial de la persona mayor) ----------
+   Textos más grandes y valores en recuadros para facilitar la lectura. */
+
+:host(.pagina) .signos-loading,
+:host(.pagina) .signos-error {
+  font-size: 1.05rem;
+}
+
+:host(.pagina) .signos-empty h3 {
+  font-size: 1.2rem;
+}
+
+:host(.pagina) .signos-empty p {
+  font-size: 1rem;
+}
+
+:host(.pagina) .signos-list {
+  gap: 20px;
+}
+
+/* Cada registro es una tarjeta con su propia franja de fecha arriba */
+:host(.pagina) .signo-item {
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+
+  border: 1px solid #d5deea;
+  border-left: 5px solid var(--vita-secundario);
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 8px rgba(18, 53, 91, 0.06);
+}
+
+:host(.pagina) .signo-item__fecha {
+  justify-content: center;
+  gap: 10px;
+
+  padding: 12px 18px;
+
+  border-bottom: 1px solid #d5deea;
+  background: color-mix(in srgb, var(--vita-secundario) 12%, white);
+
+  font-size: 1.05rem;
+}
+
+/* auto-fit: los recuadros ocupan todo el ancho, sin columnas vacías */
+:host(.pagina) .signo-item__valores {
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+
+  padding: 18px;
+}
+
+:host(.pagina) .signo-item__valores > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 14px 12px;
+
+  border: 1px solid var(--vita-border);
+  border-radius: var(--radius-sm);
+  background: var(--vita-cream);
+
+  text-align: center;
+}
+
+:host(.pagina) .signo-item__valores span {
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+}
+
+:host(.pagina) .signo-item__valores strong {
+  font-size: 1.25rem;
+}
+
+:host(.pagina) .signo-item__observaciones {
+  margin: 0 18px 18px;
+  padding: 12px 14px;
+
+  border-left: 4px solid var(--vita-secundario);
+  border-radius: var(--radius-sm);
+  background: var(--vita-cream-soft);
+  color: var(--vita-navy);
+
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+
+  :host(.pagina) .signo-item__valores {
+    grid-template-columns: 1fr 1fr;
+    padding: 14px;
+  }
+
+  :host(.pagina) .signo-item__observaciones {
+    margin: 0 14px 14px;
+  }
+
+}
