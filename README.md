@@ -62,7 +62,7 @@ La solución consiste en una plataforma web, **VITA+**, orientada a apoyar la ge
 
 # Arquitectura del Proyecto
 
-El backend está dividido en **microservicios**. El frontend nunca habla directamente con ellos: todas las peticiones pasan por el **API Gateway**, que valida el token JWT y las redirige al servicio correspondiente.
+El backend está dividido en **Servicios**. El frontend nunca habla directamente con ellos: todas las peticiones pasan por el **API Gateway**, que valida el token JWT y las redirige al servicio correspondiente.
 
 ```text
 ┌──────────────────────┐
@@ -79,7 +79,7 @@ El backend está dividido en **microservicios**. El frontend nunca habla directa
            │
            ▼
 ┌──────────────────────────────────────────┐
-│             Microservicios               │
+│             Servicios               │
 │  auth · messaging · persona-mayor ·      │
 │  acompañante · organización · voluntario │
 │  salud · actividad                       │
