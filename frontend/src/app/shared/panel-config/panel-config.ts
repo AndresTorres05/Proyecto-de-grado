@@ -65,7 +65,6 @@ export const PANEL_CONFIG: Record<string, PanelConfig> = {
       { icon: 'users', label: 'Personas mayores', path: '/panel/voluntario/personas' },
       { icon: 'bell', label: 'Alertas', path: '/panel/voluntario/alertas' },
       { icon: 'calendar', label: 'Actividades', path: '/panel/voluntario/actividades' },
-      { icon: 'clock', label: 'Disponibilidad', path: '/panel/voluntario/disponibilidad' },
       { icon: 'user', label: 'Perfil', path: '/panel/voluntario/perfil' }
     ]
   }

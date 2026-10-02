@@ -156,13 +156,6 @@ export const routes: Routes = [
       },
 
       {
-        path: 'disponibilidad',
-        loadComponent: () =>
-          import('./shared/en-construccion/en-construccion').then((m) => m.EnConstruccion),
-        data: { titulo: 'Disponibilidad' },
-      },
-
-      {
         path: 'alertas',
         loadComponent: () =>
           import('./shared/en-construccion/en-construccion').then((m) => m.EnConstruccion),

@@ -14,9 +14,6 @@ public class RegistroRequest {
 
     private String celular;
 
-    // Solo para VOLUNTARIO
-    private String disponibilidad;
-
     public RegistroRequest() {
     }
 
@@ -82,13 +79,5 @@ public class RegistroRequest {
 
     public void setCelular(String celular) {
         this.celular = celular;
-    }
-
-    public String getDisponibilidad() {
-        return disponibilidad;
-    }
-
-    public void setDisponibilidad(String disponibilidad) {
-        this.disponibilidad = disponibilidad;
     }
 }

@@ -15,7 +15,6 @@ export interface RegistroRequest {
   rol: string;
   direccion?: string;
   celular?: string;
-  disponibilidad?: string;
   fechaNacimiento?: string;
   genero?: string;
   codigo?: string;

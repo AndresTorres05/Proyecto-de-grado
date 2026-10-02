@@ -156,36 +156,6 @@
   color: var(--vita-text-gray);
 }
 
-/* ---------- Disponibilidad ---------- */
-
-.availability-row {
-  display: flex;
-  gap: 8px;
-}
-
-.availability-day {
-  flex: 1;
-  text-align: center;
-  padding: 12px 0;
-  border-radius: var(--radius-sm);
-  background: var(--vita-cream-soft);
-  border: 1px solid var(--vita-border);
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--vita-text-gray-light);
-}
-
-.availability-day--on {
-  background: var(--vita-navy);
-  color: var(--vita-white);
-  border-color: var(--vita-navy);
-}
-
-.availability-btn {
-  width: 100%;
-  margin-top: 16px;
-}
-
 /* ---------- Alertas ---------- */
 
 .alerts-panel {

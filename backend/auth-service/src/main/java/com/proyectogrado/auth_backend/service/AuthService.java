@@ -408,7 +408,7 @@ case "ORGANIZACION" -> {
 }
 
             case "VOLUNTARIO" -> voluntarioRepository.save(
-                    new Voluntario(usuarioGuardado, request.getDisponibilidad())
+                    new Voluntario(usuarioGuardado)
             );
 
             default -> throw new RuntimeException(

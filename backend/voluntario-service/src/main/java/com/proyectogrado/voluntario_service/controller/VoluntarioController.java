@@ -1,6 +1,5 @@
 package com.proyectogrado.voluntario_service.controller;
 
-import com.proyectogrado.voluntario_service.dto.ActualizarDisponibilidadRequest;
 import com.proyectogrado.voluntario_service.dto.VoluntarioPerfilResponse;
 import com.proyectogrado.voluntario_service.model.UsuarioLookup;
 import com.proyectogrado.voluntario_service.model.VoluntarioLookup;
@@ -9,14 +8,12 @@ import com.proyectogrado.voluntario_service.repository.VoluntarioLookupRepositor
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Perfil propio del voluntario: ver sus datos y editar su disponibilidad.
+ * Perfil propio del voluntario: ver sus datos.
  *
  * Todavía no existe ninguna relación (con organizaciones, personas
  * mayores o actividades) para el voluntario — ni en el monolito ni en
@@ -58,25 +55,7 @@ public class VoluntarioController {
                 idVoluntario,
                 usuario.getNombreUsuario(),
                 usuario.getCelular(),
-                usuario.getCorreo(),
-                voluntario.getDisponibilidad()
+                usuario.getCorreo()
         ));
-    }
-
-    @PutMapping("/disponibilidad")
-    public ResponseEntity<?> actualizarDisponibilidad(
-            @RequestHeader("X-User-Id") Integer idVoluntario,
-            @RequestBody ActualizarDisponibilidadRequest request
-    ) {
-        VoluntarioLookup voluntario = voluntarioLookupRepository.findById(idVoluntario).orElse(null);
-
-        if (voluntario == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        voluntario.setDisponibilidad(request.disponibilidad());
-        voluntarioLookupRepository.save(voluntario);
-
-        return ResponseEntity.ok("Disponibilidad actualizada correctamente");
     }
 }

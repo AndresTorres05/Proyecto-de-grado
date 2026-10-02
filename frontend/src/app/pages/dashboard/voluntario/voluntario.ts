@@ -24,11 +24,6 @@ interface StatCard {
   label: string;
 }
 
-interface Disponibilidad {
-  dia: string;
-  disponible: boolean;
-}
-
 interface AlertaConsulta {
   nombre: string;
   descripcion: string;
@@ -125,41 +120,6 @@ export class VoluntarioDashboard implements OnInit {
   // =========================================================
 
   protected readonly actividades = signal<Actividad[]>([]);
-
-  // =========================================================
-  // DISPONIBILIDAD
-  // =========================================================
-
-  protected readonly disponibilidad: Disponibilidad[] = [
-    {
-      dia: 'Lun',
-      disponible: true
-    },
-    {
-      dia: 'Mar',
-      disponible: true
-    },
-    {
-      dia: 'Mié',
-      disponible: false
-    },
-    {
-      dia: 'Jue',
-      disponible: true
-    },
-    {
-      dia: 'Vie',
-      disponible: true
-    },
-    {
-      dia: 'Sáb',
-      disponible: false
-    },
-    {
-      dia: 'Dom',
-      disponible: false
-    }
-  ];
 
   // =========================================================
   // ALERTAS

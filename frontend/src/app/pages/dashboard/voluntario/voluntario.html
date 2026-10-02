@@ -51,20 +51,6 @@
     </div>
 
     <div class="col">
-      <div class="panel card">
-        <div class="panel__header">
-          <h2>Mi disponibilidad</h2>
-        </div>
-        <div class="availability-row">
-          @for (d of disponibilidad; track d.dia) {
-            <div class="availability-day" [class.availability-day--on]="d.disponible">
-              {{ d.dia }}
-            </div>
-          }
-        </div>
-        <button type="button" class="btn btn-outline availability-btn">Actualizar disponibilidad</button>
-      </div>
-
       <div class="panel card alerts-panel">
         <div class="panel__header">
           <h2>Alertas asignadas</h2>

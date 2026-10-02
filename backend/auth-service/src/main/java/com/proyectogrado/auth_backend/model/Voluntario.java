@@ -15,15 +15,11 @@ public class Voluntario {
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
-    @Column(name = "disponibilidad")
-    private String disponibilidad;
-
     public Voluntario() {
     }
 
-    public Voluntario(Usuario usuario, String disponibilidad) {
+    public Voluntario(Usuario usuario) {
         this.usuario = usuario;
-        this.disponibilidad = disponibilidad;
     }
 
     public Integer getIdUsuario() {
@@ -40,13 +36,5 @@ public class Voluntario {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
-    }
-
-    public String getDisponibilidad() {
-        return disponibilidad;
-    }
-
-    public void setDisponibilidad(String disponibilidad) {
-        this.disponibilidad = disponibilidad;
     }
 }

@@ -4,7 +4,6 @@ public record VoluntarioPerfilResponse(
         Integer idUsuario,
         String nombre,
         String celular,
-        String correo,
-        String disponibilidad
+        String correo
 ) {
 }

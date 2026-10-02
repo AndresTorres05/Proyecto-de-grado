@@ -347,9 +347,6 @@ datos AS (
                'Rivera','Gómez','Díaz','Reyes','Cruz','Morales','Ortiz','Gutiérrez','Chaparro','Vargas',
                'Suárez','Castañeda','Bautista','Cárdenas','Rincón'])
             [1 + floor(random() * 24)::int] AS apellido2,
-        (ARRAY['Fines de semana', 'Entre semana en las mañanas', 'Entre semana en las tardes',
-               'Horario flexible', 'Solo festivos'])
-            [1 + floor(random() * 5)::int] AS disponibilidad,
         (18 + floor(random() * 50))::int AS edad,
         o.id_organizacion
     FROM generate_series(1, 25) AS s(i)
@@ -357,7 +354,7 @@ datos AS (
     JOIN orgs o ON o.rn = 1 + ((s.i - 1) % n_org.n)
 ),
 filas AS (
-    SELECT d.i, d.disponibilidad, d.id_organizacion,
+    SELECT d.i, d.id_organizacion,
            CASE WHEN d.idx_nombre < 10 THEN 'Femenino' ELSE 'Masculino' END AS genero,
            (ARRAY['Laura','Valentina','Sandra','Natalia','Ana','Diana','Paola','Andrea','Camila','Daniela',
                   'Sebastián','Luis','Carlos','Mateo','Santiago','Julián','David','Andrés','Felipe','Nicolás'])
@@ -376,9 +373,9 @@ ins_usuario AS (
     FROM filas f CROSS JOIN seed_reloj r
     RETURNING id_usuario, correo
 )
-INSERT INTO voluntario (id_usuario, disponibilidad)
-SELECT u.id_usuario, f.disponibilidad
-FROM ins_usuario u JOIN filas f ON f.correo = u.correo;
+INSERT INTO voluntario (id_usuario)
+SELECT u.id_usuario
+FROM ins_usuario u;
 
 -- ---------------------------------------------------------------------
 -- 7. Roles de las 250 cuentas de personas
