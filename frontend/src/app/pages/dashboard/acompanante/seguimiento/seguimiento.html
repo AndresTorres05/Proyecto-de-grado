@@ -55,42 +55,30 @@
   }
 
 
-  <!-- Personas mayores -->
+  <!-- Selector de persona mayor (la lista completa está en la página Personas mayores) -->
 
   @if (
     !cargandoPersonas &&
     personasMayores.length > 0
   ) {
 
-    <section class="seguimiento__seccion">
+    @if (personasMayores.length > 1) {
 
-      <div class="seccion__header">
-        <h2>Personas mayores</h2>
+      <div class="seguimiento__selector">
+        <label for="personaSeguimiento">Persona mayor</label>
 
-        @if (personasMayores.length > 1) {
-          <p>Selecciona una persona mayor para ver su seguimiento.</p>
-        }
+        <select
+          id="personaSeguimiento"
+          [ngModel]="personaSeleccionada?.idUsuario ?? null"
+          (ngModelChange)="seleccionarPorId($event)"
+        >
+          @for (persona of personasMayores; track persona.idUsuario) {
+            <option [ngValue]="persona.idUsuario">{{ persona.nombre }}</option>
+          }
+        </select>
       </div>
 
-      <div class="seguimiento__lista">
-
-        @for (persona of personasMayores; track persona.idUsuario) {
-
-          <app-person-card
-            etiqueta="Persona mayor"
-            [nombre]="persona.nombre"
-            [celular]="persona.celular"
-            estado="Acompañamiento activo"
-            [clickable]="true"
-            [seleccionada]="personaSeleccionada?.idUsuario === persona.idUsuario"
-            (cardClick)="seleccionarPersona(persona)"
-          />
-
-        }
-
-      </div>
-
-    </section>
+    }
 
 
     <!-- Medicamentos de la persona seleccionada -->

@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import {
   AcompananteService,
@@ -11,17 +12,17 @@ import {
   formatearProximaToma
 } from '../../../../core/medicamentos/medicamento.service';
 import { Icon } from '../../../../shared/icon/icon';
-import { PersonCard } from '../../../../shared/person-card/person-card';
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
 /**
- * Seguimiento de medicamentos: el acompañante elige una de sus personas
- * mayores y ve sus medicamentos con la próxima toma.
+ * Seguimiento de medicamentos: el acompañante ve los medicamentos de una de
+ * sus personas mayores con la próxima toma. Si acompaña a varias, la elige
+ * en un selector (empieza con la primera).
  */
 @Component({
   selector: 'app-seguimiento',
   standalone: true,
-  imports: [CommonModule, Icon, PersonCard],
+  imports: [CommonModule, FormsModule, Icon],
   templateUrl: './seguimiento.html',
   styleUrl: './seguimiento.css'
 })
@@ -58,8 +59,8 @@ export class Seguimiento implements OnInit {
         this.personasMayores = data;
         this.cargandoPersonas = false;
 
-        // Si acompaña a una sola persona mayor, se selecciona de una vez.
-        if (this.personasMayores.length === 1) {
+        // Se empieza con la primera; si hay varias, se cambia en el selector.
+        if (this.personasMayores.length > 0) {
           this.seleccionarPersona(this.personasMayores[0]);
         }
 
@@ -90,7 +91,8 @@ export class Seguimiento implements OnInit {
         const idSeleccionada = this.personaSeleccionada?.idUsuario;
         this.personaSeleccionada =
           data.find((p) => p.idUsuario === idSeleccionada)
-          ?? (data.length === 1 ? data[0] : null);
+          ?? data[0]
+          ?? null;
 
         if (this.personaSeleccionada) {
           this.cargarMedicamentos(this.personaSeleccionada.idUsuario, false);
@@ -111,6 +113,14 @@ export class Seguimiento implements OnInit {
     this.medicamentos = [];
 
     this.cargarMedicamentos(persona.idUsuario);
+  }
+
+  seleccionarPorId(idPersonaMayor: number): void {
+    const persona = this.personasMayores.find((p) => p.idUsuario === idPersonaMayor);
+
+    if (persona) {
+      this.seleccionarPersona(persona);
+    }
   }
 
   /** Con mostrarCargando en false, la lista se actualiza sin parpadear (cambios en vivo). */

@@ -51,10 +51,35 @@
   color: var(--vita-text-gray);
 }
 
-.seguimiento__lista {
+.seguimiento__selector {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 8px;
+  max-width: 360px;
+  margin-bottom: 32px;
+}
+
+.seguimiento__selector label {
+  color: var(--vita-navy);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.seguimiento__selector select {
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--vita-border);
+  border-radius: 10px;
+  background: var(--vita-white);
+  color: var(--vita-navy);
+  font: inherit;
+  cursor: pointer;
+}
+
+.seguimiento__selector select:focus {
+  outline: none;
+  border-color: var(--vita-navy);
+  box-shadow: 0 0 0 3px rgba(0, 48, 73, 0.08);
 }
 
 
