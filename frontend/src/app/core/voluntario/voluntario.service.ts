@@ -24,7 +24,7 @@ export interface OrganizacionVoluntario {
 export class VoluntarioService {
   private http = inject(HttpClient);
 
-  private apiUrl = 'http://localhost:8080/api/voluntario/organizaciones';
+  private apiUrl = '/api/voluntario/organizaciones';
 
   /** Todas las organizaciones con el estado del vínculo del voluntario. */
   listarOrganizaciones(): Observable<OrganizacionVoluntario[]> {

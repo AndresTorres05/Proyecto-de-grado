@@ -123,7 +123,7 @@ export function tiempoParaCita(cita: CitaMedica, ahora: Date = new Date()): stri
 @Injectable({ providedIn: 'root' })
 export class CitaMedicaService {
 
-  private readonly apiUrl = 'http://localhost:8080/api/persona-mayor/citas-medicas';
+  private readonly apiUrl = '/api/persona-mayor/citas-medicas';
 
   constructor(private http: HttpClient) {}
 

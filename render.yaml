@@ -1,0 +1,103 @@
+# Blueprint de Render: los 10 servicios del backend, cada uno en el plan gratis.
+# Los servicios gratis no reciben tráfico por la red privada de Render, así que
+# se llaman entre sí por sus URLs públicas (https://<nombre>.onrender.com).
+# Si Render le asigna a un servicio un nombre distinto, hay que corregir su URL aquí.
+
+services:
+  - type: web
+    name: vitamas-tesis-gateway
+    runtime: docker
+    plan: free
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./api-gateway
+    envVars:
+      - { key: AUTH_URL,          value: https://vitamas-tesis-auth.onrender.com }
+      - { key: MESSAGING_URL,     value: https://vitamas-tesis-messaging.onrender.com }
+      - { key: SALUD_URL,         value: https://vitamas-tesis-salud.onrender.com }
+      - { key: PERSONA_MAYOR_URL, value: https://vitamas-tesis-persona-mayor.onrender.com }
+      - { key: ACOMPANANTE_URL,   value: https://vitamas-tesis-acompanante.onrender.com }
+      - { key: VOLUNTARIO_URL,    value: https://vitamas-tesis-voluntario.onrender.com }
+      - { key: ORGANIZACION_URL,  value: https://vitamas-tesis-organizacion.onrender.com }
+      - { key: ACTIVIDAD_URL,     value: https://vitamas-tesis-actividad.onrender.com }
+      - { key: ANALITICA_URL,     value: https://vitamas-tesis-analitica.onrender.com }
+
+  - type: web
+    name: vitamas-tesis-auth
+    runtime: docker
+    plan: free
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./auth-service
+    envVars:
+      - { key: MESSAGING_SERVICE_URL, value: https://vitamas-tesis-messaging.onrender.com }
+
+  - type: web
+    name: vitamas-tesis-messaging
+    runtime: docker
+    plan: free
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./messaging-service
+
+  - type: web
+    name: vitamas-tesis-salud
+    runtime: docker
+    plan: free
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./salud-service
+    envVars:
+      - { key: MESSAGING_SERVICE_URL, value: https://vitamas-tesis-messaging.onrender.com }
+
+  - type: web
+    name: vitamas-tesis-persona-mayor
+    runtime: docker
+    plan: free
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./persona-mayor-service
+    envVars:
+      - { key: MESSAGING_SERVICE_URL, value: https://vitamas-tesis-messaging.onrender.com }
+
+  - type: web
+    name: vitamas-tesis-acompanante
+    runtime: docker
+    plan: free
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./acompanante-service
+
+  - type: web
+    name: vitamas-tesis-voluntario
+    runtime: docker
+    plan: free
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./voluntario-service
+
+  - type: web
+    name: vitamas-tesis-organizacion
+    runtime: docker
+    plan: free
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./organizacion-service
+
+  - type: web
+    name: vitamas-tesis-actividad
+    runtime: docker
+    plan: free
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./actividad-service
+    envVars:
+      - { key: MESSAGING_SERVICE_URL, value: https://vitamas-tesis-messaging.onrender.com }
+
+  - type: web
+    name: vitamas-tesis-analitica
+    runtime: docker
+    plan: free
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./analitica-service

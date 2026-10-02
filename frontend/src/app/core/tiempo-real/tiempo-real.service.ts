@@ -37,7 +37,7 @@ const REINTENTO_MAXIMO_MS = 30_000;
 @Injectable({ providedIn: 'root' })
 export class TiempoRealService {
 
-  private readonly url = 'http://localhost:8080/api/eventos';
+  private readonly url = '/api/eventos';
 
   private readonly avisos$ = new Subject<string>();
 

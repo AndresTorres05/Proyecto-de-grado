@@ -22,7 +22,7 @@ export interface GustoRequest {
 @Injectable({ providedIn: 'root' })
 export class GustoService {
 
-  private readonly apiUrl = 'http://localhost:8080/api/gustos';
+  private readonly apiUrl = '/api/gustos';
 
   constructor(private http: HttpClient) {}
 
@@ -44,12 +44,12 @@ export class GustoService {
 
   /** Gustos que tiene marcados una persona mayor. */
   listarAsignados(idPersonaMayor: number): Observable<Gusto[]> {
-    return this.http.get<Gusto[]>(`http://localhost:8080/api/persona-mayor/${idPersonaMayor}/gustos`);
+    return this.http.get<Gusto[]>(`/api/persona-mayor/${idPersonaMayor}/gustos`);
   }
 
   /** Reemplaza los gustos marcados de la persona mayor por los de la lista. */
   asignar(idPersonaMayor: number, idsGustos: number[]): Observable<Gusto[]> {
-    return this.http.put<Gusto[]>(`http://localhost:8080/api/persona-mayor/${idPersonaMayor}/gustos`, {
+    return this.http.put<Gusto[]>(`/api/persona-mayor/${idPersonaMayor}/gustos`, {
       idsGustos
     });
   }

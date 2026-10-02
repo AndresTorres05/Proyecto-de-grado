@@ -35,7 +35,7 @@ spring:
             # registro son públicos; auth-service valida el token por su cuenta
             # en las demás rutas.
             - id: auth-backend
-              uri: http://localhost:8081
+              uri: ${AUTH_URL:http://localhost:8081}
               predicates:
                 - Path=/api/auth/**
 
@@ -43,13 +43,13 @@ spring:
             # lo llama auth-service directamente, y si estuviera abierto se
             # podrían adivinar códigos de otros celulares sin pasar por el login.
             - id: messaging-otp
-              uri: http://localhost:8082
+              uri: ${MESSAGING_URL:http://localhost:8082}
               predicates:
                 - Path=/api/otp/send
 
             # Campanita del panel: SMS enviados al usuario autenticado.
             - id: messaging-notificaciones
-              uri: http://localhost:8082
+              uri: ${MESSAGING_URL:http://localhost:8082}
               predicates:
                 - Path=/api/notificaciones/**
               filters:
@@ -58,7 +58,7 @@ spring:
             # Perfil, gustos, acompañantes, organizaciones y botón de emergencia
             # de la persona mayor.
             - id: personamayor-service
-              uri: http://localhost:8085
+              uri: ${PERSONA_MAYOR_URL:http://localhost:8085}
               predicates:
                 - Path=/api/persona-mayor/acompanantes/**,/api/persona-mayor/organizaciones/**,/api/persona-mayor/emergencia,/api/persona-mayor/*/gustos,/api/persona-mayor/perfil,/api/gustos/**
               filters:
@@ -66,7 +66,7 @@ spring:
 
             # Personas mayores a cargo del acompañante y su seguimiento.
             - id: acompanante-service
-              uri: http://localhost:8086
+              uri: ${ACOMPANANTE_URL:http://localhost:8086}
               predicates:
                 - Path=/api/acompanante/**
               filters:
@@ -76,7 +76,7 @@ spring:
             # Los atiende persona-mayor-service. Va antes de organizacion-service
             # porque /api/organizacion/** la capturaría.
             - id: organizacion-personas-mayores-acompanantes
-              uri: http://localhost:8085
+              uri: ${PERSONA_MAYOR_URL:http://localhost:8085}
               predicates:
                 - Path=/api/organizacion/personas-mayores/*/acompanantes
               filters:
@@ -85,7 +85,7 @@ spring:
             # Signos vitales que registra la organización (salud-service). Va
             # antes de organizacion-service porque /api/organizacion/** la capturaría.
             - id: organizacion-signos-vitales
-              uri: http://localhost:8084
+              uri: ${SALUD_URL:http://localhost:8084}
               predicates:
                 - Path=/api/organizacion/signos-vitales/**
               filters:
@@ -94,7 +94,7 @@ spring:
             # Voluntarios de la organización: la vinculación vive en
             # voluntario-service. Va antes de organizacion-service por la misma razón.
             - id: organizacion-voluntarios
-              uri: http://localhost:8087
+              uri: ${VOLUNTARIO_URL:http://localhost:8087}
               predicates:
                 - Path=/api/organizacion/voluntarios,/api/organizacion/voluntarios/**
               filters:
@@ -102,7 +102,7 @@ spring:
 
             # Información de la organización y sus personas mayores.
             - id: organizacion-service
-              uri: http://localhost:8088
+              uri: ${ORGANIZACION_URL:http://localhost:8088}
               predicates:
                 - Path=/api/organizacion/**
               filters:
@@ -110,7 +110,7 @@ spring:
 
             # Analítica de la organización: datos de los reportes y su PDF.
             - id: analitica-service
-              uri: http://localhost:8090
+              uri: ${ANALITICA_URL:http://localhost:8090}
               predicates:
                 - Path=/api/analitica/**
               filters:
@@ -118,7 +118,7 @@ spring:
 
             # Perfil del voluntario y sus vínculos con organizaciones.
             - id: voluntario-service
-              uri: http://localhost:8087
+              uri: ${VOLUNTARIO_URL:http://localhost:8087}
               predicates:
                 - Path=/api/voluntario/**
               filters:
@@ -126,7 +126,7 @@ spring:
 
             # Medicamentos y recordatorios de la persona mayor.
             - id: salud-backend
-              uri: http://localhost:8084
+              uri: ${SALUD_URL:http://localhost:8084}
               predicates:
                 - Path=/api/persona-mayor/medicamentos/**
               filters:
@@ -135,7 +135,7 @@ spring:
             # Citas médicas de la persona mayor: registrarlas, editarlas,
             # borrarlas y ver las próximas y las pasadas.
             - id: salud-citas-medicas
-              uri: http://localhost:8084
+              uri: ${SALUD_URL:http://localhost:8084}
               predicates:
                 - Path=/api/persona-mayor/citas-medicas/**
               filters:
@@ -147,7 +147,7 @@ spring:
             # OPTIONS hace falta para el preflight de CORS del navegador: sin
             # él no hay ruta y el gateway responde sin cabeceras CORS.
             - id: salud-signos-vitales-persona-mayor
-              uri: http://localhost:8084
+              uri: ${SALUD_URL:http://localhost:8084}
               predicates:
                 - Path=/api/persona-mayor/signos-vitales
                 - Method=GET,POST,OPTIONS
@@ -156,7 +156,7 @@ spring:
 
             # Actividades de las organizaciones y participación en ellas.
             - id: actividad-service
-              uri: http://localhost:8089
+              uri: ${ACTIVIDAD_URL:http://localhost:8089}
               predicates:
                 - Path=/api/actividades/**
               filters:

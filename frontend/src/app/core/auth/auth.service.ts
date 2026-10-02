@@ -155,8 +155,8 @@ const RUTAS_POR_ROL: Record<string, string> = {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  private readonly apiUrl = 'http://localhost:8080/api/auth';
-  private readonly otpApiUrl = 'http://localhost:8080/api/otp';
+  private readonly apiUrl = '/api/auth';
+  private readonly otpApiUrl = '/api/otp';
 
   private readonly autenticadoSignal = signal(restaurarSesion());
 

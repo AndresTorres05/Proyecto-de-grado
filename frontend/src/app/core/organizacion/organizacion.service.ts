@@ -51,8 +51,8 @@ export interface AcompanantePersonaMayor {
   providedIn: 'root',
 })
 export class OrganizacionService {
-  private readonly apiUrl = 'http://localhost:8080/api/organizacion';
-  private readonly authInformacionUrl = 'http://localhost:8080/api/auth/informacion';
+  private readonly apiUrl = '/api/organizacion';
+  private readonly authInformacionUrl = '/api/auth/informacion';
 
   constructor(private http: HttpClient) {}
 
@@ -98,13 +98,13 @@ export class OrganizacionService {
   /** Lado de la persona mayor: solicitudes de organizaciones que no ha respondido. */
   obtenerSolicitudesOrganizaciones(): Observable<OrganizacionSolicitud[]> {
     return this.http.get<OrganizacionSolicitud[]>(
-      'http://localhost:8080/api/persona-mayor/organizaciones/solicitudes',
+      '/api/persona-mayor/organizaciones/solicitudes',
     );
   }
 
   aceptarSolicitudOrganizacion(idOrganizacion: number): Observable<string> {
     return this.http.put(
-      `http://localhost:8080/api/persona-mayor/organizaciones/solicitudes/${idOrganizacion}/aceptar`,
+      `/api/persona-mayor/organizaciones/solicitudes/${idOrganizacion}/aceptar`,
       {},
       { responseType: 'text' },
     );
@@ -112,7 +112,7 @@ export class OrganizacionService {
 
   rechazarSolicitudOrganizacion(idOrganizacion: number): Observable<string> {
     return this.http.put(
-      `http://localhost:8080/api/persona-mayor/organizaciones/solicitudes/${idOrganizacion}/rechazar`,
+      `/api/persona-mayor/organizaciones/solicitudes/${idOrganizacion}/rechazar`,
       {},
       { responseType: 'text' },
     );
@@ -120,13 +120,13 @@ export class OrganizacionService {
   /** Lado de la persona mayor: organizaciones con vínculo aceptado. */
   obtenerOrganizaciones(): Observable<OrganizacionSolicitud[]> {
     return this.http.get<OrganizacionSolicitud[]>(
-      'http://localhost:8080/api/persona-mayor/organizaciones',
+      '/api/persona-mayor/organizaciones',
     );
   }
   /** La persona mayor deshace el vínculo con una organización. */
   cancelarAsociacionOrganizacion(idOrganizacion: number): Observable<string> {
     return this.http.delete(
-      `http://localhost:8080/api/persona-mayor/organizaciones/${idOrganizacion}`,
+      `/api/persona-mayor/organizaciones/${idOrganizacion}`,
       { responseType: 'text' },
     );
   }

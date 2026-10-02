@@ -75,7 +75,7 @@ export function formatearProximaToma(proximaToma: string | null | undefined): st
 @Injectable({ providedIn: 'root' })
 export class MedicamentoService {
 
-  private readonly apiUrl = 'http://localhost:8080/api/persona-mayor/medicamentos';
+  private readonly apiUrl = '/api/persona-mayor/medicamentos';
 
   constructor(private http: HttpClient) {}
 

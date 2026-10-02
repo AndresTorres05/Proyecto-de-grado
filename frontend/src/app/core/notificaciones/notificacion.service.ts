@@ -20,7 +20,7 @@ export interface NotificacionesResponse {
 @Injectable({ providedIn: 'root' })
 export class NotificacionService {
 
-  private readonly apiUrl = 'http://localhost:8080/api/notificaciones';
+  private readonly apiUrl = '/api/notificaciones';
 
   constructor(private http: HttpClient) {}
 

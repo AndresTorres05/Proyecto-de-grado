@@ -114,7 +114,7 @@ export function separarPorFecha<T extends { fecha: string | null; hora: string |
 })
 export class ActividadService {
 
-  private readonly apiUrl = 'http://localhost:8080/api/actividades';
+  private readonly apiUrl = '/api/actividades';
 
   constructor(private http: HttpClient) {}
 

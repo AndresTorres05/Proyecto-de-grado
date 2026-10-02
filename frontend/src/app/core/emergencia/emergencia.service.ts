@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 export class EmergenciaService {
 
   private readonly apiUrl =
-    'http://localhost:8080/api/persona-mayor/emergencia';
+    '/api/persona-mayor/emergencia';
 
   constructor(private http: HttpClient) {}
 

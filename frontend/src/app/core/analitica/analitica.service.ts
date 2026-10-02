@@ -85,7 +85,7 @@ export interface ReportePdf {
 @Injectable({ providedIn: 'root' })
 export class AnaliticaService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/analitica';
+  private apiUrl = '/api/analitica';
 
   /** Actividades con fecha entre desde y hasta (YYYY-MM-DD; null = sin límite). */
   actividades(desde: string | null, hasta: string | null): Observable<ActividadAnalitica[]> {

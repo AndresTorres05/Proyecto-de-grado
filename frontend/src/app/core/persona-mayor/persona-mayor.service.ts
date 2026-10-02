@@ -30,9 +30,9 @@ export interface CambiarContrasenaRequest {
 @Injectable({ providedIn: 'root' })
 export class PersonaMayorService {
 
-  private readonly authUrl = 'http://localhost:8080/api/auth/informacion';
-  private readonly perfilUrl = 'http://localhost:8080/api/persona-mayor/perfil';
-  private readonly contrasenaUrl = 'http://localhost:8080/api/auth/contrasena';
+  private readonly authUrl = '/api/auth/informacion';
+  private readonly perfilUrl = '/api/persona-mayor/perfil';
+  private readonly contrasenaUrl = '/api/auth/contrasena';
 
   constructor(private http: HttpClient) {}
 

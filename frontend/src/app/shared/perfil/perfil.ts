@@ -135,7 +135,7 @@ export class Perfil implements OnInit {
       this.tipoPerfil === 'ACOMPANANTE' ||
       this.tipoPerfil === 'VOLUNTARIO'
     ) {
-      this.http.get<any>('http://localhost:8080/api/auth/informacion').subscribe({
+      this.http.get<any>('/api/auth/informacion').subscribe({
         next: (data) => {
           this.informacion = {
             idUsuario: data.idUsuario,
@@ -164,7 +164,7 @@ export class Perfil implements OnInit {
     if (this.esOrganizacion) {
       this.organizacionService.obtenerInformacion().subscribe({
         next: (data) => {
-          this.http.get<any>('http://localhost:8080/api/auth/informacion').subscribe({
+          this.http.get<any>('/api/auth/informacion').subscribe({
             next: (identidad) => {
               this.informacion = this.normalizarOrganizacion(data, identidad);
 
@@ -276,7 +276,7 @@ export class Perfil implements OnInit {
       this.tipoPerfil === 'VOLUNTARIO'
     ) {
       this.http
-        .put<any>('http://localhost:8080/api/auth/informacion', {
+        .put<any>('/api/auth/informacion', {
           nombre: this.formulario.nombre,
           correo: this.formulario.correo || null,
           fechaNacimiento: this.formulario.fechaNacimiento || null,
@@ -327,7 +327,7 @@ export class Perfil implements OnInit {
         .subscribe({
           next: (data) => {
             this.http
-              .get<any>('http://localhost:8080/api/auth/informacion')
+              .get<any>('/api/auth/informacion')
               .pipe(timeout(10000))
               .subscribe({
                 next: (identidad) => {
@@ -352,7 +352,7 @@ export class Perfil implements OnInit {
 
     // No se llega aquí: los cuatro roles se atienden arriba.
     this.http
-      .put<any>('http://localhost:8080/api/auth/informacion', {
+      .put<any>('/api/auth/informacion', {
         nombre: this.formulario.nombre,
         correo: this.formulario.correo,
       })
@@ -495,7 +495,7 @@ export class Perfil implements OnInit {
 
     this.http
       .put(
-        'http://localhost:8080/api/auth/contrasena',
+        '/api/auth/contrasena',
         {
           contrasenaActual: this.informacion.tieneContrasena ? this.contrasenaActual : undefined,
 

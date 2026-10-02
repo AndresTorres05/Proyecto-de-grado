@@ -82,8 +82,8 @@ export interface Actividad {
 })
 export class AcompananteService {
 
-  private readonly apiUrl = 'http://localhost:8080/api';
-private readonly authUrl = 'http://localhost:8080/api/auth';
+  private readonly apiUrl = '/api';
+private readonly authUrl = '/api/auth';
 
   constructor(private http: HttpClient) {}
 
