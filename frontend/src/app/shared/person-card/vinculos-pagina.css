@@ -33,7 +33,7 @@
   line-height: 1.5;
 }
 
-/* ---------- Mensajes ---------- */
+/* Mensajes */
 
 .vinculos__message {
   display: flex;
@@ -55,7 +55,7 @@
   color: #c62828;
 }
 
-/* ---------- Secciones ---------- */
+/* Secciones */
 
 .vinculos__section {
   margin-bottom: 36px;
@@ -101,7 +101,7 @@
   gap: 18px;
 }
 
-/* ---------- Buscador ---------- */
+/* Buscador */
 
 .vinculos__search {
   width: 100%;
@@ -124,7 +124,7 @@
   box-shadow: 0 0 0 3px rgba(0, 48, 73, 0.08);
 }
 
-/* ---------- Botones de aceptar / rechazar / solicitar ---------- */
+/* Botones de aceptar / rechazar / solicitar */
 
 .vinculos__primary,
 .vinculos__secondary {
@@ -164,7 +164,7 @@
   cursor: not-allowed;
 }
 
-/* ---------- Estados vacío / cargando ---------- */
+/* Estados vacío / cargando */
 
 .vinculos__empty {
   padding: 36px 20px;
@@ -198,7 +198,7 @@
   color: var(--vita-text-gray);
 }
 
-/* ---------- Responsive ---------- */
+/* Responsive */
 
 @media (max-width: 768px) {
   .vinculos {

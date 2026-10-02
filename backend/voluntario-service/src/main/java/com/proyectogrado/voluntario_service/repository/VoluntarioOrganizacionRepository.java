@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+/**
+ * Acceso a la tabla voluntario_organizacion (ver VoluntarioOrganizacion).
+ */
 public interface VoluntarioOrganizacionRepository
         extends JpaRepository<VoluntarioOrganizacion, VoluntarioOrganizacionId> {
 

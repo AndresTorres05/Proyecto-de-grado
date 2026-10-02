@@ -16,10 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
  * Perfil propio del voluntario: ver sus datos. Por ahora el panel del
  * voluntario en el frontend no consume este endpoint.
  *
- * Todavía no existe ningún vínculo del voluntario con organizaciones,
- * personas mayores o actividades. Cuando se defina, se le agregan aquí su
- * modelo, repositorio y controlador, con el mismo patrón de
- * persona-mayor-service y acompanante-service.
+ * Los vínculos del voluntario con organizaciones están en
+ * VoluntarioOrganizacionController. Con personas mayores o actividades
+ * todavía no tiene ninguno.
  *
  * El id del usuario autenticado llega en el encabezado X-User-Id, que pone
  * el gateway después de validar el token. Este servicio no valida tokens.

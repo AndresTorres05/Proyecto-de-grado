@@ -330,7 +330,7 @@ FROM ins_usuario u JOIN filas f ON f.correo = u.correo;
 
 -- 6. 25 voluntarios (usuario + voluntario), cada uno vinculado a una de
 --    las 5 organizaciones ficticias (voluntario_organizacion, ACEPTADA).
---    El usuario NO lleva id_organizacion: esa columna es solo para las
+--    El usuario no lleva id_organizacion: esa columna es solo para las
 --    cuentas de las organizaciones.
 WITH orgs AS (
     SELECT id_organizacion, row_number() OVER (ORDER BY id_organizacion) AS rn

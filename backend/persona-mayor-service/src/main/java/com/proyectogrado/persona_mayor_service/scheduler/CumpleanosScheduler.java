@@ -22,10 +22,10 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Todos los dias a las 8 a.m. (hora de Colombia):
+ * Todos los días a las 8 a.m. (hora de Colombia):
  * - Por cada persona mayor que cumple años, VITA+ la felicita por SMS (que
- *   tambien queda en la campanita) y se les recuerda a sus acompañantes y
- *   organizaciones con relacion ACEPTADA para que la feliciten.
+ *   también queda en la campanita) y se les recuerda a sus acompañantes y
+ *   organizaciones con relación ACEPTADA para que la feliciten.
  * - Por cada acompañante o voluntario que cumple años, VITA+ lo felicita.
  *
  * Los nacidos un 29 de febrero reciben los mensajes el 28 en años no bisiestos.
@@ -58,7 +58,7 @@ public class CumpleanosScheduler {
         revisarCumpleanos(ZonaHoraria.hoy());
     }
 
-    // Separado para poder probar el flujo con cualquier fecha.
+    /** Separado para poder probar el flujo con cualquier fecha. */
     void revisarCumpleanos(LocalDate hoy) {
         List<Integer> dias = (hoy.getMonth() == Month.FEBRUARY && hoy.getDayOfMonth() == 28 && !hoy.isLeapYear())
                 ? List.of(28, 29)
@@ -94,7 +94,7 @@ public class CumpleanosScheduler {
                 .map(UsuarioLookup::getNombreUsuario)
                 .orElse("una persona mayor que acompañas");
 
-        // Felicitacion de VITA+ a la persona mayor
+        // Felicitación de VITA+ a la persona mayor
         usuario.ifPresent(this::felicitar);
 
         String recordatorio = "Hoy es el cumpleaños de " + nombre
@@ -112,7 +112,7 @@ public class CumpleanosScheduler {
                     .ifPresent(celulares::add);
         }
 
-        // Igual que la alerta de emergencia: el celular del primer usuario de la organizacion
+        // Igual que la alerta de emergencia: el celular del primer usuario de la organización
         for (PersonaMayorOrganizacion relacion
                 : relacionOrganizacionRepository.findById_IdPersonaMayorAndEstado(idPersonaMayor, "ACEPTADA")) {
 
@@ -129,7 +129,10 @@ public class CumpleanosScheduler {
         }
     }
 
-    // Felicitacion de VITA+ al usuario que cumple años (persona mayor, acompañante o voluntario)
+    /**
+     * Felicitación de VITA+ al usuario que cumple años (persona mayor,
+     * acompañante o voluntario).
+     */
     private void felicitar(UsuarioLookup usuario) {
         String celular = usuario.getCelular();
         if (celular == null || celular.isBlank()) {

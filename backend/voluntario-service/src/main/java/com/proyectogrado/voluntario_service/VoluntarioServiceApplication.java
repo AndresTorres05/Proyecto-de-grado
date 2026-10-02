@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * Punto de entrada de voluntario-service (puerto 8087): perfil del
- * voluntario.
+ * voluntario y sus vínculos con organizaciones.
  */
 @SpringBootApplication
 public class VoluntarioServiceApplication {

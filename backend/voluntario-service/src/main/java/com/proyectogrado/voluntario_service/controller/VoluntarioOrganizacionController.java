@@ -28,16 +28,16 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Vinculacion de voluntarios con organizaciones:
- * - El voluntario consulta las organizaciones y envia solicitudes.
- * - La organizacion acepta o rechaza las solicitudes y ve sus voluntarios.
+ * Vinculación de voluntarios con organizaciones:
+ * - El voluntario consulta las organizaciones y envía solicitudes.
+ * - La organización acepta o rechaza las solicitudes y ve sus voluntarios.
  *
- * Igual que PersonaMayorOrganizacionController en personamayor-service,
- * aqui viven los dos lados del vinculo. El api-gateway enruta
+ * Igual que PersonaMayorOrganizacionController en persona-mayor-service,
+ * aquí viven los dos lados del vínculo. El gateway enruta
  * /api/organizacion/voluntarios/** a este servicio.
  *
- * El id del usuario autenticado llega en el header X-User-Id, puesto
- * por el api-gateway despues de validar el JWT.
+ * El id del usuario autenticado llega en el encabezado X-User-Id, que pone
+ * el gateway después de validar el token.
  */
 @RestController
 public class VoluntarioOrganizacionController {
@@ -56,12 +56,10 @@ public class VoluntarioOrganizacionController {
         this.usuarioLookupRepository = usuarioLookupRepository;
     }
 
-    // =========================================================
-    // VOLUNTARIO: organizaciones y solicitudes
-    // =========================================================
+    // Lado del voluntario: organizaciones y solicitudes
 
     /**
-     * Todas las organizaciones, cada una con el estado del vinculo del
+     * Todas las organizaciones, cada una con el estado del vínculo del
      * voluntario (null si nunca ha solicitado). Con esto el frontend arma
      * "mis organizaciones", "mis solicitudes" y "disponibles".
      */
@@ -92,6 +90,10 @@ public class VoluntarioOrganizacionController {
         return ResponseEntity.ok(respuesta);
     }
 
+    /**
+     * Envía una solicitud de vinculación. Si la organización la había
+     * rechazado antes, la solicitud vuelve a quedar PENDIENTE.
+     */
     @PostMapping("/api/voluntario/organizaciones/{idOrganizacion}/solicitud")
     public ResponseEntity<String> solicitarVinculacion(
             @RequestHeader("X-User-Id") Integer idVoluntario,
@@ -133,7 +135,7 @@ public class VoluntarioOrganizacionController {
     }
 
     /**
-     * Borra el vinculo, sea cual sea su estado: cancela una solicitud
+     * Borra el vínculo, sea cual sea su estado: cancela una solicitud
      * pendiente, descarta una rechazada o desvincula al voluntario.
      */
     @DeleteMapping("/api/voluntario/organizaciones/{idOrganizacion}")
@@ -162,10 +164,9 @@ public class VoluntarioOrganizacionController {
         return ResponseEntity.ok(mensaje);
     }
 
-    // =========================================================
-    // ORGANIZACION: voluntarios y solicitudes
-    // =========================================================
+    // Lado de la organización: voluntarios y solicitudes
 
+    /** Voluntarios vinculados (solicitud ACEPTADA), ordenados por nombre. */
     @GetMapping("/api/organizacion/voluntarios")
     public ResponseEntity<?> listarVoluntarios(
             @RequestHeader("X-User-Id") Integer idUsuarioOrganizacion
@@ -173,6 +174,7 @@ public class VoluntarioOrganizacionController {
         return listarPorEstado(idUsuarioOrganizacion, VoluntarioOrganizacion.ACEPTADA);
     }
 
+    /** Solicitudes PENDIENTES de voluntarios, ordenadas por nombre. */
     @GetMapping("/api/organizacion/voluntarios/solicitudes")
     public ResponseEntity<?> listarSolicitudes(
             @RequestHeader("X-User-Id") Integer idUsuarioOrganizacion
@@ -180,6 +182,7 @@ public class VoluntarioOrganizacionController {
         return listarPorEstado(idUsuarioOrganizacion, VoluntarioOrganizacion.PENDIENTE);
     }
 
+    /** Acepta una solicitud pendiente; si ya se respondió, responde 400. */
     @PutMapping("/api/organizacion/voluntarios/solicitudes/{idVoluntario}/aceptar")
     public ResponseEntity<String> aceptarSolicitud(
             @RequestHeader("X-User-Id") Integer idUsuarioOrganizacion,
@@ -189,6 +192,7 @@ public class VoluntarioOrganizacionController {
                 VoluntarioOrganizacion.ACEPTADA, "Solicitud aceptada correctamente");
     }
 
+    /** Rechaza una solicitud pendiente; el voluntario puede volver a enviarla. */
     @PutMapping("/api/organizacion/voluntarios/solicitudes/{idVoluntario}/rechazar")
     public ResponseEntity<String> rechazarSolicitud(
             @RequestHeader("X-User-Id") Integer idUsuarioOrganizacion,
@@ -198,6 +202,7 @@ public class VoluntarioOrganizacionController {
                 VoluntarioOrganizacion.RECHAZADA, "Solicitud rechazada correctamente");
     }
 
+    /** Quita el vínculo con un voluntario aceptado. */
     @DeleteMapping("/api/organizacion/voluntarios/{idVoluntario}")
     public ResponseEntity<String> desvincularVoluntario(
             @RequestHeader("X-User-Id") Integer idUsuarioOrganizacion,
@@ -224,19 +229,19 @@ public class VoluntarioOrganizacionController {
         return ResponseEntity.ok("Voluntario desvinculado correctamente");
     }
 
-    // =========================================================
-    // Helpers
-    // =========================================================
+    // Métodos auxiliares
 
-    // Se mira el rol y no la tabla "voluntario": hay cuentas viejas con el
-    // rol VOLUNTARIO que no tienen su fila en esa tabla.
+    /**
+     * Se mira el rol y no la tabla voluntario: hay cuentas viejas con el rol
+     * VOLUNTARIO que no tienen su fila en esa tabla.
+     */
     private boolean esVoluntario(Integer idUsuario) {
         return usuarioLookupRepository.tieneRol(idUsuario, "VOLUNTARIO");
     }
 
     /**
-     * Organizacion del usuario autenticado, o null si no es una cuenta de
-     * organizacion. Se exige el rol: otros usuarios podrian tener
+     * Organización del usuario autenticado, o null si no es una cuenta de
+     * organización. Se exige el rol: otros usuarios podrían tener
      * id_organizacion por datos viejos.
      */
     private Integer obtenerIdOrganizacion(Integer idUsuario) {
@@ -249,6 +254,7 @@ public class VoluntarioOrganizacionController {
                 .orElse(null);
     }
 
+    /** Voluntarios de la organización con ese estado, ordenados por nombre. */
     private ResponseEntity<?> listarPorEstado(Integer idUsuarioOrganizacion, String estado) {
         Integer idOrganizacion = obtenerIdOrganizacion(idUsuarioOrganizacion);
 
@@ -281,6 +287,7 @@ public class VoluntarioOrganizacionController {
         return ResponseEntity.ok(respuesta);
     }
 
+    /** Pasa una solicitud PENDIENTE al nuevo estado (ACEPTADA o RECHAZADA). */
     private ResponseEntity<String> responderSolicitud(
             Integer idUsuarioOrganizacion,
             Integer idVoluntario,
@@ -312,6 +319,10 @@ public class VoluntarioOrganizacionController {
         return ResponseEntity.ok(mensaje);
     }
 
+    /**
+     * Organización tal como la ve el voluntario. El celular y el correo de
+     * contacto son los de la primera cuenta de la organización.
+     */
     private OrganizacionVoluntarioResponse aOrganizacion(OrganizacionLookup organizacion, String estado) {
         UsuarioLookup contacto = usuarioLookupRepository
                 .findCuentasOrganizacion(organizacion.getIdOrganizacion())

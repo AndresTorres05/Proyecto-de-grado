@@ -44,8 +44,8 @@ export interface AcompanantePersonaMayor {
 }
 
 /**
- * Vínculos entre organizaciones y personas mayores, vistos desde los dos
- * lados, y el perfil de la organización.
+ * Vínculos de la organización con personas mayores (vistos desde los dos
+ * lados) y con voluntarios, y el perfil de la organización.
  */
 @Injectable({
   providedIn: 'root',
@@ -138,14 +138,14 @@ export class OrganizacionService {
     );
   }
 
-  // =========================================================
-  // VOLUNTARIOS (los atiende voluntario-service vía el gateway)
-  // =========================================================
+  // Voluntarios (los atiende voluntario-service vía el gateway)
 
+  /** Voluntarios con vínculo aceptado. */
   obtenerVoluntarios(): Observable<VoluntarioOrganizacion[]> {
     return this.http.get<VoluntarioOrganizacion[]>(`${this.apiUrl}/voluntarios`);
   }
 
+  /** Solicitudes de voluntarios que la organización no ha respondido. */
   obtenerSolicitudesVoluntarios(): Observable<VoluntarioOrganizacion[]> {
     return this.http.get<VoluntarioOrganizacion[]>(`${this.apiUrl}/voluntarios/solicitudes`);
   }

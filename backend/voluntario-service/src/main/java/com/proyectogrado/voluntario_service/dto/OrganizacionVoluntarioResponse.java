@@ -1,7 +1,7 @@
 package com.proyectogrado.voluntario_service.dto;
 
 /**
- * Organizacion vista por el voluntario. "estado" es el de su vinculo con
+ * Organización vista por el voluntario. "estado" es el de su vínculo con
  * ella: PENDIENTE, ACEPTADA, RECHAZADA o null si nunca ha solicitado.
  */
 public record OrganizacionVoluntarioResponse(

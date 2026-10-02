@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 /**
  * Vista de solo lectura de la tabla usuario, que pertenece a auth-service.
  * Este servicio nunca crea, edita ni borra usuarios: la vista existe para
- * mostrar nombre, celular y correo en el perfil del voluntario sin llamar
+ * leer nombre, celular, correo y organización de las cuentas sin llamar
  * por HTTP a auth-service. Es válido porque todos los servicios comparten
  * la misma base de datos.
  */

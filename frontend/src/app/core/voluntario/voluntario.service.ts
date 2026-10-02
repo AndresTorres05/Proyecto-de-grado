@@ -14,8 +14,10 @@ export interface OrganizacionVoluntario {
   estado: EstadoVinculo | null;
 }
 
-// Todo pasa por el api-gateway (8080): valida el token y pone el
-// X-User-Id del voluntario.
+/**
+ * Vínculos del voluntario con organizaciones. Todo pasa por el gateway
+ * (8080), que valida el token y agrega el X-User-Id del voluntario.
+ */
 @Injectable({
   providedIn: 'root',
 })

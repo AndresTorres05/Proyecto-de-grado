@@ -27,9 +27,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Verifica que el dia del cumpleaños de una persona mayor VITA+ la
- * felicite y se les recuerde a su acompañante y a su organizacion, que
- * VITA+ tambien felicite a acompañantes y voluntarios en su cumpleaños, y
+ * Verifica que el día del cumpleaños de una persona mayor VITA+ la
+ * felicite y se les recuerde a su acompañante y a su organización, que
+ * VITA+ también felicite a acompañantes y voluntarios en su cumpleaños, y
  * que los nacidos un 29 de febrero reciban los mensajes el 28 en años no
  * bisiestos.
  */
@@ -64,7 +64,7 @@ class CumpleanosSchedulerTest {
         when(persona.getIdUsuario()).thenReturn(ID_PERSONA);
         when(persona.getFechaNacimiento()).thenAnswer(inv -> fechaNacimiento);
 
-        // Simula la consulta por mes y dias de la BD
+        // Simula la consulta por mes y días de la BD
         PersonaMayorLookupRepository personaRepo = mock(PersonaMayorLookupRepository.class);
         when(personaRepo.findCumpleanos(anyInt(), anyCollection())).thenAnswer(inv ->
                 cumpleEn(fechaNacimiento, inv.getArgument(0), inv.getArgument(1))
@@ -152,7 +152,7 @@ class CumpleanosSchedulerTest {
     void nacidoEl29DeFebreroRecibeAvisoEl28EnAnoNoBisiesto() {
         fechaNacimiento = LocalDate.of(1948, 2, 29);
 
-        // Felicitacion + recordatorio al acompañante + recordatorio a la organizacion
+        // Felicitación + recordatorio al acompañante + recordatorio a la organización
         scheduler.revisarCumpleanos(LocalDate.of(2027, 2, 28));
         assertEquals(3, envios.size());
 

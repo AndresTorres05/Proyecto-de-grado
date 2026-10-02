@@ -35,9 +35,8 @@ interface AlertaConsulta {
 /**
  * Inicio del panel del voluntario. Por ahora casi todo son datos de
  * ejemplo: los indicadores, la próxima actividad y las alertas no salen del
- * backend. Las actividades sí se piden, pero actividad-service responde 403
- * a los voluntarios porque todavía no tienen vínculo con organizaciones, así
- * que esa lista queda vacía.
+ * backend. Las actividades sí se piden, pero actividad-service todavía no
+ * atiende a los voluntarios (responde 403), así que esa lista queda vacía.
  */
 @Component({
   selector: 'app-voluntario-dashboard',

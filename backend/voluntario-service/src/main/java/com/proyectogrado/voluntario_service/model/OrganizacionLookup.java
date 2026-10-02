@@ -6,8 +6,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * Vista de SOLO LECTURA sobre la tabla "organizacion" (dueña de
- * auth-backend), para listarle al voluntario las organizaciones a las
+ * Vista de solo lectura de la tabla organizacion, que pertenece a
+ * auth-service. Sirve para listarle al voluntario las organizaciones a las
  * que puede pedir vincularse.
  */
 @Entity
@@ -24,8 +24,8 @@ public class OrganizacionLookup {
     @Column(name = "direccion")
     private String direccion;
 
+    /** Lo exige JPA. */
     protected OrganizacionLookup() {
-        // JPA
     }
 
     public Integer getIdOrganizacion() {

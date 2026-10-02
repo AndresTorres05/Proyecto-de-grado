@@ -3,13 +3,14 @@ package com.proyectogrado.salud_backend.validacion;
 import com.proyectogrado.salud_backend.dto.SignoVitalRequest;
 
 /**
- * Validacion de una medicion de signos vitales, la misma para la que
- * registra la organizacion y la que registra la persona mayor.
+ * Validación de una medición de signos vitales, la misma para la que
+ * registra la organización y la que registra la persona mayor.
  */
 public final class SignoVitalValidador {
 
-    // Límites de lo físicamente posible (fuera de esto es un error al
-    // digitar). Deben coincidir con LIMITES de frontend/core/signos-vitales/rangos.ts.
+    // Límites de lo físicamente posible; un valor por fuera es un error de
+    // digitación. Deben coincidir con LIMITES en
+    // frontend/src/app/core/signos-vitales/rangos.ts.
     private static final double[] SISTOLICA = {60, 260};
     private static final double[] DIASTOLICA = {30, 160};
     private static final double[] PULSO = {30, 220};

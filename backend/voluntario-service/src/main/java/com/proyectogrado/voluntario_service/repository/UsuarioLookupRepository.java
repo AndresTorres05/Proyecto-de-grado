@@ -21,7 +21,7 @@ public interface UsuarioLookupRepository extends JpaRepository<UsuarioLookup, In
     boolean tieneRol(@Param("idUsuario") Integer idUsuario, @Param("rol") String rol);
 
     /**
-     * Cuentas con rol ORGANIZACION de una organizacion (de ahi se sacan su
+     * Cuentas con rol ORGANIZACION de una organización (de ahí se sacan su
      * celular y correo de contacto).
      */
     @Query(value = """

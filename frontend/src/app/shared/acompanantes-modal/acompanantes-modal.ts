@@ -2,6 +2,7 @@ import { Component, input, output } from '@angular/core';
 
 import { Icon } from '../icon/icon';
 
+/** Acompañante tal como lo muestra el modal. */
 export interface AcompananteResumen {
   idUsuario: number;
   nombre: string;
@@ -10,8 +11,8 @@ export interface AcompananteResumen {
 }
 
 /**
- * Modal estandar con los acompañantes de una persona mayor. Solo
- * presenta: cada pagina carga la lista con el endpoint que le
+ * Modal estándar con los acompañantes de una persona mayor. Solo
+ * presenta: cada página carga la lista con el endpoint que le
  * corresponde a su rol.
  */
 @Component({

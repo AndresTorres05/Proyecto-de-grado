@@ -5,7 +5,7 @@ import java.time.ZoneId;
 
 /**
  * Los cumpleaños se cuentan en hora de Colombia. Si se usara la zona del
- * servidor (p. ej. UTC en un despliegue) el aviso podria salir el dia
+ * servidor (p. ej. UTC en un despliegue), el aviso podría salir el día
  * anterior en la noche.
  */
 public final class ZonaHoraria {

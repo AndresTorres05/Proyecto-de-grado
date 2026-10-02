@@ -6,12 +6,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 /**
- * Vinculo voluntario <-> organizacion. Lo crea el voluntario como
- * solicitud (PENDIENTE) y la organizacion lo ACEPTA o lo RECHAZA. Un
- * voluntario puede estar vinculado a varias organizaciones, pero tiene
- * a lo sumo un registro por organizacion.
+ * Vínculo entre un voluntario y una organización. Lo crea el voluntario
+ * como solicitud (PENDIENTE) y la organización lo acepta (ACEPTADA) o lo
+ * rechaza (RECHAZADA). Un voluntario puede estar vinculado a varias
+ * organizaciones, pero tiene a lo sumo un registro por organización.
  *
- * Esta tabla es dueña de voluntario-service (la crea Hibernate con
+ * La tabla es de voluntario-service (la crea Hibernate con
  * ddl-auto=update); los endpoints de ambos lados viven en este servicio.
  */
 @Entity
@@ -28,8 +28,8 @@ public class VoluntarioOrganizacion {
     @Column(name = "estado", nullable = false)
     private String estado = PENDIENTE;
 
+    /** Lo exige JPA. */
     protected VoluntarioOrganizacion() {
-        // JPA
     }
 
     public VoluntarioOrganizacion(Integer idVoluntario, Integer idOrganizacion) {

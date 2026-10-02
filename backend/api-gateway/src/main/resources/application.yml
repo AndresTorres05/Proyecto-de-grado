@@ -108,7 +108,7 @@ spring:
               filters:
                 - JwtAuth
 
-            # Perfil del voluntario.
+            # Perfil del voluntario y sus vínculos con organizaciones.
             - id: voluntario-service
               uri: http://localhost:8087
               predicates:

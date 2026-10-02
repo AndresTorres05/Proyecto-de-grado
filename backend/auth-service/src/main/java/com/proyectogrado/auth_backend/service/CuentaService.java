@@ -49,7 +49,7 @@ public class CuentaService {
         ejecutar("DELETE FROM persona_mayor_acompanante"
                 + " WHERE id_persona_mayor = :id OR id_acompanante = :id", idUsuario);
 
-        // Vinculos y solicitudes como voluntario
+        // Vínculos y solicitudes como voluntario
         ejecutarSiExisteTabla("voluntario_organizacion",
                 "DELETE FROM voluntario_organizacion WHERE id_voluntario = :id", idUsuario);
 
@@ -89,8 +89,11 @@ public class CuentaService {
         ejecutar("DELETE FROM organizacion WHERE id_organizacion = :id", idOrganizacion);
     }
 
-    // voluntario_organizacion la crea voluntario-service al arrancar; si
-    // nunca ha arrancado, la tabla no existe y el DELETE abortaria todo.
+    /**
+     * Ejecuta el DELETE solo si la tabla existe. voluntario_organizacion la
+     * crea voluntario-service al arrancar; si nunca ha arrancado, la tabla no
+     * existe y el DELETE abortaría todo.
+     */
     private void ejecutarSiExisteTabla(String tabla, String sql, Integer id) {
         Object existe = entityManager
                 .createNativeQuery("SELECT to_regclass(:tabla) IS NOT NULL")
