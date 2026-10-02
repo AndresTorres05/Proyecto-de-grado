@@ -1,5 +1,6 @@
 package com.proyectogrado.salud_backend.controller;
 
+import com.proyectogrado.salud_backend.config.ZonaHoraria;
 import com.proyectogrado.salud_backend.dto.CitaMedicaRequest;
 import com.proyectogrado.salud_backend.dto.CitaMedicaResponse;
 import com.proyectogrado.salud_backend.model.CitaMedica;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -17,7 +19,8 @@ import java.util.List;
 
 /**
  * Citas médicas de la persona mayor autenticada: crear, listar, editar y
- * borrar. Los recordatorios (un día y una hora antes) los envía
+ * borrar. Solo se registran citas futuras, y las que ya pasaron no se
+ * editan (quedan como historial; sí se pueden borrar). Los recordatorios (un día y una hora antes) los envía
  * CitaMedicaReminderScheduler; los acompañantes las consultan desde
  * acompanante-service.
  */
@@ -68,7 +71,10 @@ public class CitaMedicaController {
                 .body(aRespuesta(cita));
     }
 
-    /** Edita una cita; si no es de esta persona mayor, responde 403. */
+    /**
+     * Edita una cita; si no es de esta persona mayor, responde 403, y si ya
+     * pasó, 400.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizar(
             @RequestHeader("X-User-Id") Integer idPersonaMayor,
@@ -80,6 +86,11 @@ public class CitaMedicaController {
         if (cita == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("Esta cita médica no pertenece a este usuario");
+        }
+
+        if (!cita.getInicio().isAfter(ZonaHoraria.ahora())) {
+            return ResponseEntity.badRequest()
+                    .body("Esta cita ya pasó y no se puede editar");
         }
 
         String errorCita = validar(request);
@@ -129,18 +140,26 @@ public class CitaMedicaController {
         return cita;
     }
 
-    /** Mensaje de error si falta un dato obligatorio o la fecha/hora no se entiende; null si todo está bien. */
+    /**
+     * Mensaje de error si falta un dato obligatorio, la fecha/hora no se
+     * entiende o ya pasó; null si todo está bien.
+     */
     private String validar(CitaMedicaRequest request) {
         if (estaVacio(request.getTitulo()) || estaVacio(request.getLugar())
                 || estaVacio(request.getFecha()) || estaVacio(request.getHora())) {
             return "Escribe el motivo, el lugar, la fecha y la hora de la cita";
         }
 
+        LocalDateTime inicio;
         try {
-            LocalDate.parse(request.getFecha());
-            LocalTime.parse(request.getHora());
+            inicio = LocalDate.parse(request.getFecha())
+                    .atTime(LocalTime.parse(request.getHora()));
         } catch (DateTimeParseException e) {
             return "La fecha o la hora de la cita no son válidas";
+        }
+
+        if (!inicio.isAfter(ZonaHoraria.ahora())) {
+            return "La fecha y la hora de la cita deben ser posteriores a este momento";
         }
 
         return null;
@@ -161,6 +180,11 @@ public class CitaMedicaController {
     ) {
         cita.setTitulo(request.getTitulo().trim());
         cita.setLugar(request.getLugar().trim());
+        cita.setConsultorio(
+                estaVacio(request.getConsultorio())
+                        ? null
+                        : request.getConsultorio().trim()
+        );
         cita.setObservaciones(
                 estaVacio(request.getObservaciones())
                         ? null
@@ -179,6 +203,7 @@ public class CitaMedicaController {
                 cita.getIdCita(),
                 cita.getTitulo(),
                 cita.getLugar(),
+                cita.getConsultorio(),
                 cita.getFecha() != null
                         ? cita.getFecha().toString()
                         : null,

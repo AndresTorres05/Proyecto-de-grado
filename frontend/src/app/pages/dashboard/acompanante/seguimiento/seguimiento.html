@@ -315,10 +315,17 @@
                       <strong>{{ formatearHora(cita.hora) }}</strong>
                     </div>
 
-                    <div class="dato dato--ancho">
+                    <div class="dato" [class.dato--ancho]="!cita.consultorio">
                       <span>Lugar</span>
                       <strong>{{ cita.lugar }}</strong>
                     </div>
+
+                    @if (formatearConsultorio(cita.consultorio); as consultorio) {
+                      <div class="dato">
+                        <span>Consultorio</span>
+                        <strong>{{ consultorio }}</strong>
+                      </div>
+                    }
 
                     @if (cita.observaciones) {
                       <div class="dato dato--ancho">
@@ -351,7 +358,7 @@
                 <li>
                   <span class="citas__fecha">{{ fechaDeCita(cita) }}, {{ formatearHora(cita.hora) }}</span>
                   <strong>{{ cita.titulo }}</strong>
-                  <span>{{ cita.lugar }}</span>
+                  <span>{{ cita.lugar }}@if (formatearConsultorio(cita.consultorio); as consultorio) { · {{ consultorio }} }</span>
                 </li>
               }
             </ul>

@@ -173,6 +173,25 @@ class CitaMedicaReminderSchedulerTest {
     }
 
     @Test
+    void elConsultorioVaDespuesDelLugarSinRepetirLaPalabra() {
+        LocalDateTime inicio = LocalDateTime.of(2026, 10, 5, 15, 0);
+        programar(inicio);
+        cita.setRecordatorioDiaEnviadoPara(inicio); // solo interesa el aviso de una hora antes
+        cita.setConsultorio("204");
+
+        simularMinutos(inicio.minusMinutes(61), inicio.minusMinutes(59));
+
+        cita.setConsultorio("Consultorio 305");
+        cita.setRecordatorioHoraEnviadoPara(null);
+        simularMinutos(inicio.minusMinutes(59), inicio.minusMinutes(58));
+
+        assertEquals(List.of(
+                "En 1 hora, a las 3:00 p. m., tienes cita médica: Cardiología en Hospital San José, consultorio 204.",
+                "En 59 minutos, a las 3:00 p. m., tienes cita médica: Cardiología en Hospital San José, Consultorio 305."
+        ), mensajesA(CEL_PERSONA));
+    }
+
+    @Test
     void siSeRegistraElMismoDiaElPrimerAvisoDiceHoy() {
         LocalDateTime inicio = LocalDateTime.of(2026, 10, 5, 15, 0);
         programar(inicio);

@@ -8,6 +8,7 @@ public class CitaMedicaResponse {
     private Integer idCita;
     private String titulo;
     private String lugar;
+    private String consultorio;
     private String fecha;   // "yyyy-MM-dd"
     private String hora;    // "HH:mm"
     private String observaciones;
@@ -16,6 +17,7 @@ public class CitaMedicaResponse {
             Integer idCita,
             String titulo,
             String lugar,
+            String consultorio,
             String fecha,
             String hora,
             String observaciones
@@ -23,6 +25,7 @@ public class CitaMedicaResponse {
         this.idCita = idCita;
         this.titulo = titulo;
         this.lugar = lugar;
+        this.consultorio = consultorio;
         this.fecha = fecha;
         this.hora = hora;
         this.observaciones = observaciones;
@@ -38,6 +41,10 @@ public class CitaMedicaResponse {
 
     public String getLugar() {
         return lugar;
+    }
+
+    public String getConsultorio() {
+        return consultorio;
     }
 
     public String getFecha() {

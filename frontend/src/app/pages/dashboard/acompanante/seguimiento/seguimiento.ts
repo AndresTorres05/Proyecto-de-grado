@@ -13,6 +13,7 @@ import {
 } from '../../../../core/medicamentos/medicamento.service';
 import {
   CitaMedica,
+  formatearConsultorio,
   formatearFechaCita,
   separarCitas,
   tiempoParaCita
@@ -55,6 +56,7 @@ export class Seguimiento implements OnInit {
   errorCitas = '';
 
   protected readonly formatearHora = formatearHora;
+  protected readonly formatearConsultorio = formatearConsultorio;
 
   constructor(
     private acompananteService: AcompananteService,

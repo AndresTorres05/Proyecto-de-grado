@@ -30,6 +30,9 @@ public class CitaMedicaLookup {
     @Column(name = "lugar")
     private String lugar;
 
+    @Column(name = "consultorio")
+    private String consultorio;
+
     @Column(name = "fecha")
     private LocalDate fecha;
 
@@ -57,6 +60,10 @@ public class CitaMedicaLookup {
 
     public String getLugar() {
         return lugar;
+    }
+
+    public String getConsultorio() {
+        return consultorio;
     }
 
     public LocalDate getFecha() {

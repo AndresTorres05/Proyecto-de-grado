@@ -150,6 +150,7 @@ public class AcompananteSeguimientoController {
                         c.getIdCita(),
                         c.getTitulo(),
                         c.getLugar(),
+                        c.getConsultorio(),
                         c.getFecha() != null ? c.getFecha().toString() : null,
                         c.getHora() != null ? c.getHora().format(formatoHora) : null,
                         c.getObservaciones()

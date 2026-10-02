@@ -29,6 +29,10 @@ public class CitaMedica {
     @Column(name = "lugar", nullable = false)
     private String lugar;
 
+    /** Opcional: consultorio, piso o sala dentro del lugar. */
+    @Column(name = "consultorio")
+    private String consultorio;
+
     @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
 
@@ -83,6 +87,14 @@ public class CitaMedica {
 
     public void setLugar(String lugar) {
         this.lugar = lugar;
+    }
+
+    public String getConsultorio() {
+        return consultorio;
+    }
+
+    public void setConsultorio(String consultorio) {
+        this.consultorio = consultorio;
     }
 
     public LocalDate getFecha() {

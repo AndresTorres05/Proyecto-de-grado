@@ -105,6 +105,7 @@ ALTER TABLE persona_mayor_acompanante ADD COLUMN IF NOT EXISTS solicitada_por va
 -- arrancar.
 ALTER TABLE cita_medica ADD COLUMN IF NOT EXISTS recordatorio_dia_enviado_para timestamp;
 ALTER TABLE cita_medica ADD COLUMN IF NOT EXISTS recordatorio_hora_enviado_para timestamp;
+ALTER TABLE cita_medica ADD COLUMN IF NOT EXISTS consultorio varchar(255);
 
 CREATE TABLE seed_tmp.seed_usuarios_viejos AS
 SELECT id_usuario, celular FROM usuario WHERE correo LIKE '%@vitaplus.test';
@@ -759,13 +760,16 @@ citas AS (
     CROSS JOIN seed_tmp.seed_reloj r
     CROSS JOIN LATERAL generate_series(1, o.n_citas) AS k
 )
-INSERT INTO cita_medica (id_persona_mayor, titulo, lugar, fecha, hora, observaciones,
+INSERT INTO cita_medica (id_persona_mayor, titulo, lugar, consultorio, fecha, hora, observaciones,
                          recordatorio_dia_enviado_para, recordatorio_hora_enviado_para)
 SELECT ci.id_usuario, c.titulo,
        CASE WHEN c.especialista OR ci.ips IS NULL
             THEN (ARRAY['Hospital El Tunal', 'Hospital de Meissen', 'Hospital de Kennedy',
                         'Hospital San José'])[1 + floor(random() * 4)::int]
             ELSE ci.ips END,
+       CASE WHEN ci.r_obs < 0.7
+            THEN 'Consultorio ' || (100 + floor(random() * 400)::int)
+            ELSE NULL END,
        ci.fecha, ci.hora,
        CASE WHEN c.recomendacion IS NOT NULL AND ci.r_obs < 0.8 THEN c.recomendacion
             WHEN ci.r_obs < 0.88 THEN NULL

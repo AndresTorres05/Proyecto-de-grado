@@ -7,6 +7,7 @@ public class CitaMedicaRequest {
 
     private String titulo;
     private String lugar;
+    private String consultorio;   // opcional
     private String fecha;   // "yyyy-MM-dd"
     private String hora;    // "HH:mm"
     private String observaciones;
@@ -28,6 +29,14 @@ public class CitaMedicaRequest {
 
     public void setLugar(String lugar) {
         this.lugar = lugar;
+    }
+
+    public String getConsultorio() {
+        return consultorio;
+    }
+
+    public void setConsultorio(String consultorio) {
+        this.consultorio = consultorio;
     }
 
     public String getFecha() {

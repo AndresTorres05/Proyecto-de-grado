@@ -5,7 +5,8 @@ import {
   CitaMedica,
   CitaMedicaRequest,
   TEXTO_AVISOS_CITA,
-  formatearFechaCita,
+  fechaLocal,
+  formatearConsultorio,
   momentoDeCita,
   separarCitas,
   tiempoParaCita
@@ -17,10 +18,20 @@ import { Icon } from '../../../../shared/icon/icon';
 /** Citas pasadas que se muestran antes de pulsar "Ver todas". */
 const PASADAS_VISIBLES = 5;
 
+/** Partes de la fecha para la "hoja de calendario" de cada tarjeta. */
+interface PartesFecha {
+  dia: number;
+  mes: string;      // "oct"
+  semana: string;   // "lunes"
+  anio: number;
+}
+
 /**
  * Citas médicas de la persona mayor: las próximas, el historial de las que
- * ya pasaron y un formulario para registrarlas o editarlas. salud-service
- * envía los recordatorios por SMS un día antes y una hora antes.
+ * ya pasaron y un formulario para registrarlas o editarlas. Solo se
+ * registran citas futuras, y las pasadas no se editan (sí se pueden
+ * borrar). salud-service envía los recordatorios por SMS un día antes y
+ * una hora antes.
  */
 @Component({
   selector: 'app-citas-medicas',
@@ -33,6 +44,10 @@ export class CitasMedicas implements OnInit, OnDestroy {
 
   protected readonly textoAvisos = TEXTO_AVISOS_CITA;
   protected readonly formatearHora = formatearHora;
+  protected readonly formatearConsultorio = formatearConsultorio;
+
+  /** Fecha mínima del formulario: no se registran citas en días pasados. */
+  protected readonly hoy = computed(() => fechaLocal(this.ahora()));
 
   /** Hora actual; se refresca cada minuto para que las citas pasen solas al historial. */
   protected readonly ahora = signal(new Date());
@@ -55,9 +70,13 @@ export class CitasMedicas implements OnInit, OnDestroy {
   protected readonly errorFormulario = signal<string | null>(null);
   protected readonly idEditando = signal<number | null>(null);
 
+  /** Tras un intento de guardar incompleto, se marcan en rojo los campos obligatorios vacíos. */
+  protected readonly intentoGuardar = signal(false);
+
   // Campos del formulario
   titulo = '';
   lugar = '';
+  consultorio = '';
   fecha = '';
   hora = '';
   observaciones = '';
@@ -94,15 +113,27 @@ export class CitasMedicas implements OnInit, OnDestroy {
     });
   }
 
-  protected fechaDe(cita: CitaMedica): string {
-    return formatearFechaCita(cita.fecha, this.ahora());
-  }
-
   protected faltaPara(cita: CitaMedica): string | null {
     return tiempoParaCita(cita, this.ahora());
   }
 
-  /** Si la fecha y hora escritas en el formulario ya pasaron (la cita irá al historial). */
+  /** Día, mes y día de la semana de la cita, para la hoja de calendario. */
+  protected partesFecha(cita: CitaMedica): PartesFecha {
+    const momento = momentoDeCita(cita);
+    return {
+      dia: momento.getDate(),
+      mes: momento.toLocaleDateString('es-CO', { month: 'short' }).replace('.', ''),
+      semana: momento.toLocaleDateString('es-CO', { weekday: 'long' }),
+      anio: momento.getFullYear()
+    };
+  }
+
+  /** Si un campo obligatorio está vacío después de intentar guardar. */
+  protected faltaCampo(valor: string): boolean {
+    return this.intentoGuardar() && !valor.trim();
+  }
+
+  /** Si la fecha y hora escritas en el formulario ya pasaron (no se puede guardar). */
   protected fechaFormularioYaPaso(): boolean {
     if (!this.fecha || !this.hora) {
       return false;
@@ -124,6 +155,8 @@ export class CitasMedicas implements OnInit, OnDestroy {
   abrirFormularioNuevo(): void {
     this.idEditando.set(null);
     this.limpiarFormulario();
+    this.errorFormulario.set(null);
+    this.intentoGuardar.set(false);
     this.mostrandoFormulario.set(true);
   }
 
@@ -131,22 +164,26 @@ export class CitasMedicas implements OnInit, OnDestroy {
     this.idEditando.set(cita.idCita);
     this.titulo = cita.titulo;
     this.lugar = cita.lugar;
+    this.consultorio = cita.consultorio ?? '';
     this.fecha = cita.fecha;
     this.hora = cita.hora;
     this.observaciones = cita.observaciones ?? '';
     this.errorFormulario.set(null);
+    this.intentoGuardar.set(false);
     this.mostrandoFormulario.set(true);
   }
 
   cancelarFormulario(): void {
     this.mostrandoFormulario.set(false);
     this.errorFormulario.set(null);
+    this.intentoGuardar.set(false);
     this.limpiarFormulario();
   }
 
   private limpiarFormulario(): void {
     this.titulo = '';
     this.lugar = '';
+    this.consultorio = '';
     this.fecha = '';
     this.hora = '';
     this.observaciones = '';
@@ -154,8 +191,17 @@ export class CitasMedicas implements OnInit, OnDestroy {
 
   /** Crea o actualiza la cita, según si se está editando. */
   guardar(): void {
+    this.intentoGuardar.set(true);
+
     if (!this.titulo.trim() || !this.lugar.trim() || !this.fecha || !this.hora) {
-      this.errorFormulario.set('Escribe el motivo, el lugar, la fecha y la hora de la cita.');
+      this.errorFormulario.set('Completa los campos marcados con *.');
+      return;
+    }
+
+    // Por si la página lleva un rato abierta, se compara con la hora real.
+    this.ahora.set(new Date());
+    if (this.fechaFormularioYaPaso()) {
+      this.errorFormulario.set('La fecha y la hora de la cita deben ser posteriores a este momento.');
       return;
     }
 
@@ -165,6 +211,7 @@ export class CitasMedicas implements OnInit, OnDestroy {
     const request: CitaMedicaRequest = {
       titulo: this.titulo,
       lugar: this.lugar,
+      consultorio: this.consultorio || undefined,
       fecha: this.fecha,
       hora: this.hora,
       observaciones: this.observaciones || undefined
@@ -179,6 +226,7 @@ export class CitasMedicas implements OnInit, OnDestroy {
       next: () => {
         this.guardando.set(false);
         this.mostrandoFormulario.set(false);
+        this.intentoGuardar.set(false);
         this.limpiarFormulario();
         this.cargar(false);
       },

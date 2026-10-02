@@ -117,7 +117,7 @@ public class CitaMedicaReminderScheduler {
         // Java usa espacios de no separación en "p. m."; en un SMS se ven raros.
         String hora = inicio.format(FORMATO_HORA).replace(' ', ' ').replace(' ', ' ');
 
-        String detalle = "cita médica: " + cita.getTitulo() + " en " + cita.getLugar() + ".";
+        String detalle = "cita médica: " + cita.getTitulo() + " en " + dondeEs(cita) + ".";
 
         // Las indicaciones (ayuno, documentos...) sirven para preparar la cita
         // con tiempo: van solo en el aviso del día antes.
@@ -153,6 +153,22 @@ public class CitaMedicaReminderScheduler {
                 intentarEnviar(cita, celularAcompanante, mensaje);
             }
         }
+    }
+
+    /**
+     * Lugar y, si lo hay, consultorio: "Hospital San José, consultorio 204".
+     * Si la persona ya escribió "Consultorio 204", no se repite la palabra.
+     */
+    private String dondeEs(CitaMedica cita) {
+        String consultorio = cita.getConsultorio();
+        if (consultorio == null || consultorio.isBlank()) {
+            return cita.getLugar();
+        }
+        consultorio = consultorio.trim();
+        return cita.getLugar() + ", "
+                + (consultorio.toLowerCase(Locale.ROOT).startsWith("consultorio")
+                        ? consultorio
+                        : "consultorio " + consultorio);
     }
 
     /** "En 1 hora", o "En N minutos" si la cita se registró con menos tiempo. */

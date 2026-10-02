@@ -10,6 +10,7 @@ export interface CitaMedica {
   idCita: number;
   titulo: string;
   lugar: string;
+  consultorio: string | null;
   fecha: string;
   hora: string;
   observaciones: string | null;
@@ -19,6 +20,7 @@ export interface CitaMedica {
 export interface CitaMedicaRequest {
   titulo: string;
   lugar: string;
+  consultorio?: string;
   fecha: string;
   hora: string;
   observaciones?: string;
@@ -29,6 +31,23 @@ export interface CitaMedicaRequest {
  * MINUTOS_AVISO_HORA de CitaMedicaReminderScheduler en salud-service.
  */
 export const TEXTO_AVISOS_CITA = 'un día antes y una hora antes';
+
+/**
+ * Consultorio para mostrar: "204" -> "Consultorio 204". Si ya empieza por
+ * "consultorio" se deja como está. Igual que en los SMS de salud-service.
+ */
+export function formatearConsultorio(consultorio: string | null | undefined): string | null {
+  const texto = consultorio?.trim();
+  if (!texto) {
+    return null;
+  }
+  return texto.toLowerCase().startsWith('consultorio') ? texto : `Consultorio ${texto}`;
+}
+
+/** Fecha YYYY-MM-DD en hora local (toISOString() usaría UTC). */
+export function fechaLocal(fecha: Date): string {
+  return fecha.toLocaleDateString('en-CA');
+}
 
 /** Fecha y hora de la cita como Date local. */
 export function momentoDeCita(cita: CitaMedica): Date {
