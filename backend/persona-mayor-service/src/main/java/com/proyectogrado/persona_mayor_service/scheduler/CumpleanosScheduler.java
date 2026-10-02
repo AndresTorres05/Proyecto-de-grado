@@ -22,11 +22,11 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Todos los dias a las 8 a.m. (hora de Colombia), por cada persona mayor
- * que cumple años:
- * - VITA+ la felicita por SMS (que tambien queda en la campanita).
- * - Se les recuerda a sus acompañantes y organizaciones con relacion
- *   ACEPTADA para que la feliciten.
+ * Todos los dias a las 8 a.m. (hora de Colombia):
+ * - Por cada persona mayor que cumple años, VITA+ la felicita por SMS (que
+ *   tambien queda en la campanita) y se les recuerda a sus acompañantes y
+ *   organizaciones con relacion ACEPTADA para que la feliciten.
+ * - Por cada acompañante o voluntario que cumple años, VITA+ lo felicita.
  *
  * Los nacidos un 29 de febrero reciben los mensajes el 28 en años no bisiestos.
  */
@@ -67,40 +67,38 @@ public class CumpleanosScheduler {
         for (PersonaMayorLookup personaMayor
                 : personaMayorLookupRepository.findCumpleanos(hoy.getMonthValue(), dias)) {
             try {
-                avisar(personaMayor, hoy);
+                avisar(personaMayor);
             } catch (Exception e) {
                 System.out.println("[CUMPLEAÑOS] Error con persona mayor " + personaMayor.getIdUsuario()
                         + ": " + e.getMessage());
             }
         }
+
+        for (UsuarioLookup usuario
+                : usuarioLookupRepository.findCumpleanosAcompanantesYVoluntarios(hoy.getMonthValue(), dias)) {
+            try {
+                felicitar(usuario);
+            } catch (Exception e) {
+                System.out.println("[CUMPLEAÑOS] Error con usuario " + usuario.getIdUsuario()
+                        + ": " + e.getMessage());
+            }
+        }
     }
 
-    private void avisar(PersonaMayorLookup personaMayor, LocalDate hoy) {
+    private void avisar(PersonaMayorLookup personaMayor) {
         Integer idPersonaMayor = personaMayor.getIdUsuario();
 
         Optional<UsuarioLookup> usuario = usuarioLookupRepository.findById(idPersonaMayor);
 
         String nombre = usuario
                 .map(UsuarioLookup::getNombreUsuario)
-                .orElse("Una persona mayor que acompañas");
+                .orElse("una persona mayor que acompañas");
 
         // Felicitacion de VITA+ a la persona mayor
-        usuario.map(UsuarioLookup::getCelular)
-                .filter(celular -> !celular.isBlank())
-                .ifPresent(celular -> enviar(idPersonaMayor, celular,
-                        "¡Feliz cumpleaños, " + nombre
-                                + "! Todo el equipo de VITA+ te desea un día lleno de alegría y salud."));
+        usuario.ifPresent(this::felicitar);
 
-        // La fecha del perfil manda; si no la edito, se usa la del registro
-        LocalDate fechaNacimiento = personaMayor.getFechaNacimiento() != null
-                ? personaMayor.getFechaNacimiento()
-                : usuario.map(UsuarioLookup::getFechaNacimiento).orElse(null);
-
-        String recordatorio = fechaNacimiento != null
-                ? "Hoy es el cumpleaños de " + nombre + ": cumple "
-                        + (hoy.getYear() - fechaNacimiento.getYear())
-                        + " años. ¡No olvides felicitarle desde VITA+!"
-                : "Hoy es el cumpleaños de " + nombre + ". ¡No olvides felicitarle desde VITA+!";
+        String recordatorio = "Hoy es el cumpleaños de " + nombre
+                + ". Un saludo tuyo puede alegrarle el día.";
 
         // Un Set por si el mismo celular aparece dos veces
         Set<String> celulares = new LinkedHashSet<>();
@@ -131,9 +129,20 @@ public class CumpleanosScheduler {
         }
     }
 
-    private void enviar(Integer idPersonaMayor, String celular, String mensaje) {
+    // Felicitacion de VITA+ al usuario que cumple años (persona mayor, acompañante o voluntario)
+    private void felicitar(UsuarioLookup usuario) {
+        String celular = usuario.getCelular();
+        if (celular == null || celular.isBlank()) {
+            return;
+        }
+        enviar(usuario.getIdUsuario(), celular,
+                "¡Feliz cumpleaños, " + usuario.getNombreUsuario()
+                        + "! Todo el equipo de VITA+ te desea un día lleno de alegría y salud.");
+    }
+
+    private void enviar(Integer idUsuario, String celular, String mensaje) {
         boolean enviado = messagingClient.enviarMensaje(celular, mensaje);
-        System.out.println("[CUMPLEAÑOS] Persona mayor " + idPersonaMayor + " -> " + celular
+        System.out.println("[CUMPLEAÑOS] Usuario " + idUsuario + " -> " + celular
                 + ": " + (enviado ? "OK" : "FALLO"));
     }
 }

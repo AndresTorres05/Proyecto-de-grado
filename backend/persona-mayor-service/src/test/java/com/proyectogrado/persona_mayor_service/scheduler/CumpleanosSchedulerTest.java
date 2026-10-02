@@ -28,8 +28,9 @@ import static org.mockito.Mockito.when;
 
 /**
  * Verifica que el dia del cumpleaños de una persona mayor VITA+ la
- * felicite y se les recuerde a su acompañante y a su organizacion, y que
- * los nacidos un 29 de febrero reciban los mensajes el 28 en años no
+ * felicite y se les recuerde a su acompañante y a su organizacion, que
+ * VITA+ tambien felicite a acompañantes y voluntarios en su cumpleaños, y
+ * que los nacidos un 29 de febrero reciban los mensajes el 28 en años no
  * bisiestos.
  */
 class CumpleanosSchedulerTest {
@@ -44,12 +45,17 @@ class CumpleanosSchedulerTest {
     private static final String CEL_PERSONA = "+570000000001";
     private static final String CEL_ACOMPANANTE = "+570000000002";
     private static final String CEL_ORGANIZACION = "+570000000003";
+    private static final int ID_VOLUNTARIO = 40;
+    private static final String NOMBRE_VOLUNTARIO = "Voluntario de prueba";
+    private static final String CEL_VOLUNTARIO = "+570000000004";
 
     private record Envio(String celular, String mensaje) {
     }
 
     private final List<Envio> envios = new ArrayList<>();
     private LocalDate fechaNacimiento;
+    private LocalDate fechaNacimientoAcompanante;
+    private LocalDate fechaNacimientoVoluntario;
     private CumpleanosScheduler scheduler;
 
     @BeforeEach
@@ -81,6 +87,19 @@ class CumpleanosSchedulerTest {
         when(usuarioRepo.findById(ID_ACOMPANANTE)).thenReturn(Optional.of(usuarioAcompanante));
         when(usuarioRepo.findByIdOrganizacion(ID_ORGANIZACION)).thenReturn(List.of(usuarioOrganizacion));
 
+        // Simula la consulta de acompañantes y voluntarios que cumplen años
+        UsuarioLookup usuarioVoluntario = usuario(ID_VOLUNTARIO, NOMBRE_VOLUNTARIO, CEL_VOLUNTARIO);
+        when(usuarioRepo.findCumpleanosAcompanantesYVoluntarios(anyInt(), anyCollection())).thenAnswer(inv -> {
+            List<UsuarioLookup> cumplen = new ArrayList<>();
+            if (cumpleEn(fechaNacimientoAcompanante, inv.getArgument(0), inv.getArgument(1))) {
+                cumplen.add(usuarioAcompanante);
+            }
+            if (cumpleEn(fechaNacimientoVoluntario, inv.getArgument(0), inv.getArgument(1))) {
+                cumplen.add(usuarioVoluntario);
+            }
+            return cumplen;
+        });
+
         MessagingClient messagingClient = mock(MessagingClient.class);
         when(messagingClient.enviarMensaje(anyString(), anyString())).thenAnswer(inv -> {
             envios.add(new Envio(inv.getArgument(0), inv.getArgument(1)));
@@ -100,8 +119,24 @@ class CumpleanosSchedulerTest {
                 envios.stream().map(Envio::celular).toList());
         assertTrue(envios.get(0).mensaje().contains("¡Feliz cumpleaños, " + NOMBRE_PERSONA + "!"));
         assertTrue(envios.get(1).mensaje().contains(NOMBRE_PERSONA));
-        assertTrue(envios.get(1).mensaje().contains("cumple 76 años"));
+        assertEquals("Hoy es el cumpleaños de " + NOMBRE_PERSONA
+                + ". Un saludo tuyo puede alegrarle el día.", envios.get(1).mensaje());
         assertEquals(envios.get(1).mensaje(), envios.get(2).mensaje());
+    }
+
+    @Test
+    void felicitaAAcompananteYVoluntarioEnSuCumpleanos() {
+        fechaNacimiento = LocalDate.of(1950, 3, 15);
+        fechaNacimientoAcompanante = LocalDate.of(1990, 10, 1);
+        fechaNacimientoVoluntario = LocalDate.of(2000, 10, 1);
+
+        scheduler.revisarCumpleanos(LocalDate.of(2026, 10, 1));
+
+        assertEquals(List.of(CEL_ACOMPANANTE, CEL_VOLUNTARIO),
+                envios.stream().map(Envio::celular).toList());
+        assertTrue(envios.get(0).mensaje().contains("¡Feliz cumpleaños, " + NOMBRE_ACOMPANANTE + "!"));
+        assertTrue(envios.get(1).mensaje().contains("¡Feliz cumpleaños, " + NOMBRE_VOLUNTARIO + "!"));
+        assertTrue(envios.get(1).mensaje().contains("VITA+"));
     }
 
     @Test
@@ -130,7 +165,7 @@ class CumpleanosSchedulerTest {
     }
 
     private static boolean cumpleEn(LocalDate fecha, int mes, Collection<Integer> dias) {
-        return fecha.getMonthValue() == mes && dias.contains(fecha.getDayOfMonth());
+        return fecha != null && fecha.getMonthValue() == mes && dias.contains(fecha.getDayOfMonth());
     }
 
     private static UsuarioLookup usuario(int id, String nombre, String celular) {
