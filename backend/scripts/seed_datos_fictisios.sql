@@ -7,7 +7,9 @@
 --   - 25 acompañantes y 25 voluntarios
 --   - catálogo de gustos, talentos y pasatiempos + 3 a 6 por persona
 --   - vínculos persona mayor <-> acompañante y persona mayor <->
---     organización (con estados PENDIENTE / ACEPTADA / RECHAZADA)
+--     organización (con estados PENDIENTE / ACEPTADA / RECHAZADA); las
+--     solicitudes de acompañamiento pendientes van en los dos sentidos
+--     (unas las envió la persona mayor y otras el acompañante)
 --   - vínculos voluntario <-> organización (aceptados, y algunas
 --     solicitudes pendientes)
 --   - medicamentos coherentes con el perfil de salud de cada persona
@@ -16,6 +18,8 @@
 --     errores de digitación para probar los reportes
 --   - citas médicas pasadas y futuras
 --   - 48 actividades con inscripciones y asistencia
+--   - actividades propuestas por voluntarios a sus organizaciones
+--     (pendientes, aceptadas y rechazadas)
 --   - notificaciones del panel (recordatorios y alertas de emergencia)
 --
 -- Cómo correrlo:
@@ -45,6 +49,10 @@
 --     scheduler de medicamentos intentará enviar el SMS a esos números
 --     inexistentes y TextBee fallará. Vuelve a correr el script para
 --     correr las fechas otra vez hacia el futuro.
+--   - El scheduler de cumpleaños (8 a. m.) felicita a todo el que cumpla
+--     años ese día, y las cuentas ficticias tienen fechas de nacimiento
+--     en todo el año: casi todos los días intentará enviar algún SMS a
+--     estos números y TextBee fallará. No afecta nada más.
 --   - Los celulares ficticios tampoco reciben el código OTP, así que
 --     para entrar con estas cuentas usa correo y contraseña.
 --
@@ -80,6 +88,10 @@ CREATE TABLE IF NOT EXISTS voluntario_organizacion (
 -- actividad-service al arrancar, y aquí igual por la misma razón.
 ALTER TABLE actividad ADD COLUMN IF NOT EXISTS id_voluntario integer;
 ALTER TABLE actividad ADD COLUMN IF NOT EXISTS estado varchar(255);
+
+-- Quién envió la solicitud de acompañamiento; la agregan
+-- persona-mayor-service y acompanante-service al arrancar.
+ALTER TABLE persona_mayor_acompanante ADD COLUMN IF NOT EXISTS solicitada_por varchar(255);
 
 CREATE TEMP TABLE seed_usuarios_viejos ON COMMIT DROP AS
 SELECT id_usuario, celular FROM usuario WHERE correo LIKE '%@vitaplus.test';
@@ -431,6 +443,9 @@ ON CONFLICT DO NOTHING;
 --    acompañante principal (85% ACEPTADA) y ~30% tiene además un
 --    segundo acompañante (70% ACEPTADA), para probar personas con
 --    varios contactos.
+--    solicitada_por: las aceptadas las envió la persona mayor; de las
+--    pendientes, ~40% las envió el acompañante (la persona mayor las ve
+--    para aceptar o rechazar) y el resto la persona mayor.
 WITH pm AS (
     SELECT id_usuario, row_number() OVER (ORDER BY id_usuario) AS rn
     FROM usuario WHERE correo LIKE 'pm%@vitaplus.test'
@@ -451,11 +466,17 @@ vinculos AS (
     FROM pm CROSS JOIN n_ac
     JOIN ac ON ac.rn = 1 + ((pm.rn + 6) % n_ac.n)
     WHERE random() < 0.30
+),
+con_estado AS (
+    SELECT id_persona_mayor, id_acompanante,
+           CASE WHEN random() < p_aceptada THEN 'ACEPTADA' ELSE 'PENDIENTE' END AS estado
+    FROM vinculos
 )
-INSERT INTO persona_mayor_acompanante (id_persona_mayor, id_acompanante, estado)
-SELECT id_persona_mayor, id_acompanante,
-       CASE WHEN random() < p_aceptada THEN 'ACEPTADA' ELSE 'PENDIENTE' END
-FROM vinculos
+INSERT INTO persona_mayor_acompanante (id_persona_mayor, id_acompanante, estado, solicitada_por)
+SELECT id_persona_mayor, id_acompanante, estado,
+       CASE WHEN estado = 'PENDIENTE' AND random() < 0.40 THEN 'ACOMPANANTE'
+            ELSE 'PERSONA_MAYOR' END
+FROM con_estado
 ON CONFLICT DO NOTHING;
 
 -- 9. Vínculo persona mayor - organización. Cada persona mayor queda con
@@ -806,9 +827,63 @@ CROSS JOIN seed_reloj r
 JOIN n_org ON true
 JOIN orgs o ON o.rn = 1 + ((p.rn + ronda - 2) % n_org.n);
 
+-- 15b. Actividades propuestas por voluntarios. ~60% de los voluntarios le
+--      propone una actividad a la organización con la que tiene vínculo
+--      ACEPTADO; el voluntario queda como responsable. Estados: 45%
+--      PENDIENTE (para verlas en el panel de la organización), 35%
+--      ACEPTADA (las ven las personas mayores) y 20% RECHAZADA.
+WITH vols AS (
+    SELECT u.id_usuario, u.nombre_usuario, vo.id_organizacion, random() AS r
+    FROM usuario u
+    JOIN voluntario_organizacion vo ON vo.id_voluntario = u.id_usuario AND vo.estado = 'ACEPTADA'
+    WHERE u.correo LIKE 'vol%@vitaplus.test'
+),
+plantillas AS (
+    SELECT row_number() OVER () AS rn, nombre, tipo, descripcion FROM (VALUES
+      ('Clases de dibujo',               'Educativa',
+       'Dibujo con lápiz y acuarela para principiantes, con materiales incluidos.'),
+      ('Tarde de cuentos y recuerdos',   'Social',
+       'Cada participante comparte una historia de su juventud con el grupo.'),
+      ('Rumba terapia',                  'Deportiva',
+       'Ejercicio suave con música tropical, adaptado a personas mayores.'),
+      ('Acompañamiento a citas médicas', 'Salud y bienestar',
+       'Voluntarios acompañan a quienes no tienen quien los lleve a sus citas.'),
+      ('Taller de cocina tradicional',   'Manualidades',
+       'Preparación de recetas típicas como envueltos, ajiaco y arepas.'),
+      ('Cine foro',                      'Recreativa',
+       'Proyección de una película clásica colombiana y conversación al final.')
+    ) AS v(nombre, tipo, descripcion)
+),
+propuestas AS (
+    SELECT v.*,
+           CASE WHEN v.r < 0.45 THEN 'PENDIENTE'
+                WHEN v.r < 0.80 THEN 'ACEPTADA'
+                ELSE 'RECHAZADA' END AS estado,
+           1 + floor(random() * 6)::int AS idx_plantilla
+    FROM vols v
+    WHERE random() < 0.60
+)
+INSERT INTO actividad (id_organizacion, id_voluntario, estado, nombre, descripcion, fecha, hora,
+                       lugar, tipo, cupos, responsable)
+SELECT p.id_organizacion, p.id_usuario, p.estado, pl.nombre, pl.descripcion,
+       -- Las aceptadas pueden haber pasado ya; las demás aún no ocurren
+       CASE WHEN p.estado = 'ACEPTADA' THEN r.hoy + (floor(random() * 91)::int - 60)
+            ELSE r.hoy + (5 + floor(random() * 26)::int) END,
+       (ARRAY['09:00', '10:00', '14:00', '15:00'])[1 + floor(random() * 4)::int],
+       (ARRAY['Salón comunal Usme Centro', 'Parque La Flora', 'Sede Yomasa', 'Polideportivo Santa Librada',
+              'Salón parroquial Comuneros'])[1 + floor(random() * 5)::int],
+       pl.tipo,
+       8 + floor(random() * 13)::int,
+       p.nombre_usuario
+FROM propuestas p
+JOIN plantillas pl ON pl.rn = p.idx_plantilla
+CROSS JOIN seed_reloj r;
+
 -- 16. Participación en actividades (inscripciones + asistencia).
 --     - Solo se inscriben personas mayores cuya relación con la
---       organización de la actividad esté ACEPTADA.
+--       organización de la actividad esté ACEPTADA, y solo en
+--       actividades visibles (las de la organización y las propuestas
+--       ACEPTADAS).
 --     - Cada actividad llena entre 70% y 90% de sus cupos.
 --     - asistio queda en NULL para las actividades que aún no pasan y en
 --       true/false (85%/15%) para las que ya pasaron.
@@ -820,6 +895,7 @@ WITH actividades_ficticias AS (
            greatest(1, floor(a.cupos * (0.7 + random() * 0.2))::int) AS n_inscritos
     FROM actividad a
     WHERE a.id_organizacion IN (SELECT id_organizacion FROM usuario WHERE correo LIKE 'org%@vitaplus.test')
+      AND (a.estado IS NULL OR a.estado = 'ACEPTADA')
 ),
 candidatos AS (
     SELECT af.id_actividad, af.fecha, af.inicio, af.n_inscritos,
@@ -934,6 +1010,9 @@ UNION ALL SELECT 'vinculos_persona_mayor_gusto', count(*) FROM persona_mayor_gus
     WHERE id_persona_mayor IN (SELECT id_usuario FROM usuario WHERE correo LIKE 'pm%@vitaplus.test')
 UNION ALL SELECT 'vinculos_persona_mayor_acompanante', count(*) FROM persona_mayor_acompanante
     WHERE id_persona_mayor IN (SELECT id_usuario FROM usuario WHERE correo LIKE 'pm%@vitaplus.test')
+UNION ALL SELECT 'solicitudes_enviadas_por_acompanantes', count(*) FROM persona_mayor_acompanante
+    WHERE estado = 'PENDIENTE' AND solicitada_por = 'ACOMPANANTE'
+      AND id_persona_mayor IN (SELECT id_usuario FROM usuario WHERE correo LIKE 'pm%@vitaplus.test')
 UNION ALL SELECT 'vinculos_persona_mayor_organizacion', count(*) FROM persona_mayor_organizacion
     WHERE id_persona_mayor IN (SELECT id_usuario FROM usuario WHERE correo LIKE 'pm%@vitaplus.test')
 UNION ALL SELECT 'vinculos_persona_mayor_organizacion_aceptados', count(*) FROM persona_mayor_organizacion
@@ -947,6 +1026,8 @@ UNION ALL SELECT 'citas_medicas', count(*) FROM cita_medica
     WHERE id_persona_mayor IN (SELECT id_usuario FROM usuario WHERE correo LIKE 'pm%@vitaplus.test')
 UNION ALL SELECT 'actividades', count(*) FROM actividad
     WHERE id_organizacion IN (SELECT id_organizacion FROM usuario WHERE correo LIKE 'org%@vitaplus.test')
+UNION ALL SELECT 'propuestas_de_voluntarios', count(*) FROM actividad
+    WHERE id_voluntario IN (SELECT id_usuario FROM usuario WHERE correo LIKE 'vol%@vitaplus.test')
 UNION ALL SELECT 'participaciones_en_actividades', count(*) FROM participacion
     WHERE id_persona_mayor IN (SELECT id_usuario FROM usuario WHERE correo LIKE 'pm%@vitaplus.test')
 UNION ALL SELECT 'notificaciones', count(*) FROM notificacion WHERE celular LIKE '+570000%';
