@@ -11,12 +11,12 @@ spring:
     gateway:
       server:
         webflux:
-          # CORS para el frontend (Angular en localhost:4200). Aplica a las
+          # CORS para el frontend (localhost:4200 o Vercel, que reenvía el Origin). Aplica a las
           # rutas de abajo, no a los controladores del gateway (ver EventosController).
           globalcors:
             cors-configurations:
               '[/**]':
-                allowedOrigins: "http://localhost:4200"
+                allowedOriginPatterns: "*"
                 allowedMethods:
                   - GET
                   - POST

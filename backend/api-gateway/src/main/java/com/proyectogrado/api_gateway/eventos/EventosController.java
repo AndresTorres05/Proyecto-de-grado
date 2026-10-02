@@ -31,7 +31,7 @@ import java.util.Date;
  * rutas del gateway, no a sus controladores.
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(originPatterns = "*")
 public class EventosController {
 
     /**
