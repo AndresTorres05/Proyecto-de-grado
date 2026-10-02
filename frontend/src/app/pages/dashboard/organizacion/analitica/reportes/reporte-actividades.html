@@ -1,29 +1,8 @@
 <!-- Indicadores -->
 <div class="kpis">
-  <app-kpi
-    etiqueta="Actividades"
-    icono="activity"
-    [valor]="kpis().actividades.toString()"
-    detalle="Con fecha dentro del período"
-  />
-  <app-kpi
-    etiqueta="Inscripciones"
-    icono="users"
-    [valor]="kpis().inscritos.toString()"
-    [detalle]="formatoNumero(kpis().promedio) + ' por actividad en promedio'"
-  />
-  <app-kpi
-    etiqueta="Asistencia"
-    icono="check-circle"
-    [valor]="kpis().asistencia"
-    [detalle]="kpis().detalleAsistencia"
-  />
-  <app-kpi
-    etiqueta="Ocupación de cupos"
-    icono="bar-chart"
-    [valor]="kpis().ocupacion"
-    [detalle]="kpis().detalleOcupacion"
-  />
+  @for (k of tarjetas(); track k.etiqueta) {
+    <app-kpi [etiqueta]="k.etiqueta" [valor]="k.valor" [detalle]="k.detalle" [icono]="k.icono" [tono]="k.tono" />
+  }
 </div>
 
 <!-- Gráficas; cada una se puede ver también como tabla -->

@@ -1,14 +1,17 @@
-import { Component, OnInit, WritableSignal, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, WritableSignal, computed, inject, signal, viewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import {
   ActividadAnalitica,
   AnaliticaService,
   PoblacionAnalitica,
+  ReportePdf,
   SaludAnalitica
 } from '../../../../core/analitica/analitica.service';
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
+import { imagenGrafica } from '../../../../shared/echart/echart';
 import { Icon } from '../../../../shared/icon/icon';
+import { ReporteExportable } from './contenido-reporte';
 import { ReporteActividades } from './reportes/reporte-actividades';
 import { ReportePoblacion } from './reportes/reporte-poblacion';
 import { ReporteSalud } from './reportes/reporte-salud';
@@ -69,6 +72,14 @@ export class Analitica implements OnInit {
 
   /** El reporte de población no depende del período. */
   protected readonly usaPeriodo = computed(() => this.reporteActivo() !== 'poblacion');
+
+  // Reporte visible (solo uno existe a la vez), para exportarlo a PDF
+  private readonly reporteActividades = viewChild(ReporteActividades);
+  private readonly reporteSalud = viewChild(ReporteSalud);
+  private readonly reportePoblacion = viewChild(ReportePoblacion);
+
+  protected readonly descargandoPdf = signal(false);
+  protected readonly errorPdf = signal<string | null>(null);
 
   protected readonly descripcionActiva = computed(() =>
     this.reportes.find((r) => r.id === this.reporteActivo())!.descripcion);
@@ -149,6 +160,61 @@ export class Analitica implements OnInit {
   }
 
   /** Hora de la última actualización, para mostrarla junto al reporte. */
+  // ---------- PDF ----------
+
+  /**
+   * Convierte las gráficas del reporte visible en imágenes y le pide a
+   * analitica-service que arme el PDF; luego lo descarga.
+   */
+  protected descargarPdf(): void {
+    const reporte: ReporteExportable | undefined = {
+      actividades: this.reporteActividades(),
+      salud: this.reporteSalud(),
+      poblacion: this.reportePoblacion()
+    }[this.reporteActivo()];
+
+    if (!reporte || this.descargandoPdf()) {
+      return;
+    }
+
+    this.descargandoPdf.set(true);
+    this.errorPdf.set(null);
+
+    const info = this.reportes.find((r) => r.id === this.reporteActivo())!;
+    const contenido = reporte.contenidoPdf();
+
+    const solicitud: ReportePdf = {
+      titulo: info.nombre,
+      descripcion: info.descripcion,
+      periodo: this.usaPeriodo() ? this.periodos.find((p) => p.id === this.periodo())!.nombre : null,
+      indicadores: contenido.indicadores.map(({ etiqueta, valor, detalle, tono }) => ({ etiqueta, valor, detalle, tono })),
+      secciones: contenido.secciones.map((s) => ({
+        titulo: s.titulo,
+        descripcion: s.descripcion,
+        imagen: s.opciones ? imagenGrafica(s.opciones) : null,
+        tabla: { columnas: s.tabla.columnas, filas: s.tabla.filas.map((f) => f.map(String)) }
+      })),
+      nota: contenido.nota ?? null
+    };
+
+    this.analiticaService.descargarPdf(solicitud).subscribe({
+      next: (archivo) => {
+        const url = URL.createObjectURL(archivo);
+        const enlace = document.createElement('a');
+        enlace.href = url;
+        enlace.download = `reporte-${this.reporteActivo()}-${new Date().toLocaleDateString('en-CA')}.pdf`;
+        enlace.click();
+        URL.revokeObjectURL(url);
+        this.descargandoPdf.set(false);
+      },
+      error: (error) => {
+        console.error('Error al generar el PDF:', error);
+        this.errorPdf.set('No se pudo generar el PDF del reporte. Intenta de nuevo.');
+        this.descargandoPdf.set(false);
+      }
+    });
+  }
+
   protected hora(fecha: Date | null): string {
     return fecha ? fecha.toLocaleTimeString('es-CO', { hour: 'numeric', minute: '2-digit' }) : '';
   }

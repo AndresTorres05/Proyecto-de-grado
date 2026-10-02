@@ -1,4 +1,4 @@
-package com.proyectogrado.organizacion_service.dto;
+package com.proyectogrado.analitica_service.dto;
 
 import java.util.List;
 

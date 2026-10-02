@@ -7,7 +7,8 @@ import {
 } from '../../../../../shared/echart/tema';
 import { OpcionesGrafica } from '../../../../../shared/echart/echart';
 import { GraficaCard, TablaGrafica } from '../componentes/grafica-card';
-import { Kpi } from '../componentes/kpi';
+import { DatoKpi, Kpi } from '../componentes/kpi';
+import { ContenidoReporte, ReporteExportable } from '../contenido-reporte';
 
 /** Rangos de la gráfica de edades. */
 const RANGOS_EDAD = [
@@ -46,7 +47,7 @@ const pct = (parte: number, total: number) => (total > 0 ? Math.round((parte / t
   templateUrl: './reporte-poblacion.html',
   styleUrl: '../reporte.css'
 })
-export class ReportePoblacion {
+export class ReportePoblacion implements ReporteExportable {
 
   readonly datos = input.required<PoblacionAnalitica>();
 
@@ -236,4 +237,41 @@ export class ReportePoblacion {
       d.personas
     ])
   }));
+
+  // ---------- Tarjetas (pantalla y PDF) ----------
+
+  protected readonly tarjetas = computed<DatoKpi[]>(() => {
+    const k = this.kpis();
+    return [
+      { etiqueta: 'Personas asociadas', icono: 'users', tono: 'neutro',
+        valor: String(k.total), detalle: 'Con asociación aceptada' },
+      { etiqueta: 'Edad promedio', icono: 'calendar', tono: 'neutro',
+        valor: k.edadPromedio, detalle: k.detalleEdad },
+      { etiqueta: 'Con EPS registrada', icono: 'clipboard', tono: 'neutro',
+        valor: k.conEps, detalle: k.detalleEps },
+      { etiqueta: 'Con intereses registrados', icono: 'sparkles', tono: 'neutro',
+        valor: k.conIntereses, detalle: k.detalleIntereses }
+    ];
+  });
+
+  // ---------- PDF ----------
+
+  contenidoPdf(): ContenidoReporte {
+    const hayPersonas = this.datos().personas.length > 0;
+    return {
+      indicadores: this.tarjetas(),
+      secciones: [
+        { titulo: 'Rangos de edad', descripcion: 'Cuántas personas mayores hay en cada rango de edad.',
+          opciones: hayPersonas ? this.graficaEdad() : null, tabla: this.tablaEdad() },
+        { titulo: 'Género', descripcion: 'Distribución por género de las personas asociadas.',
+          opciones: hayPersonas ? this.graficaGenero() : null, tabla: this.tablaGenero() },
+        { titulo: 'EPS', descripcion: 'Entidades de salud de las personas asociadas.',
+          opciones: hayPersonas ? this.graficaEps() : null, tabla: this.tablaEps() },
+        { titulo: 'Intereses más comunes',
+          descripcion: 'Los 10 gustos, talentos y hobbies más frecuentes.',
+          opciones: this.datos().intereses.length > 0 ? this.graficaIntereses() : null,
+          tabla: this.tablaIntereses() }
+      ]
+    };
+  }
 }

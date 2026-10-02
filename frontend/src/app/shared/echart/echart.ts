@@ -43,6 +43,22 @@ echarts.use([
 /** Opciones de ECharts tal como las arma cada reporte. */
 export type OpcionesGrafica = echarts.EChartsCoreOption;
 
+/**
+ * Dibuja una gráfica fuera de pantalla y la devuelve como PNG (data URL).
+ * Sirve para exportar a PDF aunque la gráfica no esté visible (p. ej. si
+ * en pantalla se está viendo su tabla).
+ */
+export function imagenGrafica(opciones: OpcionesGrafica, ancho = 1000, alto = 420): string {
+  const contenedor = document.createElement('div');
+  const grafica = echarts.init(contenedor, undefined, { renderer: 'canvas', width: ancho, height: alto });
+  try {
+    grafica.setOption({ ...opciones, animation: false });
+    return grafica.getDataURL({ type: 'png', pixelRatio: 2, backgroundColor: '#ffffff' });
+  } finally {
+    grafica.dispose();
+  }
+}
+
 /** Barra, punto o porción en la que se hizo clic. */
 export interface ClicGrafica {
   nombre: string;

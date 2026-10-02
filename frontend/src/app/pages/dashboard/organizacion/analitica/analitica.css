@@ -124,6 +124,28 @@
   cursor: default;
 }
 
+/* Descargar el reporte en PDF (acción principal de la fila) */
+.descargar {
+  padding: 8px 16px;
+  border: 1px solid var(--vita-navy);
+  border-radius: var(--radius-pill);
+  background: var(--vita-navy);
+  color: var(--vita-white);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.descargar:hover:not(:disabled) {
+  background: var(--vita-navy-light);
+}
+
+.descargar:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
 /* Estados */
 
 .aviso-error {

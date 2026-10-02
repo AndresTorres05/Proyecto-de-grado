@@ -1,38 +1,8 @@
 <!-- Indicadores -->
 <div class="kpis">
-  <app-kpi
-    etiqueta="Con seguimiento"
-    icono="heart"
-    [valor]="kpis().conSeguimiento + ' de ' + kpis().total"
-    detalle="Personas con al menos una medición en el período"
-  />
-  <app-kpi
-    etiqueta="Mediciones registradas"
-    icono="clipboard"
-    [valor]="kpis().mediciones.toString()"
-    detalle="En el período seleccionado"
-  />
-  <app-kpi
-    etiqueta="Valores fuera de rango"
-    icono="alert-triangle"
-    [valor]="kpis().fueraDeRango.toString()"
-    [tono]="kpis().fueraDeRango > 0 ? 'alerta' : 'bueno'"
-    [detalle]="kpis().fueraDeRango > 0 ? 'Personas con su última medición por revisar' : 'Todas las últimas mediciones son normales'"
-  />
-  <app-kpi
-    etiqueta="Sin medición reciente"
-    icono="clock"
-    [valor]="kpis().sinReciente.toString()"
-    [tono]="kpis().sinReciente > 0 ? 'alerta' : 'bueno'"
-    [detalle]="kpis().sinReciente > 0 ? 'Sin medición en los últimos 30 días' : 'Todas medidas en los últimos 30 días'"
-  />
-  <app-kpi
-    etiqueta="Posibles errores de registro"
-    icono="info"
-    [valor]="kpis().errores.toString()"
-    [tono]="kpis().errores > 0 ? 'alerta' : 'bueno'"
-    [detalle]="kpis().ejemploError"
-  />
+  @for (k of tarjetas(); track k.etiqueta) {
+    <app-kpi [etiqueta]="k.etiqueta" [valor]="k.valor" [detalle]="k.detalle" [icono]="k.icono" [tono]="k.tono" />
+  }
 </div>
 
 <!-- Gráficas; cada una se puede ver también como tabla -->

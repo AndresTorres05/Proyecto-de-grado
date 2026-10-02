@@ -1,14 +1,12 @@
-package com.proyectogrado.organizacion_service.controller;
+package com.proyectogrado.analitica_service.controller;
 
-import com.proyectogrado.organizacion_service.dto.AnaliticaDtos.ActividadAnalitica;
-import com.proyectogrado.organizacion_service.dto.AnaliticaDtos.InteresConteo;
-import com.proyectogrado.organizacion_service.dto.AnaliticaDtos.MedicionAnalitica;
-import com.proyectogrado.organizacion_service.dto.AnaliticaDtos.PersonaAnalitica;
-import com.proyectogrado.organizacion_service.dto.AnaliticaDtos.PersonaPoblacion;
-import com.proyectogrado.organizacion_service.dto.AnaliticaDtos.PoblacionAnalitica;
-import com.proyectogrado.organizacion_service.dto.AnaliticaDtos.SaludAnalitica;
-import com.proyectogrado.organizacion_service.model.UsuarioLookup;
-import com.proyectogrado.organizacion_service.repository.UsuarioLookupRepository;
+import com.proyectogrado.analitica_service.dto.AnaliticaDtos.ActividadAnalitica;
+import com.proyectogrado.analitica_service.dto.AnaliticaDtos.InteresConteo;
+import com.proyectogrado.analitica_service.dto.AnaliticaDtos.MedicionAnalitica;
+import com.proyectogrado.analitica_service.dto.AnaliticaDtos.PersonaAnalitica;
+import com.proyectogrado.analitica_service.dto.AnaliticaDtos.PersonaPoblacion;
+import com.proyectogrado.analitica_service.dto.AnaliticaDtos.PoblacionAnalitica;
+import com.proyectogrado.analitica_service.dto.AnaliticaDtos.SaludAnalitica;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -30,7 +28,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
- * Analítica de la organización (reportes con gráficas en el frontend).
+ * Datos de los reportes de analítica de la organización (el frontend arma
+ * con ellos los indicadores y las gráficas; ver también PdfController).
  *
  * Solo lectura. Las tablas son de otros servicios (actividad, salud,
  * persona mayor), pero todos comparten la base, así que se consultan
@@ -39,7 +38,7 @@ import java.util.List;
  * organización del usuario.
  */
 @RestController
-@RequestMapping("/api/organizacion/analitica")
+@RequestMapping("/api/analitica")
 public class AnaliticaController {
 
     private static final DateTimeFormatter FORMATO_FECHA_HORA =
@@ -54,14 +53,11 @@ public class AnaliticaController {
             """;
 
     private final NamedParameterJdbcTemplate jdbc;
-    private final UsuarioLookupRepository usuarioLookupRepository;
+    private final OrganizacionActual organizacionActual;
 
-    public AnaliticaController(
-            NamedParameterJdbcTemplate jdbc,
-            UsuarioLookupRepository usuarioLookupRepository
-    ) {
+    public AnaliticaController(NamedParameterJdbcTemplate jdbc, OrganizacionActual organizacionActual) {
         this.jdbc = jdbc;
-        this.usuarioLookupRepository = usuarioLookupRepository;
+        this.organizacionActual = organizacionActual;
     }
 
     /**
@@ -216,9 +212,8 @@ public class AnaliticaController {
 
     /** Organización de la cuenta, o null si el usuario no es una organización. */
     private Integer obtenerIdOrganizacion(Integer idUsuario) {
-        return usuarioLookupRepository.findById(idUsuario)
-                .map(UsuarioLookup::getIdOrganizacion)
-                .orElse(null);
+        OrganizacionActual.Organizacion organizacion = organizacionActual.de(idUsuario);
+        return organizacion != null ? organizacion.id() : null;
     }
 
     private ResponseEntity<String> sinOrganizacion() {

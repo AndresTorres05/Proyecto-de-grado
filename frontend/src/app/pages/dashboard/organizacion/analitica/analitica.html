@@ -49,6 +49,16 @@
     @if (estadoActivo().actualizado; as actualizado) {
       <span class="filtros__nota">Actualizado {{ hora(actualizado) }}</span>
     }
+
+    <!-- PDF del reporte visible (lo arma analitica-service) -->
+    <button
+      type="button"
+      class="descargar"
+      (click)="descargarPdf()"
+      [disabled]="descargandoPdf() || !estadoActivo().datos"
+    >
+      {{ descargandoPdf() ? 'Generando PDF…' : 'Descargar PDF' }}
+    </button>
   </div>
 </div>
 
@@ -56,6 +66,13 @@
   <div class="aviso-error" role="alert">
     <app-icon name="alert-circle" /> {{ error }}
     <button type="button" (click)="recargar()">Reintentar</button>
+  </div>
+}
+
+@if (errorPdf(); as error) {
+  <div class="aviso-error" role="alert">
+    <app-icon name="alert-circle" /> {{ error }}
+    <button type="button" (click)="descargarPdf()">Reintentar</button>
   </div>
 }
 

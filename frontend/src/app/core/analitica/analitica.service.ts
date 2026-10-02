@@ -62,15 +62,30 @@ export interface PoblacionAnalitica {
   personasConIntereses: number;
 }
 
+/** Contenido de un reporte para el PDF (ver ReportePdfRequest en el backend). */
+export interface ReportePdf {
+  titulo: string;
+  descripcion: string;
+  periodo: string | null;
+  indicadores: { etiqueta: string; valor: string; detalle: string; tono: string }[];
+  secciones: {
+    titulo: string;
+    descripcion: string;
+    imagen: string | null;   // PNG en base64 (data URL)
+    tabla: { columnas: string[]; filas: string[][] };
+  }[];
+  nota: string | null;
+}
+
 /**
- * Datos de la analítica de la organización. organizacion-service devuelve
+ * Datos de la analítica de la organización. analitica-service devuelve
  * datos "crudos" (una fila por actividad, medición o persona); los
  * indicadores y las gráficas se calculan en cada reporte.
  */
 @Injectable({ providedIn: 'root' })
 export class AnaliticaService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/organizacion/analitica';
+  private apiUrl = 'http://localhost:8080/api/analitica';
 
   /** Actividades con fecha entre desde y hasta (YYYY-MM-DD; null = sin límite). */
   actividades(desde: string | null, hasta: string | null): Observable<ActividadAnalitica[]> {
@@ -88,5 +103,10 @@ export class AnaliticaService {
   /** Edad, género, EPS e intereses de las personas vinculadas. */
   poblacion(): Observable<PoblacionAnalitica> {
     return this.http.get<PoblacionAnalitica>(`${this.apiUrl}/poblacion`);
+  }
+
+  /** Arma el PDF de un reporte en analitica-service y lo devuelve como archivo. */
+  descargarPdf(reporte: ReportePdf): Observable<Blob> {
+    return this.http.post(`${this.apiUrl}/reportes/pdf`, reporte, { responseType: 'blob' });
   }
 }

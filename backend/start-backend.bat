@@ -14,6 +14,8 @@ start "Acompanante Service" cmd /k "cd /d %~dp0acompanante-service && .\mvnw.cmd
 
 start "Actividad Service" cmd /k "cd /d %~dp0actividad-service && .\mvnw.cmd spring-boot:run"
 
+start "Analitica Service" cmd /k "cd /d %~dp0analitica-service && .\mvnw.cmd spring-boot:run"
+
 start "API Gateway" cmd /k "cd /d %~dp0api-gateway && .\mvnw.cmd spring-boot:run"
 
 start "Auth Service" cmd /k "cd /d %~dp0auth-service && .\mvnw.cmd spring-boot:run"

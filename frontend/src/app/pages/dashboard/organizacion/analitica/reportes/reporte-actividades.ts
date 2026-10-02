@@ -7,7 +7,8 @@ import {
 } from '../../../../../shared/echart/tema';
 import { OpcionesGrafica } from '../../../../../shared/echart/echart';
 import { GraficaCard, TablaGrafica } from '../componentes/grafica-card';
-import { Kpi } from '../componentes/kpi';
+import { DatoKpi, Kpi } from '../componentes/kpi';
+import { ContenidoReporte, ReporteExportable } from '../contenido-reporte';
 
 /** Abreviaturas de los meses para las etiquetas del eje. */
 const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
@@ -24,7 +25,7 @@ const pct = (parte: number, total: number) => (total > 0 ? Math.round((parte / t
   templateUrl: './reporte-actividades.html',
   styleUrl: '../reporte.css'
 })
-export class ReporteActividades {
+export class ReporteActividades implements ReporteExportable {
 
   readonly actividades = input.required<ActividadAnalitica[]>();
 
@@ -183,4 +184,41 @@ export class ReporteActividades {
   }));
 
   protected readonly formatoNumero = formatoNumero;
+
+  // ---------- Tarjetas (pantalla y PDF) ----------
+
+  protected readonly tarjetas = computed<DatoKpi[]>(() => {
+    const k = this.kpis();
+    return [
+      { etiqueta: 'Actividades', icono: 'activity', tono: 'neutro',
+        valor: String(k.actividades), detalle: 'Con fecha dentro del período' },
+      { etiqueta: 'Inscripciones', icono: 'users', tono: 'neutro',
+        valor: String(k.inscritos), detalle: `${formatoNumero(k.promedio)} por actividad en promedio` },
+      { etiqueta: 'Asistencia', icono: 'check-circle', tono: 'neutro',
+        valor: k.asistencia, detalle: k.detalleAsistencia },
+      { etiqueta: 'Ocupación de cupos', icono: 'bar-chart', tono: 'neutro',
+        valor: k.ocupacion, detalle: k.detalleOcupacion }
+    ];
+  });
+
+  // ---------- PDF ----------
+
+  contenidoPdf(): ContenidoReporte {
+    const hayActividades = this.actividades().length > 0;
+    return {
+      indicadores: this.tarjetas(),
+      secciones: [
+        { titulo: 'Inscritos y asistentes por mes',
+          descripcion: 'Cuántas personas mayores se inscribieron a las actividades de cada mes y cuántas asistieron.',
+          opciones: hayActividades ? this.graficaMeses() : null, tabla: this.tablaMeses() },
+        { titulo: 'Participación por tipo de actividad',
+          descripcion: 'Inscripciones según el tipo de actividad.',
+          opciones: hayActividades ? this.graficaTipos() : null, tabla: this.tablaTipos() },
+        { titulo: 'Ocupación de cupos',
+          descripcion: 'Actividades con cupos definidos, de la más llena a la menos llena (máx. 10).',
+          opciones: this.tablaOcupacion().filas.length > 0 ? this.graficaOcupacion() : null,
+          tabla: this.tablaOcupacion() }
+      ]
+    };
+  }
 }

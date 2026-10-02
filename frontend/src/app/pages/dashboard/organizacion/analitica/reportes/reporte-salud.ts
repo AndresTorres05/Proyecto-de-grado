@@ -12,7 +12,8 @@ import {
 import { ClicGrafica, OpcionesGrafica } from '../../../../../shared/echart/echart';
 import { Icon } from '../../../../../shared/icon/icon';
 import { GraficaCard, TablaGrafica } from '../componentes/grafica-card';
-import { Kpi } from '../componentes/kpi';
+import { DatoKpi, Kpi } from '../componentes/kpi';
+import { ContenidoReporte, ReporteExportable } from '../contenido-reporte';
 
 const DIA = 24 * 60 * 60 * 1000;
 
@@ -62,7 +63,7 @@ function indicadoresConError(m: MedicionAnalitica): IndicadorAnalitica[] {
   templateUrl: './reporte-salud.html',
   styleUrls: ['../reporte.css', './reporte-salud.css']
 })
-export class ReporteSalud {
+export class ReporteSalud implements ReporteExportable {
 
   readonly datos = input.required<SaludAnalitica>();
   /** Inicio del período (YYYY-MM-DD) o null = todo. */
@@ -510,5 +511,59 @@ export class ReporteSalud {
       case 'pulso': return `${m.frecuenciaCardiaca} lpm`;
       case 'oxigeno': return `${m.saturacionOxigeno} %`;
     }
+  }
+
+  // ---------- Tarjetas (pantalla y PDF) ----------
+
+  protected readonly tarjetas = computed<DatoKpi[]>(() => {
+    const k = this.kpis();
+    return [
+      { etiqueta: 'Con seguimiento', icono: 'heart', tono: 'neutro',
+        valor: `${k.conSeguimiento} de ${k.total}`, detalle: 'Personas con al menos una medición en el período' },
+      { etiqueta: 'Mediciones registradas', icono: 'clipboard', tono: 'neutro',
+        valor: String(k.mediciones), detalle: 'En el período seleccionado' },
+      { etiqueta: 'Valores fuera de rango', icono: 'alert-triangle',
+        tono: k.fueraDeRango > 0 ? 'alerta' : 'bueno', valor: String(k.fueraDeRango),
+        detalle: k.fueraDeRango > 0 ? 'Personas con su última medición por revisar' : 'Todas las últimas mediciones son normales' },
+      { etiqueta: 'Sin medición reciente', icono: 'clock',
+        tono: k.sinReciente > 0 ? 'alerta' : 'bueno', valor: String(k.sinReciente),
+        detalle: k.sinReciente > 0 ? 'Sin medición en los últimos 30 días' : 'Todas medidas en los últimos 30 días' },
+      { etiqueta: 'Posibles errores de registro', icono: 'info',
+        tono: k.errores > 0 ? 'alerta' : 'bueno', valor: String(k.errores), detalle: k.ejemploError }
+    ];
+  });
+
+  // ---------- PDF ----------
+
+  contenidoPdf(): ContenidoReporte {
+    const hayMediciones = this.datos().mediciones.length > 0;
+    const persona = this.datos().personas.find((p) => p.idUsuario === this.personaActual());
+
+    return {
+      indicadores: this.tarjetas(),
+      secciones: [
+        { titulo: 'Estado actual por indicador',
+          descripcion: 'Según la última medición de cada persona.',
+          opciones: hayMediciones ? this.graficaEstado() : null, tabla: this.tablaEstado() },
+        { titulo: this.tituloTiempo(),
+          descripcion: 'Cuántas mediciones de signos vitales se registraron en el período.',
+          opciones: this.tablaTiempo().filas.length > 0 ? this.graficaTiempo() : null, tabla: this.tablaTiempo() },
+        ...(persona
+          ? [{ titulo: `Evolución de ${persona.nombre}: ${this.nombreIndicador[this.indicadorEvolucion()].toLowerCase()}`,
+               descripcion: this.descripcionEvolucion(),
+               opciones: this.graficaEvolucion(), tabla: this.tablaEvolucion() }]
+          : []),
+        { titulo: 'Personas que requieren atención',
+          descripcion: 'Última medición fuera de rango, sin medición en los últimos 30 días o con posibles errores de registro.',
+          opciones: null,
+          tabla: {
+            columnas: ['Persona', 'Motivo', 'Última medición'],
+            filas: this.atencion().map((p) => [p.nombre, p.motivos.join('; '), this.fecha(p.ultima)])
+          } }
+      ],
+      nota: 'Los rangos "normales" son referencias generales para adultos (presión 90–139 / 60–89 mmHg, pulso 60–100 lpm, '
+        + 'oxígeno 95 % o más). Son orientativos y no reemplazan el criterio médico. Un "posible error de registro" '
+        + 'es un valor que no puede ser real y probablemente se digitó mal.'
+    };
   }
 }

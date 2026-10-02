@@ -1,29 +1,8 @@
 <!-- Indicadores -->
 <div class="kpis">
-  <app-kpi
-    etiqueta="Personas asociadas"
-    icono="users"
-    [valor]="kpis().total.toString()"
-    detalle="Con asociación aceptada"
-  />
-  <app-kpi
-    etiqueta="Edad promedio"
-    icono="calendar"
-    [valor]="kpis().edadPromedio"
-    [detalle]="kpis().detalleEdad"
-  />
-  <app-kpi
-    etiqueta="Con EPS registrada"
-    icono="clipboard"
-    [valor]="kpis().conEps"
-    [detalle]="kpis().detalleEps"
-  />
-  <app-kpi
-    etiqueta="Con intereses registrados"
-    icono="sparkles"
-    [valor]="kpis().conIntereses"
-    [detalle]="kpis().detalleIntereses"
-  />
+  @for (k of tarjetas(); track k.etiqueta) {
+    <app-kpi [etiqueta]="k.etiqueta" [valor]="k.valor" [detalle]="k.detalle" [icono]="k.icono" [tono]="k.tono" />
+  }
 </div>
 
 <!-- Gráficas; cada una se puede ver también como tabla -->

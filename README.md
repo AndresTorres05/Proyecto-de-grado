@@ -41,12 +41,14 @@ La solución consiste en una plataforma web, **VITA+**, orientada a apoyar la ge
 * Spring Cloud Gateway (API Gateway)
 * Spring Security + JWT
 * Spring Data JPA
+* OpenPDF (reportes de analítica en PDF)
 * Maven (Maven Wrapper incluido en cada servicio)
 
 ## Frontend
 
 * Angular 22
 * TypeScript
+* Apache ECharts (gráficas de la analítica)
 
 ## Base de datos y servicios externos
 
@@ -83,7 +85,7 @@ El backend está dividido en **Servicios**. El frontend nunca habla directamente
 │                Servicios                 │
 │  auth · messaging · persona-mayor ·      │
 │  acompañante · organización · voluntario │
-│  salud · actividad                       │
+│  salud · actividad · analítica           │
 └──────────┬───────────────────┬───────────┘
            │ JPA / SQL         │ HTTPS
            ▼                   ▼
@@ -106,6 +108,7 @@ El backend está dividido en **Servicios**. El frontend nunca habla directamente
 | `voluntario-service`    |  8087  | Panel del voluntario                                             |
 | `organizacion-service`  |  8088  | Personas mayores vinculadas a la organización                    |
 | `actividad-service`     |  8089  | Actividades de la organización y participación en ellas         |
+| `analitica-service`     |  8090  | Reportes de analítica de la organización y su descarga en PDF   |
 
 ---
 
@@ -124,6 +127,7 @@ Proyecto-de-grado/
 │   ├── voluntario-service/
 │   ├── salud-service/
 │   ├── actividad-service/
+│   ├── analitica-service/
 │   ├── scripts/
 │   └── start-backend.bat      ← prende todos los servicios a la vez
 │

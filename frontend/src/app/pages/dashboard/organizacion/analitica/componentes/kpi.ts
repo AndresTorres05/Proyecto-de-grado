@@ -5,6 +5,15 @@ import { Icon } from '../../../../../shared/icon/icon';
 /** Estado de la tarjeta: neutro, bueno (verde) o alerta (rojo). */
 export type TonoKpi = 'neutro' | 'bueno' | 'alerta';
 
+/** Datos de una tarjeta; los usa la pantalla y el PDF del reporte. */
+export interface DatoKpi {
+  etiqueta: string;
+  valor: string;
+  detalle: string;
+  icono: string;
+  tono: TonoKpi;
+}
+
 /**
  * Tarjeta de indicador (KPI): etiqueta, valor grande y detalle. El tono
  * de estado siempre va con icono y texto, nunca solo con color.
