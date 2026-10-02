@@ -5,8 +5,6 @@ import com.proyectogrado.persona_mayor_service.model.PersonaMayorAcompanante;
 import com.proyectogrado.persona_mayor_service.model.PersonaMayorLookup;
 import com.proyectogrado.persona_mayor_service.model.PersonaMayorOrganizacion;
 import com.proyectogrado.persona_mayor_service.model.UsuarioLookup;
-import com.proyectogrado.persona_mayor_service.repository.AvisoCumpleanosRepository;
-import com.proyectogrado.persona_mayor_service.repository.FelicitacionCumpleanosRepository;
 import com.proyectogrado.persona_mayor_service.repository.PersonaMayorAcompananteRepository;
 import com.proyectogrado.persona_mayor_service.repository.PersonaMayorLookupRepository;
 import com.proyectogrado.persona_mayor_service.repository.PersonaMayorOrganizacionRepository;
@@ -17,10 +15,8 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -31,10 +27,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Verifica que VITA+ felicite al cumpleañero (de cualquier rol), que el
- * aviso de una persona mayor llegue a su acompañante y a su organizacion,
- * todo una sola vez por año, y que los nacidos un 29 de febrero reciban
- * los mensajes el 28 en años no bisiestos.
+ * Verifica que el dia del cumpleaños de una persona mayor VITA+ la
+ * felicite y se les recuerde a su acompañante y a su organizacion, y que
+ * los nacidos un 29 de febrero reciban los mensajes el 28 en años no
+ * bisiestos.
  */
 class CumpleanosSchedulerTest {
 
@@ -48,13 +44,11 @@ class CumpleanosSchedulerTest {
     private static final String CEL_PERSONA = "+570000000001";
     private static final String CEL_ACOMPANANTE = "+570000000002";
     private static final String CEL_ORGANIZACION = "+570000000003";
-    private static final LocalDate NACIMIENTO_ACOMPANANTE = LocalDate.of(1980, 5, 15);
 
     private record Envio(String celular, String mensaje) {
     }
 
     private final List<Envio> envios = new ArrayList<>();
-    private final Set<String> reservas = new HashSet<>();
     private LocalDate fechaNacimiento;
     private CumpleanosScheduler scheduler;
 
@@ -70,15 +64,6 @@ class CumpleanosSchedulerTest {
                 cumpleEn(fechaNacimiento, inv.getArgument(0), inv.getArgument(1))
                         ? List.of(persona)
                         : List.of());
-
-        // Simula el "insert ... on conflict do nothing" de ambas tablas
-        AvisoCumpleanosRepository avisoRepo = mock(AvisoCumpleanosRepository.class);
-        when(avisoRepo.reservar(anyInt(), anyInt()))
-                .thenAnswer(inv -> reservas.add("A" + inv.getArgument(0) + "-" + inv.getArgument(1)) ? 1 : 0);
-
-        FelicitacionCumpleanosRepository felicitacionRepo = mock(FelicitacionCumpleanosRepository.class);
-        when(felicitacionRepo.reservar(anyInt(), anyInt()))
-                .thenAnswer(inv -> reservas.add("F" + inv.getArgument(0) + "-" + inv.getArgument(1)) ? 1 : 0);
 
         PersonaMayorAcompananteRepository acompRepo = mock(PersonaMayorAcompananteRepository.class);
         when(acompRepo.findById_IdPersonaMayorAndEstado(ID_PERSONA, "ACEPTADA"))
@@ -96,34 +81,19 @@ class CumpleanosSchedulerTest {
         when(usuarioRepo.findById(ID_ACOMPANANTE)).thenReturn(Optional.of(usuarioAcompanante));
         when(usuarioRepo.findByIdOrganizacion(ID_ORGANIZACION)).thenReturn(List.of(usuarioOrganizacion));
 
-        // Cumpleañeros de cualquier rol: la persona mayor y el acompañante
-        when(usuarioRepo.findCumpleanos(anyInt(), anyCollection())).thenAnswer(inv -> {
-            List<UsuarioLookup> cumpleaneros = new ArrayList<>();
-            if (cumpleEn(fechaNacimiento, inv.getArgument(0), inv.getArgument(1))) {
-                cumpleaneros.add(usuarioPersona);
-            }
-            if (cumpleEn(NACIMIENTO_ACOMPANANTE, inv.getArgument(0), inv.getArgument(1))) {
-                cumpleaneros.add(usuarioAcompanante);
-            }
-            return cumpleaneros;
-        });
-
         MessagingClient messagingClient = mock(MessagingClient.class);
         when(messagingClient.enviarMensaje(anyString(), anyString())).thenAnswer(inv -> {
             envios.add(new Envio(inv.getArgument(0), inv.getArgument(1)));
             return true;
         });
 
-        scheduler = new CumpleanosScheduler(
-                personaRepo, avisoRepo, felicitacionRepo, acompRepo, orgRepo, usuarioRepo, messagingClient);
+        scheduler = new CumpleanosScheduler(personaRepo, acompRepo, orgRepo, usuarioRepo, messagingClient);
     }
 
     @Test
-    void felicitaYAvisaAAcompananteYOrganizacionUnaSolaVez() {
+    void felicitaALaPersonaMayorYRecuerdaAAcompananteYOrganizacion() {
         fechaNacimiento = LocalDate.of(1950, 10, 1);
 
-        // El scheduler corre varias veces el mismo dia
-        scheduler.revisarCumpleanos(LocalDate.of(2026, 10, 1));
         scheduler.revisarCumpleanos(LocalDate.of(2026, 10, 1));
 
         assertEquals(List.of(CEL_PERSONA, CEL_ACOMPANANTE, CEL_ORGANIZACION),
@@ -131,22 +101,7 @@ class CumpleanosSchedulerTest {
         assertTrue(envios.get(0).mensaje().contains("¡Feliz cumpleaños, " + NOMBRE_PERSONA + "!"));
         assertTrue(envios.get(1).mensaje().contains(NOMBRE_PERSONA));
         assertTrue(envios.get(1).mensaje().contains("cumple 76 años"));
-
-        // Al año siguiente vuelve a felicitar y avisar
-        scheduler.revisarCumpleanos(LocalDate.of(2027, 10, 1));
-        assertEquals(6, envios.size());
-    }
-
-    @Test
-    void felicitaACumpleanerosQueNoSonPersonasMayores() {
-        fechaNacimiento = LocalDate.of(1950, 10, 1);
-
-        // Cumpleaños del acompañante: solo le llega su felicitacion
-        scheduler.revisarCumpleanos(LocalDate.of(2026, 5, 15));
-        scheduler.revisarCumpleanos(LocalDate.of(2026, 5, 15));
-
-        assertEquals(List.of(CEL_ACOMPANANTE), envios.stream().map(Envio::celular).toList());
-        assertTrue(envios.get(0).mensaje().contains("¡Feliz cumpleaños, " + NOMBRE_ACOMPANANTE + "!"));
+        assertEquals(envios.get(1).mensaje(), envios.get(2).mensaje());
     }
 
     @Test
@@ -162,7 +117,7 @@ class CumpleanosSchedulerTest {
     void nacidoEl29DeFebreroRecibeAvisoEl28EnAnoNoBisiesto() {
         fechaNacimiento = LocalDate.of(1948, 2, 29);
 
-        // Felicitacion + aviso al acompañante + aviso a la organizacion
+        // Felicitacion + recordatorio al acompañante + recordatorio a la organizacion
         scheduler.revisarCumpleanos(LocalDate.of(2027, 2, 28));
         assertEquals(3, envios.size());
 
