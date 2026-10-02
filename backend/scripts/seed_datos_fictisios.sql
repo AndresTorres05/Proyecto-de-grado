@@ -8,6 +8,8 @@
 --   - catálogo de gustos, talentos y pasatiempos + 3 a 6 por persona
 --   - vínculos persona mayor <-> acompañante y persona mayor <->
 --     organización (con estados PENDIENTE / ACEPTADA / RECHAZADA)
+--   - vínculos voluntario <-> organización (aceptados, y algunas
+--     solicitudes pendientes)
 --   - medicamentos coherentes con el perfil de salud de cada persona
 --   - historial de signos vitales de los últimos 6 meses (~5.000
 --     mediciones), con algunos valores fuera de rango y unos pocos
@@ -48,7 +50,8 @@
 --
 -- Los voluntarios no tienen una tabla que los conecte con personas
 -- mayores (no existe en el modelo actual): quedan conectados de forma
--- indirecta a través de la organización a la que pertenecen.
+-- indirecta a través de la organización a la que están vinculados
+-- (tabla voluntario_organizacion).
 --
 -- Todas las fechas y horas se calculan en hora de Colombia
 -- (America/Bogota), que es la que usan los servicios; la base de datos
@@ -64,6 +67,15 @@ SELECT date_trunc('minute', now() AT TIME ZONE 'America/Bogota') AS ahora,
        (now() AT TIME ZONE 'America/Bogota')::date                AS hoy;
 
 -- 0. Limpieza idempotente (solo borra lo generado por este script)
+-- voluntario_organizacion la crea voluntario-service al arrancar; se
+-- crea aquí igual por si esta base de datos nunca lo ha arrancado.
+CREATE TABLE IF NOT EXISTS voluntario_organizacion (
+    id_voluntario   integer      NOT NULL,
+    id_organizacion integer      NOT NULL,
+    estado          varchar(255) NOT NULL,
+    PRIMARY KEY (id_organizacion, id_voluntario)
+);
+
 CREATE TEMP TABLE seed_usuarios_viejos ON COMMIT DROP AS
 SELECT id_usuario, celular FROM usuario WHERE correo LIKE '%@vitaplus.test';
 
@@ -101,6 +113,10 @@ DELETE FROM persona_mayor_organizacion
 DELETE FROM persona_mayor_acompanante
  WHERE id_persona_mayor IN (SELECT id_usuario FROM seed_usuarios_viejos)
     OR id_acompanante IN (SELECT id_usuario FROM seed_usuarios_viejos);
+
+DELETE FROM voluntario_organizacion
+ WHERE id_voluntario IN (SELECT id_usuario FROM seed_usuarios_viejos)
+    OR id_organizacion IN (SELECT id_organizacion FROM seed_orgs_viejas);
 
 DELETE FROM usuario_rol    WHERE id_usuario IN (SELECT id_usuario FROM seed_usuarios_viejos);
 DELETE FROM voluntario     WHERE id_usuario IN (SELECT id_usuario FROM seed_usuarios_viejos);
@@ -312,8 +328,10 @@ INSERT INTO acompanante (id_usuario, relacion)
 SELECT u.id_usuario, f.relacion
 FROM ins_usuario u JOIN filas f ON f.correo = u.correo;
 
--- 6. 25 voluntarios (usuario + voluntario), cada uno asignado a una de
---    las 5 organizaciones ficticias
+-- 6. 25 voluntarios (usuario + voluntario), cada uno vinculado a una de
+--    las 5 organizaciones ficticias (voluntario_organizacion, ACEPTADA).
+--    El usuario NO lleva id_organizacion: esa columna es solo para las
+--    cuentas de las organizaciones.
 WITH orgs AS (
     SELECT id_organizacion, row_number() OVER (ORDER BY id_organizacion) AS rn
     FROM usuario WHERE correo LIKE 'org%@vitaplus.test'
@@ -350,16 +368,40 @@ filas AS (
 ),
 ins_usuario AS (
     INSERT INTO usuario (nombre_usuario, contrasena_hash, correo, celular, fecha_nacimiento, genero,
-                         id_organizacion, activo, fecha_creacion)
+                         activo, fecha_creacion)
     SELECT f.nombre_usuario, crypt('Vita2025*', gen_salt('bf', 10)), f.correo, f.celular,
-           f.fecha_nacimiento, f.genero, f.id_organizacion, true,
+           f.fecha_nacimiento, f.genero, true,
            r.ahora - make_interval(days => floor(random() * 400)::int)
     FROM filas f CROSS JOIN seed_reloj r
     RETURNING id_usuario, correo
+),
+ins_voluntario AS (
+    INSERT INTO voluntario (id_usuario)
+    SELECT u.id_usuario
+    FROM ins_usuario u
 )
-INSERT INTO voluntario (id_usuario)
-SELECT u.id_usuario
-FROM ins_usuario u;
+INSERT INTO voluntario_organizacion (id_voluntario, id_organizacion, estado)
+SELECT u.id_usuario, f.id_organizacion, 'ACEPTADA'
+FROM ins_usuario u JOIN filas f ON f.correo = u.correo;
+
+-- Los 5 primeros voluntarios también tienen una solicitud PENDIENTE con
+-- la organización siguiente, para ver solicitudes en el panel.
+WITH orgs AS (
+    SELECT id_organizacion, row_number() OVER (ORDER BY id_organizacion) AS rn
+    FROM usuario WHERE correo LIKE 'org%@vitaplus.test'
+),
+n_org AS (SELECT count(*) AS n FROM orgs),
+vols AS (
+    SELECT id_usuario, row_number() OVER (ORDER BY correo) AS i
+    FROM usuario WHERE correo LIKE 'vol%@vitaplus.test'
+)
+INSERT INTO voluntario_organizacion (id_voluntario, id_organizacion, estado)
+SELECT v.id_usuario, o.id_organizacion, 'PENDIENTE'
+FROM vols v
+CROSS JOIN n_org
+JOIN orgs o ON o.rn = 1 + (v.i % n_org.n)
+WHERE v.i <= 5
+ON CONFLICT DO NOTHING;
 
 -- 7. Roles de las 250 cuentas de personas
 INSERT INTO usuario_rol (id_usuario, id_rol)
@@ -880,6 +922,8 @@ SELECT 'organizaciones' AS dato, count(*) AS cantidad FROM usuario WHERE correo 
 UNION ALL SELECT 'personas_mayores', count(*) FROM usuario WHERE correo LIKE 'pm%@vitaplus.test'
 UNION ALL SELECT 'acompanantes', count(*) FROM usuario WHERE correo LIKE 'acomp%@vitaplus.test'
 UNION ALL SELECT 'voluntarios', count(*) FROM usuario WHERE correo LIKE 'vol%@vitaplus.test'
+UNION ALL SELECT 'vinculos_voluntario_organizacion', count(*) FROM voluntario_organizacion
+    WHERE id_voluntario IN (SELECT id_usuario FROM usuario WHERE correo LIKE 'vol%@vitaplus.test')
 UNION ALL SELECT 'gustos_en_catalogo', count(*) FROM gusto WHERE categoria IN ('GUSTO', 'TALENTO', 'HOBBY')
 UNION ALL SELECT 'vinculos_persona_mayor_gusto', count(*) FROM persona_mayor_gusto
     WHERE id_persona_mayor IN (SELECT id_usuario FROM usuario WHERE correo LIKE 'pm%@vitaplus.test')

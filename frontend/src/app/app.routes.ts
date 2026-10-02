@@ -61,8 +61,9 @@ export const routes: Routes = [
       {
         path: 'voluntarios',
         loadComponent: () =>
-          import('./shared/en-construccion/en-construccion').then((m) => m.EnConstruccion),
-        data: { titulo: 'Voluntarios' },
+          import('./pages/dashboard/organizacion/voluntarios/voluntarios').then(
+            (m) => m.Voluntarios,
+          ),
       },
 
       {
@@ -142,6 +143,14 @@ export const routes: Routes = [
         path: '',
         loadComponent: () =>
           import('./pages/dashboard/voluntario/voluntario').then((m) => m.VoluntarioDashboard),
+      },
+
+      {
+        path: 'organizaciones',
+        loadComponent: () =>
+          import('./pages/dashboard/voluntario/organizaciones/organizaciones').then(
+            (m) => m.VoluntarioOrganizaciones,
+          ),
       },
 
       {

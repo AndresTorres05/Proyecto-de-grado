@@ -29,6 +29,10 @@ public class UsuarioLookup {
     @Column(name = "correo")
     private String correo;
 
+    /** Solo tiene valor para las cuentas de una organización. */
+    @Column(name = "id_organizacion")
+    private Integer idOrganizacion;
+
     /** Lo exige JPA. */
 
     protected UsuarioLookup() {
@@ -48,5 +52,9 @@ public class UsuarioLookup {
 
     public String getCorreo() {
         return correo;
+    }
+
+    public Integer getIdOrganizacion() {
+        return idOrganizacion;
     }
 }

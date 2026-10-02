@@ -38,8 +38,8 @@ export const PANEL_CONFIG: Record<string, PanelConfig> = {
       { icon: 'users', label: 'Personas mayores', path: '/panel/organizacion/personas-mayores' },
       { icon: 'activity', label: 'Signos vitales', path: '/panel/organizacion/signos-vitales' },
       { icon: 'calendar', label: 'Actividades', path: '/panel/organizacion/actividades' },
-      { icon: 'bar-chart', label: 'Analítica', path: '/panel/organizacion/analitica' },
       { icon: 'star', label: 'Voluntarios', path: '/panel/organizacion/voluntarios' },
+      { icon: 'bar-chart', label: 'Analítica', path: '/panel/organizacion/analitica' },
       // Acompañantes, alertas, medicamentos, donaciones y mapa irán aquí, en
       // ese orden, cuando existan. Mientras tanto no aparecen en el menú y sus
       // rutas muestran EnConstruccion.
@@ -64,6 +64,7 @@ export const PANEL_CONFIG: Record<string, PanelConfig> = {
     roleAccent: 'var(--vita-gold)',
     navItems: [
       { icon: 'home', label: 'Inicio', path: '/panel/voluntario' },
+      { icon: 'building', label: 'Organizaciones', path: '/panel/voluntario/organizaciones' },
       { icon: 'users', label: 'Personas mayores', path: '/panel/voluntario/personas' },
       { icon: 'bell', label: 'Alertas', path: '/panel/voluntario/alertas' },
       { icon: 'calendar', label: 'Actividades', path: '/panel/voluntario/actividades' },

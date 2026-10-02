@@ -30,6 +30,28 @@
     </div>
   }
 
+  @if (correo()) {
+    <div class="person-card__detail">
+      <app-icon name="mail" />
+
+      <div>
+        <span>Correo</span>
+        <strong>{{ correo() }}</strong>
+      </div>
+    </div>
+  }
+
+  @if (direccion()) {
+    <div class="person-card__detail">
+      <app-icon name="map-pin" />
+
+      <div>
+        <span>Dirección</span>
+        <strong>{{ direccion() }}</strong>
+      </div>
+    </div>
+  }
+
   @if (relacion()) {
     <div class="person-card__detail">
       <app-icon name="users" />
@@ -51,6 +73,7 @@
     <div
       class="person-card__status"
       [class.person-card__status--pending]="estadoTipo() === 'pendiente'"
+      [class.person-card__status--rejected]="estadoTipo() === 'rechazado'"
     >
       <span class="person-card__status-dot"></span>
       <span>{{ estado() }}</span>

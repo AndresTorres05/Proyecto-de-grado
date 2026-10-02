@@ -27,6 +27,14 @@ export interface OrganizacionSolicitud {
   direccion: string;
 }
 
+/** Voluntario vinculado a la organización, o que le envió una solicitud. */
+export interface VoluntarioOrganizacion {
+  idUsuario: number;
+  nombre: string;
+  celular: string | null;
+  correo: string | null;
+}
+
 /** Acompañante de una persona mayor, visto por la organización. */
 export interface AcompanantePersonaMayor {
   idUsuario: number;
@@ -128,5 +136,39 @@ export class OrganizacionService {
     return this.http.get<AcompanantePersonaMayor[]>(
       `${this.apiUrl}/personas-mayores/${idPersonaMayor}/acompanantes`,
     );
+  }
+
+  // =========================================================
+  // VOLUNTARIOS (los atiende voluntario-service vía el gateway)
+  // =========================================================
+
+  obtenerVoluntarios(): Observable<VoluntarioOrganizacion[]> {
+    return this.http.get<VoluntarioOrganizacion[]>(`${this.apiUrl}/voluntarios`);
+  }
+
+  obtenerSolicitudesVoluntarios(): Observable<VoluntarioOrganizacion[]> {
+    return this.http.get<VoluntarioOrganizacion[]>(`${this.apiUrl}/voluntarios/solicitudes`);
+  }
+
+  aceptarSolicitudVoluntario(idVoluntario: number): Observable<string> {
+    return this.http.put(
+      `${this.apiUrl}/voluntarios/solicitudes/${idVoluntario}/aceptar`,
+      {},
+      { responseType: 'text' },
+    );
+  }
+
+  rechazarSolicitudVoluntario(idVoluntario: number): Observable<string> {
+    return this.http.put(
+      `${this.apiUrl}/voluntarios/solicitudes/${idVoluntario}/rechazar`,
+      {},
+      { responseType: 'text' },
+    );
+  }
+
+  desvincularVoluntario(idVoluntario: number): Observable<string> {
+    return this.http.delete(`${this.apiUrl}/voluntarios/${idVoluntario}`, {
+      responseType: 'text',
+    });
   }
 }

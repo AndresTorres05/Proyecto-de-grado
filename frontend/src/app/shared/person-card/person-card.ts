@@ -1,14 +1,15 @@
 import { Component, input, output } from '@angular/core';
 import { Icon } from '../icon/icon';
 
-/** Color de la etiqueta de estado: activo (verde) o pendiente. */
-export type PersonCardEstado = 'activo' | 'pendiente';
+/** Color de la etiqueta de estado: activo (verde), pendiente o rechazado. */
+export type PersonCardEstado = 'activo' | 'pendiente' | 'rechazado';
 
 /**
- * Tarjeta estándar para mostrar una persona (persona mayor, acompañante o
- * contacto de emergencia) en los listados de los paneles: nombre, celular,
- * relación opcional y un estado. Las acciones de cada página (aceptar,
- * cancelar el vínculo...) se proyectan con el atributo card-actions.
+ * Tarjeta estándar para mostrar una persona (persona mayor, acompañante,
+ * voluntario o contacto de emergencia) u organización en los listados de los
+ * paneles: nombre, celular, relación/correo/dirección opcionales y un estado.
+ * Las acciones de cada página (aceptar, cancelar el vínculo...) se proyectan
+ * con el atributo card-actions.
  */
 @Component({
   selector: 'app-person-card',
@@ -32,6 +33,8 @@ export class PersonCard {
   readonly etiqueta = input('');
   readonly celular = input('');
   readonly relacion = input<string | null | undefined>(null);
+  readonly correo = input<string | null | undefined>(null);
+  readonly direccion = input<string | null | undefined>(null);
   readonly icono = input('user');
 
   readonly estado = input<string | null>(null);

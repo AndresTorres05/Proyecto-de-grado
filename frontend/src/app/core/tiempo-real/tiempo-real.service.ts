@@ -14,6 +14,7 @@ export type Recurso =
   | 'signos-vitales'
   | 'acompanamientos'   // persona mayor <-> acompañante, solicitudes, contactos
   | 'organizaciones'    // persona mayor <-> organización, solicitudes
+  | 'voluntarios'       // voluntario <-> organización, solicitudes
   | 'gustos'
   | 'notificaciones'    // SMS de emergencia enviados, notificaciones leídas
   | 'usuarios';         // nombres/datos de perfil, registros nuevos
