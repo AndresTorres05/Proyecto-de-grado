@@ -6,16 +6,18 @@ import {
   SignoVitalResponse
 } from '../../../../core/signos-vitales/signos-vitales.services';
 import { SignosVitalesLista } from '../../../../shared/signos-vitales-lista/signos-vitales-lista';
+import { RegistrarSignosModal } from './registrar-signos-modal/registrar-signos-modal';
 import { Icon } from '../../../../shared/icon/icon';
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
 /**
  * Historial de signos vitales de la persona mayor. Usa la misma lista
  * que el modal de "Últimos signos vitales" de organización/acompañante.
+ * La persona mayor también puede registrar sus propios signos vitales.
  */
 @Component({
   selector: 'app-persona-mayor-signos-vitales',
-  imports: [SignosVitalesLista, Icon, DatePipe],
+  imports: [SignosVitalesLista, RegistrarSignosModal, Icon, DatePipe],
   templateUrl: './signos-vitales.html',
   styleUrl: './signos-vitales.css'
 })
@@ -27,12 +29,30 @@ export class SignosVitalesPersonaMayor implements OnInit {
   protected readonly cargando = signal(true);
   protected readonly error = signal<string | null>(null);
 
+  protected readonly mostrarRegistro = signal(false);
+  protected readonly mensajeExito = signal('');
+  private temporizadorExito?: ReturnType<typeof setTimeout>;
+
   constructor() {
     alCambiar(['signos-vitales'], () => this.cargar());
   }
 
   ngOnInit(): void {
     this.cargar();
+  }
+
+  protected abrirRegistro(): void {
+    this.mensajeExito.set('');
+    this.mostrarRegistro.set(true);
+  }
+
+  protected alRegistrar(): void {
+    this.mostrarRegistro.set(false);
+    this.cargar();
+
+    this.mensajeExito.set('Tus signos vitales se registraron correctamente.');
+    clearTimeout(this.temporizadorExito);
+    this.temporizadorExito = setTimeout(() => this.mensajeExito.set(''), 5000);
   }
 
   private cargar(): void {

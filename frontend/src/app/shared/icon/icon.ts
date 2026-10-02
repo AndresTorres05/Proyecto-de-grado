@@ -56,6 +56,8 @@ const ICONS: Record<string, string> = {
   info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5"/><path d="M12 8h.01"/>',
   sprout:
     '<path d="M12 21v-9"/><path d="M12 12c-2.8 0-5-2-5-5.5 2.8 0 5 2 5 5.5Z"/><path d="M12 12c0-3 2.2-5.5 5-5.5 0 3.5-2.2 5.5-5 5.5Z"/>',
+  thermometer:
+    '<path d="M14 14.76V5a2 2 0 0 0-4 0v9.76a4 4 0 1 0 4 0Z"/><path d="M12 9v7.5"/><circle cx="12" cy="17.5" r="1.2" fill="currentColor" stroke="none"/>',
   'arrow-left': '<path d="M20 12H5"/><path d="m11 19-7-7 7-7"/>',
   wrench:
     '<path d="M15.5 4.5a4.2 4.2 0 0 0-5.4 5.4l-6.1 6.1a1.9 1.9 0 0 0 2.7 2.7l6.1-6.1a4.2 4.2 0 0 0 5.4-5.4l-2.6 2.6-2.3-.6-.6-2.3 2.6-2.6Z"/>',

@@ -96,16 +96,16 @@ spring:
               filters:
                 - JwtAuth
 
-            # Historial de signos vitales de la persona mayor: solo lectura.
-            # Los registros los crea la organizacion; no se exponen el
-            # POST/PUT/DELETE de este controlador. OPTIONS es necesario para
-            # el preflight de CORS del navegador (si no, no hay ruta y el
-            # gateway responde sin cabeceras CORS).
+            # Signos vitales de la persona mayor: ver su historial y registrar
+            # una medicion propia. No se exponen el PUT/DELETE de este
+            # controlador (los registros no se editan ni se borran). OPTIONS
+            # es necesario para el preflight de CORS del navegador (si no, no
+            # hay ruta y el gateway responde sin cabeceras CORS).
             - id: salud-signos-vitales-persona-mayor
               uri: http://localhost:8084
               predicates:
                 - Path=/api/persona-mayor/signos-vitales
-                - Method=GET,OPTIONS
+                - Method=GET,POST,OPTIONS
               filters:
                 - JwtAuth
 

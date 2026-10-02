@@ -34,7 +34,7 @@ export interface PersonaMayor {
 }
 
 // Todo pasa por el api-gateway (8080): valida el token, pone el X-User-Id
-// de la organización y es el único que maneja CORS.
+// del usuario autenticado y es el único que maneja CORS.
 @Injectable({
   providedIn: 'root',
 })
@@ -48,6 +48,11 @@ export class SignosVitalesService {
   /** Historial completo de la persona mayor autenticada, del más reciente al más antiguo. */
   listarPropios(): Observable<SignoVitalResponse[]> {
     return this.http.get<SignoVitalResponse[]>(this.personaMayorApiUrl);
+  }
+
+  /** La persona mayor autenticada registra sus propios signos vitales. */
+  registrarPropio(datos: SignoVitalRequest): Observable<SignoVitalResponse> {
+    return this.http.post<SignoVitalResponse>(this.personaMayorApiUrl, datos);
   }
 
   registrar(idPersonaMayor: number, datos: SignoVitalRequest): Observable<SignoVitalResponse> {

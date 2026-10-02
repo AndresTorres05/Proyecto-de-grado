@@ -1,7 +1,28 @@
 <header class="page-header">
-  <h1>Signos vitales</h1>
-  <p>Historial de los signos vitales que ha registrado tu organización, del más reciente al más antiguo.</p>
+  <div>
+    <h1>Signos vitales</h1>
+    <p>Historial de tus signos vitales, del más reciente al más antiguo. Puedes registrarlos tú o tu organización.</p>
+  </div>
+
+  <button type="button" class="btn btn-primary page-header__accion" (click)="abrirRegistro()">
+    <app-icon name="plus" />
+    Registrar signos vitales
+  </button>
 </header>
+
+@if (mostrarRegistro()) {
+  <app-registrar-signos-modal
+    (cerrar)="mostrarRegistro.set(false)"
+    (registrado)="alRegistrar()"
+  />
+}
+
+@if (mensajeExito()) {
+  <div class="mensaje-exito" role="status">
+    <app-icon name="check-circle" />
+    {{ mensajeExito() }}
+  </div>
+}
 
 @if (!cargando() && !error() && registros().length > 0) {
   @let ultimo = registros()[0];
@@ -42,7 +63,7 @@
 
       @if (ultimo.temperatura !== null) {
         <div class="valor valor--temperatura">
-          <div class="valor__icon"><app-icon name="sun" /></div>
+          <div class="valor__icon"><app-icon name="thermometer" /></div>
           <span class="valor__label">Temperatura</span>
           <strong class="valor__numero">{{ ultimo.temperatura }}</strong>
           <span class="valor__unidad">°C</span>
@@ -116,7 +137,7 @@
       ? 'Aún no tienes registros anteriores'
       : 'Aún no tienes signos vitales registrados'"
     [textoVacio]="registros().length > 0
-      ? 'Cuando tu organización haga un nuevo registro, el actual pasará a esta lista.'
-      : 'Cuando tu organización registre tus signos vitales, aparecerán aquí.'"
+      ? 'Cuando registres nuevos signos vitales, el registro actual pasará a esta lista.'
+      : 'Usa el botón de arriba para registrarlos, o espera a que tu organización lo haga.'"
   />
 </section>

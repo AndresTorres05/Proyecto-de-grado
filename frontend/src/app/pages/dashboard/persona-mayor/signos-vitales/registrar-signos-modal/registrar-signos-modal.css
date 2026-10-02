@@ -1,0 +1,332 @@
+/* =========================================================
+   REGISTRAR SIGNOS VITALES (persona mayor)
+   Mismo estilo que el formulario de signos vitales de la
+   organización, adaptado a un modal.
+   ========================================================= */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(16, 24, 40, 0.55);
+  backdrop-filter: blur(2px);
+}
+
+.modal {
+  width: 100%;
+  max-width: 640px;
+  max-height: 92vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+
+  padding: 30px;
+
+  background: #ffffff;
+  border: 1px solid #eaecf0;
+  border-radius: 18px;
+  box-shadow:
+    0 24px 48px rgba(16, 24, 40, 0.18),
+    0 4px 12px rgba(16, 24, 40, 0.08);
+
+  animation: aparecerModal 0.2s ease-out;
+}
+
+/* ---------- Encabezado ---------- */
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.modal__header h2 {
+  margin: 0;
+  color: var(--vita-navy);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--vita-text-gray);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.modal__close {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--vita-text-gray);
+
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.modal__close:hover {
+  background: var(--vita-cream-soft);
+  color: var(--vita-navy);
+}
+
+.modal__description {
+  margin: 6px 0 24px;
+  color: #667085;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* ---------- Formulario ---------- */
+
+.formulario {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.campo-completo {
+  grid-column: 1 / -1;
+}
+
+.campo label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #344054;
+}
+
+.campo input,
+.campo textarea {
+  width: 100%;
+  box-sizing: border-box;
+
+  border: 1px solid #d0d5dd;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #344054;
+
+  font-family: inherit;
+  font-size: 15px;
+
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.campo input {
+  height: 48px;
+  padding: 0 14px;
+}
+
+.campo textarea {
+  padding: 12px 14px;
+  resize: vertical;
+}
+
+.campo input::placeholder,
+.campo textarea::placeholder {
+  color: #98a2b3;
+}
+
+.campo input:focus,
+.campo textarea:focus {
+  outline: none;
+  border-color: var(--vita-navy);
+  box-shadow: 0 0 0 3px rgba(0, 48, 73, 0.08);
+}
+
+.input-unidad {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-unidad input {
+  padding-right: 58px;
+}
+
+.input-unidad span {
+  position: absolute;
+  right: 14px;
+  color: #667085;
+  font-size: 12px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.mensaje.error {
+  padding: 13px 16px;
+  border-radius: 10px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* ---------- Confirmación ---------- */
+
+.confirmacion {
+  text-align: center;
+}
+
+.modal-icono {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background: #eef6f8;
+  color: var(--vita-navy);
+  font-size: 21px;
+}
+
+.confirmacion h2 {
+  margin: 0;
+  color: var(--vita-navy);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.modal-descripcion {
+  margin: 8px 0 22px;
+  color: #667085;
+  font-size: 14px;
+}
+
+.resumen-signos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.resumen-item {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  border: 1px solid #eaecf0;
+  border-radius: 9px;
+}
+
+.resumen-item span {
+  margin-bottom: 4px;
+  color: #667085;
+  font-size: 12px;
+}
+
+.resumen-item strong {
+  color: #344054;
+  font-size: 15px;
+}
+
+/* ---------- Botones ---------- */
+
+.modal-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid #eaecf0;
+}
+
+.modal-acciones button {
+  min-width: 140px;
+  height: 46px;
+  padding: 0 20px;
+
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-secundario {
+  background: #ffffff;
+  color: #344054;
+  border: 1px solid #d0d5dd;
+}
+
+.btn-secundario:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #98a2b3;
+}
+
+.btn-principal {
+  background: var(--vita-navy);
+  color: #ffffff;
+  border: 1px solid var(--vita-navy);
+  box-shadow: 0 3px 8px rgba(0, 48, 73, 0.18);
+}
+
+.btn-principal:hover:not(:disabled) {
+  background: #002f47;
+  transform: translateY(-1px);
+}
+
+.modal-acciones button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@keyframes aparecerModal {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 600px) {
+  .modal {
+    padding: 22px;
+  }
+
+  .formulario,
+  .resumen-signos {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-acciones {
+    flex-direction: column-reverse;
+  }
+
+  .modal-acciones button {
+    width: 100%;
+  }
+}

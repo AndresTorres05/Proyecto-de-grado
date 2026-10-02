@@ -4,6 +4,7 @@ import com.proyectogrado.salud_backend.dto.SignoVitalRequest;
 import com.proyectogrado.salud_backend.dto.SignoVitalResponse;
 import com.proyectogrado.salud_backend.model.SignoVital;
 import com.proyectogrado.salud_backend.repository.SignoVitalRepository;
+import com.proyectogrado.salud_backend.validacion.SignoVitalValidador;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,11 +37,18 @@ public class SignoVitalController {
         return ResponseEntity.ok(respuesta);
     }
 
+    // La persona mayor registra sus propios signos vitales, con la misma
+    // validacion que usa la organizacion.
     @PostMapping
-    public ResponseEntity<SignoVitalResponse> crear(
+    public ResponseEntity<?> crear(
             @RequestHeader("X-User-Id") Integer idPersonaMayor,
             @RequestBody SignoVitalRequest request
     ) {
+        String errorMedicion = SignoVitalValidador.validar(request);
+        if (errorMedicion != null) {
+            return ResponseEntity.badRequest().body(errorMedicion);
+        }
+
         SignoVital signoVital = new SignoVital();
 
         signoVital.setIdPersonaMayor(idPersonaMayor);
