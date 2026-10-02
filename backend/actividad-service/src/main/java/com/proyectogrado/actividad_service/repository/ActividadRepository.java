@@ -13,6 +13,12 @@ public interface ActividadRepository extends JpaRepository<Actividad, Integer> {
 
     List<Actividad> findByIdOrganizacion(Integer idOrganizacion);
 
+    /** Propuestas de un voluntario, en cualquier estado. */
+    List<Actividad> findByIdVoluntario(Integer idVoluntario);
+
+    /** Propuestas de voluntarios a una organización con un estado dado. */
+    List<Actividad> findByIdOrganizacionAndEstado(Integer idOrganizacion, String estado);
+
     /** Actividades entre dos fechas, ambas incluidas. La usa el scheduler de recordatorios. */
     List<Actividad> findByFechaBetween(LocalDate desde, LocalDate hasta);
 }

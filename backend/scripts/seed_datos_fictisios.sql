@@ -76,6 +76,11 @@ CREATE TABLE IF NOT EXISTS voluntario_organizacion (
     PRIMARY KEY (id_organizacion, id_voluntario)
 );
 
+-- Columnas de las propuestas de actividades de voluntarios; las agrega
+-- actividad-service al arrancar, y aquí igual por la misma razón.
+ALTER TABLE actividad ADD COLUMN IF NOT EXISTS id_voluntario integer;
+ALTER TABLE actividad ADD COLUMN IF NOT EXISTS estado varchar(255);
+
 CREATE TEMP TABLE seed_usuarios_viejos ON COMMIT DROP AS
 SELECT id_usuario, celular FROM usuario WHERE correo LIKE '%@vitaplus.test';
 

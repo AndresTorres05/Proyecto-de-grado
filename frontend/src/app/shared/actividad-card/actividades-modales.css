@@ -1,3 +1,10 @@
+/*
+ * Botones, modales y formulario de actividades: los usan la página de
+ * actividades de la organización (crear, editar, participantes y
+ * confirmaciones) y el formulario compartido actividad-formulario, que
+ * también usa el voluntario para proponer actividades.
+ */
+
 .btn-primary {
   border: none;
   border-radius: 10px;
@@ -133,6 +140,7 @@
 }
 
 .form-group input,
+.form-group select,
 .form-group textarea {
   width: 100%;
   box-sizing: border-box;
@@ -150,6 +158,7 @@
 }
 
 .form-group input:focus,
+.form-group select:focus,
 .form-group textarea:focus {
   border-color: #2563eb;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
@@ -307,6 +316,28 @@
 }
 
 /* Confirmación */
+
+/* Propuestas de voluntarios (página de la organización) */
+
+.propuesta-autor {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--vita-navy);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.propuesta-mensaje {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1.25rem;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background: #e8f5e9;
+  color: #2e7d32;
+}
 
 .required {
   color: #dc2626;

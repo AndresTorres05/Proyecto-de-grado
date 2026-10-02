@@ -93,6 +93,8 @@ public class AnaliticaController {
                   LEFT JOIN participacion p ON p.id_actividad = a.id_actividad
                  WHERE a.id_organizacion = :org
                    AND a.fecha BETWEEN :desde AND :hasta
+                   -- Sin propuestas de voluntarios pendientes o rechazadas
+                   AND (a.estado IS NULL OR a.estado = 'ACEPTADA')
                  GROUP BY a.id_actividad, a.nombre, a.tipo, a.fecha, a.cupos
                  ORDER BY a.fecha, a.id_actividad
                 """, params, (rs, i) -> new ActividadAnalitica(

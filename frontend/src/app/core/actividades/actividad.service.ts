@@ -41,6 +41,30 @@ export interface ActividadRequest {
   responsable: string | null;
 }
 
+/** Estado de una actividad propuesta por un voluntario. */
+export type EstadoPropuesta = 'PENDIENTE' | 'ACEPTADA' | 'RECHAZADA';
+
+/**
+ * Actividad que un voluntario propuso a una organización. El voluntario ve
+ * a qué organización la presentó y la organización ve quién la propuso.
+ */
+export interface PropuestaActividad {
+  idActividad: number;
+  idOrganizacion: number;
+  nombreOrganizacion: string | null;
+  idVoluntario: number;
+  nombreVoluntario: string | null;
+  estado: EstadoPropuesta;
+  nombre: string;
+  descripcion: string | null;
+  fecha: string | null;
+  hora: string | null;
+  lugar: string | null;
+  tipo: string | null;
+  cupos: number | null;
+  responsable: string | null;
+}
+
 /** Persona inscrita en una actividad. asistio es null mientras no se registre la asistencia. */
 export interface ParticipanteActividad {
   idPersonaMayor: number;
@@ -156,6 +180,33 @@ export class ActividadService {
     return this.http.get<ParticipanteActividad[]>(
       `${this.apiUrl}/${id}/participantes`
     );
+  }
+
+  // =========================================================
+  // PROPUESTAS DE VOLUNTARIOS
+  // =========================================================
+
+  /** El voluntario presenta una actividad a una de sus organizaciones; queda PENDIENTE. */
+  proponer(request: ActividadRequest & { idOrganizacion: number | null }): Observable<PropuestaActividad> {
+    return this.http.post<PropuestaActividad>(`${this.apiUrl}/propuestas`, request);
+  }
+
+  /** Propuestas del voluntario en todos sus estados. */
+  listarPropuestasMias(): Observable<PropuestaActividad[]> {
+    return this.http.get<PropuestaActividad[]>(`${this.apiUrl}/propuestas/mias`);
+  }
+
+  /** Propuestas pendientes que recibió la organización. */
+  listarPropuestasPendientes(): Observable<PropuestaActividad[]> {
+    return this.http.get<PropuestaActividad[]>(`${this.apiUrl}/propuestas`);
+  }
+
+  aceptarPropuesta(id: number): Observable<PropuestaActividad> {
+    return this.http.put<PropuestaActividad>(`${this.apiUrl}/propuestas/${id}/aceptar`, {});
+  }
+
+  rechazarPropuesta(id: number): Observable<PropuestaActividad> {
+    return this.http.put<PropuestaActividad>(`${this.apiUrl}/propuestas/${id}/rechazar`, {});
   }
 
   /** Marca si una persona inscrita asistió (solo para la organización dueña). */

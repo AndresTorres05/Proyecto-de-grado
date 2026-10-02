@@ -8,6 +8,7 @@ import {
   Actividad,
   ActividadRequest,
   ParticipanteActividad,
+  PropuestaActividad,
   fechaHoy,
   separarPorFecha
 } from '../../../../core/actividades/actividad.service';
@@ -16,12 +17,14 @@ import { AuthService } from '../../../../core/auth/auth.service';
 import { OrganizacionService } from '../../../../core/organizacion/organizacion.service';
 import { Icon } from '../../../../shared/icon/icon';
 import { ActividadCard } from '../../../../shared/actividad-card/actividad-card';
+import { ActividadFormulario } from '../../../../shared/actividad-formulario/actividad-formulario';
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
 /**
  * Actividades de la organización: crear, editar y borrar (siempre con
  * confirmación), ver los inscritos y registrar su asistencia. Las
- * actividades que ya pasaron no se pueden editar.
+ * actividades que ya pasaron no se pueden editar. Arriba aparecen las
+ * propuestas de voluntarios pendientes, para aceptarlas o rechazarlas.
  */
 @Component({
   selector: 'app-actividades',
@@ -31,10 +34,11 @@ import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
     FormsModule,
     DatePipe,
     Icon,
-    ActividadCard
+    ActividadCard,
+    ActividadFormulario
   ],
   templateUrl: './actividades.html',
-  styleUrls: ['../../../../shared/actividad-card/actividades-pagina.css', './actividades.css']
+  styleUrls: ['../../../../shared/actividad-card/actividades-pagina.css', '../../../../shared/actividad-card/actividades-modales.css']
 })
 export class Actividades implements OnInit {
 
@@ -44,27 +48,19 @@ export class Actividades implements OnInit {
 
   protected readonly nombreUsuario = signal('');
 
-  // Formulario de nueva actividad y modales de confirmación
+  // Propuestas de voluntarios pendientes de respuesta
+  protected readonly propuestas = signal<PropuestaActividad[]>([]);
+  protected readonly propuestaProcesando = signal<number | null>(null);
+  protected readonly mensajePropuesta = signal<string | null>(null);
+
+  // Formulario de nueva actividad (componente compartido, con su propia
+  // validación y confirmación) y confirmación de la edición
   protected mostrarFormulario = signal(false);
 
   protected mostrarConfirmacion = signal(false);
 
-  /** El mismo modal de confirmación sirve para crear y para editar. */
-  protected tipoConfirmacion: 'crear' | 'editar' = 'crear';
-
   protected actividadEliminando: Actividad | null = null;
 protected mostrarConfirmacionEliminacion = signal(false);
-
-protected nuevaActividad: ActividadRequest = {
-  nombre: '',
-  descripcion: null,
-  fecha: null,
-  hora: null,
-  lugar: null,
-  tipo: null,
-  cupos: null,
-  responsable: null
-};
 
   // Editar actividad
   protected actividadEditandoId: number | null = null;
@@ -97,6 +93,7 @@ constructor(
     // participantes está abierto, también se actualiza.
     alCambiar(['actividades'], () => {
       this.cargarActividades(false);
+      this.cargarPropuestas();
 
       const actividad = this.actividadParticipantes();
       if (actividad) {
@@ -112,6 +109,7 @@ constructor(
 
 ngOnInit(): void {
   this.cargarActividades();
+  this.cargarPropuestas();
   this.cargarInformacionOrganizacion();
 
   // Desde las acciones rápidas del inicio se llega con ?abrir=registrar.
@@ -164,6 +162,43 @@ ngOnInit(): void {
     });
   }
 
+  private cargarPropuestas(): void {
+    this.actividadService.listarPropuestasPendientes().subscribe({
+      next: (propuestas) => this.propuestas.set(propuestas),
+      error: (error) => console.error('Error al cargar las propuestas de voluntarios:', error)
+    });
+  }
+
+  /** Al aceptarla, la actividad pasa a la lista de la organización y la ven sus personas mayores. */
+  protected responderPropuesta(propuesta: PropuestaActividad, aceptar: boolean): void {
+    this.error.set(null);
+    this.mensajePropuesta.set(null);
+    this.propuestaProcesando.set(propuesta.idActividad);
+
+    const peticion = aceptar
+      ? this.actividadService.aceptarPropuesta(propuesta.idActividad)
+      : this.actividadService.rechazarPropuesta(propuesta.idActividad);
+
+    peticion.subscribe({
+      next: () => {
+        this.propuestaProcesando.set(null);
+        this.mensajePropuesta.set(aceptar
+          ? `Aceptaste "${propuesta.nombre}". Ya aparece en tus actividades y la ven tus personas mayores.`
+          : `Rechazaste "${propuesta.nombre}".`);
+        this.cargarPropuestas();
+        this.cargarActividades(false);
+      },
+      error: (error) => {
+        console.error('Error al responder la propuesta:', error);
+        this.propuestaProcesando.set(null);
+        this.error.set(typeof error?.error === 'string' && error.error
+          ? error.error
+          : 'No se pudo responder la propuesta.');
+        this.cargarPropuestas();
+      }
+    });
+  }
+
   protected actividadesProximas(): Actividad[] {
     return separarPorFecha(this.actividades()).proximas;
   }
@@ -177,17 +212,6 @@ ngOnInit(): void {
   }
 
   protected abrirFormulario(): void {
-this.nuevaActividad = {
-  nombre: '',
-  descripcion: null,
-  fecha: null,
-  hora: null,
-  lugar: null,
-  tipo: null,
-  cupos: null,
-  responsable: null
-};
-
     this.mostrarFormulario.set(true);
   }
 
@@ -195,79 +219,45 @@ this.nuevaActividad = {
     this.mostrarFormulario.set(false);
   }
 
-/** Valida el formulario y pide confirmación antes de crear. */
-protected crearActividad(): void {
-
-  if (!this.nuevaActividad.nombre.trim()) {
-    this.error.set('El nombre de la actividad es obligatorio');
-    return;
-  }
-
-  if (!this.nuevaActividad.fecha) {
-    this.error.set('La fecha de la actividad es obligatoria');
-    return;
-  }
-
-  if (!this.nuevaActividad.hora) {
-    this.error.set('La hora de la actividad es obligatoria');
-    return;
-  }
-
-  if (!this.nuevaActividad.lugar?.trim()) {
-    this.error.set('El lugar de la actividad es obligatorio');
-    return;
-  }
-
-  if (
-    this.nuevaActividad.fecha < new Date().toISOString().split('T')[0]
-  ) {
-    this.error.set(
-      'No se puede crear una actividad con una fecha anterior a hoy'
-    );
-    return;
-  }
-
+/** Guarda la actividad que ya validó y confirmó el formulario. */
+protected crearActividad(datos: ActividadRequest): void {
   this.error.set(null);
-  this.tipoConfirmacion = 'crear';
-  this.mostrarConfirmacion.set(true);
+
+  this.actividadService.crear(datos).subscribe({
+    next: () => {
+      this.cerrarFormulario();
+      this.cargarActividades();
+    },
+    error: (error) => {
+      console.error('Error al crear actividad:', error);
+      this.error.set('No se pudo crear la actividad.');
+    }
+  });
 }
 
-/** Crea la actividad o guarda la edición, según lo que se esté confirmando. */
-protected confirmarCreacion(): void {
+/** Guarda la edición después de confirmarla. */
+protected confirmarEdicion(): void {
   this.mostrarConfirmacion.set(false);
 
-  if (this.tipoConfirmacion === 'crear') {
-    this.actividadService.crear(this.nuevaActividad).subscribe({
+  if (this.actividadEditandoId === null) {
+    return;
+  }
+
+  this.actividadService
+    .actualizar(
+      this.actividadEditandoId,
+      this.actividadEditando
+    )
+    .subscribe({
       next: () => {
-        this.cerrarFormulario();
+        this.cancelarEdicion();
         this.cargarActividades();
       },
       error: (error) => {
-        console.error('Error al crear actividad:', error);
-        this.error.set('No se pudo crear la actividad.');
+        console.error('Error al actualizar actividad:', error);
+        this.error.set('No se pudo actualizar la actividad');
       }
     });
-
-    return;
-  }
-
-  if (this.tipoConfirmacion === 'editar' && this.actividadEditandoId !== null) {
-    this.actividadService
-      .actualizar(
-        this.actividadEditandoId,
-        this.actividadEditando
-      )
-      .subscribe({
-        next: () => {
-          this.cancelarEdicion();
-          this.cargarActividades();
-        },
-        error: (error) => {
-          console.error('Error al actualizar actividad:', error);
-          this.error.set('No se pudo actualizar la actividad');
-        }
-      });
-  }
 }
 
 protected cancelarConfirmacion(): void {
@@ -319,7 +309,6 @@ protected guardarActividad(): void {
   }
 
   this.error.set(null);
-  this.tipoConfirmacion = 'editar';
   this.mostrarConfirmacion.set(true);
 }
 

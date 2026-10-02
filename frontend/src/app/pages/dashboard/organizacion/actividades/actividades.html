@@ -27,6 +27,63 @@
 
   @if (!cargando()) {
 
+    <!-- Propuestas de voluntarios pendientes -->
+
+    @if (mensajePropuesta()) {
+      <div class="propuesta-mensaje" role="status">
+        <app-icon name="check-circle" />
+        {{ mensajePropuesta() }}
+      </div>
+    }
+
+    @if (propuestas().length > 0) {
+
+      <section class="activities-section">
+
+        <div class="section-header">
+          <div>
+            <h2>Propuestas de voluntarios</h2>
+            <p>Actividades que te propusieron tus voluntarios. Si las aceptas, tus personas mayores podrán inscribirse.</p>
+          </div>
+        </div>
+
+        <div class="activities-list">
+
+          @for (propuesta of propuestas(); track propuesta.idActividad) {
+
+            <app-actividad-card [actividad]="propuesta">
+              <span class="propuesta-autor">
+                <app-icon name="star" />
+                Propuesta por {{ propuesta.nombreVoluntario ?? 'un voluntario' }}
+              </span>
+
+              <button
+                class="btn-delete"
+                type="button"
+                (click)="responderPropuesta(propuesta, false)"
+                [disabled]="propuestaProcesando() === propuesta.idActividad"
+              >
+                Rechazar
+              </button>
+
+              <button
+                class="btn-primary"
+                type="button"
+                (click)="responderPropuesta(propuesta, true)"
+                [disabled]="propuestaProcesando() === propuesta.idActividad"
+              >
+                Aceptar
+              </button>
+            </app-actividad-card>
+
+          }
+
+        </div>
+
+      </section>
+
+    }
+
     <!-- Próximas actividades -->
 
     <section class="activities-section">
@@ -160,238 +217,14 @@
 
 
 
-<!-- Modal para crear una actividad -->
+<!-- Modal para crear una actividad (formulario compartido con las propuestas de voluntarios) -->
 
 @if (mostrarFormulario()) {
-
-  <div
-    class="modal-backdrop"
-    (click)="cerrarFormulario()"
-  >
-
-    <div
-      class="modal"
-      (click)="$event.stopPropagation()"
-    >
-
-      <!-- Encabezado -->
-      <div class="modal-header">
-
-        <div>
-
-          <h2>
-            Crear actividad
-          </h2>
-
-          <p>
-            Registra una nueva actividad para tu organización.
-          </p>
-
-        </div>
-
-
-        <button
-          class="modal-close"
-          type="button"
-          (click)="cerrarFormulario()"
-        >
-          ×
-        </button>
-
-      </div>
-
-
-      <!-- Formulario -->
-      <form
-        class="activity-form"
-        (ngSubmit)="crearActividad()"
-      >
-
-        <div class="form-group">
-
-          <label for="nombreActividad">
-  Nombre de la actividad <span class="required">*</span>
-</label>
-
-          <input
-            id="nombreActividad"
-            type="text"
-            name="nombreActividad"
-            [(ngModel)]="nuevaActividad.nombre"
-            placeholder="Ej. Taller de memoria y estimulación cognitiva"
-            autocomplete="off"
-            required
-          />
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="descripcionActividad">
-            Descripción
-          </label>
-
-          <textarea
-            id="descripcionActividad"
-            name="descripcionActividad"
-            [(ngModel)]="nuevaActividad.descripcion"
-            placeholder="Describe brevemente en qué consiste la actividad"
-            rows="4"
-          ></textarea>
-
-        </div>
-
-
-        <!-- Fecha y hora en la misma fila -->
-        <div class="form-row">
-
-          <div class="form-group">
-
-<label for="fechaActividad">
-  Fecha <span class="required">*</span>
-</label>
-
-            <input
-              id="fechaActividad"
-              type="date"
-              name="fechaActividad"
-              [(ngModel)]="nuevaActividad.fecha"
-              required
-            />
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label for="horaActividad">
-  Hora <span class="required">*</span>
-</label>
-
-            <input
-              id="horaActividad"
-              type="time"
-              name="horaActividad"
-              [(ngModel)]="nuevaActividad.hora"
-              required
-            />
-
-          </div>
-
-        </div>
-
-
-        <div class="form-group">
-
-<label for="lugarActividad">
-  Lugar <span class="required">*</span>
-</label>
-
-          <input
-            id="lugarActividad"
-            type="text"
-            name="lugarActividad"
-            [(ngModel)]="nuevaActividad.lugar"
-            placeholder="Ej. Salón principal"
-            autocomplete="off"
-            required
-          />
-
-        </div>
-
-
-        <!-- Tipo y cupos en la misma fila -->
-        <div class="form-row">
-
-          <div class="form-group">
-
-            <label for="tipoActividad">
-              Tipo de actividad
-            </label>
-
-            <input
-              id="tipoActividad"
-              type="text"
-              name="tipoActividad"
-              [(ngModel)]="nuevaActividad.tipo"
-              placeholder="Ej. Recreativa"
-              autocomplete="off"
-            />
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label for="cuposActividad">
-              Cupos máximos
-            </label>
-
-            <input
-              id="cuposActividad"
-              type="number"
-              name="cuposActividad"
-              [(ngModel)]="nuevaActividad.cupos"
-              placeholder="Ej. 20"
-              min="1"
-            />
-
-          </div>
-
-        </div>
-
-
-<div class="form-group">
-
-  <label for="responsableActividad">
-    Responsable
-  </label>
-
-  <input
-    id="responsableActividad"
-    type="text"
-    name="responsableActividad"
-    [(ngModel)]="nuevaActividad.responsable"
-    placeholder="Ej. María González"
-    autocomplete="off"
+  <app-actividad-formulario
+    [errorServidor]="error()"
+    (guardar)="crearActividad($event)"
+    (cerrar)="cerrarFormulario()"
   />
-
-</div>
-
-
-  <!-- Mensaje de error -->
-  @if (error()) {
-    <div class="error-message">
-      {{ error() }}
-    </div>
-  }
-
-        <div class="modal-actions">
-
-          <button
-            type="button"
-            class="btn-cancel"
-            (click)="cerrarFormulario()"
-          >
-            Cancelar
-          </button>
-
-          <button
-            type="submit"
-            class="btn-primary"
-          >
-            Crear actividad
-          </button>
-
-        </div>
-
-      </form>
-
-    </div>
-
-  </div>
-
 }
 
 
@@ -879,7 +712,7 @@
 
       <div class="modal-header">
         <h2>
-  {{ tipoConfirmacion === 'crear' ? 'Confirmar actividad' : 'Confirmar cambios' }}
+  Confirmar cambios
 </h2>
 
         <button
@@ -900,15 +733,11 @@
 
     <div>
 <h3>
-  {{ tipoConfirmacion === 'crear'
-    ? '¿Crear esta actividad?'
-    : '¿Guardar estos cambios?' }}
+  ¿Guardar estos cambios?
 </h3>
 
 <p>
-  {{ tipoConfirmacion === 'crear'
-    ? 'Revisa la información antes de registrar la actividad.'
-    : 'Revisa la información antes de guardar los cambios.' }}
+  Revisa la información antes de guardar los cambios.
 </p>
     </div>
   </div>
@@ -918,9 +747,7 @@
     <div class="confirmation-item">
       <span class="confirmation-label">Actividad</span>
       <strong>
-  {{ tipoConfirmacion === 'crear'
-    ? nuevaActividad.nombre
-    : actividadEditando.nombre }}
+  {{ actividadEditando.nombre }}
 </strong>
     </div>
 
@@ -929,18 +756,14 @@
       <div class="confirmation-item">
         <span class="confirmation-label">Fecha</span>
         <strong>
-  {{ tipoConfirmacion === 'crear'
-    ? nuevaActividad.fecha
-    : actividadEditando.fecha }}
+  {{ actividadEditando.fecha }}
 </strong>
       </div>
 
       <div class="confirmation-item">
         <span class="confirmation-label">Hora</span>
         <strong>
-  {{ tipoConfirmacion === 'crear'
-    ? nuevaActividad.hora
-    : actividadEditando.hora }}
+  {{ actividadEditando.hora }}
 </strong>
       </div>
 
@@ -951,18 +774,14 @@
       <div class="confirmation-item">
         <span class="confirmation-label">Lugar</span>
         <strong>
-  {{ tipoConfirmacion === 'crear'
-    ? nuevaActividad.lugar
-    : actividadEditando.lugar }}
+  {{ actividadEditando.lugar }}
 </strong>
       </div>
 
       <div class="confirmation-item">
         <span class="confirmation-label">Responsable</span>
   <strong>
-  {{ (tipoConfirmacion === 'crear'
-      ? nuevaActividad.responsable
-      : actividadEditando.responsable) || 'No especificado' }}
+  {{ actividadEditando.responsable || 'No especificado' }}
 </strong>
       </div>
 
@@ -973,34 +792,26 @@
       <div class="confirmation-item">
         <span class="confirmation-label">Tipo</span>
 <strong>
-  {{ (tipoConfirmacion === 'crear'
-      ? nuevaActividad.tipo
-      : actividadEditando.tipo) || 'No especificado' }}
+  {{ actividadEditando.tipo || 'No especificado' }}
 </strong>
       </div>
 
       <div class="confirmation-item">
         <span class="confirmation-label">Cupos</span>
 <strong>
-  {{ (tipoConfirmacion === 'crear'
-      ? nuevaActividad.cupos
-      : actividadEditando.cupos) || 'No especificado' }}
+  {{ actividadEditando.cupos || 'No especificado' }}
 </strong>
       </div>
 
     </div>
 
     @if (
-  tipoConfirmacion === 'crear'
-    ? nuevaActividad.descripcion
-    : actividadEditando.descripcion
+  actividadEditando.descripcion
 ) {
       <div class="confirmation-item confirmation-description">
         <span class="confirmation-label">Descripción</span>
         <strong>
-  {{ tipoConfirmacion === 'crear'
-    ? nuevaActividad.descripcion
-    : actividadEditando.descripcion }}
+  {{ actividadEditando.descripcion }}
 </strong>
       </div>
     }
@@ -1021,11 +832,9 @@
         <button
           type="button"
           class="btn-primary"
-          (click)="confirmarCreacion()"
+          (click)="confirmarEdicion()"
         >
-          {{ tipoConfirmacion === 'crear'
-  ? 'Confirmar y crear'
-  : 'Confirmar y guardar' }}
+          Confirmar y guardar
         </button>
       </div>
 

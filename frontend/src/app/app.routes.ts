@@ -156,8 +156,9 @@ export const routes: Routes = [
       {
         path: 'actividades',
         loadComponent: () =>
-          import('./shared/en-construccion/en-construccion').then((m) => m.EnConstruccion),
-        data: { titulo: 'Actividades' },
+          import('./pages/dashboard/voluntario/actividades/actividades').then(
+            (m) => m.VoluntarioActividades,
+          ),
       },
 
       {

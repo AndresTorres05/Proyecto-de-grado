@@ -53,6 +53,13 @@ public class CuentaService {
         ejecutarSiExisteTabla("voluntario_organizacion",
                 "DELETE FROM voluntario_organizacion WHERE id_voluntario = :id", idUsuario);
 
+        // Propuestas de actividades del voluntario que nadie ve (pendientes o
+        // rechazadas). Las aceptadas son actividades de la organización y se quedan.
+        if (existeColumna("actividad", "id_voluntario")) {
+            ejecutar("DELETE FROM actividad WHERE id_voluntario = :id"
+                    + " AND estado IN ('PENDIENTE', 'RECHAZADA')", idUsuario);
+        }
+
         // Perfiles de rol
         ejecutar("DELETE FROM persona_mayor WHERE id_usuario = :id", idUsuario);
         ejecutar("DELETE FROM acompanante WHERE id_usuario = :id", idUsuario);
@@ -103,6 +110,18 @@ public class CuentaService {
         if (Boolean.TRUE.equals(existe)) {
             ejecutar(sql, id);
         }
+    }
+
+    // id_voluntario y estado los agrega actividad-service al arrancar.
+    private boolean existeColumna(String tabla, String columna) {
+        Object existe = entityManager
+                .createNativeQuery("SELECT EXISTS (SELECT 1 FROM information_schema.columns"
+                        + " WHERE table_name = :tabla AND column_name = :columna)")
+                .setParameter("tabla", tabla)
+                .setParameter("columna", columna)
+                .getSingleResult();
+
+        return Boolean.TRUE.equals(existe);
     }
 
     private void ejecutar(String sql, Integer id) {

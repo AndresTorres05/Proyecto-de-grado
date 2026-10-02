@@ -6,14 +6,18 @@ import com.proyectogrado.actividad_service.dto.ActividadRequest;
 import com.proyectogrado.actividad_service.dto.ActividadResponse;
 import com.proyectogrado.actividad_service.dto.AsistenciaRequest;
 import com.proyectogrado.actividad_service.dto.ParticipanteActividadResponse;
+import com.proyectogrado.actividad_service.dto.PropuestaActividadRequest;
+import com.proyectogrado.actividad_service.dto.PropuestaActividadResponse;
 
 import com.proyectogrado.actividad_service.model.Actividad;
+import com.proyectogrado.actividad_service.model.OrganizacionLookup;
 import com.proyectogrado.actividad_service.model.Participacion;
 import com.proyectogrado.actividad_service.model.PersonaMayorAcompananteLookup;
 import com.proyectogrado.actividad_service.model.UsuarioLookup;
 
 import com.proyectogrado.actividad_service.repository.AcompananteLookupRepository;
 import com.proyectogrado.actividad_service.repository.ActividadRepository;
+import com.proyectogrado.actividad_service.repository.OrganizacionLookupRepository;
 import com.proyectogrado.actividad_service.repository.ParticipacionRepository;
 import com.proyectogrado.actividad_service.repository.PersonaMayorAcompananteLookupRepository;
 import com.proyectogrado.actividad_service.repository.PersonaMayorLookupRepository;
@@ -26,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,7 +39,8 @@ import java.util.stream.Collectors;
 /**
  * Actividades de las organizaciones: la organización las crea y registra la
  * asistencia, la persona mayor se inscribe y el acompañante consulta las de
- * las personas que acompaña.
+ * las personas que acompaña. Un voluntario puede proponer actividades a sus
+ * organizaciones; mientras la organización no las acepte, nadie más las ve.
  *
  * El id del usuario autenticado llega en el encabezado X-User-Id, que pone
  * el gateway después de validar el token. Este servicio no recibe el rol:
@@ -52,6 +58,7 @@ public class ActividadController {
     private final AcompananteLookupRepository acompananteLookupRepository;
     private final PersonaMayorOrganizacionLookupRepository personaMayorOrganizacionRepository;
     private final PersonaMayorAcompananteLookupRepository personaMayorAcompananteRepository;
+    private final OrganizacionLookupRepository organizacionLookupRepository;
 
     public ActividadController(
             ActividadRepository actividadRepository,
@@ -60,7 +67,8 @@ public class ActividadController {
             PersonaMayorLookupRepository personaMayorLookupRepository,
             AcompananteLookupRepository acompananteLookupRepository,
             PersonaMayorOrganizacionLookupRepository personaMayorOrganizacionRepository,
-            PersonaMayorAcompananteLookupRepository personaMayorAcompananteRepository
+            PersonaMayorAcompananteLookupRepository personaMayorAcompananteRepository,
+            OrganizacionLookupRepository organizacionLookupRepository
     ) {
         this.actividadRepository = actividadRepository;
         this.participacionRepository = participacionRepository;
@@ -69,18 +77,20 @@ public class ActividadController {
         this.acompananteLookupRepository = acompananteLookupRepository;
         this.personaMayorOrganizacionRepository = personaMayorOrganizacionRepository;
         this.personaMayorAcompananteRepository = personaMayorAcompananteRepository;
+        this.organizacionLookupRepository = organizacionLookupRepository;
     }
 
     /** Actividades que puede ver el usuario, según su rol. */
     @GetMapping
     public ResponseEntity<?> listar(@RequestHeader("X-User-Id") Integer idUsuario) {
 
-        // Organización: solo ve sus propias actividades.
+        // Organización: solo ve sus propias actividades (las propuestas de
+        // voluntarios aparecen aquí cuando las acepta).
         Integer idOrganizacion = resolverIdOrganizacion(idUsuario);
 
         if (idOrganizacion != null) {
             return ResponseEntity.ok(
-                    actividadRepository.findByIdOrganizacion(idOrganizacion)
+                    visiblesDe(idOrganizacion)
                             .stream()
                             .map(this::aResponse)
                             .toList()
@@ -140,7 +150,7 @@ public class ActividadController {
         }
 
         return ResponseEntity.ok(
-                actividadRepository.findByIdOrganizacion(idOrganizacion)
+                visiblesDe(idOrganizacion)
                         .stream()
                         .map(this::aResponse)
                         .toList()
@@ -288,7 +298,8 @@ public class ActividadController {
 
         Actividad actividad = actividadRepository.findById(id).orElse(null);
 
-        if (actividad == null) {
+        // Una propuesta pendiente o rechazada no existe para la persona mayor
+        if (actividad == null || !actividad.esVisible()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -387,33 +398,156 @@ public class ActividadController {
                     .body("Solo una organización puede crear actividades");
         }
 
-        if (request.getNombre() == null || request.getNombre().isBlank()) {
-            return ResponseEntity.badRequest().body("El nombre es obligatorio");
-        }
-
-        if (request.getFecha() != null && request.getFecha().isBefore(LocalDate.now())) {
-            return ResponseEntity.badRequest()
-                    .body("No se puede crear una actividad con una fecha anterior a hoy");
-        }
-
-        if (request.getCupos() != null && request.getCupos() <= 0) {
-            return ResponseEntity.badRequest().body("Los cupos deben ser mayores a 0");
+        String error = validarNueva(request);
+        if (error != null) {
+            return ResponseEntity.badRequest().body(error);
         }
 
         Actividad actividad = new Actividad();
         actividad.setIdOrganizacion(idOrganizacion);
-        actividad.setNombre(request.getNombre());
-        actividad.setDescripcion(request.getDescripcion());
-        actividad.setFecha(request.getFecha());
-        actividad.setHora(request.getHora());
-        actividad.setLugar(request.getLugar());
-        actividad.setTipo(request.getTipo());
-        actividad.setCupos(request.getCupos());
-        actividad.setResponsable(request.getResponsable());
+        aplicarDatos(actividad, request);
 
         actividad = actividadRepository.save(actividad);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(aResponse(actividad));
+    }
+
+    // =========================================================
+    // PROPUESTAS DE VOLUNTARIOS
+    // =========================================================
+
+    /**
+     * El voluntario propone una actividad a una organización a la que está
+     * vinculado. Usa las mismas validaciones que la creación de la
+     * organización y queda PENDIENTE hasta que la organización responda.
+     */
+    @PostMapping("/propuestas")
+    public ResponseEntity<?> proponer(
+            @RequestBody PropuestaActividadRequest request,
+            @RequestHeader("X-User-Id") Integer idVoluntario
+    ) {
+
+        if (!esVoluntario(idVoluntario)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Solo un voluntario puede proponer actividades");
+        }
+
+        if (request.getIdOrganizacion() == null) {
+            return ResponseEntity.badRequest()
+                    .body("Selecciona la organización a la que quieres presentar la actividad");
+        }
+
+        if (!usuarioLookupRepository.voluntarioVinculado(idVoluntario, request.getIdOrganizacion())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Solo puedes proponer actividades a organizaciones a las que estás vinculado");
+        }
+
+        String error = validarNueva(request);
+        if (error != null) {
+            return ResponseEntity.badRequest().body(error);
+        }
+
+        Actividad actividad = new Actividad();
+        actividad.setIdOrganizacion(request.getIdOrganizacion());
+        actividad.setIdVoluntario(idVoluntario);
+        actividad.setEstado(Actividad.PENDIENTE);
+        aplicarDatos(actividad, request);
+
+        actividad = actividadRepository.save(actividad);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(aPropuesta(actividad));
+    }
+
+    /** Propuestas del voluntario en todos sus estados, de la más nueva a la más vieja. */
+    @GetMapping("/propuestas/mias")
+    public ResponseEntity<?> listarPropuestasMias(@RequestHeader("X-User-Id") Integer idVoluntario) {
+
+        if (!esVoluntario(idVoluntario)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Solo un voluntario tiene propuestas de actividades");
+        }
+
+        return ResponseEntity.ok(
+                actividadRepository.findByIdVoluntario(idVoluntario)
+                        .stream()
+                        .sorted(Comparator.comparing(Actividad::getIdActividad).reversed())
+                        .map(this::aPropuesta)
+                        .toList()
+        );
+    }
+
+    /** Propuestas pendientes que los voluntarios le presentaron a la organización. */
+    @GetMapping("/propuestas")
+    public ResponseEntity<?> listarPropuestasPendientes(@RequestHeader("X-User-Id") Integer idUsuario) {
+
+        Integer idOrganizacion = resolverIdOrganizacion(idUsuario);
+
+        if (idOrganizacion == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Solo una organización recibe propuestas de actividades");
+        }
+
+        return ResponseEntity.ok(
+                actividadRepository.findByIdOrganizacionAndEstado(idOrganizacion, Actividad.PENDIENTE)
+                        .stream()
+                        .sorted(Comparator.comparing(Actividad::getIdActividad))
+                        .map(this::aPropuesta)
+                        .toList()
+        );
+    }
+
+    /** La organización acepta la propuesta: desde ahora la ven sus personas mayores. */
+    @PutMapping("/propuestas/{id}/aceptar")
+    public ResponseEntity<?> aceptarPropuesta(
+            @PathVariable Integer id,
+            @RequestHeader("X-User-Id") Integer idUsuario
+    ) {
+        return responderPropuesta(id, idUsuario, Actividad.ACEPTADA);
+    }
+
+    /** La organización rechaza la propuesta: no la ve ninguna persona mayor. */
+    @PutMapping("/propuestas/{id}/rechazar")
+    public ResponseEntity<?> rechazarPropuesta(
+            @PathVariable Integer id,
+            @RequestHeader("X-User-Id") Integer idUsuario
+    ) {
+        return responderPropuesta(id, idUsuario, Actividad.RECHAZADA);
+    }
+
+    private ResponseEntity<?> responderPropuesta(Integer id, Integer idUsuario, String nuevoEstado) {
+
+        Integer idOrganizacion = resolverIdOrganizacion(idUsuario);
+
+        if (idOrganizacion == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Solo una organización puede responder propuestas");
+        }
+
+        Actividad actividad = actividadRepository.findById(id).orElse(null);
+
+        if (actividad == null || actividad.getIdVoluntario() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No se encontró la propuesta");
+        }
+
+        if (!idOrganizacion.equals(actividad.getIdOrganizacion())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Esta propuesta no fue presentada a tu organización");
+        }
+
+        if (!Actividad.PENDIENTE.equals(actividad.getEstado())) {
+            return ResponseEntity.badRequest().body("Esta propuesta ya fue respondida");
+        }
+
+        if (Actividad.ACEPTADA.equals(nuevoEstado) && yaPaso(actividad)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("No puedes aceptar una actividad cuya fecha ya pasó");
+        }
+
+        actividad.setEstado(nuevoEstado);
+        actividad = actividadRepository.save(actividad);
+
+        return ResponseEntity.ok(aPropuesta(actividad));
     }
 
     /** Edita una actividad. Solo para la organización dueña. */
@@ -500,6 +634,47 @@ public class ActividadController {
                 .orElse(null);
     }
 
+    /** Mismas reglas para la actividad de una organización y la propuesta de un voluntario. */
+    private String validarNueva(ActividadRequest request) {
+        if (request.getNombre() == null || request.getNombre().isBlank()) {
+            return "El nombre es obligatorio";
+        }
+
+        if (request.getFecha() != null && request.getFecha().isBefore(LocalDate.now())) {
+            return "No se puede crear una actividad con una fecha anterior a hoy";
+        }
+
+        if (request.getCupos() != null && request.getCupos() <= 0) {
+            return "Los cupos deben ser mayores a 0";
+        }
+
+        return null;
+    }
+
+    private void aplicarDatos(Actividad actividad, ActividadRequest request) {
+        actividad.setNombre(request.getNombre());
+        actividad.setDescripcion(request.getDescripcion());
+        actividad.setFecha(request.getFecha());
+        actividad.setHora(request.getHora());
+        actividad.setLugar(request.getLugar());
+        actividad.setTipo(request.getTipo());
+        actividad.setCupos(request.getCupos());
+        actividad.setResponsable(request.getResponsable());
+    }
+
+    /** Actividades de la organización que ven las personas mayores (sin propuestas pendientes ni rechazadas). */
+    private List<Actividad> visiblesDe(Integer idOrganizacion) {
+        return actividadRepository.findByIdOrganizacion(idOrganizacion)
+                .stream()
+                .filter(Actividad::esVisible)
+                .toList();
+    }
+
+    // Se mira el rol: hay cuentas viejas con rol VOLUNTARIO sin fila en la tabla voluntario.
+    private boolean esVoluntario(Integer idUsuario) {
+        return usuarioLookupRepository.tieneRol(idUsuario, "VOLUNTARIO");
+    }
+
     private boolean esPersonaMayor(Integer idUsuario) {
         return personaMayorLookupRepository.existsById(idUsuario);
     }
@@ -519,8 +694,36 @@ public class ActividadController {
 
     private List<Actividad> actividadesDe(Set<Integer> idsOrganizaciones) {
         return idsOrganizaciones.stream()
-                .flatMap(idOrganizacion -> actividadRepository.findByIdOrganizacion(idOrganizacion).stream())
+                .flatMap(idOrganizacion -> visiblesDe(idOrganizacion).stream())
                 .toList();
+    }
+
+    private PropuestaActividadResponse aPropuesta(Actividad a) {
+        String nombreOrganizacion = organizacionLookupRepository.findById(a.getIdOrganizacion())
+                .map(OrganizacionLookup::getNombre)
+                .orElse(null);
+
+        String nombreVoluntario = a.getIdVoluntario() == null ? null
+                : usuarioLookupRepository.findById(a.getIdVoluntario())
+                        .map(UsuarioLookup::getNombreUsuario)
+                        .orElse(null);
+
+        return new PropuestaActividadResponse(
+                a.getIdActividad(),
+                a.getIdOrganizacion(),
+                nombreOrganizacion,
+                a.getIdVoluntario(),
+                nombreVoluntario,
+                a.getEstado(),
+                a.getNombre(),
+                a.getDescripcion(),
+                a.getFecha(),
+                a.getHora(),
+                a.getLugar(),
+                a.getTipo(),
+                a.getCupos(),
+                a.getResponsable()
+        );
     }
 
     private ActividadResponse aResponse(Actividad a) {

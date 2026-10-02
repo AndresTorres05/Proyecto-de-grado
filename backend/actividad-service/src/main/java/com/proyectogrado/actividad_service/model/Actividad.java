@@ -7,10 +7,19 @@ import java.time.LocalDate;
  * Actividad organizada por una organización. Esta tabla es de
  * actividad-service: aquí sí se crea, edita y borra, a diferencia de las
  * entidades Lookup de este servicio, que solo leen tablas de otros servicios.
+ *
+ * Un voluntario también puede proponer una actividad a una de sus
+ * organizaciones: queda con idVoluntario y estado PENDIENTE, y solo la ven
+ * las personas mayores cuando la organización la acepta. Las que crea la
+ * organización tienen estado null.
  */
 @Entity
 @Table(name = "actividad")
 public class Actividad {
+
+    public static final String PENDIENTE = "PENDIENTE";
+    public static final String ACEPTADA = "ACEPTADA";
+    public static final String RECHAZADA = "RECHAZADA";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,6 +55,14 @@ public class Actividad {
 
     @Column(name = "responsable")
     private String responsable;
+
+    /** Voluntario que propuso la actividad; null si la creó la organización. */
+    @Column(name = "id_voluntario")
+    private Integer idVoluntario;
+
+    /** Estado de la propuesta del voluntario; null si la creó la organización. */
+    @Column(name = "estado")
+    private String estado;
 
     public Actividad() {
     }
@@ -128,5 +145,29 @@ public class Actividad {
 
     public void setResponsable(String responsable) {
         this.responsable = responsable;
+    }
+
+    public Integer getIdVoluntario() {
+        return idVoluntario;
+    }
+
+    public void setIdVoluntario(Integer idVoluntario) {
+        this.idVoluntario = idVoluntario;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    /**
+     * true si la ven las personas mayores: la creó la organización o es una
+     * propuesta aceptada.
+     */
+    public boolean esVisible() {
+        return estado == null || ACEPTADA.equals(estado);
     }
 }

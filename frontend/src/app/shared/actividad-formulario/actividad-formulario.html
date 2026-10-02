@@ -1,0 +1,378 @@
+<!-- Formulario -->
+
+@if (!confirmando()) {
+
+  <div
+    class="modal-backdrop"
+    (click)="cerrar.emit()"
+  >
+
+    <div
+      class="modal"
+      (click)="$event.stopPropagation()"
+    >
+
+      <!-- Encabezado -->
+      <div class="modal-header">
+
+        <div>
+          <h2>{{ titulo() }}</h2>
+          <p>{{ subtitulo() }}</p>
+        </div>
+
+        <button
+          class="modal-close"
+          type="button"
+          (click)="cerrar.emit()"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <form
+        class="activity-form"
+        (ngSubmit)="revisar()"
+      >
+
+        <!-- Organización (solo en las propuestas de voluntarios) -->
+        @if (organizaciones(); as opciones) {
+
+          <div class="form-group">
+
+            <label for="organizacionActividad">
+              Organización <span class="required">*</span>
+            </label>
+
+            <select
+              id="organizacionActividad"
+              name="organizacionActividad"
+              [(ngModel)]="idOrganizacion"
+            >
+              <option [ngValue]="null" disabled>Selecciona la organización</option>
+
+              @for (organizacion of opciones; track organizacion.idOrganizacion) {
+                <option [ngValue]="organizacion.idOrganizacion">
+                  {{ organizacion.nombre }}
+                </option>
+              }
+            </select>
+
+          </div>
+
+        }
+
+
+        <div class="form-group">
+
+          <label for="nombreActividad">
+            Nombre de la actividad <span class="required">*</span>
+          </label>
+
+          <input
+            id="nombreActividad"
+            type="text"
+            name="nombreActividad"
+            [(ngModel)]="actividad.nombre"
+            placeholder="Ej. Taller de memoria y estimulación cognitiva"
+            autocomplete="off"
+            required
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="descripcionActividad">
+            Descripción
+          </label>
+
+          <textarea
+            id="descripcionActividad"
+            name="descripcionActividad"
+            [(ngModel)]="actividad.descripcion"
+            placeholder="Describe brevemente en qué consiste la actividad"
+            rows="4"
+          ></textarea>
+
+        </div>
+
+
+        <!-- Fecha y hora en la misma fila -->
+        <div class="form-row">
+
+          <div class="form-group">
+
+            <label for="fechaActividad">
+              Fecha <span class="required">*</span>
+            </label>
+
+            <input
+              id="fechaActividad"
+              type="date"
+              name="fechaActividad"
+              [(ngModel)]="actividad.fecha"
+              required
+            />
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="horaActividad">
+              Hora <span class="required">*</span>
+            </label>
+
+            <input
+              id="horaActividad"
+              type="time"
+              name="horaActividad"
+              [(ngModel)]="actividad.hora"
+              required
+            />
+
+          </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="lugarActividad">
+            Lugar <span class="required">*</span>
+          </label>
+
+          <input
+            id="lugarActividad"
+            type="text"
+            name="lugarActividad"
+            [(ngModel)]="actividad.lugar"
+            placeholder="Ej. Salón principal"
+            autocomplete="off"
+            required
+          />
+
+        </div>
+
+
+        <!-- Tipo y cupos en la misma fila -->
+        <div class="form-row">
+
+          <div class="form-group">
+
+            <label for="tipoActividad">
+              Tipo de actividad
+            </label>
+
+            <input
+              id="tipoActividad"
+              type="text"
+              name="tipoActividad"
+              [(ngModel)]="actividad.tipo"
+              placeholder="Ej. Recreativa"
+              autocomplete="off"
+            />
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="cuposActividad">
+              Cupos máximos
+            </label>
+
+            <input
+              id="cuposActividad"
+              type="number"
+              name="cuposActividad"
+              [(ngModel)]="actividad.cupos"
+              placeholder="Ej. 20"
+              min="1"
+            />
+
+          </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="responsableActividad">
+            Responsable
+          </label>
+
+          <input
+            id="responsableActividad"
+            type="text"
+            name="responsableActividad"
+            [(ngModel)]="actividad.responsable"
+            placeholder="Ej. María González"
+            autocomplete="off"
+          />
+
+        </div>
+
+
+        <!-- Mensaje de error -->
+        @if (error() || errorServidor()) {
+          <div class="form-error">
+            {{ error() || errorServidor() }}
+          </div>
+        }
+
+        <div class="modal-actions">
+
+          <button
+            type="button"
+            class="btn-cancel"
+            (click)="cerrar.emit()"
+          >
+            Cancelar
+          </button>
+
+          <button
+            type="submit"
+            class="btn-primary"
+          >
+            {{ textoEnviar() }}
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+} @else {
+
+  <!-- Confirmación con el resumen -->
+
+  <div
+    class="modal-backdrop"
+    (click)="confirmando.set(false)"
+  >
+    <div
+      class="modal confirmation-modal"
+      (click)="$event.stopPropagation()"
+    >
+
+      <div class="modal-header">
+        <h2>Confirmar actividad</h2>
+
+        <button
+          type="button"
+          class="modal-close"
+          (click)="confirmando.set(false)"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="confirmation-content">
+
+        <div class="confirmation-message">
+          <div class="confirmation-icon">
+            <app-icon name="check" />
+          </div>
+
+          <div>
+            <h3>{{ preguntaConfirmacion() }}</h3>
+            <p>Revisa la información antes de registrar la actividad.</p>
+          </div>
+        </div>
+
+        <div class="confirmation-details">
+
+          @if (organizaciones()) {
+            <div class="confirmation-item">
+              <span class="confirmation-label">Organización</span>
+              <strong>{{ nombreOrganizacion() }}</strong>
+            </div>
+          }
+
+          <div class="confirmation-item">
+            <span class="confirmation-label">Actividad</span>
+            <strong>{{ actividad.nombre }}</strong>
+          </div>
+
+          <div class="confirmation-row">
+
+            <div class="confirmation-item">
+              <span class="confirmation-label">Fecha</span>
+              <strong>{{ actividad.fecha }}</strong>
+            </div>
+
+            <div class="confirmation-item">
+              <span class="confirmation-label">Hora</span>
+              <strong>{{ actividad.hora }}</strong>
+            </div>
+
+          </div>
+
+          <div class="confirmation-row">
+
+            <div class="confirmation-item">
+              <span class="confirmation-label">Lugar</span>
+              <strong>{{ actividad.lugar }}</strong>
+            </div>
+
+            <div class="confirmation-item">
+              <span class="confirmation-label">Responsable</span>
+              <strong>{{ actividad.responsable || 'No especificado' }}</strong>
+            </div>
+
+          </div>
+
+          <div class="confirmation-row">
+
+            <div class="confirmation-item">
+              <span class="confirmation-label">Tipo</span>
+              <strong>{{ actividad.tipo || 'No especificado' }}</strong>
+            </div>
+
+            <div class="confirmation-item">
+              <span class="confirmation-label">Cupos</span>
+              <strong>{{ actividad.cupos || 'No especificado' }}</strong>
+            </div>
+
+          </div>
+
+          @if (actividad.descripcion) {
+            <div class="confirmation-item confirmation-description">
+              <span class="confirmation-label">Descripción</span>
+              <strong>{{ actividad.descripcion }}</strong>
+            </div>
+          }
+
+        </div>
+
+      </div>
+
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="btn-secondary"
+          (click)="confirmando.set(false)"
+        >
+          Volver
+        </button>
+
+        <button
+          type="button"
+          class="btn-primary"
+          (click)="confirmar()"
+        >
+          {{ textoConfirmar() }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+}
