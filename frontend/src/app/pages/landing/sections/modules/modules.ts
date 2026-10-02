@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 
+/** Sección con los módulos de la plataforma, en tarjetas. */
 @Component({
   selector: 'app-modules',
   imports: [],

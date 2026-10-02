@@ -13,17 +13,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Perfil propio del voluntario: ver sus datos.
+ * Perfil propio del voluntario: ver sus datos. Por ahora el panel del
+ * voluntario en el frontend no consume este endpoint.
  *
- * Todavía no existe ninguna relación (con organizaciones, personas
- * mayores o actividades) para el voluntario — ni en el monolito ni en
- * la base de datos actual. Cuando se defina esa relación, se agrega
- * su propio modelo/repositorio/controlador aquí, con el mismo patrón
- * que ya usan personamayor-service y acompanante-service.
+ * Todavía no existe ningún vínculo del voluntario con organizaciones,
+ * personas mayores o actividades. Cuando se defina, se le agregan aquí su
+ * modelo, repositorio y controlador, con el mismo patrón de
+ * persona-mayor-service y acompanante-service.
  *
- * El id del usuario autenticado llega en el header X-User-Id, puesto
- * por el api-gateway despues de validar el JWT. Este servicio no valida
- * tokens.
+ * El id del usuario autenticado llega en el encabezado X-User-Id, que pone
+ * el gateway después de validar el token. Este servicio no valida tokens.
  */
 @RestController
 @RequestMapping("/api/voluntario/perfil")
@@ -40,6 +39,7 @@ public class VoluntarioController {
         this.voluntarioLookupRepository = voluntarioLookupRepository;
     }
 
+    /** Datos de la cuenta del voluntario autenticado. */
     @GetMapping
     public ResponseEntity<VoluntarioPerfilResponse> verPerfil(
             @RequestHeader("X-User-Id") Integer idVoluntario

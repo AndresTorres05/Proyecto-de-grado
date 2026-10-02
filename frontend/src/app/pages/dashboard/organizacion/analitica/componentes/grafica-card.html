@@ -1,4 +1,5 @@
 <section class="grafica card">
+  <!-- Título, descripción y controles (los de cada reporte, más Ver tabla) -->
   <header class="grafica__header">
     <div>
       <h3>{{ titulo() }}</h3>
@@ -23,6 +24,7 @@
     </div>
   </header>
 
+  <!-- Sin datos, tabla o gráfica -->
   @if (vacio()) {
     <p class="grafica__vacio" [style.min-height.px]="alto() / 2">{{ textoVacio() }}</p>
   } @else if (verTabla()) {

@@ -1,5 +1,8 @@
 package com.proyectogrado.auth_backend.dto;
 
+/**
+ * Datos para recuperar la contraseña con el código OTP enviado al celular.
+ */
 public class RestablecerContrasenaRequest {
 
     private String celular;

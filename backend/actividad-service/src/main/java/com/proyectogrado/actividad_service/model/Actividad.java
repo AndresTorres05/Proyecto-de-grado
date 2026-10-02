@@ -4,10 +4,9 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 /**
- * Actividad organizada por una organizacion. Tabla propia de
- * actividad-service: aqui SI se crea, edita y borra (a diferencia de
- * las entidades "Lookup" de este mismo servicio, que son de solo
- * lectura sobre tablas de otros servicios).
+ * Actividad organizada por una organización. Esta tabla es de
+ * actividad-service: aquí sí se crea, edita y borra, a diferencia de las
+ * entidades Lookup de este servicio, que solo leen tablas de otros servicios.
  */
 @Entity
 @Table(name = "actividad")
@@ -30,15 +29,18 @@ public class Actividad {
     @Column(name = "fecha")
     private LocalDate fecha;
 
+    /** "HH:mm", tal como llega del formulario. */
     @Column(name = "hora")
     private String hora;
 
     @Column(name = "lugar")
     private String lugar;
 
+    /** Texto libre, por ejemplo "Recreativa". */
     @Column(name = "tipo")
     private String tipo;
 
+    /** Máximo de inscritos; si es null, no hay límite. */
     @Column(name = "cupos")
     private Integer cupos;
 

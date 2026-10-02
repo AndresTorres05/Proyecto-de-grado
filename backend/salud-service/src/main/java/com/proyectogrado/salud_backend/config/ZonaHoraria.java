@@ -5,10 +5,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 /**
- * Las horas de los medicamentos las escribe la persona mayor en hora de
- * Colombia. Si se usara la zona del servidor (p. ej. UTC en un despliegue)
- * los recordatorios llegarian con horas de diferencia, asi que todo calculo
- * de "ahora" pasa por aqui.
+ * Fecha y hora actuales en Colombia. La persona mayor escribe las horas de
+ * sus medicamentos en hora colombiana; si se usara la zona del servidor
+ * (por ejemplo UTC en un despliegue), los recordatorios llegarían con horas
+ * de diferencia. Por eso todo cálculo de "ahora" pasa por aquí.
  */
 public final class ZonaHoraria {
 

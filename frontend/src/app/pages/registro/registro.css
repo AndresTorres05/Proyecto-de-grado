@@ -21,7 +21,7 @@
   padding: 32px;
 }
 
-/* ---------- Marca ---------- */
+/* Marca */
 
 .login-brand {
   display: flex;
@@ -42,7 +42,7 @@
   color: var(--vita-navy);
 }
 
-/* ---------- Cabecera ---------- */
+/* Encabezado */
 
 .login-back {
   display: inline-block;
@@ -69,7 +69,7 @@
   font-size: 0.9rem;
 }
 
-/* ---------- Formulario ---------- */
+/* Formulario */
 
 .login-form {
   display: flex;
@@ -184,7 +184,7 @@
   text-decoration: underline;
 }
 
-/* ---------- Términos y condiciones ---------- */
+/* Términos y condiciones */
 
 .terms-modal {
   position: fixed;

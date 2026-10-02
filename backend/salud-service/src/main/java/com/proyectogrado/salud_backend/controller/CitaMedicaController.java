@@ -14,6 +14,10 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * Citas médicas de la persona mayor (crear, listar, editar y borrar).
+ * Por ahora no tienen ruta en el gateway ni pantalla en el frontend.
+ */
 @RestController
 @RequestMapping("/api/persona-mayor/citas-medicas")
 public class CitaMedicaController {
@@ -24,6 +28,7 @@ public class CitaMedicaController {
         this.citaMedicaRepository = citaMedicaRepository;
     }
 
+    /** Citas de la persona mayor autenticada, ordenadas por fecha y hora. */
     @GetMapping
     public ResponseEntity<List<CitaMedicaResponse>> listar(
             @RequestHeader("X-User-Id") Integer idPersonaMayor
@@ -37,6 +42,7 @@ public class CitaMedicaController {
         return ResponseEntity.ok(respuesta);
     }
 
+    /** Crea una cita para la persona mayor autenticada. */
     @PostMapping
     public ResponseEntity<CitaMedicaResponse> crear(
             @RequestHeader("X-User-Id") Integer idPersonaMayor,
@@ -54,6 +60,7 @@ public class CitaMedicaController {
                 .body(aRespuesta(cita));
     }
 
+    /** Edita una cita; si no es de esta persona mayor, responde 403. */
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizar(
             @RequestHeader("X-User-Id") Integer idPersonaMayor,
@@ -74,6 +81,7 @@ public class CitaMedicaController {
         return ResponseEntity.ok(aRespuesta(cita));
     }
 
+    /** Borra una cita; si no es de esta persona mayor, responde 403. */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(
             @RequestHeader("X-User-Id") Integer idPersonaMayor,
@@ -91,6 +99,7 @@ public class CitaMedicaController {
         return ResponseEntity.noContent().build();
     }
 
+    /** La cita, o null si no existe o es de otra persona mayor. */
     private CitaMedica obtenerPropia(
             Integer id,
             Integer idPersonaMayor
@@ -107,6 +116,7 @@ public class CitaMedicaController {
         return cita;
     }
 
+    /** Copia los datos del formulario; la fecha y la hora solo cambian si vienen. */
     private void aplicarCambios(
             CitaMedica cita,
             CitaMedicaRequest request

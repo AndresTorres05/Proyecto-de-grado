@@ -1,15 +1,11 @@
-/* =========================================================
-   SECCIÓN "SOBRE NOSOTROS"
-   ========================================================= */
+/* Sección "Sobre nosotros" */
 
 .about-us-section {
   padding: 6rem 1rem;
   font-family: 'Sora', sans-serif;
 }
 
-/* =========================================================
-   CONTENEDOR PRINCIPAL
-   ========================================================= */
+/* Contenedor principal */
 
 .about-us-section .container {
   max-width: 1100px;
@@ -19,16 +15,14 @@
   align-items: center;
 }
 
-/* =========================================================
-   ENCABEZADO DE LA SECCIÓN
-   ========================================================= */
+/* Encabezado de la sección */
 
 .about-us-section .section-header {
   text-align: center;
   margin-bottom: 4rem;
 }
 
-/* ---------- Etiqueta ---------- */
+/* Etiqueta */
 
 .about-us-section .section-header .tagline {
   background-color: rgba(91, 113, 138, 0.05);
@@ -44,7 +38,7 @@
   margin-bottom: 1rem;
 }
 
-/* ---------- Título principal ---------- */
+/* Título principal */
 
 .about-us-section .section-header .main-title {
   color: var(--vita-navy, #0e3b68);
@@ -55,7 +49,7 @@
   letter-spacing: -0.04em;
 }
 
-/* ---------- Descripción ---------- */
+/* Descripción */
 
 .about-us-section .section-header .description-text {
   color: var(--vita-text-gray, #666666);
@@ -64,9 +58,7 @@
   margin: 0 auto;
 }
 
-/* =========================================================
-   CONTENEDOR DE TARJETAS
-   ========================================================= */
+/* Contenedor de tarjetas */
 
 .about-us-section .cards-container {
   display: flex;
@@ -75,7 +67,7 @@
   justify-content: center;
 }
 
-/* ---------- Tablets ---------- */
+/* Tablets */
 
 @media (max-width: 991px) {
   .about-us-section .cards-container {
@@ -84,9 +76,7 @@
   }
 }
 
-/* =========================================================
-   TARJETAS DE INFORMACIÓN
-   ========================================================= */
+/* Tarjetas de información */
 
 .about-us-section .info-card {
   flex: 1;
@@ -98,14 +88,14 @@
   border: 1px solid rgba(14, 59, 104, 0.03);
 }
 
-/* ---------- Efecto hover ---------- */
+/* Efecto al pasar el cursor */
 
 .about-us-section .info-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 18px 45px rgba(14, 59, 104, 0.1);
 }
 
-/* ---------- Tablets ---------- */
+/* Tablets */
 
 @media (max-width: 991px) {
   .about-us-section .info-card {
@@ -113,7 +103,7 @@
   }
 }
 
-/* ---------- Móviles ---------- */
+/* Móviles */
 
 @media (max-width: 650px) {
   .about-us-section .info-card {
@@ -121,16 +111,14 @@
   }
 }
 
-/* =========================================================
-   CONTENIDO DE LA TARJETA
-   ========================================================= */
+/* Contenido de la tarjeta */
 
 .about-us-section .card-content {
   display: flex;
   flex-direction: column;
 }
 
-/* ---------- Fila de ícono y título ---------- */
+/* Fila de icono y título */
 
 .about-us-section .card-header-row {
   display: flex;
@@ -139,7 +127,7 @@
   margin-bottom: 1.25rem;
 }
 
-/* ---------- Ícono ---------- */
+/* Icono */
 
 .about-us-section .card-icon {
   display: flex;
@@ -154,7 +142,7 @@
   object-fit: contain;
 }
 
-/* ---------- Título de la tarjeta ---------- */
+/* Título de la tarjeta */
 
 .about-us-section .card-title {
   color: var(--vita-navy, #0e3b68);
@@ -164,7 +152,7 @@
   letter-spacing: -0.02em;
 }
 
-/* ---------- Descripción de la tarjeta ---------- */
+/* Descripción de la tarjeta */
 
 .about-us-section .card-description {
   color: var(--vita-text-gray, #666666);

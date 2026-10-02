@@ -8,6 +8,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 
+/**
+ * Rol asignado a un usuario. La llave es la pareja (usuario, rol).
+ */
 @Entity
 @Table(name = "usuario_rol")
 public class UsuarioRol {
@@ -68,6 +71,7 @@ public class UsuarioRol {
         actualizarId();
     }
 
+    /** Mantiene la llave compuesta al día cuando cambia el usuario o el rol. */
     private void actualizarId() {
 
         if (usuario != null

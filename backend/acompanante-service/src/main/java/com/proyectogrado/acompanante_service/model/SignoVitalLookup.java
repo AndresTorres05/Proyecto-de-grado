@@ -8,9 +8,9 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 /**
- * Solo lectura sobre "signo_vital" (dueno de salud-backend). Necesario
- * para que un acompanante vea los signos vitales de una persona mayor que
- * acompana, sin duplicar la logica de signos vitales aqui.
+ * Vista de solo lectura de la tabla signo_vital, que pertenece a
+ * salud-service. Permite que el acompañante vea los signos vitales de la
+ * persona mayor.
  */
 @Entity
 @Table(name = "signo_vital")
@@ -50,8 +50,9 @@ public class SignoVitalLookup {
     @Column(name = "observaciones")
     private String observaciones;
 
+    /** Lo exige JPA. */
+
     protected SignoVitalLookup() {
-        // JPA
     }
 
     public Integer getIdSignoVital() {

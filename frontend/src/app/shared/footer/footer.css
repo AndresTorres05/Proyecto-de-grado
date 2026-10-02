@@ -1,6 +1,4 @@
-/* =========================================================
-   FOOTER
-   ========================================================= */
+/* Pie de página */
 
 :host {
   display: block;
@@ -8,18 +6,14 @@
   padding-bottom: 0;
 }
 
-/* =========================================================
-   CONTENEDOR PRINCIPAL
-   ========================================================= */
+/* Contenedor principal */
 
 .footer-wrapper {
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* =========================================================
-   GRID PRINCIPAL
-   ========================================================= */
+/* Cuadrícula principal */
 
 .footer-grid {
   display: grid;
@@ -29,7 +23,7 @@
   margin-bottom: 20px;
 }
 
-/* ---------- Tablets ---------- */
+/* Tablets */
 
 @media (max-width: 960px) {
   .footer-grid {
@@ -37,7 +31,7 @@
   }
 }
 
-/* ---------- Móviles ---------- */
+/* Móviles */
 
 @media (max-width: 600px) {
   .footer-grid {
@@ -45,11 +39,9 @@
   }
 }
 
-/* =========================================================
-   MARCA / INFORMACIÓN PRINCIPAL
-   ========================================================= */
+/* Marca e información principal */
 
-/* ---------- Logo ---------- */
+/* Logo */
 
 .footer-brand .footer-logo-row {
   display: flex;
@@ -75,7 +67,7 @@
   letter-spacing: -0.02em;
 }
 
-/* ---------- Descripción ---------- */
+/* Descripción */
 
 .footer-brand .footer-description {
   color: rgba(255, 255, 255, 0.80);
@@ -85,16 +77,14 @@
   max-width: 280px;
 }
 
-/* ---------- Redes sociales ---------- */
+/* Redes sociales */
 
 .footer-brand .social-links-row {
   display: flex;
   gap: 12px;
 }
 
-/* =========================================================
-   TÍTULOS DEL FOOTER
-   ========================================================= */
+/* Títulos del pie de página */
 
 .footer-heading {
   color: #ffffff;
@@ -105,9 +95,7 @@
   font-weight: 700;
 }
 
-/* =========================================================
-   ENLACES
-   ========================================================= */
+/* Enlaces */
 
 .footer-links {
   list-style: none;
@@ -131,9 +119,7 @@
   transform: translateX(4px);
 }
 
-/* =========================================================
-   REDES SOCIALES
-   ========================================================= */
+/* Redes sociales */
 
 .social-link {
   width: 38px;
@@ -156,7 +142,7 @@
   transform: translateY(-2px);
 }
 
-/* ---------- Icono de GitHub ---------- */
+/* Icono de GitHub */
 
 .social-link .social-icon-img {
   width: 20px;
@@ -165,9 +151,7 @@
   filter: grayscale(1) brightness(0) invert(1);
 }
 
-/* =========================================================
-   CONTACTO
-   ========================================================= */
+/* Contacto */
 
 .footer-contact-col .contact-info-list {
   display: flex;
@@ -193,9 +177,7 @@
   margin-top: 10px;
 }
 
-/* =========================================================
-   NEWSLETTER
-   ========================================================= */
+/* Boletín */
 
 .newsletter-form {
   display: flex;
@@ -211,7 +193,7 @@
   border-color: var(--vita-gold, #f6c95e);
 }
 
-/* ---------- Campo ---------- */
+/* Campo */
 
 .newsletter-form .newsletter-input {
   flex: 1;
@@ -226,7 +208,7 @@
   color: rgba(255, 255, 255, 0.35);
 }
 
-/* ---------- Botón ---------- */
+/* Botón */
 
 .newsletter-form .newsletter-btn {
   width: 34px;
@@ -247,9 +229,7 @@
   transform: scale(1.08);
 }
 
-/* =========================================================
-   ALIANZAS INSTITUCIONALES
-   ========================================================= */
+/* Alianzas institucionales */
 
 .footer-partners-bar {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -261,7 +241,7 @@
   gap: 14px;
 }
 
-/* ---------- Etiqueta ---------- */
+/* Etiqueta */
 
 .footer-partners-bar .partners-label {
   font-size: 0.75rem;
@@ -271,7 +251,7 @@
   font-weight: 600;
 }
 
-/* ---------- Logos ---------- */
+/* Logos */
 
 .footer-partners-bar .partners-logos {
   display: flex;
@@ -305,9 +285,7 @@
   filter: none;
 }
 
-/* =========================================================
-   ENLACE AL REPOSITORIO
-   ========================================================= */
+/* Enlace al repositorio */
 
 .repository-link {
   display: flex;
@@ -324,9 +302,7 @@
   margin: 0;
 }
 
-/* =========================================================
-   PARTE INFERIOR
-   ========================================================= */
+/* Parte inferior */
 
 .footer-bottom {
   margin-top: 40px;
@@ -338,9 +314,7 @@
   color: rgba(255, 255, 255, 0.80);
 }
 
-/* =========================================================
-   CONFIGURACIÓN DEL FOOTER OSCURO
-   ========================================================= */
+/* Pie de página oscuro */
 
 footer.section--darker {
   padding-top: 30px !important;

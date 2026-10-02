@@ -15,23 +15,28 @@ import { GraficaCard, TablaGrafica } from '../componentes/grafica-card';
 import { Kpi } from '../componentes/kpi';
 
 const DIA = 24 * 60 * 60 * 1000;
+
+/** Sin mediciones en más de estos días, la persona aparece como "requiere atención". */
 const DIAS_SIN_MEDICION = 30;
 
-// Indicadores que muestra la analítica (temperatura no).
+/** Indicadores que muestra la analítica (la temperatura no). */
 type IndicadorAnalitica = Exclude<Indicador, 'temperatura'>;
 const INDICADORES: IndicadorAnalitica[] = ['presion', 'pulso', 'oxigeno'];
 
-// Campos de la medición que forman cada indicador
+/** Campos de la medición que forman cada indicador. */
 const CAMPOS: Record<IndicadorAnalitica, CampoSigno[]> = {
   presion: ['presionSistolica', 'presionDiastolica'],
   pulso: ['frecuenciaCardiaca'],
   oxigeno: ['saturacionOxigeno']
 };
 
-// Color para "posible error de registro": es un problema del dato, no de
-// salud, así que va en gris oscuro (no en los colores de estado).
+/**
+ * Color para "posible error de registro": es un problema del dato, no de
+ * salud, así que va en gris oscuro y no en los colores de estado.
+ */
 const COLOR_ERROR = '#6b7785';
 
+/** Persona de la tabla "Personas que requieren atención". */
 interface PersonaAtencion {
   idUsuario: number;
   nombre: string;
@@ -71,7 +76,7 @@ export class ReporteSalud {
   protected readonly personaElegida = signal<number | null>(null);
   protected readonly indicadorEvolucion = signal<IndicadorAnalitica>('presion');
 
-  // ---------- Datos base ----------
+  // Datos base
 
   private readonly medicionesPorPersona = computed(() => {
     const mapa = new Map<number, MedicionAnalitica[]>();
@@ -102,8 +107,12 @@ export class ReporteSalud {
   private readonly medicionesConError = computed(() =>
     this.medicionesPeriodo().filter((m) => camposImposibles(m).length > 0));
 
-  // ---------- Personas que requieren atención ----------
+  // Personas que requieren atención
 
+  /**
+   * Personas con la última medición fuera de rango, sin medir hace más de
+   * DIAS_SIN_MEDICION días, sin ninguna medición o con valores imposibles.
+   */
   protected readonly atencion = computed<PersonaAtencion[]>(() => {
     const ahora = Date.now();
     const lista: PersonaAtencion[] = [];
@@ -154,7 +163,7 @@ export class ReporteSalud {
       }
     }
 
-    // Primero valores fuera de rango, luego errores de registro
+    // Primero valores fuera de rango, luego errores de registro.
     return lista.sort((a, b) =>
       b.indicadores.length - a.indicadores.length || b.errores - a.errores || a.nombre.localeCompare(b.nombre));
   });
@@ -164,7 +173,7 @@ export class ReporteSalud {
     return filtro ? this.atencion().filter((p) => p.indicadores.includes(filtro)) : this.atencion();
   });
 
-  // ---------- Indicadores ----------
+  // Indicadores
 
   protected readonly kpis = computed(() => {
     const total = this.datos().personas.length;
@@ -200,7 +209,7 @@ export class ReporteSalud {
     return `Más reciente: ${nombre.toLowerCase()} ${valor} ${unidad} (${persona}, ${this.fecha(m.fechaHora)})`;
   });
 
-  // ---------- 1. Estado actual por indicador ----------
+  // Gráfica 1: estado actual por indicador
 
   private readonly estadoActual = computed(() =>
     INDICADORES.map((indicador) => {
@@ -256,7 +265,7 @@ export class ReporteSalud {
     this.filtroIndicador.set(this.filtroIndicador() === indicador ? null : indicador);
   }
 
-  // ---------- 2. Mediciones en el tiempo ----------
+  // Gráfica 2: mediciones en el tiempo
 
   private readonly medicionesEnElTiempo = computed(() => {
     const mediciones = this.medicionesPeriodo();
@@ -314,7 +323,7 @@ export class ReporteSalud {
       tooltip: tooltip({ trigger: 'axis' }),
       xAxis: ejeCategorias(puntos.map((p) => p.etiqueta), {
         boundaryGap: false,
-        // Que la primera y la última fecha no se corten en los bordes
+        // Que la primera y la última fecha no se corten en los bordes.
         axisLabel: { color: '#586576', fontSize: 12, hideOverlap: true, alignMinLabel: 'left', alignMaxLabel: 'right' }
       }),
       yAxis: ejeValores(),
@@ -330,7 +339,7 @@ export class ReporteSalud {
   protected readonly tituloTiempo = computed(() =>
     this.medicionesEnElTiempo().porMes ? 'Mediciones por mes' : 'Mediciones por semana');
 
-  // ---------- 3. Evolución de una persona ----------
+  // Gráfica 3: evolución de una persona
 
   /** Personas con al menos una medición (para el selector). */
   protected readonly personasConMediciones = computed(() =>
@@ -342,7 +351,7 @@ export class ReporteSalud {
     if (elegida !== null && disponibles.some((p) => p.idUsuario === elegida)) {
       return elegida;
     }
-    // Por defecto: la primera que requiere atención por valores, o la primera con datos
+    // Por defecto: la primera que requiere atención por valores, o la primera con datos.
     const conAlerta = this.atencion().find((p) =>
       (p.indicadores.length > 0 || p.errores > 0) && this.medicionesPorPersona().has(p.idUsuario));
     return conAlerta?.idUsuario ?? disponibles[0]?.idUsuario ?? null;
@@ -403,14 +412,14 @@ export class ReporteSalud {
     const valores = series.flatMap((s) => s.puntos.map((p) => p[1] as number));
     const sinDatos = valores.length === 0;
 
-    // Eje Y: siempre incluye el rango normal (para que se vea la franja)
+    // Eje Y: siempre incluye el rango normal (para que se vea la franja).
     const bajo = Math.min(...valores, ...definiciones.map((d) => d.rango.min));
     const alto = Math.max(...valores, ...definiciones.map((d) => d.rango.max));
     const margen = Math.max((alto - bajo) * 0.15, 2);
     const minimoY = Math.max(0, Math.floor(bajo - margen));
     const maximoY = indicador === 'oxigeno' ? 100 : Math.ceil(alto + margen);
 
-    // Eje X: todo el período (o los últimos 30 días si es "Todo" y no hay datos)
+    // Eje X: todo el período (o los últimos 30 días si es "Todo" y no hay datos).
     const ahora = new Date();
     const desde = this.desde();
     const inicio = desde
@@ -446,7 +455,7 @@ export class ReporteSalud {
           data: [[{ name: s.franja, yAxis: s.rango.min }, { yAxis: s.rango.max }]]
         }
       })),
-      // Sin datos: el marco completo con un aviso en el centro
+      // Sin datos: el marco completo con un aviso en el centro.
       graphic: sinDatos
         ? [{
             type: 'text',
@@ -488,7 +497,7 @@ export class ReporteSalud {
     document.getElementById('evolucion-persona')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
-  // ---------- Utilidades ----------
+  // Utilidades
 
   protected fecha(fechaHora: string | null): string {
     if (!fechaHora) return '—';

@@ -2,6 +2,10 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from './auth.service';
 
+/**
+ * Protege las rutas de los paneles: exige sesión y, si la ruta pide un rol
+ * (data.rol), que sea el del usuario.
+ */
 export const authGuard: CanActivateFn = (route) => {
   const authService = inject(AuthService);
   const router = inject(Router);
@@ -14,7 +18,7 @@ export const authGuard: CanActivateFn = (route) => {
   const rolUsuario = authService.getRol();
 
   if (rolRequerido && rolUsuario !== rolRequerido) {
-    // Está logueado, pero con otro rol: lo mandamos a SU panel correcto, no al que pidió
+    // Tiene sesión, pero con otro rol: se le envía a su propio panel.
     authService.redirigirSegunRol(rolUsuario ?? '');
     return false;
   }

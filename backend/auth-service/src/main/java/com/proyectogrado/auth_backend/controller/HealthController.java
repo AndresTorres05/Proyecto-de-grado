@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+/**
+ * Endpoint de prueba para comprobar que auth-service está en funcionamiento.
+ */
 @RestController
 @RequestMapping("/api/auth")
 public class HealthController {

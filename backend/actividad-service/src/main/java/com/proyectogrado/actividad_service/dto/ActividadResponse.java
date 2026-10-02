@@ -2,6 +2,9 @@ package com.proyectogrado.actividad_service.dto;
 
 import java.time.LocalDate;
 
+/**
+ * Actividad tal como la recibe el frontend.
+ */
 public class ActividadResponse {
 
     private Integer idActividad;

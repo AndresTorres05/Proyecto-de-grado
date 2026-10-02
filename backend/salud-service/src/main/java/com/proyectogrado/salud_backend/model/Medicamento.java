@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /**
- * Dueno de este servicio. A diferencia de PersonaMayor (que vive en
- * auth-backend), aqui SI se guarda todo el ciclo de vida del medicamento.
+ * Medicamento de una persona mayor, con su horario y el estado de sus
+ * recordatorios. Esta tabla es de salud-service.
  *
- * "idPersonaMayor" es un Integer plano, no una relacion JPA: PersonaMayor
- * es de auth-backend, no de este servicio.
+ * idPersonaMayor es un Integer simple y no una relación JPA, porque la
+ * tabla persona_mayor pertenece a auth-service.
  */
 @Entity
 @Table(name = "medicamento")
@@ -38,18 +38,22 @@ public class Medicamento {
     @Column(name = "dosis")
     private String dosis;
 
+    /** En pantalla se llama "Descripción": texto libre, por ejemplo "Después de cada comida". */
     @Column(name = "frecuencia")
     private String frecuencia;
 
+    /** Cada cuántas horas se toma; es lo que usa el scheduler para avanzar las tomas. */
     @Column(name = "intervalo_horas", nullable = false)
     private Integer intervaloHoras;
 
+    /** Hora de referencia de las tomas, en hora de Colombia. */
     @Column(name = "hora")
     private LocalTime hora;
 
     @Column(name = "fecha_inicio")
     private LocalDate fechaInicio;
 
+    /** Opcional: después de esta fecha ya no se envían recordatorios. */
     @Column(name = "fecha_fin")
     private LocalDate fechaFin;
 
@@ -59,6 +63,7 @@ public class Medicamento {
     @Column(name = "ultima_toma")
     private LocalDateTime ultimaToma;
 
+    /** Momento del último aviso enviado; evita repetir avisos (ver MedicamentoRepository). */
     @Column(name = "ultimo_recordatorio_enviado")
     private LocalDateTime ultimoRecordatorioEnviado;
 
@@ -68,6 +73,7 @@ public class Medicamento {
     public Medicamento() {
     }
 
+    /** Por defecto, el medicamento queda activo y empieza hoy. */
     @PrePersist
     protected void onCreate() {
         if (this.activo == null) {

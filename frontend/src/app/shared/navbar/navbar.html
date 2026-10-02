@@ -22,6 +22,7 @@
       </span>
     </a>
 
+    <!-- Enlaces a las secciones de la landing -->
     <nav
       class="navbar__nav"
       aria-label="Navegación principal"
@@ -39,6 +40,7 @@
       </ul>
     </nav>
 
+    <!-- Sin sesión: ingresar o crear cuenta. Con sesión: menú del usuario. -->
     <div class="navbar__actions">
 
       @if (!autenticado()) {
@@ -61,7 +63,7 @@
 
         <div class="navbar__user">
 
-  <!-- Inicial del usuario -->
+  <!-- Botón con la inicial del usuario; abre su menú -->
   <button
     type="button"
     class="navbar__user-avatar"

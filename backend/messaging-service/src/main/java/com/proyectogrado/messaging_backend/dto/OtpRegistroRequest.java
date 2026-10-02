@@ -1,5 +1,9 @@
 package com.proyectogrado.messaging_backend.dto;
 
+/**
+ * Datos de un registro con OTP. Hoy no se usa: el registro lo atiende
+ * auth-service en /api/auth/registro.
+ */
 public class OtpRegistroRequest {
 
     private String celular;
@@ -10,10 +14,10 @@ public class OtpRegistroRequest {
 
     private String rol;
 
-    // Opcional para PERSONA_MAYOR y ACOMPANANTE
+    // Opcional para PERSONA_MAYOR y ACOMPANANTE.
     private String correo;
 
-    // Solo para PERSONA_MAYOR
+    // Solo para PERSONA_MAYOR.
     private String fechaNacimiento;
 
     private String genero;

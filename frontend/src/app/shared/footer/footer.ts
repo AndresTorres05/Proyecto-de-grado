@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 
+/** Pie de página de la landing: marca, contacto y enlace al repositorio. */
 @Component({
   selector: 'app-footer',
   imports: [],
@@ -11,11 +12,9 @@ export class Footer {
 
   protected readonly redesSociales = [
     { texto: 'GH', etiqueta: 'GitHub Repository', url: 'https://github.com/JuanDGarridoR/Proyecto-de-grado.git' },
-    /*{ texto: 'in', etiqueta: 'LinkedIn', url: '#' },
-    { texto: 'f', etiqueta: 'Facebook', url: '#' },
-    { texto: '▶', etiqueta: 'YouTube', url: '#' }*/
   ];
 
+  // Textos para futuras columnas de enlaces; hoy la plantilla no los muestra.
   protected readonly enlacesPlataforma = [
     'Módulos',
     'Analítica',

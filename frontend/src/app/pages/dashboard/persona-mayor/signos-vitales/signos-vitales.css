@@ -2,7 +2,7 @@
   display: block;
 }
 
-/* ---------- Encabezado ---------- */
+/* Encabezado */
 
 .page-header {
   display: flex;
@@ -55,7 +55,7 @@
 }
 
 
-/* ---------- Encabezado de sección ---------- */
+/* Encabezado de sección */
 
 .section-header {
   display: flex;
@@ -87,7 +87,7 @@
 }
 
 
-/* ---------- Último registro ---------- */
+/* Último registro */
 
 .ultimo {
   margin-bottom: 24px;
@@ -195,8 +195,7 @@
   line-height: 1.5;
 }
 
-
-/* ---------- Historial ---------- */
+/* Historial de mediciones */
 
 .historial {
   padding: 28px;
@@ -214,7 +213,7 @@
 }
 
 
-/* ---------- Responsive ---------- */
+/* Responsive */
 
 @media (max-width: 600px) {
 

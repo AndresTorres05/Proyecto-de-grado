@@ -6,9 +6,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * Vista de SOLO LECTURA sobre la tabla "voluntario", que es dueño de
- * auth-backend (nace con el registro). Sirve para confirmar que el
- * usuario autenticado realmente es un voluntario.
+ * Vista de solo lectura de la tabla voluntario, que crea auth-service
+ * durante el registro. Sirve para confirmar que el usuario autenticado
+ * realmente es un voluntario.
  */
 @Entity
 @Table(name = "voluntario")
@@ -18,8 +18,8 @@ public class VoluntarioLookup {
     @Column(name = "id_usuario")
     private Integer idUsuario;
 
+    /** Lo exige JPA. */
     protected VoluntarioLookup() {
-        // JPA
     }
 
     public Integer getIdUsuario() {

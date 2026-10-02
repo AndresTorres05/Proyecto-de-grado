@@ -1,5 +1,8 @@
 package com.proyectogrado.persona_mayor_service.dto;
 
+/**
+ * Perfil de la persona mayor tal como lo recibe el frontend.
+ */
 public class PersonaMayorInformacionResponse {
 
     private Integer idUsuario;

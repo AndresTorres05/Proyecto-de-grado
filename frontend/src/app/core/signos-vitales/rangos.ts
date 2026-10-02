@@ -12,8 +12,10 @@ export const RANGOS = {
   oxigeno: { min: 95, max: 100, unidad: '%' }
 } as const;
 
+/** Indicadores que se evalúan contra RANGOS. */
 export type Indicador = 'presion' | 'pulso' | 'temperatura' | 'oxigeno';
 
+/** Nombre de cada indicador para mostrar en pantalla. */
 export const NOMBRE_INDICADOR: Record<Indicador, string> = {
   presion: 'Presión',
   pulso: 'Pulso',
@@ -35,7 +37,8 @@ function dentro(valor: number, rango: { min: number; max: number }): boolean {
 }
 
 /**
- * true = normal, false = revisar, null = no se midió ese indicador.
+ * true = normal, false = revisar, null = no se midió ese indicador. En el
+ * oxígeno solo cuenta el mínimo.
  */
 export function evaluarIndicador(s: ValoresSignos, indicador: Indicador): boolean | null {
   switch (indicador) {
@@ -55,6 +58,7 @@ export function evaluarIndicador(s: ValoresSignos, indicador: Indicador): boolea
   }
 }
 
+/** Todos los indicadores, en el orden en que se muestran. */
 export const INDICADORES: Indicador[] = ['presion', 'pulso', 'temperatura', 'oxigeno'];
 
 /** Indicadores medidos que están fuera de rango. */
@@ -62,12 +66,11 @@ export function indicadoresFueraDeRango(s: ValoresSignos): Indicador[] {
   return INDICADORES.filter((i) => evaluarIndicador(s, i) === false);
 }
 
-// =========================================================
-// LÍMITES DE LO POSIBLE
-// Fuera de estos valores la medición no es real (error al digitar).
-// Deben coincidir con LIMITES de SignoVitalOrganizacionController.
-// =========================================================
-
+/**
+ * Límites de lo físicamente posible: un valor por fuera no es una medición
+ * real sino un error de digitación. Deben coincidir con los límites de
+ * SignoVitalOrganizacionController en salud-service.
+ */
 export const LIMITES = {
   presionSistolica: { min: 60, max: 260, nombre: 'Presión sistólica', unidad: 'mmHg' },
   presionDiastolica: { min: 30, max: 160, nombre: 'Presión diastólica', unidad: 'mmHg' },

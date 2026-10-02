@@ -18,18 +18,27 @@ import localeEs from '@angular/common/locales/es-CO';
 
 registerLocaleData(localeEs);
 
+/** Tarjeta de indicador. */
 interface StatCard {
   icon: string;
   value: string;
   label: string;
 }
 
+/** Alerta asignada al voluntario. */
 interface AlertaConsulta {
   nombre: string;
   descripcion: string;
   prioridad: 'Alta' | 'Media' | 'Baja';
 }
 
+/**
+ * Inicio del panel del voluntario. Por ahora casi todo son datos de
+ * ejemplo: los indicadores, la próxima actividad y las alertas no salen del
+ * backend. Las actividades sí se piden, pero actividad-service responde 403
+ * a los voluntarios porque todavía no tienen vínculo con organizaciones, así
+ * que esa lista queda vacía.
+ */
 @Component({
   selector: 'app-voluntario-dashboard',
   imports: [Icon, DatePipe],
@@ -38,25 +47,13 @@ interface AlertaConsulta {
 })
 export class VoluntarioDashboard implements OnInit {
 
-  // =========================================================
-  // CONFIGURACIÓN DEL PANEL
-  // =========================================================
-
   protected readonly panelConfig = PANEL_CONFIG['VOLUNTARIO'];
 
   protected readonly navItems = this.panelConfig.navItems;
 
   protected readonly fechaActual = new Date();
 
-  // =========================================================
-  // USUARIO
-  // =========================================================
-
   protected readonly nombreUsuario: string;
-
-  // =========================================================
-  // CONSTRUCTOR
-  // =========================================================
 
   constructor(
     private actividadService: ActividadService,
@@ -67,25 +64,18 @@ export class VoluntarioDashboard implements OnInit {
     alCambiar(['actividades'], () => this.cargarActividades());
   }
 
-  // =========================================================
-  // INICIALIZACIÓN
-  // =========================================================
-
   ngOnInit(): void {
     this.cargarActividades();
   }
 
   private cargarActividades(): void {
     this.actividadService.listar().subscribe((actividades) =>
-      // Solo las próximas, de la más cercana a la más lejana
+      // Solo las próximas, de la más cercana a la más lejana.
       this.actividades.set(separarPorFecha(actividades).proximas)
     );
   }
 
-  // =========================================================
-  // ESTADÍSTICAS
-  // =========================================================
-
+  /** Datos de ejemplo. */
   protected readonly stats: StatCard[] = [
     {
       icon: 'activity',
@@ -104,10 +94,7 @@ export class VoluntarioDashboard implements OnInit {
     }
   ];
 
-  // =========================================================
-  // PRÓXIMA ACTIVIDAD
-  // =========================================================
-
+  /** Datos de ejemplo. */
   protected readonly proximaActividad = {
     nombre: 'Fisioterapia grupal',
     fecha: 'Hoy · 3:00 p.m. — 4:30 p.m.',
@@ -115,16 +102,9 @@ export class VoluntarioDashboard implements OnInit {
     participantes: 12
   };
 
-  // =========================================================
-  // ACTIVIDADES
-  // =========================================================
-
   protected readonly actividades = signal<Actividad[]>([]);
 
-  // =========================================================
-  // ALERTAS
-  // =========================================================
-
+  /** Datos de ejemplo. */
   protected readonly alertas: AlertaConsulta[] = [
     {
       nombre: 'Jornada de vacunación',

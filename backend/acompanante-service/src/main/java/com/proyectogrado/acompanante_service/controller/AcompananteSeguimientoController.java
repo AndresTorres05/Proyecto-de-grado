@@ -24,12 +24,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
- * Le permite a un acompanante ver medicamentos y contactos de una
- * persona mayor que acompana, SOLO si la relacion esta ACEPTADA.
+ * Seguimiento de una persona mayor por parte de su acompañante: signos
+ * vitales, medicamentos y los demás contactos. Solo responde si el vínculo
+ * entre los dos está ACEPTADO.
  *
- * Cruza tres dominios de datos (identidad en auth-backend, relacion en
- * este mismo servicio, medicamentos en salud-backend) via los lookups
- * de solo lectura ya establecidos en el proyecto.
+ * Cruza datos de varios servicios (la cuenta en auth-service, los vínculos
+ * en este servicio, los medicamentos y signos vitales en salud-service)
+ * con entidades Lookup de solo lectura.
  */
 @RestController
 @RequestMapping("/api/acompanante/seguimiento")
@@ -55,7 +56,7 @@ public class AcompananteSeguimientoController {
         this.signoVitalLookupRepository = signoVitalLookupRepository;
     }
 
-    // Últimos 10 registros de la persona mayor, del más reciente al más antiguo.
+    /** Últimos 10 registros de signos vitales, del más reciente al más antiguo. */
     @GetMapping("/{idPersonaMayor}/signos-vitales")
     public ResponseEntity<?> obtenerSignosVitales(
             @RequestHeader("X-User-Id") Integer idAcompanante,
@@ -88,6 +89,7 @@ public class AcompananteSeguimientoController {
         return ResponseEntity.ok(respuesta);
     }
 
+    /** Medicamentos de la persona mayor con su próxima y su última toma. */
     @GetMapping("/{idPersonaMayor}/medicamentos")
     public ResponseEntity<?> obtenerMedicamentos(
             @RequestHeader("X-User-Id") Integer idAcompanante,
@@ -120,6 +122,7 @@ public class AcompananteSeguimientoController {
         return ResponseEntity.ok(respuesta);
     }
 
+    /** Todos los acompañantes aceptados de la persona mayor, incluido el que consulta. */
     @GetMapping("/{idPersonaMayor}/contactos")
     public ResponseEntity<?> obtenerContactos(
             @RequestHeader("X-User-Id") Integer idAcompanante,
@@ -165,6 +168,7 @@ public class AcompananteSeguimientoController {
         return ResponseEntity.ok(respuesta);
     }
 
+    /** Si el acompañante tiene un vínculo aceptado con esa persona mayor. */
     private boolean tieneRelacionAceptada(
             Integer idAcompanante,
             Integer idPersonaMayor

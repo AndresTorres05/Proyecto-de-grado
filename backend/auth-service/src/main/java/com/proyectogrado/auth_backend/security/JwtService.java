@@ -14,19 +14,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * Genera y lee los tokens JWT. Cada token lleva el id del usuario y su rol,
+ * y se firma con jwt.secret. El gateway valida los tokens con esa misma clave.
+ */
 @Service
 public class JwtService {
 
     @Value("${jwt.secret}")
     private String jwtSecret;
 
+    /** Duración del token en milisegundos. */
     @Value("${jwt.expiration}")
     private long jwtExpiration;
-
-
-    // =========================================================
-    // SIGNING KEY
-    // =========================================================
 
     private SecretKey getSigningKey() {
 
@@ -35,11 +35,7 @@ public class JwtService {
         );
     }
 
-
-    // =========================================================
-    // GENERAR TOKEN
-    // =========================================================
-
+    /** Crea el token que recibe el frontend al iniciar sesión o registrarse. */
     public String generarToken(
             Integer idUsuario,
             String rol
@@ -87,11 +83,6 @@ public class JwtService {
                 .compact();
     }
 
-
-    // =========================================================
-    // EXTRAER ID USUARIO
-    // =========================================================
-
     public Integer extraerIdUsuario(
             String token
     ) {
@@ -111,11 +102,6 @@ public class JwtService {
                 : null;
     }
 
-
-    // =========================================================
-    // EXTRAER ROL
-    // =========================================================
-
     public String extraerRol(
             String token
     ) {
@@ -130,11 +116,7 @@ public class JwtService {
         );
     }
 
-
-    // =========================================================
-    // VALIDAR TOKEN
-    // =========================================================
-
+    /** Comprueba que el token sea del usuario esperado y que no haya vencido. */
     public boolean esTokenValido(
             String token,
             Integer idUsuarioEsperado
@@ -152,11 +134,6 @@ public class JwtService {
                 && !esTokenExpirado(token);
     }
 
-
-    // =========================================================
-    // TOKEN EXPIRADO
-    // =========================================================
-
     private boolean esTokenExpirado(
             String token
     ) {
@@ -166,11 +143,6 @@ public class JwtService {
                 Claims::getExpiration
         ).before(new Date());
     }
-
-
-    // =========================================================
-    // EXTRAER CLAIM
-    // =========================================================
 
     private <T> T extraerClaim(
             String token,
@@ -183,11 +155,10 @@ public class JwtService {
         return resolver.apply(claims);
     }
 
-
-    // =========================================================
-    // EXTRAER TODOS LOS CLAIMS
-    // =========================================================
-
+    /**
+     * Verifica la firma y devuelve el contenido del token. Lanza una
+     * excepción si la firma no coincide o si el token ya venció.
+     */
     private Claims extraerTodosLosClaims(
             String token
     ) {

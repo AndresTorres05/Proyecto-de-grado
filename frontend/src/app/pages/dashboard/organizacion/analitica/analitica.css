@@ -18,7 +18,7 @@
   font-size: 1rem;
 }
 
-/* ---------- Pestañas (páginas del informe) ---------- */
+/* Pestañas (páginas del informe) */
 
 .pestanas {
   display: flex;
@@ -53,7 +53,7 @@
   color: var(--vita-navy);
 }
 
-/* ---------- Filtros ---------- */
+/* Filtros */
 
 .filtros {
   display: flex;
@@ -124,7 +124,7 @@
   cursor: default;
 }
 
-/* ---------- Estados ---------- */
+/* Estados */
 
 .aviso-error {
   display: flex;

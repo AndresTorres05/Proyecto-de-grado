@@ -1,5 +1,8 @@
 package com.proyectogrado.auth_backend.dto;
 
+/**
+ * Datos para iniciar sesión con el celular y el código OTP.
+ */
 public class LoginOtpRequest {
 
     private String celular;

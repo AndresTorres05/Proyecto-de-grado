@@ -2,6 +2,9 @@ package com.proyectogrado.auth_backend.model;
 
 import jakarta.persistence.*;
 
+/**
+ * Catálogo de roles: PERSONA_MAYOR, ACOMPANANTE, ORGANIZACION y VOLUNTARIO.
+ */
 @Entity
 @Table(name = "rol")
 public class Rol {

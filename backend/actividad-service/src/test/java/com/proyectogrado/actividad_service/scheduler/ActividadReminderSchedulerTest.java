@@ -39,7 +39,8 @@ class ActividadReminderSchedulerTest {
     }
 
     private Actividad actividad;
-    // idPersonaMayor -> recordatorioEnviadoPara (simula la tabla participacion)
+
+    /** idPersonaMayor -> recordatorioEnviadoPara; simula la tabla participacion. */
     private final Map<Integer, LocalDateTime> inscritos = new HashMap<>();
     private final List<Envio> envios = new ArrayList<>();
     private LocalDateTime reloj;
@@ -54,7 +55,7 @@ class ActividadReminderSchedulerTest {
         actividad.setFecha(LocalDate.of(2026, 9, 29));
         actividad.setHora("15:00");
 
-        // Personas 10 y 30 inscritas; la 20 no esta inscrita.
+        // Personas 10 y 30 inscritas; la 20 no está inscrita.
         inscritos.put(10, null);
         inscritos.put(30, null);
 
@@ -104,6 +105,10 @@ class ActividadReminderSchedulerTest {
                 actividadRepository, participacionRepository, usuarioRepository, messagingClient);
     }
 
+    /**
+     * Ejecuta el scheduler una vez por minuto entre las dos fechas. desfaseMs
+     * simula que se dispara unos milisegundos antes o después del segundo 0.
+     */
     private void simularMinutos(LocalDateTime desde, LocalDateTime hasta, long desfaseMs) {
         for (reloj = desde; !reloj.isAfter(hasta); reloj = reloj.plusMinutes(1)) {
             scheduler.revisarRecordatorios(reloj.plusNanos(desfaseMs * 1_000_000));

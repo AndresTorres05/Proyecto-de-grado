@@ -2,6 +2,7 @@
 
   <div class="login-card">
 
+    <!-- Marca -->
     <div class="login-brand">
 
       <img
@@ -36,9 +37,7 @@
       class="login-form"
     >
 
-<!-- ================================================= -->
-      <!-- ROL -->
-      <!-- ================================================= -->
+<!-- Rol -->
 
       <label
         class="login-label"
@@ -73,9 +72,7 @@
 
       </select>
 
-      <!-- ================================================= -->
-      <!-- NOMBRE -->
-      <!-- ================================================= -->
+      <!-- Nombre de la persona o de la organización -->
 
 <label
   class="login-label"
@@ -99,10 +96,7 @@
 
       
 
-      <!-- ================================================= -->
-      <!-- PERSONA MAYOR / ACOMPAÑANTE -->
-      <!-- CELULAR -->
-      <!-- ================================================= -->
+      <!-- El resto de campos aparece al elegir un rol -->
 
       @if (rol) {
 
@@ -133,9 +127,7 @@
 
         </div>
 
-        <!-- ================================================= -->
-        <!-- CORREO PERSONA MAYOR / ACOMPAÑANTE -->
-        <!-- ================================================= -->
+        <!-- Correo (opcional) -->
 
         <label
           class="login-label"
@@ -153,9 +145,7 @@
           placeholder="tucorreo@ejemplo.com"
         />
 
-        <!-- ================================================= -->
-        <!-- CONTRASEÑA PERSONA MAYOR / ACOMPAÑANTE -->
-        <!-- ================================================= -->
+        <!-- Contraseña (opcional; va junto con el correo) -->
 
         <label
           class="login-label"
@@ -200,9 +190,7 @@
           un correo electrónico.
         </p>
 
-        <!-- ================================================= -->
-        <!-- DATOS PERSONA MAYOR -->
-        <!-- ================================================= -->
+        <!-- Datos personales: persona mayor, acompañante y voluntario -->
 
         @if (
           rol === 'PERSONA_MAYOR' ||
@@ -282,16 +270,11 @@
 
       
 
-      <!-- ================================================= -->
-      <!-- ORGANIZACIÓN -->
-      <!-- ================================================= -->
 
 
 
 
-      <!-- ================================================= -->
-      <!-- MENSAJES -->
-      <!-- ================================================= -->
+      <!-- Mensajes -->
 
       @if (infoMensaje()) {
 
@@ -310,6 +293,7 @@
       }
 
 
+      <!-- Términos y condiciones -->
       <div class="login-terms">
   <label class="login-terms__label">
     <input
@@ -330,9 +314,7 @@
   </label>
 </div>
 
-      <!-- ================================================= -->
-      <!-- BOTÓN CREAR CUENTA -->
-      <!-- ================================================= -->
+      <!-- Botón de crear cuenta (aparece al elegir un rol) -->
 
       @if (rol) {
 
@@ -368,6 +350,7 @@
 
   </div>
 
+  <!-- Modal con los términos y condiciones -->
   @if (mostrarTerminos) {
 
   <div class="terms-modal">

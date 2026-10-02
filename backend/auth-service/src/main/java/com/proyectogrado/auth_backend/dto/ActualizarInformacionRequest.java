@@ -2,6 +2,10 @@ package com.proyectogrado.auth_backend.dto;
 
 import java.time.LocalDate;
 
+/**
+ * Cambios que se envían desde "Mi información". No trae el celular porque
+ * no se puede editar.
+ */
 public class ActualizarInformacionRequest {
 
     private String nombre;
@@ -10,7 +14,7 @@ public class ActualizarInformacionRequest {
     private String genero;
     private String direccion;
 
-    // Solo aplican a personas mayores
+    // Solo aplican a personas mayores.
     private String eps;
     private String ips;
 

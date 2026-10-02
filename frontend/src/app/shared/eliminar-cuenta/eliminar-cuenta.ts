@@ -2,9 +2,9 @@ import { Component, signal } from '@angular/core';
 import { AuthService } from '../../core/auth/auth.service';
 
 /**
- * Bloque "Zona de peligro" para eliminar la cuenta, valido para
- * cualquier rol. Va en la pagina de perfil/administracion de cada
- * panel (no en el menu del usuario) para que no quede tan a la mano.
+ * Bloque "Zona de peligro" para eliminar la cuenta, para cualquier rol. Va
+ * en la página de perfil de cada panel, y no en el menú del usuario, para
+ * que no quede tan a la mano.
  */
 @Component({
   selector: 'app-eliminar-cuenta',
@@ -31,6 +31,7 @@ export class EliminarCuenta {
     this.mostrandoModal.set(false);
   }
 
+  /** Para confirmar hay que escribir ELIMINAR. */
   confirmacionValida(): boolean {
     return this.textoConfirmacion().trim() === 'ELIMINAR';
   }

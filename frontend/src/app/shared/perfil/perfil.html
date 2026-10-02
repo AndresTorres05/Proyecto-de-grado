@@ -1,5 +1,5 @@
 <div class="informacion">
-  <!-- ========================= ENCABEZADO ========================= -->
+  <!-- Encabezado -->
   <div class="informacion__header">
     <div>
       <h1>{{ tituloInformacion }}</h1>
@@ -15,54 +15,48 @@
       </button>
     }
   </div>
-  <!-- ========================= CARGANDO ========================= -->
+  <!-- Cargando -->
   @if (cargando) {
     <div class="informacion__loading">
       <p>{{ textoCarga }}</p>
     </div>
   } @else {
-    <!-- ========================= INFORMACIÓN ========================= -->
+    <!-- Información -->
     <div class="informacion__card">
       <div class="informacion__section">
         <h2>{{ esOrganizacion ? 'Datos de la organización' : 'Datos personales' }}</h2>
         <div class="informacion__grid">
-          <!-- NOMBRE -->
           <div class="informacion__field">
             <label> Nombre </label>
             <p>{{ informacion?.nombre || 'No registrado' }}</p>
           </div>
-          <!-- CORREO -->
           <div class="informacion__field">
             <label> Correo electrónico </label>
             <p>{{ informacion?.correo || 'No registrado' }}</p>
           </div>
-          <!-- CELULAR -->
           <div class="informacion__field">
             <label> Celular </label>
             <p>{{ informacion?.celular || 'No registrado' }}</p>
           </div>
-          <!-- FECHA DE NACIMIENTO -->
           @if (!esOrganizacion) {
             <div class="informacion__field">
               <label> Fecha de nacimiento </label>
               <p>{{ informacion?.fechaNacimiento || 'No registrada' }}</p>
             </div>
           }
-          <!-- GÉNERO -->
           @if (!esOrganizacion) {
             <div class="informacion__field">
               <label> Género </label>
               <p>{{ informacion?.genero || 'No registrado' }}</p>
             </div>
           }
-          <!-- DIRECCIÓN -->
           @if (!esOrganizacion) {
             <div class="informacion__field">
               <label> Dirección </label>
               <p>{{ informacion?.direccion || 'No registrada' }}</p>
             </div>
           }
-          <!-- DIRECCIÓN ORGANIZACIÓN -->
+          <!-- Dirección de la organización -->
           @if (esOrganizacion) {
             <div class="informacion__field">
               <label> Dirección </label>
@@ -82,9 +76,7 @@
           }
         </div>
       </div>
-      <!-- =========================
-     SEGURIDAD
-     ========================= -->
+      <!-- Seguridad -->
 
       <div class="informacion__section">
         <div class="informacion__security">
@@ -113,7 +105,7 @@
     </div>
     <app-eliminar-cuenta />
   }
-  <!-- ===================================================== MODAL EDITAR INFORMACIÓN ===================================================== -->
+  <!-- Modal para editar la información -->
   @if (editando && formulario) {
     <div class="informacion__edit-overlay">
       <div
@@ -141,7 +133,6 @@
           }
         </p>
         <div class="informacion__grid">
-          <!-- NOMBRE -->
           <div class="informacion__field">
             <label for="nombre"> Nombre </label>
             <input
@@ -153,7 +144,6 @@
               "
             />
           </div>
-          <!-- CORREO -->
           <div class="informacion__field">
             <label for="correo"> Correo electrónico </label>
             <input
@@ -163,19 +153,16 @@
               placeholder="Ingresa tu correo"
             />
           </div>
-          <!-- CELULAR -->
           <div class="informacion__field">
             <label> Celular </label>
             <p>{{ informacion?.celular || 'No registrado' }}</p>
           </div>
-          <!-- FECHA DE NACIMIENTO -->
           @if (!esOrganizacion) {
             <div class="informacion__field">
               <label for="fechaNacimiento"> Fecha de nacimiento </label>
               <input id="fechaNacimiento" type="date" [(ngModel)]="formulario.fechaNacimiento" />
             </div>
           }
-          <!-- GÉNERO -->
           @if (!esOrganizacion) {
             <div class="informacion__field">
               <label for="genero"> Género </label>
@@ -187,7 +174,6 @@
               </select>
             </div>
           }
-          <!-- DIRECCIÓN -->
           @if (!esOrganizacion) {
             <div class="informacion__field">
               <label for="direccion"> Dirección </label>
@@ -222,7 +208,7 @@
               />
             </div>
           }
-          <!-- DIRECCIÓN ORGANIZACIÓN -->
+          <!-- Dirección de la organización -->
           @if (esOrganizacion) {
             <div class="informacion__field">
               <label for="direccionOrganizacion"> Dirección </label>
@@ -249,7 +235,7 @@
       </div>
     </div>
   }
-  <!-- ===================================================== MODAL CONFIRMACIÓN ===================================================== -->
+  <!-- Modal de confirmación -->
   @if (mostrandoConfirmacion) {
     <div class="informacion__confirm-overlay">
       <div
@@ -301,7 +287,7 @@
       </div>
     </div>
   }
-  <!-- ===================================================== MODAL CONTRASEÑA ===================================================== -->
+  <!-- Modal de contraseña -->
   @if (mostrandoContrasena) {
     <div class="informacion__confirm-overlay">
       <div
@@ -324,7 +310,6 @@
             Crea una contraseña para poder iniciar sesión con tu correo electrónico.
           }
         </p>
-        <!-- CONTRASEÑA ACTUAL -->
         @if (informacion?.tieneContrasena) {
           <div class="informacion__field">
             <label for="contrasenaActual"> Contraseña actual </label>
@@ -338,7 +323,6 @@
             </app-campo-contrasena>
           </div>
         }
-        <!-- NUEVA CONTRASEÑA -->
         <div class="informacion__field">
           <label for="nuevaContrasena"> Nueva contraseña </label>
           <app-campo-contrasena>
@@ -350,7 +334,6 @@
             />
           </app-campo-contrasena>
         </div>
-        <!-- CONFIRMAR CONTRASEÑA -->
         <div class="informacion__field">
           <label for="confirmarContrasena"> Confirmar contraseña </label>
           <app-campo-contrasena>

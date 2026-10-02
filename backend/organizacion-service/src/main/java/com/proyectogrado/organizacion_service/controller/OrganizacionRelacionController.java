@@ -22,16 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * Lado "organizacion" de la relacion con personas mayores:
- * verlas, asociar una nueva por celular, cancelar la asociación.
+ * Lado de la organización en el vínculo con personas mayores: verlas,
+ * enviar una solicitud a una nueva por celular y cancelar un vínculo.
  *
- * El id del usuario autenticado llega en el header X-User-Id, puesto
- * por el api-gateway despues de validar el JWT. Este servicio no valida
- * tokens.
+ * El id del usuario autenticado llega en el encabezado X-User-Id, que pone
+ * el gateway después de validar el token. Este servicio no valida tokens.
  *
- * OJO: X-User-Id es el id del USUARIO de la organización (quien inició
- * sesión), no el id_organizacion. Por eso el primer paso de cada
- * endpoint es resolver uno a partir del otro con obtenerIdOrganizacion().
+ * Ese id es el de la cuenta que inició sesión, no el id_organizacion; por
+ * eso cada endpoint empieza por obtenerIdOrganizacion().
  */
 @RestController
 @RequestMapping("/api/organizacion/personas-mayores")
@@ -48,6 +46,7 @@ public class OrganizacionRelacionController {
         this.usuarioLookupRepository = usuarioLookupRepository;
     }
 
+    /** Personas mayores con vínculo aceptado. */
     @GetMapping
     public ResponseEntity<?> obtenerPersonasMayores(
             @RequestHeader("X-User-Id") Integer idUsuarioOrganizacion
@@ -65,6 +64,11 @@ public class OrganizacionRelacionController {
         return ResponseEntity.ok(mapearAPersonaMayor(relaciones));
     }
 
+    /**
+     * Envía una solicitud de vínculo a la persona mayor con ese celular, que
+     * ella acepta o rechaza desde su panel. Si antes la rechazó, la solicitud
+     * vuelve a PENDIENTE.
+     */
     @PostMapping
     public ResponseEntity<?> asociarPersonaMayor(
             @RequestHeader("X-User-Id") Integer idUsuarioOrganizacion,
@@ -121,6 +125,7 @@ public class OrganizacionRelacionController {
         return ResponseEntity.ok("Solicitud de asociación enviada correctamente");
     }
 
+    /** Quita el vínculo con una persona mayor, esté en el estado que esté. */
     @DeleteMapping("/{idPersonaMayor}")
     public ResponseEntity<?> cancelarAsociacion(
             @RequestHeader("X-User-Id") Integer idUsuarioOrganizacion,
@@ -150,6 +155,7 @@ public class OrganizacionRelacionController {
         return ResponseEntity.ok("Asociación cancelada correctamente");
     }
 
+    /** Organización de la cuenta, o null si el usuario no es una organización. */
     private Integer obtenerIdOrganizacion(Integer idUsuario) {
         return usuarioLookupRepository.findById(idUsuario)
                 .map(UsuarioLookup::getIdOrganizacion)

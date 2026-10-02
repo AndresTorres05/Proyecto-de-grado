@@ -20,6 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Catálogo de gustos, talentos y pasatiempos que las personas mayores
+ * pueden marcar, agrupados por categoría.
+ */
 @RestController
 @RequestMapping("/api/gustos")
 public class GustoController {
@@ -35,6 +39,7 @@ public class GustoController {
         this.personaMayorGustoRepository = personaMayorGustoRepository;
     }
 
+    /** Todo el catálogo, o solo una categoría si se indica. */
     @GetMapping
     public List<GustoResponse> listar(@RequestParam(required = false) String categoria) {
         List<Gusto> gustos = categoria == null
@@ -46,6 +51,7 @@ public class GustoController {
                 .toList();
     }
 
+    /** Agrega un gusto al catálogo; el nombre no se puede repetir. */
     @PostMapping
     public ResponseEntity<?> crear(@RequestBody GustoRequest request) {
         if (request.getNombre() == null || request.getNombre().isBlank()) {
@@ -60,6 +66,7 @@ public class GustoController {
                 .body(new GustoResponse(gusto.getIdGusto(), gusto.getNombre(), gusto.getCategoria()));
     }
 
+    /** Cambia el nombre o la categoría de un gusto. */
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizar(@PathVariable Integer id, @RequestBody GustoRequest request) {
         Gusto gusto = gustoRepository.findById(id).orElse(null);
@@ -76,6 +83,7 @@ public class GustoController {
         return ResponseEntity.ok(new GustoResponse(gusto.getIdGusto(), gusto.getNombre(), gusto.getCategoria()));
     }
 
+    /** Borra un gusto si nadie lo tiene asignado; si alguien lo tiene, responde 409. */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Integer id) {
         if (!gustoRepository.existsById(id)) {

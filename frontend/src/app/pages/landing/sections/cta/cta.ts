@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 
+/**
+ * Llamado a la acción: invita a contactar al equipo. Está desactivada en la
+ * landing y las cifras son de ejemplo.
+ */
 @Component({
   selector: 'app-cta',
   imports: [],

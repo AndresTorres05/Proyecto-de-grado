@@ -23,7 +23,8 @@ import {
 } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 
-// Solo los módulos que usamos (mantiene pequeño el paquete de la página).
+// Se registran solo los módulos que se usan, para que el paquete de la
+// página no crezca.
 echarts.use([
   BarChart,
   LineChart,
@@ -39,8 +40,10 @@ echarts.use([
   CanvasRenderer
 ]);
 
+/** Opciones de ECharts tal como las arma cada reporte. */
 export type OpcionesGrafica = echarts.EChartsCoreOption;
 
+/** Barra, punto o porción en la que se hizo clic. */
 export interface ClicGrafica {
   nombre: string;
   serie?: string;
@@ -70,7 +73,7 @@ export class EChart implements AfterViewInit, OnDestroy {
   private observador?: ResizeObserver;
 
   constructor() {
-    // Reemplaza la gráfica cuando cambian los datos/opciones.
+    // Redibuja la gráfica cuando cambian las opciones.
     effect(() => {
       const opciones = this.opciones();
       this.grafica?.setOption(opciones, { notMerge: true });

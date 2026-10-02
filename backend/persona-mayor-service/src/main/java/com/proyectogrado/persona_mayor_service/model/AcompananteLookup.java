@@ -6,11 +6,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * "Acompanante" tambien es dueno de auth-backend (nace con el registro).
- * personamayor-service solo necesita y solo puede tocar la columna
- * "relacion", que describe la RELACION (ej: "hijo", "vecina"), no la
- * identidad del acompanante -> por eso se permite escribirla desde aqui,
- * a diferencia de UsuarioLookup que es 100% solo lectura.
+ * Fila de la tabla acompanante, que crea auth-service durante el registro.
+ * Aquí solo se usa la columna relacion, que describe el vínculo con la
+ * persona mayor (por ejemplo, "hijo" o "vecina") y no la identidad del
+ * acompañante; por eso este servicio sí puede escribirla, a diferencia de
+ * UsuarioLookup, que es solo de lectura.
  */
 @Entity
 @Table(name = "acompanante")
@@ -23,8 +23,8 @@ public class AcompananteLookup {
     @Column(name = "relacion")
     private String relacion;
 
+    /** Lo exige JPA. */
     protected AcompananteLookup() {
-        // JPA
     }
 
     public Integer getIdUsuario() {

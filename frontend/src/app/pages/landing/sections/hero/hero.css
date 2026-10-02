@@ -1,7 +1,5 @@
 
-/* =========================================================
-   HERO - DISTRIBUCIÓN PRINCIPAL
-   ========================================================= */
+/* Portada: distribución principal */
 
 .hero__grid {
   display: grid;
@@ -11,11 +9,9 @@
 }
 
 
-/* =========================================================
-   COLUMNA DE TEXTO
-   ========================================================= */
+/* Columna de texto */
 
-/* ---------- Badge ---------- */
+/* Insignia */
 
 .hero__badge {
   display: inline-flex;
@@ -38,7 +34,7 @@
 }
 
 
-/* ---------- Título ---------- */
+/* Título */
 
 .hero__title {
   font-size: clamp(2.25rem, 4vw, 3.25rem);
@@ -52,7 +48,7 @@
 }
 
 
-/* ---------- Descripción ---------- */
+/* Descripción */
 
 .hero__description {
   color: var(--vita-text-gray);
@@ -61,7 +57,7 @@
 }
 
 
-/* ---------- Acciones ---------- */
+/* Acciones */
 
 .hero__actions {
   display: flex;
@@ -71,7 +67,7 @@
 }
 
 
-/* ---------- Estadísticas ---------- */
+/* Estadísticas */
 
 .hero__stats {
   display: flex;
@@ -106,9 +102,7 @@
 }
 
 
-/* =========================================================
-   COLUMNA DE ILUSTRACIÓN
-   ========================================================= */
+/* Columna de ilustración */
 
 .hero__illustration {
   display: flex;
@@ -117,7 +111,7 @@
 }
 
 
-/* ---------- Escenario de la ilustración ---------- */
+/* Escenario de la ilustración */
 
 .hero__stage {
   position: relative;
@@ -126,7 +120,7 @@
 }
 
 
-/* ---------- Círculo de fondo ---------- */
+/* Círculo de fondo */
 
 .hero__circle {
   position: absolute;
@@ -147,7 +141,7 @@
 }
 
 
-/* ---------- Imagen de fondo ---------- */
+/* Imagen de fondo */
 
 .hero__bg-img {
   width: 100%;
@@ -157,9 +151,7 @@
 }
 
 
-/* =========================================================
-   AVATARES
-   ========================================================= */
+/* Avatares */
 
 .hero__avatar {
   position: absolute;
@@ -193,9 +185,7 @@
 }
 
 
-/* =========================================================
-   TARJETAS FLOTANTES
-   ========================================================= */
+/* Tarjetas flotantes */
 
 .float-card {
   position: absolute;
@@ -237,7 +227,7 @@
 }
 
 
-/* ---------- Posición de tarjetas ---------- */
+/* Posición de tarjetas */
 
 .float-card--1 {
   top: 4%;
@@ -265,9 +255,7 @@
 }
 
 
-/* =========================================================
-   ROLES
-   ========================================================= */
+/* Roles */
 
 .hero__roles {
   display: flex;
@@ -303,11 +291,9 @@
 }
 
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
+/* Responsive */
 
-/* ---------- Tablets ---------- */
+/* Tablets */
 
 @media (max-width: 960px) {
   .hero__grid {
@@ -320,7 +306,7 @@
 }
 
 
-/* ---------- Móviles ---------- */
+/* Móviles */
 
 @media (max-width: 768px) {
   .hero__description {
@@ -337,7 +323,7 @@
 }
 
 
-/* ---------- Móviles pequeños ---------- */
+/* Móviles pequeños */
 
 @media (max-width: 600px) {
   .hero__stage {
@@ -356,9 +342,7 @@
 }
 
 
-/* =========================================================
-   ANIMACIÓN DE FLOTACIÓN
-   ========================================================= */
+/* Animación de flotación */
 
 @keyframes floatAnimation {
   0% {
@@ -375,14 +359,14 @@
 }
 
 
-/* ---------- Aplicación de la animación ---------- */
+/* Aplicación de la animación */
 
 .float-card {
   animation: floatAnimation 4s ease-in-out infinite;
 }
 
 
-/* ---------- Desfase entre tarjetas ---------- */
+/* Desfase entre tarjetas */
 
 .float-card--1 {
   animation-delay: 0s;

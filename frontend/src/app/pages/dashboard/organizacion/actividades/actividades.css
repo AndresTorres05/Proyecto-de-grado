@@ -60,9 +60,7 @@
   opacity: 0.8;
 }
 
-/* =========================
-   MODALES
-   ========================= */
+/* Modales */
 
 .modal-backdrop {
   position: fixed;
@@ -170,9 +168,7 @@
   margin-top: 1.5rem;
 }
 
-/* =========================
-   PARTICIPANTES
-   ========================= */
+/* Participantes */
 
 .participants-summary {
   display: flex;
@@ -287,9 +283,7 @@
   cursor: pointer;
 }
 
-/* =========================
-   RESPONSIVE
-   ========================= */
+/* Responsive */
 
 @media (max-width: 600px) {
   .form-row,
@@ -312,9 +306,7 @@
   }
 }
 
-/* =========================
-   CONFIRMACIÓN
-   ========================= */
+/* Confirmación */
 
 .required {
   color: #dc2626;

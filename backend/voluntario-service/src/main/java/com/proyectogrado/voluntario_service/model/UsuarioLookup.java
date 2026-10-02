@@ -6,11 +6,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * Vista de SOLO LECTURA sobre la tabla "usuario", que es dueña de
- * auth-backend. voluntario-service NUNCA crea, edita ni borra usuarios;
- * esto existe solo para poder mostrar nombre/celular/correo en el
- * perfil del voluntario sin llamar por HTTP a auth-backend en cada
- * consulta (válido en arquitectura de servicios con BD compartida).
+ * Vista de solo lectura de la tabla usuario, que pertenece a auth-service.
+ * Este servicio nunca crea, edita ni borra usuarios: la vista existe para
+ * mostrar nombre, celular y correo en el perfil del voluntario sin llamar
+ * por HTTP a auth-service. Es válido porque todos los servicios comparten
+ * la misma base de datos.
  */
 @Entity
 @Table(name = "usuario")
@@ -29,8 +29,9 @@ public class UsuarioLookup {
     @Column(name = "correo")
     private String correo;
 
+    /** Lo exige JPA. */
+
     protected UsuarioLookup() {
-        // JPA
     }
 
     public Integer getIdUsuario() {

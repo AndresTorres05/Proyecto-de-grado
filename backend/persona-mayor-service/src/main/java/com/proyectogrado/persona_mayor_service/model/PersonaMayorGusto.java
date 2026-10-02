@@ -7,6 +7,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 
+/**
+ * Gusto marcado por una persona mayor.
+ */
 @Entity
 @Table(name = "persona_mayor_gusto")
 public class PersonaMayorGusto {
@@ -14,8 +17,10 @@ public class PersonaMayorGusto {
     @EmbeddedId
     private PersonaMayorGustoId id;
 
-    // Gusto SI es dueno de este servicio, por eso aqui si se referencia
-    // como entidad JPA completa (a diferencia de PersonaMayor/Acompanante).
+    /**
+     * La tabla gusto sí es de este servicio, por eso aquí se referencia como
+     * entidad JPA completa (a diferencia de PersonaMayor y Acompanante).
+     */
     @ManyToOne(fetch = jakarta.persistence.FetchType.LAZY)
     @MapsId("idGusto")
     @JoinColumn(name = "id_gusto")

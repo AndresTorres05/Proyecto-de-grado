@@ -1,4 +1,8 @@
 @echo off
+REM Arranca los nueve servicios del backend, cada uno en su propia ventana
+REM de consola. %~dp0 es la carpeta de este script, así que funciona sin
+REM importar desde dónde se ejecute.
+
 title VITA+ Backend
 
 echo ========================================

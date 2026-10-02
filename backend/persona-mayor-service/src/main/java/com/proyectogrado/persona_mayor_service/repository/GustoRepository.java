@@ -5,6 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+/**
+ * Acceso al catálogo de gustos.
+ */
 public interface GustoRepository extends JpaRepository<Gusto, Integer> {
 
     List<Gusto> findByCategoria(String categoria);

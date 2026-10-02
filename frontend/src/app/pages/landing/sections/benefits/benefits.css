@@ -1,9 +1,7 @@
 
-/* =========================================================
-   SECCIÓN DE BENEFICIOS
-   ========================================================= */
+/* Sección de beneficios */
 
-/* ---------- Título ---------- */
+/* Título */
 
 .benefits-title {
   text-align: center;
@@ -12,7 +10,7 @@
 }
 
 
-/* ---------- Distribución principal ---------- */
+/* Distribución principal */
 
 .benefits-row {
   display: grid;
@@ -22,9 +20,7 @@
 }
 
 
-/* =========================================================
-   MINI DASHBOARD DECORATIVO
-   ========================================================= */
+/* Panel de ejemplo decorativo */
 
 .mini-dashboard {
   padding: 24px;
@@ -117,9 +113,7 @@
 }
 
 
-/* =========================================================
-   TEXTO DEL BENEFICIO
-   ========================================================= */
+/* Texto del beneficio */
 
 .benefits-text__eyebrow-row {
   display: flex;
@@ -153,9 +147,7 @@
 }
 
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
+/* Responsive */
 
 @media (max-width: 900px) {
   .benefits-row {

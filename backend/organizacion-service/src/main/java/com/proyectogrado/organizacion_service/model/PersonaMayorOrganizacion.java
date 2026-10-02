@@ -6,12 +6,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 /**
- * Relacion persona mayor <-> organizacion.
+ * Vínculo entre una persona mayor y una organización.
  *
- * Igual que en acompanante-service: no se referencian PersonaMayor ni
- * Organizacion como entidades JPA (esos son de auth-backend), solo sus
- * IDs. Esta misma tabla también la usa personamayor-service desde el
- * otro lado de la relación (ver/aceptar/rechazar organizaciones).
+ * No se referencian PersonaMayor ni Organizacion como entidades JPA (esas
+ * tablas son de auth-service), solo sus ids. persona-mayor-service usa esta
+ * misma tabla desde el otro lado (ver, aceptar o rechazar organizaciones).
  */
 @Entity
 @Table(name = "persona_mayor_organizacion")
@@ -20,6 +19,7 @@ public class PersonaMayorOrganizacion {
     @EmbeddedId
     private PersonaMayorOrganizacionId id;
 
+    /** PENDIENTE hasta que la persona mayor responde; luego ACEPTADA o RECHAZADA. */
     @Column(name = "estado", nullable = false)
     private String estado = "PENDIENTE";
 

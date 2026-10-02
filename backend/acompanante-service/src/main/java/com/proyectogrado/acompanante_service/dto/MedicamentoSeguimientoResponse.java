@@ -1,5 +1,9 @@
 package com.proyectogrado.acompanante_service.dto;
 
+/**
+ * Medicamento tal como lo ve el acompañante. La hora va en "HH:mm" y las
+ * tomas en "yyyy-MM-ddTHH:mm".
+ */
 public class MedicamentoSeguimientoResponse {
 
     private Integer idMedicamento;

@@ -6,9 +6,7 @@
   box-sizing: border-box;
 }
 
-/* =========================
-   ENCABEZADO
-========================= */
+/* Encabezado */
 
 .encabezado {
   margin-bottom: 28px;
@@ -28,9 +26,7 @@
   line-height: 1.5;
 }
 
-/* =========================
-   MENSAJES
-========================= */
+/* Mensajes */
 
 .mensaje {
   margin: 0;
@@ -52,9 +48,7 @@
   color: #b91c1c;
 }
 
-/* =========================
-   FORMULARIO
-========================= */
+/* Formulario */
 
 .formulario-card {
   background: #ffffff;
@@ -69,9 +63,7 @@
   gap: 24px;
 }
 
-/* =========================
-   CAMPOS
-========================= */
+/* Campos */
 
 .campo {
   display: flex;
@@ -93,9 +85,7 @@
   color: #d92d20;
 }
 
-/* =========================
-   INPUTS
-========================= */
+/* Campos */
 
 .campo input,
 .campo select,
@@ -150,9 +140,7 @@
   cursor: not-allowed;
 }
 
-/* =========================
-   PERSONA MAYOR
-========================= */
+/* Persona mayor */
 
 #personaMayor {
   cursor: pointer;
@@ -163,9 +151,7 @@
   cursor: not-allowed;
 }
 
-/* =========================
-   INPUT + UNIDAD
-========================= */
+/* Campo con unidad */
 
 .input-unidad {
   position: relative;
@@ -188,9 +174,7 @@
   pointer-events: none;
 }
 
-/* =========================
-   BOTONES DEL FORMULARIO
-========================= */
+/* Botones del formulario */
 
 .acciones {
   grid-column: 1 / -1;
@@ -274,9 +258,7 @@
   transform: none;
 }
 
-/* =========================
-   MODAL
-========================= */
+/* Modal */
 
 .modal-overlay {
   position: fixed;
@@ -349,9 +331,7 @@
   font-size: 14px;
 }
 
-/* =========================
-   PERSONA EN CONFIRMACIÓN
-========================= */
+/* Persona en confirmación */
 
 .persona-confirmacion {
   display: flex;
@@ -386,9 +366,7 @@
   font-size: 13px;
 }
 
-/* =========================
-   RESUMEN
-========================= */
+/* Resumen */
 
 .resumen-signos {
   display: grid;
@@ -420,9 +398,7 @@
   font-size: 14px;
 }
 
-/* =========================
-   BOTONES DEL MODAL
-========================= */
+/* Botones del modal */
 
 .modal-acciones {
   display: flex;
@@ -488,9 +464,7 @@
   cursor: not-allowed;
 }
 
-/* =========================
-   ANIMACIÓN
-========================= */
+/* Animación */
 
 @keyframes aparecerModal {
   from {
@@ -504,9 +478,7 @@
   }
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+/* Responsive */
 
 @media (max-width: 768px) {
   .signos-container {

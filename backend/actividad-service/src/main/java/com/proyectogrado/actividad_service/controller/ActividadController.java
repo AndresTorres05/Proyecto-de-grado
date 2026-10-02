@@ -32,19 +32,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Actividades organizadas por una organizacion, inscripciones de
- * personas mayores y consulta de esas actividades por sus
- * acompañantes.
+ * Actividades de las organizaciones: la organización las crea y registra la
+ * asistencia, la persona mayor se inscribe y el acompañante consulta las de
+ * las personas que acompaña.
  *
- * El id del usuario autenticado llega en el header X-User-Id, puesto
- * por el api-gateway despues de validar el JWT. Este servicio no valida
- * tokens ni conoce roles explicitos: el rol se deduce consultando (de
- * solo lectura) las tablas "usuario", "persona_mayor" y "acompanante",
- * igual que en organizacion-service / personamayor-service.
- *
- * Los paths se mantienen identicos a los que exponia el monolito
- * (/api/actividades/**) para que el frontend no tenga que cambiar nada;
- * solo se agrega la ruta correspondiente en el api-gateway.
+ * El id del usuario autenticado llega en el encabezado X-User-Id, que pone
+ * el gateway después de validar el token. Este servicio no recibe el rol:
+ * lo deduce consultando (solo lectura) las tablas usuario, persona_mayor y
+ * acompanante.
  */
 @RestController
 @RequestMapping("/api/actividades")
@@ -76,14 +71,11 @@ public class ActividadController {
         this.personaMayorAcompananteRepository = personaMayorAcompananteRepository;
     }
 
-    // =========================================================
-    // LISTAR ACTIVIDADES SEGÚN EL ROL / RELACIÓN
-    // =========================================================
-
+    /** Actividades que puede ver el usuario, según su rol. */
     @GetMapping
     public ResponseEntity<?> listar(@RequestHeader("X-User-Id") Integer idUsuario) {
 
-        // ORGANIZACIÓN: solamente ve sus propias actividades
+        // Organización: solo ve sus propias actividades.
         Integer idOrganizacion = resolverIdOrganizacion(idUsuario);
 
         if (idOrganizacion != null) {
@@ -95,7 +87,7 @@ public class ActividadController {
             );
         }
 
-        // PERSONA MAYOR: solo actividades de organizaciones ACEPTADAS
+        // Persona mayor: actividades de las organizaciones con vínculo aceptado.
         if (esPersonaMayor(idUsuario)) {
 
             Set<Integer> idsOrganizaciones = organizacionesAceptadasDe(idUsuario);
@@ -108,8 +100,8 @@ public class ActividadController {
             );
         }
 
-        // ACOMPAÑANTE: actividades de las organizaciones de las
-        // personas mayores que acompaña (relación ACEPTADA)
+        // Acompañante: actividades de las organizaciones de las personas
+        // mayores que acompaña (solo vínculos aceptados).
         if (esAcompanante(idUsuario)) {
 
             List<PersonaMayorAcompananteLookup> relacionesAcompanante =
@@ -136,10 +128,7 @@ public class ActividadController {
                 .body("No tienes permisos para consultar actividades");
     }
 
-    // =========================================================
-    // ACTIVIDADES PROPIAS DE LA ORGANIZACIÓN
-    // =========================================================
-
+    /** Actividades de la organización del usuario. */
     @GetMapping("/mias")
     public ResponseEntity<?> listarMias(@RequestHeader("X-User-Id") Integer idUsuario) {
 
@@ -158,10 +147,7 @@ public class ActividadController {
         );
     }
 
-    // =========================================================
-    // ACTIVIDADES DISPONIBLES PARA PERSONA MAYOR
-    // =========================================================
-
+    /** Actividades que puede ver la persona mayor, marcando en cuáles ya está inscrita. */
     @GetMapping("/disponibles")
     public ResponseEntity<?> listarDisponibles(@RequestHeader("X-User-Id") Integer idPersonaMayor) {
 
@@ -197,10 +183,7 @@ public class ActividadController {
         return ResponseEntity.ok(respuesta);
     }
 
-    // =========================================================
-    // PARTICIPANTES DE UNA ACTIVIDAD - SOLO ORGANIZACIÓN PROPIETARIA
-    // =========================================================
-
+    /** Inscritos en una actividad y si asistieron. Solo para la organización dueña. */
     @GetMapping("/{id}/participantes")
     public ResponseEntity<?> listarParticipantes(
             @PathVariable Integer id,
@@ -245,10 +228,7 @@ public class ActividadController {
         return ResponseEntity.ok(participantes);
     }
 
-    // =========================================================
-    // REGISTRAR ASISTENCIA - SOLO ORGANIZACIÓN PROPIETARIA
-    // =========================================================
-
+    /** Marca si una persona inscrita asistió. Solo para la organización dueña. */
     @PutMapping("/{id}/participantes/{idPersonaMayor}/asistencia")
     public ResponseEntity<?> registrarAsistencia(
             @PathVariable Integer id,
@@ -291,10 +271,10 @@ public class ActividadController {
         return ResponseEntity.ok().build();
     }
 
-    // =========================================================
-    // INSCRIBIR PERSONA MAYOR
-    // =========================================================
-
+    /**
+     * Inscribe a la persona mayor. Exige que tenga vínculo aceptado con la
+     * organización, que la actividad no haya pasado y que queden cupos.
+     */
     @PostMapping("/{id}/inscribirse")
     public ResponseEntity<?> inscribirse(
             @PathVariable Integer id,
@@ -351,10 +331,7 @@ public class ActividadController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    // =========================================================
-    // CANCELAR INSCRIPCIÓN
-    // =========================================================
-
+    /** Cancela la inscripción, siempre que la actividad no haya pasado. */
     @DeleteMapping("/{id}/inscribirse")
     public ResponseEntity<?> cancelarInscripcion(
             @PathVariable Integer id,
@@ -387,17 +364,16 @@ public class ActividadController {
         return ResponseEntity.noContent().build();
     }
 
-    // Una actividad de hoy todavía cuenta como próxima; se usa la fecha de
-    // Colombia para que no cambie según la zona horaria del servidor.
+    /**
+     * Una actividad de hoy todavía cuenta como próxima. Se usa la fecha de
+     * Colombia para que no dependa de la zona horaria del servidor.
+     */
     private boolean yaPaso(Actividad actividad) {
         return actividad.getFecha() != null
                 && actividad.getFecha().isBefore(ZonaHoraria.ahora().toLocalDate());
     }
 
-    // =========================================================
-    // CREAR ACTIVIDAD - SOLO ORGANIZACIÓN
-    // =========================================================
-
+    /** Crea una actividad de la organización del usuario. La fecha no puede ser anterior a hoy. */
     @PostMapping
     public ResponseEntity<?> crear(
             @RequestBody ActividadRequest request,
@@ -440,10 +416,7 @@ public class ActividadController {
         return ResponseEntity.status(HttpStatus.CREATED).body(aResponse(actividad));
     }
 
-    // =========================================================
-    // ACTUALIZAR ACTIVIDAD - SOLO ORGANIZACIÓN PROPIETARIA
-    // =========================================================
-
+    /** Edita una actividad. Solo para la organización dueña. */
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizar(
             @PathVariable Integer id,
@@ -486,10 +459,7 @@ public class ActividadController {
         return ResponseEntity.ok(aResponse(actividad));
     }
 
-    // =========================================================
-    // ELIMINAR ACTIVIDAD - SOLO ORGANIZACIÓN PROPIETARIA
-    // =========================================================
-
+    /** Borra una actividad con sus inscripciones. Solo para la organización dueña. */
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<?> eliminar(
@@ -510,10 +480,10 @@ public class ActividadController {
                     .body("Esta actividad no pertenece a tu organización");
         }
 
-        // Primero las inscripciones: si la llave foranea de participacion
-        // no borra en cascada, el DELETE de la actividad fallaria cuando
-        // hay personas mayores inscritas y la actividad les seguiria
-        // apareciendo. En una transaccion: o se borra todo o nada.
+        // Primero las inscripciones: si la llave foránea de participacion no
+        // borra en cascada, el DELETE de la actividad fallaría cuando hay
+        // personas mayores inscritas y la actividad les seguiría apareciendo.
+        // Todo va en una transacción: o se borra todo o nada.
         participacionRepository.deleteAllInBatch(
                 participacionRepository.findById_IdActividad(id)
         );
@@ -523,10 +493,7 @@ public class ActividadController {
         return ResponseEntity.noContent().build();
     }
 
-    // =========================================================
-    // HELPERS
-    // =========================================================
-
+    /** Organización de la cuenta, o null si el usuario no es una organización. */
     private Integer resolverIdOrganizacion(Integer idUsuario) {
         return usuarioLookupRepository.findById(idUsuario)
                 .map(UsuarioLookup::getIdOrganizacion)
@@ -541,6 +508,7 @@ public class ActividadController {
         return acompananteLookupRepository.existsById(idUsuario);
     }
 
+    /** Organizaciones con las que la persona mayor tiene vínculo aceptado. */
     private Set<Integer> organizacionesAceptadasDe(Integer idPersonaMayor) {
         return personaMayorOrganizacionRepository
                 .findById_IdPersonaMayorAndEstado(idPersonaMayor, "ACEPTADA")

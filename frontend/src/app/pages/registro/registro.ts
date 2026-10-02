@@ -4,6 +4,11 @@ import { CampoContrasena } from '../../shared/campo-contrasena/campo-contrasena'
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 
+/**
+ * Registro de cuenta para los cuatro roles. El celular es obligatorio para
+ * todos; el correo y la contraseña son opcionales, pero van juntos. Valida
+ * en el navegador las mismas reglas que AuthService en auth-service.
+ */
 @Component({
   selector: 'app-registro',
   standalone: true,
@@ -13,41 +18,25 @@ import { AuthService } from '../../core/auth/auth.service';
 })
 export class Registro {
 
-  // =========================================================
-  // CAMPOS COMUNES
-  // =========================================================
-
+  // Campos comunes a todos los roles
   nombreUsuario = '';
   rol = '';
   aceptaTerminos = false;
   mostrarTerminos = false;
 
-  // =========================================================
-  // CORREO Y CONTRASEÑA
-  // =========================================================
-
+  // Correo y contraseña (opcionales, pero van juntos)
   correo = '';
   contrasena = '';
 
-// =========================================================
-// DATOS PERSONALES
-// =========================================================
-
+// Celular y datos personales
 celularLocal = '';
 fechaNacimiento = '';
 genero = '';
 direccion = '';
 
-// =========================================================
-// CONFIRMACIÓN DE CONTRASEÑA
-// =========================================================
-
 confirmarContrasena = '';
 
-  // =========================================================
-  // ROLES
-  // =========================================================
-
+  // Opciones de los selectores
   roles = [
     { valor: 'ORGANIZACION', etiqueta: 'Organización' },
     { valor: 'VOLUNTARIO', etiqueta: 'Voluntario' },
@@ -61,10 +50,7 @@ confirmarContrasena = '';
     { valor: 'Otro', etiqueta: 'Otro' }
   ];
 
-  // =========================================================
-  // ESTADOS
-  // =========================================================
-
+  // Estado de la pantalla
   cargando = signal(false);
   errorMensaje = signal<string | null>(null);
   infoMensaje = signal<string | null>(null);
@@ -73,10 +59,7 @@ confirmarContrasena = '';
 
   constructor(private authService: AuthService) {}
 
-  // =========================================================
-  // CELULAR COMPLETO
-  // =========================================================
-
+  /** Celular con el indicativo de Colombia, como lo guarda el backend: +57 y 10 dígitos. */
   get celularCompleto(): string {
 
     const celular =
@@ -85,10 +68,7 @@ confirmarContrasena = '';
     return `+57${celular}`;
   }
 
-  // =========================================================
-  // CAMBIO DE ROL
-  // =========================================================
-
+  /** Al cambiar de rol se limpian los campos, porque cada rol pide datos distintos. */
 onCambioRol(): void {
   this.errorMensaje.set(null);
   this.infoMensaje.set(null);
@@ -110,10 +90,7 @@ cerrarTerminos(): void {
   this.mostrarTerminos = false;
 }
 
-  // =========================================================
-  // SUBMIT PRINCIPAL
-  // =========================================================
-
+  /** Exige aceptar los términos antes de registrar. */
 onSubmit(): void {
   this.errorMensaje.set(null);
 
@@ -127,10 +104,7 @@ onSubmit(): void {
   this.registrar();
 }
 
-// =========================================================
-// REGISTRO
-// =========================================================
-
+/** Valida el formulario, crea la cuenta y entra directo al panel del rol. */
 private registrar(): void {
 
   const celular = this.celularLocal.replace(/\D/g, '');
@@ -138,7 +112,7 @@ private registrar(): void {
   const contrasena = this.contrasena.trim();
   const confirmarContrasena = this.confirmarContrasena.trim();
 
-  // Celular obligatorio para todos los perfiles
+  // Celular obligatorio para todos los roles.
   if (celular.length !== 10) {
     this.errorMensaje.set(
       'Ingresa un número de celular válido (10 dígitos).'
@@ -146,7 +120,7 @@ private registrar(): void {
     return;
   }
 
-  // Correo y contraseña deben ir juntos
+  // Correo y contraseña van juntos.
   if (correo && !contrasena) {
     this.errorMensaje.set(
       'Si ingresas un correo, debes ingresar una contraseña.'
@@ -161,7 +135,6 @@ private registrar(): void {
     return;
   }
 
-  // Validar contraseña
   if (contrasena && contrasena.length < 6) {
     this.errorMensaje.set(
       'La contraseña debe tener mínimo 6 caracteres.'
@@ -169,7 +142,6 @@ private registrar(): void {
     return;
   }
 
-  // Confirmación de contraseña
   if (contrasena && !confirmarContrasena) {
     this.errorMensaje.set(
       'Debes confirmar la contraseña.'
@@ -184,7 +156,7 @@ private registrar(): void {
     return;
   }
 
-  // Datos obligatorios para perfiles personales
+  // Persona mayor, acompañante y voluntario: datos personales obligatorios.
   if (
     this.rol === 'PERSONA_MAYOR' ||
     this.rol === 'ACOMPANANTE' ||
@@ -213,7 +185,7 @@ private registrar(): void {
     }
   }
 
-  // Dirección obligatoria para organización
+  // Organización: la dirección es obligatoria.
   if (
     this.rol === 'ORGANIZACION' &&
     !this.direccion.trim()

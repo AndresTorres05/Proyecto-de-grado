@@ -18,6 +18,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * Signos vitales que la organización registra y consulta para las personas
+ * mayores vinculadas a ella. Solo puede hacerlo si el vínculo está ACEPTADO.
+ */
 @RestController
 @RequestMapping("/api/organizacion/signos-vitales")
 public class SignoVitalOrganizacionController {
@@ -36,7 +40,7 @@ public class SignoVitalOrganizacionController {
         this.usuarioLookupRepository = usuarioLookupRepository;
     }
 
-    // Últimos 10 registros de la persona mayor, del más reciente al más antiguo.
+    /** Últimos 10 registros de la persona mayor, del más reciente al más antiguo. */
     @GetMapping("/{idPersonaMayor}")
     public ResponseEntity<?> listarUltimos(
             @RequestHeader("X-User-Id") Integer idUsuarioOrganizacion,
@@ -58,6 +62,7 @@ public class SignoVitalOrganizacionController {
         return ResponseEntity.ok(respuesta);
     }
 
+    /** Valida la medición y la registra con la fecha y hora actuales. */
     @PostMapping("/{idPersonaMayor}")
     public ResponseEntity<?> crear(
             @RequestHeader("X-User-Id") Integer idUsuarioOrganizacion,
@@ -119,8 +124,10 @@ signoVital = signoVitalRepository.saveAndFlush(signoVital);
                 .body(aRespuesta(signoVital));
     }
 
-    // Devuelve la respuesta de error si la organización no puede acceder a
-    // la persona mayor, o null si la persona está asociada y aceptada.
+    /**
+     * Respuesta de error si la organización no puede acceder a la persona
+     * mayor, o null si la persona está vinculada y el vínculo está aceptado.
+     */
     private ResponseEntity<?> validarAcceso(
             Integer idUsuarioOrganizacion,
             Integer idPersonaMayor

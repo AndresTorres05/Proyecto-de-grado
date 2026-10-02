@@ -4,6 +4,11 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 
+/**
+ * Cuenta de un usuario de la plataforma, sea cual sea su rol. Es la tabla
+ * central del modelo: los demás servicios la consultan con sus propias
+ * entidades (UsuarioLookup) para obtener nombres y celulares.
+ */
 @Entity
 @Table(name = "usuario")
 public class Usuario {
@@ -16,12 +21,14 @@ public class Usuario {
     @Column(name = "nombre_usuario", nullable = false)
     private String nombreUsuario;
 
+    /** Hash BCrypt. Es null si la cuenta se creó solo con celular y OTP. */
     @Column(name = "contrasena_hash")
     private String contrasenaHash;
 
     @Column(name = "correo", unique = true)
     private String correo;
 
+    /** Con indicativo del país, por ejemplo +573001234567. */
     @Column(name = "Celular", unique = true)
     private String celular;
 
@@ -34,19 +41,19 @@ public class Usuario {
     @Column(name = "direccion")
     private String direccion;
 
+    /** Solo en cuentas de organización: la organización a la que pertenece la cuenta. */
     @Column(name = "id_organizacion")
     private Integer idOrganizacion;
 
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
 
+    /** Una cuenta inactiva no puede iniciar sesión. */
     @Column(name = "activo")
     private Boolean activo;
 
     public Usuario() {
     }
-
-    // Getters y setters
 
     public Integer getIdUsuario() {
         return idUsuario;

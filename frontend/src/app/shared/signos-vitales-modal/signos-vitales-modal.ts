@@ -4,10 +4,9 @@ import { SignoVitalResponse } from '../../core/signos-vitales/signos-vitales.ser
 import { SignosVitalesLista } from '../signos-vitales-lista/signos-vitales-lista';
 
 /**
- * Modal estandar con los ultimos registros de signos vitales de una
- * persona mayor. Solo presenta: cada pagina carga los registros con el
- * endpoint que le corresponde a su rol. La lista en si es
- * SignosVitalesLista, la misma que usa el historial de la persona mayor.
+ * Modal estándar con los últimos registros de signos vitales de una persona
+ * mayor. Solo los muestra: cada página los carga con el endpoint de su rol.
+ * La lista es SignosVitalesLista, la misma del historial de la persona mayor.
  */
 @Component({
   selector: 'app-signos-vitales-modal',

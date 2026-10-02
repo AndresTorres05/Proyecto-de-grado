@@ -4,6 +4,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { Icon } from '../icon/icon';
 
+/**
+ * Página temporal de las secciones que todavía no existen. Muestra el
+ * título que llega en data.titulo de la ruta.
+ */
 @Component({
   selector: 'app-en-construccion',
   standalone: true,

@@ -1,12 +1,15 @@
 package com.proyectogrado.salud_backend.dto;
 
+/**
+ * Cita médica tal como la devuelve la API.
+ */
 public class CitaMedicaResponse {
 
     private Integer idCita;
     private String titulo;
     private String lugar;
-    private String fecha;
-    private String hora;
+    private String fecha;   // "yyyy-MM-dd"
+    private String hora;    // "HH:mm"
     private String observaciones;
 
     public CitaMedicaResponse(

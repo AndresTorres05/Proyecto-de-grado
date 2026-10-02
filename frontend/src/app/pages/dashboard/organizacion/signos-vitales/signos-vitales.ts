@@ -11,7 +11,11 @@ import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 import { validarMedicion } from '../../../../core/signos-vitales/rangos';
 import { Icon } from '../../../../shared/icon/icon';
 
-
+/**
+ * Registro de signos vitales por parte de la organización. Antes de
+ * guardar se validan los valores (ver validarMedicion) y se pide
+ * confirmación; el backend vuelve a validar.
+ */
 @Component({
   selector: 'app-signos-vitales',
   standalone: true,
@@ -47,7 +51,7 @@ export class SignosVitales implements OnInit {
   personaSeleccionada: PersonaMayor | null = null;
 
   constructor() {
-    // Personas asociadas/desasociadas o que cambiaron de nombre
+    // Personas vinculadas o desvinculadas, o que cambiaron de nombre.
     alCambiar(['organizaciones', 'usuarios'], () => this.cargarPersonasMayores(false));
   }
 
@@ -79,6 +83,7 @@ export class SignosVitales implements OnInit {
     });
   }
 
+/** Valida el formulario y abre la confirmación; todavía no guarda nada. */
 registrarSignosVitales(): void {
   this.mensajeExito = '';
   this.mensajeError = '';
@@ -98,7 +103,7 @@ registrarSignosVitales(): void {
     return;
   }
 
-  // Valores posibles y presión completa (sistólica + diastólica)
+  // Valores posibles y presión completa (sistólica y diastólica).
   const errorMedicion = validarMedicion({
     presionSistolica: this.presionSistolica,
     presionDiastolica: this.presionDiastolica,
@@ -116,13 +121,11 @@ registrarSignosVitales(): void {
 
   this.personaSeleccionada = persona;
 
-  // En este punto todavía NO se está guardando.
   this.guardando = false;
-
-  // Abrir confirmación.
   this.mostrarConfirmacion = true;
 }
 
+/** Guarda la medición. Si el servidor tarda más de 20 segundos, se avisa sin reintentar. */
 confirmarRegistro(): void {
   if (this.guardando) return;
 
@@ -179,7 +182,7 @@ confirmarRegistro(): void {
         this.mostrarConfirmacion = false;
 
         if (error.status === 400 && typeof error.error === 'string') {
-          // Valores imposibles o presión incompleta (validación del servidor)
+          // Valores imposibles o presión incompleta (validación del servidor).
           this.mensajeError = error.error;
         } else if (error.status === 403) {
           this.mensajeError =
@@ -188,6 +191,7 @@ confirmarRegistro(): void {
           this.mensajeError =
             'No se encontró la organización asociada al usuario.';
         } else if (error.status === 0 || error.status >= 500 || error.name === 'TimeoutError') {
+          // Puede que sí se haya guardado: mejor revisar antes de repetir.
           this.mensajeError =
             'El servidor no confirmó el registro. Revisa el historial antes de volver a intentarlo para no duplicarlo.';
         } else {

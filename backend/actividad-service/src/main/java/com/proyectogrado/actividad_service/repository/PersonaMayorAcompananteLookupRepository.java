@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+/**
+ * Lectura de los vínculos entre personas mayores y acompañantes.
+ */
 public interface PersonaMayorAcompananteLookupRepository
         extends JpaRepository<PersonaMayorAcompananteLookup, PersonaMayorAcompananteId> {
 

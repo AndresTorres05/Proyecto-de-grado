@@ -1,6 +1,4 @@
-/* =========================================================
-   MODAL DE ACOMPAÑANTES (compartido)
-   ========================================================= */
+/* Modal de acompañantes (compartido) */
 
 .modal-overlay {
   position: fixed;
@@ -31,7 +29,7 @@
 }
 
 
-/* ---------- Encabezado ---------- */
+/* Encabezado */
 
 .modal__header {
   display: flex;
@@ -98,7 +96,7 @@
 }
 
 
-/* ---------- Responsive ---------- */
+/* Responsive */
 
 @media (max-width: 600px) {
 
@@ -113,7 +111,7 @@
   max-width: 560px;
 }
 
-/* ---------- Encabezado ---------- */
+/* Encabezado */
 
 .acompanantes-modal .modal__header {
   margin-bottom: 6px;
@@ -125,7 +123,7 @@
   font-size: 0.8rem;
 }
 
-/* ---------- Descripción ---------- */
+/* Descripción */
 
 .acompanantes-modal .modal__description {
   margin-bottom: 22px;
@@ -135,7 +133,7 @@
   color: var(--vita-navy);
 }
 
-/* ---------- Lista ---------- */
+/* Lista */
 
 .acompanantes-list {
   display: flex;
@@ -145,7 +143,7 @@
   overflow-y: auto;
 }
 
-/* ---------- Acompañante ---------- */
+/* Acompañante */
 
 .acompanante-item {
   display: flex;
@@ -169,7 +167,7 @@
   border-color: #d6dfdb;
 }
 
-/* ---------- Icono ---------- */
+/* Icono */
 
 .acompanante-item__icon {
   width: 44px;
@@ -189,7 +187,7 @@
   font-size: 1.2rem;
 }
 
-/* ---------- Información ---------- */
+/* Información */
 
 .acompanante-item__info {
   display: flex;
@@ -219,7 +217,7 @@
   font-weight: 600;
 }
 
-/* ---------- Cargando ---------- */
+/* Cargando */
 
 .acompanantes-loading {
   display: flex;
@@ -233,7 +231,7 @@
   font-size: 0.9rem;
 }
 
-/* ---------- Estado vacío ---------- */
+/* Estado vacío */
 
 .acompanantes-empty {
   display: flex;
@@ -283,7 +281,7 @@
   line-height: 1.5;
 }
 
-/* ---------- Responsive ---------- */
+/* Responsive */
 
 @media (max-width: 600px) {
 

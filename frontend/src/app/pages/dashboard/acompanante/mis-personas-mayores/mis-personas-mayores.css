@@ -6,6 +6,7 @@
   box-sizing: border-box;
 }
 
+/* Encabezado */
 .mis-personas__header {
   display: flex;
   justify-content: space-between;
@@ -26,6 +27,7 @@
   font-size: 1rem;
 }
 
+/* Mensajes de éxito y error */
 .mis-personas__message {
   padding: 14px 18px;
   margin-bottom: 24px;
@@ -43,6 +45,7 @@
   color: #c62828;
 }
 
+/* Secciones (solicitudes y personas a cargo) */
 .mis-personas__section {
   margin-bottom: 32px;
 }
@@ -80,6 +83,7 @@
 }
 
 .mis-personas__requests,
+/* Lista y botones de aceptar o rechazar */
 .mis-personas__list {
   display: flex;
   flex-direction: column;
@@ -116,6 +120,7 @@
   color: white;
 }
 
+/* Estado vacío y cargando */
 .mis-personas__empty {
   padding: 40px 20px;
   text-align: center;
@@ -147,6 +152,7 @@
   color: var(--vita-text-gray);
 }
 
+/* Responsive */
 @media (max-width: 768px) {
   .mis-personas {
     padding: 20px;

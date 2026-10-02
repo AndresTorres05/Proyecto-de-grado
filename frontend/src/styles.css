@@ -1,12 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
+/* Estilos globales de Vita+: variables de la marca, estilos base, utilidades
+   compartidas y las acciones que se proyectan dentro de <app-person-card>. */
 
 :root {
-  /* VITA+ — paleta de marca (Opción 4: "Vita Tecnológica Amigable") */
-  --vita-principal: #12355b; /* Principal */
-  --vita-secundario: #2ec4b6; /* Secundario */
-  --vita-complemento: #b8a9e8; /* Complemento */
-  --vita-acento: #ffd166; /* Acento */
-  --vita-fondo: #ffffff; /* Fondo */
+  /* Paleta de la marca (opción 4: "Vita Tecnológica Amigable") */
+  --vita-principal: #12355b;
+  --vita-secundario: #2ec4b6;
+  --vita-complemento: #b8a9e8;
+  --vita-acento: #ffd166;
+  --vita-fondo: #ffffff;
 
   /* Alias semánticos: mapean la paleta anterior a la nueva.
      Se conservan los nombres para no reescribir cada componente. */
@@ -29,6 +30,7 @@
   --vita-border: #e3e9f1;
   --vita-white: #ffffff;
 
+  /* Bordes, sombras, fuentes y medidas */
   --radius-sm: 10px;
   --radius-md: 16px;
   --radius-lg: 24px;
@@ -45,6 +47,8 @@
   --container-max: 1200px;
   --section-padding-block: 96px;
 }
+
+/* Estilos base */
 
 * {
   box-sizing: border-box;
@@ -92,7 +96,7 @@ button {
   cursor: pointer;
 }
 
-/* Utilidades compartidas por las secciones de la landing */
+/* Utilidades compartidas: contenedor, secciones de la landing, botones y tarjetas */
 
 .container {
   width: 100%;
@@ -228,7 +232,7 @@ button {
 }
 
 /* Acciones dentro de <app-person-card> (se proyectan con card-actions,
-   por eso viven aqui y no en el CSS encapsulado de la tarjeta). */
+   por eso viven aquí y no en el CSS encapsulado de la tarjeta). */
 
 .person-card-actions {
   display: flex;

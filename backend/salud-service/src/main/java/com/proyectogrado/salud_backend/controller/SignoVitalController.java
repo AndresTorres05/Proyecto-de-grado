@@ -14,6 +14,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * Signos vitales de la persona mayor autenticada: su historial y las
+ * mediciones que registra ella misma. La organización también registra
+ * mediciones (ver SignoVitalOrganizacionController). El gateway solo expone
+ * GET y POST, así que editar y borrar desde aquí no está disponible para el
+ * frontend.
+ */
 @RestController
 @RequestMapping("/api/persona-mayor/signos-vitales")
 public class SignoVitalController {
@@ -24,6 +31,7 @@ public class SignoVitalController {
         this.signoVitalRepository = signoVitalRepository;
     }
 
+    /** Historial completo, del registro más reciente al más antiguo. */
     @GetMapping
     public ResponseEntity<List<SignoVitalResponse>> listar(
             @RequestHeader("X-User-Id") Integer idPersonaMayor
@@ -37,8 +45,10 @@ public class SignoVitalController {
         return ResponseEntity.ok(respuesta);
     }
 
-    // La persona mayor registra sus propios signos vitales, con la misma
-    // validacion que usa la organizacion.
+    /**
+     * La persona mayor registra una medición propia, con la fecha y hora
+     * actuales y la misma validación que usa la organización.
+     */
     @PostMapping
     public ResponseEntity<?> crear(
             @RequestHeader("X-User-Id") Integer idPersonaMayor,
@@ -63,6 +73,7 @@ public class SignoVitalController {
                 .body(aRespuesta(signoVital));
     }
 
+    /** Edita una medición; si no es de esta persona mayor, responde 403. */
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizar(
             @RequestHeader("X-User-Id") Integer idPersonaMayor,
@@ -83,6 +94,7 @@ public class SignoVitalController {
         return ResponseEntity.ok(aRespuesta(signoVital));
     }
 
+    /** Borra una medición; si no es de esta persona mayor, responde 403. */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(
             @RequestHeader("X-User-Id") Integer idPersonaMayor,
@@ -100,6 +112,7 @@ public class SignoVitalController {
         return ResponseEntity.noContent().build();
     }
 
+    /** La medición, o null si no existe o es de otra persona mayor. */
     private SignoVital obtenerPropio(
             Integer id,
             Integer idPersonaMayor

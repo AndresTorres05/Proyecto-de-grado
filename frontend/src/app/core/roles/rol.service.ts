@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+/** Rol de usuario. */
 export interface Rol {
   idRol: number;
   nombre: string;
@@ -11,6 +12,10 @@ export interface RolRequest {
   nombre: string;
 }
 
+/**
+ * CRUD de roles. Hoy no lo usa ninguna pantalla y el backend no tiene la
+ * ruta /api/roles.
+ */
 @Injectable({ providedIn: 'root' })
 export class RolService {
 

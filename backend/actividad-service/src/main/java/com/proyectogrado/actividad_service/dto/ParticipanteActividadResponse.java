@@ -1,5 +1,8 @@
 package com.proyectogrado.actividad_service.dto;
 
+/**
+ * Persona inscrita en una actividad y si asistió.
+ */
 public class ParticipanteActividadResponse {
 
     private Integer idPersonaMayor;

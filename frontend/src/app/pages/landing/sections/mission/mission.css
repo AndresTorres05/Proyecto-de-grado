@@ -1,3 +1,4 @@
+/* Introducción */
 .mission-intro {
   max-width: 720px;
   margin-inline: auto;
@@ -30,6 +31,7 @@
   color: rgba(255, 255, 255, 0.75);
 }
 
+/* Tarjetas de los tres pilares */
 .mission-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -58,6 +60,7 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
+/* Responsive */
 @media (max-width: 768px) {
   .mission-grid {
     grid-template-columns: 1fr;

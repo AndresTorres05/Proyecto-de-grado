@@ -1,17 +1,20 @@
 package com.proyectogrado.salud_backend.dto;
 
+/**
+ * Medicamento tal como lo recibe el frontend.
+ */
 public class MedicamentoResponse {
 
     private Integer idMedicamento;
     private String nombre;
     private String dosis;
-    private String frecuencia;
+    private String frecuencia;    // "Descripción" en pantalla
     private Integer intervaloHoras;
-    private String hora;
-    private String fechaInicio;
-    private String fechaFin;
-    private String proximaToma;
-    private String ultimaToma;
+    private String hora;          // "HH:mm"
+    private String fechaInicio;   // "yyyy-MM-dd"
+    private String fechaFin;      // "yyyy-MM-dd"
+    private String proximaToma;   // "yyyy-MM-ddTHH:mm"
+    private String ultimaToma;    // "yyyy-MM-ddTHH:mm"
     private Boolean activo;
 
     public MedicamentoResponse(Integer idMedicamento, String nombre, String dosis, String frecuencia,

@@ -21,18 +21,25 @@ import { PANEL_CONFIG } from '../../../shared/panel-config/panel-config';
 import { DatePipe, registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es-CO';
 
+/** Recordatorio de la lista "Recordatorios de hoy". */
 interface Recordatorio {
   hora: string;
   detalle: string;
   persona: string;
 }
 
+/** Alerta sobre una persona mayor. */
 interface AlertaConsulta {
   nombre: string;
   descripcion: string;
   prioridad: 'Alta' | 'Media' | 'Baja';
 }
 
+/**
+ * Inicio del panel del acompañante: sus personas mayores, recordatorios,
+ * alertas y próximas actividades. Las personas y las actividades vienen del
+ * backend; los recordatorios y las alertas todavía son datos de ejemplo.
+ */
 @Component({
   selector: 'app-acompanante-dashboard',
   imports: [Icon, DatePipe],
@@ -41,25 +48,13 @@ interface AlertaConsulta {
 })
 export class AcompananteDashboard implements OnInit {
 
-  // =========================================================
-  // CONFIGURACIÓN DEL PANEL
-  // =========================================================
-
   protected readonly panelConfig = PANEL_CONFIG['ACOMPANANTE'];
 
   protected readonly navItems = this.panelConfig.navItems;
 
   protected readonly fechaActual = new Date();
 
-  // =========================================================
-  // USUARIO
-  // =========================================================
-
   protected readonly nombreUsuario: string;
-
-  // =========================================================
-  // CONSTRUCTOR
-  // =========================================================
 
   constructor(
     private actividadService: ActividadService,
@@ -68,13 +63,10 @@ export class AcompananteDashboard implements OnInit {
   ) {
     this.nombreUsuario = this.authService.getNombreUsuario();
 
+    // Se recarga cuando otro usuario cambia actividades o vínculos.
     alCambiar(['actividades'], () => this.cargarActividades());
     alCambiar(['acompanamientos', 'usuarios'], () => this.cargarPersonasMayores());
   }
-
-  // =========================================================
-  // INICIALIZACIÓN
-  // =========================================================
 
   ngOnInit(): void {
     this.cargarActividades();
@@ -83,7 +75,7 @@ export class AcompananteDashboard implements OnInit {
 
   private cargarActividades(): void {
     this.actividadService.listar().subscribe((actividades) =>
-      // Solo las próximas, de la más cercana a la más lejana
+      // Solo las próximas, de la más cercana a la más lejana.
       this.actividades.set(separarPorFecha(actividades).proximas)
     );
   }
@@ -95,17 +87,11 @@ export class AcompananteDashboard implements OnInit {
     );
   }
 
-  // =========================================================
-  // PERSONAS MAYORES
-  // =========================================================
-
+  /** Personas mayores con vínculo aceptado. */
   protected readonly personasMayores =
     signal<PersonaMayorAcompanada[]>([]);
 
-  // =========================================================
-  // RECORDATORIOS
-  // =========================================================
-
+  /** Datos de ejemplo: todavía no salen del backend. */
   protected readonly recordatorios: Recordatorio[] = [
     {
       hora: '10:00 a.m.',
@@ -124,10 +110,7 @@ export class AcompananteDashboard implements OnInit {
     }
   ];
 
-  // =========================================================
-  // ALERTAS
-  // =========================================================
-
+  /** Datos de ejemplo: todavía no salen del backend. */
   protected readonly alertas: AlertaConsulta[] = [
     {
       nombre: 'Rosa Elvira Gómez',
@@ -137,9 +120,6 @@ export class AcompananteDashboard implements OnInit {
     }
   ];
 
-  // =========================================================
-  // ACTIVIDADES
-  // =========================================================
-
+  /** Próximas actividades de las organizaciones de sus personas mayores. */
   protected readonly actividades = signal<Actividad[]>([]);
 }

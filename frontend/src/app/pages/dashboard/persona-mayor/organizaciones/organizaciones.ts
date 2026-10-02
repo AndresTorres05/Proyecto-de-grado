@@ -9,6 +9,11 @@ import {
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 import { Icon } from '../../../../shared/icon/icon';
 
+/**
+ * Organizaciones de la persona mayor: solicitudes pendientes para aceptar o
+ * rechazar y organizaciones con vínculo aceptado. Toda acción pasa por un
+ * modal de confirmación.
+ */
 @Component({
   selector: 'app-organizaciones',
   standalone: true,
@@ -24,6 +29,7 @@ export class Organizaciones implements OnInit {
   protected readonly solicitudes =
     signal<OrganizacionSolicitud[]>([]);
 
+  /** Organización cuya solicitud se está enviando; deshabilita sus botones. */
   protected readonly procesandoSolicitud =
     signal<number | null>(null);
 
@@ -39,6 +45,7 @@ export class Organizaciones implements OnInit {
 protected readonly organizacionSeleccionada =
   signal<OrganizacionSolicitud | null>(null);
 
+/** Qué se confirma en el modal: aceptar, rechazar o cancelar el vínculo. */
 protected readonly accionPendiente =
   signal<'aceptar' | 'rechazar' | 'cancelar' | null>(null);
 
@@ -94,6 +101,7 @@ protected readonly accionPendiente =
       });
   }
 
+/** Abre la confirmación para aceptar la solicitud. */
 aceptarSolicitud(
   idOrganizacion: number
 ): void {
@@ -111,6 +119,7 @@ aceptarSolicitud(
   this.modalAbierto.set(true);
 }
 
+  /** Abre la confirmación para rechazar la solicitud. */
   rechazarSolicitud(
   idOrganizacion: number
 ): void {
@@ -129,6 +138,7 @@ aceptarSolicitud(
 }
 
 
+/** Abre la confirmación para deshacer el vínculo con la organización. */
 cancelarAsociacion(
   organizacion: OrganizacionSolicitud
 ): void {
@@ -145,6 +155,7 @@ cerrarModal(): void {
   this.accionPendiente.set(null);
 }
 
+/** Ejecuta la acción que se confirmó en el modal. */
 confirmarAccion(): void {
 
   const organizacion =

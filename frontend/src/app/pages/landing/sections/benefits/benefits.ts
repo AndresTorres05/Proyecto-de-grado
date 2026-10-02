@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 
+/**
+ * Sección de beneficios con cifras y una gráfica decorativa. Está desactivada
+ * en la landing (ver landing.html) y las cifras son de ejemplo.
+ */
 @Component({
   selector: 'app-benefits',
   imports: [],

@@ -5,6 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
+/**
+ * Lectura de la tabla usuario (ver UsuarioLookup).
+ */
 public interface UsuarioLookupRepository extends JpaRepository<UsuarioLookup, Integer> {
 
     Optional<UsuarioLookup> findByCelular(String celular);

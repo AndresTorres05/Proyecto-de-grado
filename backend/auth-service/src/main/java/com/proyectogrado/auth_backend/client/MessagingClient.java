@@ -6,11 +6,9 @@ import org.springframework.web.client.RestClient;
 import java.util.Map;
 
 /**
- * Encapsula la comunicacion con messaging-backend.
- *
- * auth-backend es el unico que emite JWT, pero no sabe nada de SMS/OTP:
- * le delega esa verificacion a messaging-backend y solo interpreta la
- * respuesta.
+ * Cliente de messaging-service. auth-service emite los tokens, pero no
+ * envía ni verifica códigos OTP: le pregunta a messaging-service y solo
+ * interpreta la respuesta.
  */
 @Component
 public class MessagingClient {
@@ -22,9 +20,9 @@ public class MessagingClient {
     }
 
     /**
-     * Verifica un codigo OTP contra messaging-backend.
-     *
-     * @return true si el codigo es valido (y ya fue consumido alla).
+     * Pregunta a messaging-service si el código es válido para ese celular.
+     * Si lo es, allá queda usado y no sirve una segunda vez. Ante cualquier
+     * error de comunicación devuelve false.
      */
     public boolean verificarOtp(String celular, String codigo) {
 

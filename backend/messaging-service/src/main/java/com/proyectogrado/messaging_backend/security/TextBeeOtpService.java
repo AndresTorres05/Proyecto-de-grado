@@ -20,6 +20,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ * Envío de SMS con TextBee y manejo de los códigos OTP.
+ *
+ * Los códigos pendientes viven solo en memoria y se guardan como HMAC, nunca
+ * en claro. Cada código vence a los MINUTOS_EXPIRACION minutos, se anula
+ * tras MAX_INTENTOS intentos fallidos y se borra en cuanto se usa.
+ */
 @Service
 public class TextBeeOtpService {
 
@@ -31,21 +38,29 @@ public class TextBeeOtpService {
 
     private static final long MINUTOS_EXPIRACION = 10;
 
-    // Tras estos intentos fallidos el código se invalida y hay que pedir
-    // otro; sin este límite un código de 6 dígitos se adivina por fuerza bruta.
+    /**
+     * Tras estos intentos fallidos el código se anula y hay que pedir otro;
+     * sin este límite, un código de 6 dígitos se adivina por fuerza bruta.
+     */
     private static final int MAX_INTENTOS = 5;
 
-    // Igual al contador de reenvío del login en el frontend.
+    /**
+     * Espera mínima entre dos envíos al mismo celular. Coincide con el
+     * contador de reenvío del login en el frontend.
+     */
     private static final long SEGUNDOS_ENTRE_ENVIOS = 30;
 
     private final SecureRandom random = new SecureRandom();
 
-    // Los códigos nunca se guardan en claro: solo su HMAC-SHA256 con esta
-    // clave, que se genera al arrancar y no sale de la memoria. Como los
-    // códigos pendientes también viven solo en memoria, al reiniciar el
-    // servicio ambos se pierden a la vez.
+    /**
+     * Los códigos nunca se guardan en claro, solo su HMAC-SHA256 con esta
+     * clave, que se genera al arrancar y no sale de la memoria. Como los
+     * códigos pendientes también viven solo en memoria, al reiniciar el
+     * servicio ambos se pierden a la vez.
+     */
     private final SecretKeySpec claveHmac = generarClaveHmac();
 
+    /** Último código enviado a cada celular (normalizado). */
     private final Map<String, CodigoOtp> codigosPendientes =
             new ConcurrentHashMap<>();
 
@@ -62,7 +77,8 @@ public class TextBeeOtpService {
     }
 
     /**
-     * Genera y envía un código OTP al celular indicado.
+     * Genera y envía un código OTP al celular. Si ya se envió uno hace menos
+     * de SEGUNDOS_ENTRE_ENVIOS, lanza IllegalStateException.
      */
     public void enviarCodigo(String celular) {
 
@@ -105,7 +121,7 @@ public class TextBeeOtpService {
     }
 
     /**
-     * Envía un mensaje SMS normal, por ejemplo una alerta de emergencia.
+     * Envía un SMS con texto libre, por ejemplo una alerta de emergencia.
      */
     public void enviarMensaje(String celular, String mensaje) {
 
@@ -121,7 +137,8 @@ public class TextBeeOtpService {
     }
 
     /**
-     * Verifica el código OTP enviado anteriormente.
+     * Comprueba el código enviado a ese celular. Si es correcto, lo borra
+     * para que no se pueda usar otra vez.
      */
     public boolean verificarCodigo(String celular, String codigo) {
 
@@ -173,7 +190,7 @@ public class TextBeeOtpService {
     }
 
     /**
-     * Realiza el envío físico del SMS mediante TextBee.
+     * Hace la petición a TextBee para enviar el SMS.
      */
     private void enviarSms(String celular, String mensaje) {
 
@@ -246,6 +263,7 @@ public class TextBeeOtpService {
         return String.valueOf(numero);
     }
 
+    /** Clave aleatoria nueva en cada arranque del servicio. */
     private static SecretKeySpec generarClaveHmac() {
 
         byte[] clave = new byte[32];
@@ -275,7 +293,7 @@ public class TextBeeOtpService {
     }
 
     /**
-     * Valida que el celular tenga un valor válido.
+     * Solo comprueba que el celular no venga vacío.
      */
     private void validarCelular(String celular) {
 
@@ -288,13 +306,15 @@ public class TextBeeOtpService {
     }
 
     /**
-     * Normaliza el celular para evitar problemas al verificar el OTP.
+     * Quita los espacios, para que "+57 300 123 4567" y "+573001234567" se
+     * traten como el mismo celular.
      */
     private String normalizarCelular(String celular) {
 
         return celular.trim().replaceAll("\\s+", "");
     }
 
+    /** Código pendiente de un celular: su HMAC, cuándo se envió, cuándo vence y cuántos fallos lleva. */
     private record CodigoOtp(
             byte[] hash,
             Instant enviado,

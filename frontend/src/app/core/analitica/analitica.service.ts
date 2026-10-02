@@ -2,9 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-// Datos "crudos" que devuelve organizacion-service; los indicadores y las
-// gráficas se calculan en cada reporte.
-
+/** Una actividad del período con sus inscritos y asistentes. */
 export interface ActividadAnalitica {
   idActividad: number;
   nombre: string;
@@ -16,11 +14,13 @@ export interface ActividadAnalitica {
   conRegistro: number;    // se tomó asistencia (asistio no es null)
 }
 
+/** Persona mayor vinculada a la organización. */
 export interface PersonaAnalitica {
   idUsuario: number;
   nombre: string;
 }
 
+/** Una medición de signos vitales. */
 export interface MedicionAnalitica {
   idPersonaMayor: number;
   fechaHora: string;      // YYYY-MM-DDTHH:mm
@@ -33,11 +33,13 @@ export interface MedicionAnalitica {
   peso: number | null;
 }
 
+/** Respuesta de /salud: las personas y todas sus mediciones. */
 export interface SaludAnalitica {
   personas: PersonaAnalitica[];
   mediciones: MedicionAnalitica[];
 }
 
+/** Datos de una persona para el perfil de la población. */
 export interface PersonaPoblacion {
   idUsuario: number;
   nombre: string;
@@ -46,18 +48,25 @@ export interface PersonaPoblacion {
   eps: string | null;
 }
 
+/** Cuántas personas tienen marcado un gusto. */
 export interface InteresConteo {
   nombre: string;
   categoria: string;
   personas: number;
 }
 
+/** Respuesta de /poblacion. */
 export interface PoblacionAnalitica {
   personas: PersonaPoblacion[];
   intereses: InteresConteo[];
   personasConIntereses: number;
 }
 
+/**
+ * Datos de la analítica de la organización. organizacion-service devuelve
+ * datos "crudos" (una fila por actividad, medición o persona); los
+ * indicadores y las gráficas se calculan en cada reporte.
+ */
 @Injectable({ providedIn: 'root' })
 export class AnaliticaService {
   private http = inject(HttpClient);
@@ -71,10 +80,12 @@ export class AnaliticaService {
     return this.http.get<ActividadAnalitica[]>(`${this.apiUrl}/actividades`, { params });
   }
 
+  /** Personas vinculadas y todas sus mediciones de signos vitales. */
   salud(): Observable<SaludAnalitica> {
     return this.http.get<SaludAnalitica>(`${this.apiUrl}/salud`);
   }
 
+  /** Edad, género, EPS e intereses de las personas vinculadas. */
   poblacion(): Observable<PoblacionAnalitica> {
     return this.http.get<PoblacionAnalitica>(`${this.apiUrl}/poblacion`);
   }

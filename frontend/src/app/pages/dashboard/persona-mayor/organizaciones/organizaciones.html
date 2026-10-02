@@ -1,6 +1,4 @@
-<!-- =========================================================
-     ENCABEZADO
-     ========================================================= -->
+<!-- Encabezado -->
 
 <div class="page-header">
 
@@ -14,9 +12,7 @@
 </div>
 
 
-<!-- =========================================================
-     MENSAJES DE RESPUESTA
-     ========================================================= -->
+<!-- Mensajes de respuesta -->
 
 @if (mensaje()) {
 
@@ -51,9 +47,7 @@
 }
 
 
-<!-- =========================================================
-     SOLICITUDES PENDIENTES
-     ========================================================= -->
+<!-- Solicitudes pendientes -->
 
 @if (solicitudes().length > 0) {
 
@@ -252,9 +246,7 @@
 }
 
 
-<!-- =========================================================
-     SIN SOLICITUDES
-     ========================================================= -->
+<!-- Sin solicitudes -->
 
 @if (solicitudes().length === 0) {
 
@@ -283,9 +275,7 @@
 }
 
 
-<!-- =========================================================
-     MIS ORGANIZACIONES
-     ========================================================= -->
+<!-- Mis organizaciones -->
 
 <section class="organizations-section">
 
@@ -353,12 +343,8 @@
           </div>
 
 
-          <!-- Separador -->
-
           <div class="organization-card__divider"></div>
 
-
-          <!-- Dirección -->
 
           @if (organizacion.direccion) {
 
@@ -383,8 +369,6 @@
           }
 
 
-          <!-- Celular -->
-
           @if (organizacion.celular) {
 
             <div class="organization-card__detail">
@@ -408,8 +392,6 @@
           }
 
 
-          <!-- Correo -->
-
           @if (organizacion.correo) {
 
             <div class="organization-card__detail">
@@ -432,8 +414,6 @@
 
           }
 
-
-          <!-- Separador -->
 
 <div class="organization-card__divider organization-card__divider--status"></div>
 
@@ -474,9 +454,7 @@
 
 </section>
 
-<!-- =========================================================
-     MODAL DE CONFIRMACIÓN
-     ========================================================= -->
+<!-- Modal de confirmación -->
 
 @if (modalAbierto()) {
 

@@ -27,6 +27,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Vínculos entre personas mayores y organizaciones. La organización envía
+ * una solicitud y la persona mayor la acepta o la rechaza; mientras no esté
+ * ACEPTADA, la organización no ve a esa persona.
+ *
+ * Por el gateway solo llegan aquí /api/persona-mayor/organizaciones/** y
+ * /api/organizacion/personas-mayores/{id}/acompanantes. El resto de
+ * /api/organizacion/personas-mayores lo atiende organizacion-service, así
+ * que los demás endpoints de organización de esta clase no se usan.
+ */
 @RestController
 public class PersonaMayorOrganizacionController {
 
@@ -48,10 +58,7 @@ public PersonaMayorOrganizacionController(
     this.personaMayorAcompananteRepository = personaMayorAcompananteRepository;
 }
 
-    // =========================================================
-    // ORGANIZACION: personas mayores asociadas
-    // =========================================================
-
+    /** Personas mayores con vínculo aceptado con la organización del usuario. */
     @GetMapping("/api/organizacion/personas-mayores")
     public ResponseEntity<?> obtenerPersonasMayoresOrganizacion(
             @RequestHeader("X-User-Id") Integer idUsuarioOrganizacion
@@ -69,10 +76,10 @@ public PersonaMayorOrganizacionController(
         return ResponseEntity.ok(mapearAPersonaMayor(relaciones));
     }
 
-    // =========================================================
-// ORGANIZACION: acompanantes de una persona mayor
-// =========================================================
-
+    /**
+     * Acompañantes aceptados de una persona mayor, para la organización. Solo
+     * responde si la persona tiene un vínculo aceptado con esa organización.
+     */
 @GetMapping("/api/organizacion/personas-mayores/{idPersonaMayor}/acompanantes")
 public ResponseEntity<?> obtenerAcompanantesPersonaMayor(
         @RequestHeader("X-User-Id") Integer idUsuarioOrganizacion,
@@ -86,7 +93,7 @@ public ResponseEntity<?> obtenerAcompanantesPersonaMayor(
                 .body("El usuario no tiene una organización asociada");
     }
 
-    // Verificar que la persona mayor pertenece a esta organización
+    // La persona mayor tiene que estar vinculada a esta organización.
     PersonaMayorOrganizacionId idRelacion =
             new PersonaMayorOrganizacionId(
                     idPersonaMayor,
@@ -101,7 +108,6 @@ public ResponseEntity<?> obtenerAcompanantesPersonaMayor(
                 .body("La persona mayor no está asociada a esta organización");
     }
 
-    // Buscar acompanantes aceptados
     List<PersonaMayorAcompanante> relaciones =
             personaMayorAcompananteRepository
                     .findById_IdPersonaMayorAndEstado(
@@ -144,6 +150,10 @@ public ResponseEntity<?> obtenerAcompanantesPersonaMayor(
     return ResponseEntity.ok(acompanantes);
 }
 
+    /**
+     * La organización envía una solicitud de vínculo a la persona mayor con
+     * ese celular. Si antes la rechazó, la solicitud vuelve a PENDIENTE.
+     */
     @PostMapping("/api/organizacion/personas-mayores")
     public ResponseEntity<?> asociarPersonaMayor(
             @RequestHeader("X-User-Id") Integer idUsuarioOrganizacion,
@@ -200,6 +210,7 @@ public ResponseEntity<?> obtenerAcompanantesPersonaMayor(
         return ResponseEntity.ok("Solicitud de asociación enviada correctamente");
     }
 
+    /** La organización deshace el vínculo con una persona mayor. */
     @DeleteMapping("/api/organizacion/personas-mayores/{idPersonaMayor}")
     public ResponseEntity<?> cancelarAsociacionDesdeOrganizacion(
             @RequestHeader("X-User-Id") Integer idUsuarioOrganizacion,
@@ -215,10 +226,7 @@ public ResponseEntity<?> obtenerAcompanantesPersonaMayor(
         return eliminarRelacion(new PersonaMayorOrganizacionId(idPersonaMayor, idOrganizacion));
     }
 
-    // =========================================================
-    // PERSONA MAYOR: organizaciones
-    // =========================================================
-
+    /** Organizaciones con las que la persona mayor tiene un vínculo aceptado. */
     @GetMapping("/api/persona-mayor/organizaciones")
     public ResponseEntity<List<OrganizacionSolicitudResponse>> obtenerOrganizaciones(
             @RequestHeader("X-User-Id") Integer idPersonaMayor
@@ -226,6 +234,7 @@ public ResponseEntity<?> obtenerAcompanantesPersonaMayor(
         return ResponseEntity.ok(listarOrganizacionesPorEstado(idPersonaMayor, "ACEPTADA"));
     }
 
+    /** Solicitudes de organizaciones que la persona mayor aún no ha respondido. */
     @GetMapping("/api/persona-mayor/organizaciones/solicitudes")
     public ResponseEntity<List<OrganizacionSolicitudResponse>> obtenerSolicitudes(
             @RequestHeader("X-User-Id") Integer idPersonaMayor
@@ -249,6 +258,7 @@ public ResponseEntity<?> obtenerAcompanantesPersonaMayor(
         return cambiarEstadoOrganizacion(idPersonaMayor, idOrganizacion, "RECHAZADA", "rechazada");
     }
 
+    /** La persona mayor deshace el vínculo con una organización. */
     @DeleteMapping("/api/persona-mayor/organizaciones/{idOrganizacion}")
     public ResponseEntity<?> cancelarAsociacionDesdePersonaMayor(
             @RequestHeader("X-User-Id") Integer idPersonaMayor,
@@ -257,16 +267,14 @@ public ResponseEntity<?> obtenerAcompanantesPersonaMayor(
         return eliminarRelacion(new PersonaMayorOrganizacionId(idPersonaMayor, idOrganizacion));
     }
 
-    // =========================================================
-    // Helpers
-    // =========================================================
-
+    /** Organización a la que pertenece la cuenta, o null si no es una cuenta de organización. */
     private Integer obtenerIdOrganizacion(Integer idUsuario) {
         return usuarioLookupRepository.findById(idUsuario)
                 .map(UsuarioLookup::getIdOrganizacion)
                 .orElse(null);
     }
 
+    /** Acepta o rechaza una solicitud; solo se puede si sigue PENDIENTE. */
     private ResponseEntity<String> cambiarEstadoOrganizacion(
             Integer idPersonaMayor,
             Integer idOrganizacion,
@@ -308,6 +316,10 @@ public ResponseEntity<?> obtenerAcompanantesPersonaMayor(
         return ResponseEntity.ok("Asociación cancelada correctamente");
     }
 
+    /**
+     * Organizaciones de la persona mayor en el estado indicado. El nombre y
+     * el contacto salen de la primera cuenta de usuario de cada organización.
+     */
     private List<OrganizacionSolicitudResponse> listarOrganizacionesPorEstado(
             Integer idPersonaMayor,
             String estado

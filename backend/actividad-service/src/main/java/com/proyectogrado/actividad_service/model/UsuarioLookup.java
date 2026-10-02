@@ -6,12 +6,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * Vista de SOLO LECTURA sobre la tabla "usuario", que es dueña de
- * auth-backend. actividad-service NUNCA crea, edita ni borra usuarios;
- * esto existe solo para:
- *  - saber a que organizacion pertenece el usuario autenticado
- *    (columna id_organizacion, solo tiene valor para el rol ORGANIZACION),
- *  - mostrar nombre/celular de un participante en las respuestas.
+ * Vista de solo lectura de la tabla usuario, que pertenece a auth-service.
+ * Sirve para saber a qué organización pertenece el usuario autenticado
+ * (id_organizacion solo tiene valor en cuentas de organización) y para
+ * mostrar el nombre y el celular de los participantes.
  */
 @Entity
 @Table(name = "usuario")
@@ -33,8 +31,9 @@ public class UsuarioLookup {
     @Column(name = "id_organizacion")
     private Integer idOrganizacion;
 
+    /** Lo exige JPA. */
+
     protected UsuarioLookup() {
-        // JPA
     }
 
     public Integer getIdUsuario() {

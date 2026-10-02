@@ -9,6 +9,7 @@ import { OpcionesGrafica } from '../../../../../shared/echart/echart';
 import { GraficaCard, TablaGrafica } from '../componentes/grafica-card';
 import { Kpi } from '../componentes/kpi';
 
+/** Rangos de la gráfica de edades. */
 const RANGOS_EDAD = [
   { etiqueta: 'Menos de 60', min: 0, max: 59 },
   { etiqueta: '60 a 69', min: 60, max: 69 },
@@ -17,14 +18,14 @@ const RANGOS_EDAD = [
   { etiqueta: '90 o más', min: 90, max: 200 }
 ];
 
-// Color fijo por categoría de interés (sigue a la categoría, no al ranking)
+/** Color fijo por categoría de interés: sigue a la categoría, no al puesto en el ranking. */
 const CATEGORIAS: { valor: string; nombre: string; color: string }[] = [
   { valor: 'GUSTO', nombre: 'Gustos', color: SERIE[0] },
   { valor: 'TALENTO', nombre: 'Talentos', color: SERIE[1] },
   { valor: 'HOBBY', nombre: 'Hobbies', color: SERIE[2] }
 ];
 
-// Color fijo por género
+/** Color fijo por género. */
 const GENEROS: { valor: string; color: string }[] = [
   { valor: 'Femenino', color: SERIE[0] },
   { valor: 'Masculino', color: SERIE[1] },
@@ -32,6 +33,7 @@ const GENEROS: { valor: string; color: string }[] = [
   { valor: 'Sin dato', color: GRIS }
 ];
 
+/** Porcentaje entero; 0 si el total es 0. */
 const pct = (parte: number, total: number) => (total > 0 ? Math.round((parte / total) * 100) : 0);
 
 /**
@@ -48,6 +50,7 @@ export class ReportePoblacion {
 
   readonly datos = input.required<PoblacionAnalitica>();
 
+  /** Edad de cada persona que tiene fecha de nacimiento. */
   private readonly edades = computed(() => {
     const hoy = new Date();
     return this.datos().personas
@@ -60,7 +63,7 @@ export class ReportePoblacion {
       });
   });
 
-  // ---------- Indicadores ----------
+  // Indicadores
 
   protected readonly kpis = computed(() => {
     const total = this.datos().personas.length;
@@ -81,7 +84,7 @@ export class ReportePoblacion {
     };
   });
 
-  // ---------- 1. Rangos de edad ----------
+  // Gráfica 1: rangos de edad
 
   private readonly porEdad = computed(() =>
     RANGOS_EDAD.map((r) => ({
@@ -100,7 +103,7 @@ export class ReportePoblacion {
       series: [{
         name: 'Personas', type: 'bar', barMaxWidth: 40,
         label: etiquetaValor('top'),
-        // Rangos ordenados: rampa azul de claro (jóvenes) a oscuro (mayores)
+        // Rangos ordenados: rampa azul de claro (jóvenes) a oscuro (mayores).
         data: datos.map((d, i) => ({ value: d.personas, itemStyle: estiloBarra(RAMPA_AZUL[i]) }))
       }]
     });
@@ -111,7 +114,7 @@ export class ReportePoblacion {
     filas: this.porEdad().map((d) => [d.etiqueta, d.personas])
   }));
 
-  // ---------- 2. Género ----------
+  // Gráfica 2: género
 
   private readonly porGenero = computed(() => {
     const total = this.datos().personas.length;
@@ -151,7 +154,7 @@ export class ReportePoblacion {
     filas: this.porGenero().map((g) => [g.valor, g.personas, `${g.porcentaje} %`])
   }));
 
-  // ---------- 3. EPS ----------
+  // Gráfica 3: EPS
 
   private readonly porEps = computed(() => {
     const conteo = new Map<string, number>();
@@ -163,7 +166,7 @@ export class ReportePoblacion {
       .map(([eps, personas]) => ({ eps, personas }))
       .sort((a, b) => b.personas - a.personas);
 
-    // Más de 8: el resto se agrupa en "Otras"
+    // Más de 8: el resto se agrupa en "Otras".
     if (lista.length <= 8) return lista;
     const otras = lista.slice(7).reduce((s, e) => s + e.personas, 0);
     return [...lista.slice(0, 7), { eps: 'Otras', personas: otras }];
@@ -194,7 +197,7 @@ export class ReportePoblacion {
     filas: this.porEps().map((d) => [d.eps, d.personas])
   }));
 
-  // ---------- 4. Intereses más comunes ----------
+  // Gráfica 4: intereses más comunes
 
   private readonly topIntereses = computed(() => this.datos().intereses.slice(0, 10));
 

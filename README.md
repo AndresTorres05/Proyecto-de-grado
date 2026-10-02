@@ -140,10 +140,13 @@ Proyecto-de-grado/
 │   ├── angular.json
 │   └── package.json
 │
+├── GUIA_COMENTARIOS.md        ← cómo se comenta el código
 └── README.md
 ```
 
 Cada servicio del backend es un proyecto Spring Boot independiente con su propio `pom.xml`, `mvnw.cmd` y `src/main/resources/application.properties` (o `application.yml` en el gateway).
+
+Las reglas para comentar el código están en [GUIA_COMENTARIOS.md](GUIA_COMENTARIOS.md).
 
 ---
 

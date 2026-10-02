@@ -69,7 +69,7 @@ const ICONS: Record<string, string> = {
   'map-pin':
     '<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z"/><circle cx="12" cy="10" r="2.3"/>',
 
-  // ---------- Íconos de gustos / talentos / hobbies ----------
+  // Iconos de gustos, talentos y pasatiempos
   book: '<path d="M3.5 5.5c2-1 5-1 7 .5v13c-2-1.5-5-1.5-7-.5Z"/><path d="M20.5 5.5c-2-1-5-1-7 .5v13c2-1.5 5-1.5 7-.5Z"/>',
   music:
     '<circle cx="7" cy="17.5" r="2.2"/><circle cx="17" cy="15.5" r="2.2"/><path d="M9.2 17.5V5.5L19.2 3.5v12"/>',
@@ -111,6 +111,7 @@ const ICONS: Record<string, string> = {
   swim: '<path d="M3 17c1.5-1.5 3-1.5 4.5 0s3 1.5 4.5 0 3-1.5 4.5 0 3 1.5 4.5 0"/><circle cx="17" cy="7" r="1.6"/><path d="M4 12.5 13 9l2 3-4 2"/>',
 };
 
+/** Icono SVG del set ICONS. Si el nombre no existe, muestra un punto. */
 @Component({
   selector: 'app-icon',
   standalone: true,
@@ -143,6 +144,8 @@ export class Icon implements OnChanges {
 
   ngOnChanges(): void {
     const inner = ICONS[this.name] ?? ICONS['dot'];
+    // Saltarse la sanitización es seguro: el SVG sale de ICONS, que es texto
+    // fijo del código, y no de datos que escriba el usuario.
     this.svg = this.sanitizer.bypassSecurityTrustHtml(
       `<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" ` +
         `stroke="currentColor" stroke-width="${this.strokeWidth}" ` +

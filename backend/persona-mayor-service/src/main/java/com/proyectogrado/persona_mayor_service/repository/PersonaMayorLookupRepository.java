@@ -8,12 +8,15 @@ import org.springframework.data.repository.query.Param;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Acceso a la tabla persona_mayor (ver PersonaMayorLookup).
+ */
 public interface PersonaMayorLookupRepository extends JpaRepository<PersonaMayorLookup, Integer> {
 
     /**
-     * Personas mayores que nacieron en ese mes y alguno de esos dias. La
+     * Personas mayores que nacieron en ese mes y alguno de esos días. La
      * fecha del registro queda en "usuario"; la de "persona_mayor" solo
-     * existe si la persona edito su perfil, y en ese caso manda.
+     * existe si la persona editó su perfil, y en ese caso manda.
      */
     @Query(value = """
             select pm.* from persona_mayor pm

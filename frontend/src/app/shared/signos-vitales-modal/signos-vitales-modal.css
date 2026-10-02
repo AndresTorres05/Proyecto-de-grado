@@ -1,8 +1,5 @@
-/* =========================================================
-   MODAL DE SIGNOS VITALES (compartido)
-   La lista de registros y sus estilos estan en
-   shared/signos-vitales-lista.
-   ========================================================= */
+/* Modal de signos vitales (compartido). La lista de registros y sus
+   estilos están en shared/signos-vitales-lista. */
 
 .modal-overlay {
   position: fixed;
@@ -33,7 +30,7 @@
 }
 
 
-/* ---------- Encabezado ---------- */
+/* Encabezado */
 
 .modal__header {
   display: flex;
@@ -100,7 +97,7 @@
 }
 
 
-/* ---------- Responsive ---------- */
+/* Responsive */
 
 @media (max-width: 600px) {
 

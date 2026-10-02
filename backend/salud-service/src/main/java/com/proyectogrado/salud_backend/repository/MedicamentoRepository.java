@@ -10,16 +10,21 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Acceso a la tabla medicamento, incluidas las actualizaciones con las que
+ * el scheduler "reserva" cada aviso antes de enviarlo.
+ */
 public interface MedicamentoRepository extends JpaRepository<Medicamento, Integer> {
 
     List<Medicamento> findByIdPersonaMayor(Integer idPersonaMayor);
 
+    /** Medicamentos activos cuya próxima toma cae antes del límite. */
     List<Medicamento> findByActivoTrueAndProximaTomaLessThanEqual(LocalDateTime limite);
 
     /**
-     * Reserva el aviso previo (15 min antes) de la toma actual. Solo
-     * afecta una fila si ese aviso aun no se ha enviado, de modo que
-     * aunque haya dos instancias del scheduler solo una lo envia.
+     * Reserva el aviso previo (15 minutos antes) de la toma actual. Solo
+     * afecta una fila si ese aviso aún no se ha enviado, de modo que aunque
+     * haya dos instancias del scheduler, solo una lo envía.
      */
     @Modifying
     @Transactional
@@ -37,9 +42,9 @@ public interface MedicamentoRepository extends JpaRepository<Medicamento, Intege
                             @Param("ahora") LocalDateTime ahora);
 
     /**
-     * Reserva el aviso a la hora exacta y avanza la proxima toma. Solo
-     * afecta una fila si la proxima toma sigue siendo la misma que se leyo,
-     * asi cada toma se avisa una sola vez.
+     * Reserva el aviso de la hora exacta y avanza la próxima toma. Solo
+     * afecta una fila si la próxima toma sigue siendo la misma que se leyó;
+     * así cada toma se avisa una sola vez.
      */
     @Modifying
     @Transactional

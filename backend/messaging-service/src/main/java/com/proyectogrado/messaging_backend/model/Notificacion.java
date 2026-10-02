@@ -11,12 +11,12 @@ import jakarta.persistence.Table;
 import java.time.Instant;
 
 /**
- * Copia de cada SMS enviado con exito por /api/mensajes/enviar
+ * Copia de cada SMS enviado con éxito por /api/mensajes/enviar
  * (emergencias, recordatorios de medicamentos y de actividades), para
- * mostrarlo en la campanita del panel. Los OTP no se guardan.
+ * mostrarlo en la campanita del panel. Los códigos OTP no se guardan.
  *
- * Se asocia por celular porque es lo que reciben los servicios que
- * envian; el celular de un usuario no se puede editar (es su login).
+ * Se asocia por celular porque es el dato que reciben los servicios que
+ * envían, y el celular de un usuario no se puede editar (es su login).
  */
 @Entity
 @Table(name = "notificacion", indexes = @Index(name = "idx_notificacion_celular", columnList = "celular"))
@@ -39,8 +39,8 @@ public class Notificacion {
     @Column(name = "leida", nullable = false)
     private boolean leida;
 
+    /** Lo exige JPA. */
     protected Notificacion() {
-        // JPA
     }
 
     public Notificacion(String celular, String mensaje) {

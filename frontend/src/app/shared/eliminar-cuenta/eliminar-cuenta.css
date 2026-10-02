@@ -1,4 +1,4 @@
-/* ---------- Zona de peligro ---------- */
+/* Zona de peligro */
 
 .zona-peligro {
   display: flex;
@@ -45,7 +45,7 @@
   color: var(--vita-white);
 }
 
-/* ---------- Modal de confirmación ---------- */
+/* Modal de confirmación */
 
 .eliminar-overlay {
   position: fixed;

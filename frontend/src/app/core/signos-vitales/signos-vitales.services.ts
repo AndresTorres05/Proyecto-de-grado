@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+/** Una medición nueva; cada valor es opcional. */
 export interface SignoVitalRequest {
   presionSistolica: number | null;
   presionDiastolica: number | null;
@@ -13,6 +14,7 @@ export interface SignoVitalRequest {
   observaciones: string;
 }
 
+/** Medición tal como la devuelve salud-service; fechaHora va en "yyyy-MM-ddTHH:mm". */
 export interface SignoVitalResponse {
   idSignoVital: number;
   fechaHora: string;
@@ -26,6 +28,7 @@ export interface SignoVitalResponse {
   observaciones: string | null;
 }
 
+/** Persona mayor vinculada a la organización. */
 export interface PersonaMayor {
   idUsuario: number;
   nombre: string;
@@ -33,8 +36,11 @@ export interface PersonaMayor {
   correo: string | null;
 }
 
-// Todo pasa por el api-gateway (8080): valida el token, pone el X-User-Id
-// del usuario autenticado y es el único que maneja CORS.
+/**
+ * Signos vitales: la organización los registra y consulta, y la persona
+ * mayor ve su historial y registra sus propias mediciones. Todo pasa por el
+ * gateway (8080), que valida el token, agrega el X-User-Id y maneja el CORS.
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -55,6 +61,7 @@ export class SignosVitalesService {
     return this.http.post<SignoVitalResponse>(this.personaMayorApiUrl, datos);
   }
 
+  /** La organización registra una medición de una persona mayor vinculada. */
   registrar(idPersonaMayor: number, datos: SignoVitalRequest): Observable<SignoVitalResponse> {
     return this.http.post<SignoVitalResponse>(`${this.apiUrl}/${idPersonaMayor}`, datos);
   }
@@ -64,6 +71,7 @@ export class SignosVitalesService {
     return this.http.get<SignoVitalResponse[]>(`${this.apiUrl}/${idPersonaMayor}`);
   }
 
+  /** Personas mayores vinculadas a la organización (organizacion-service). */
   listarPersonasMayores(): Observable<PersonaMayor[]> {
     return this.http.get<PersonaMayor[]>(this.personasApiUrl);
   }

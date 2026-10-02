@@ -15,6 +15,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * Lee el token de cada petición que llega a auth-service y, si es válido,
+ * deja autenticado al usuario durante esa petición. Si no hay token o no
+ * sirve, la petición sigue sin autenticar y SecurityConfig decide si pasa.
+ */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -37,22 +42,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-
-        // =========================================================
-        // PETICIONES OPTIONS
-        // =========================================================
-
+        // El preflight de CORS (OPTIONS) nunca trae token.
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
 
             filterChain.doFilter(request, response);
 
             return;
         }
-
-
-        // =========================================================
-        // OBTENER HEADER AUTHORIZATION
-        // =========================================================
 
         final String authHeader =
                 request.getHeader("Authorization");
@@ -66,20 +62,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-
-        // =========================================================
-        // EXTRAER TOKEN
-        // =========================================================
-
+        // Quita el prefijo "Bearer ".
         final String token =
                 authHeader.substring(7);
 
 
         try {
-
-            // -----------------------------------------------------
-            // Extraer ID del usuario
-            // -----------------------------------------------------
 
             Integer idUsuario =
                     jwtService.extraerIdUsuario(token);
@@ -97,29 +85,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
 
-            // -----------------------------------------------------
-            // Comprobar si ya existe autenticación
-            // -----------------------------------------------------
-
+            // Solo si nadie autenticó ya al usuario en esta petición.
             if (SecurityContextHolder
                     .getContext()
                     .getAuthentication() == null) {
 
-                        
-
-
-                // -------------------------------------------------
-                // Buscar usuario
-                // -------------------------------------------------
-
                 UserDetails userDetails =
                         usuarioDetailsService
                                 .loadUserById(idUsuario);
-
-
-                // -------------------------------------------------
-                // Validar JWT
-                // -------------------------------------------------
 
                 if (jwtService.esTokenValido(
                         token,
@@ -177,16 +150,13 @@ System.out.println(
 
         } catch (Exception e) {
 
+            // Firma inválida, token vencido o usuario inexistente: la
+            // petición sigue sin autenticar.
             System.out.println(
                     "Error procesando JWT: "
                             + e.getMessage()
             );
         }
-
-
-        // =========================================================
-        // CONTINUAR CADENA
-        // =========================================================
 
         filterChain.doFilter(request, response);
     }

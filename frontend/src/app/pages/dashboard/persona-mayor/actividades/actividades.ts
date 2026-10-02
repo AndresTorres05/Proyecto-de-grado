@@ -12,6 +12,10 @@ import { ActividadCard } from '../../../../shared/actividad-card/actividad-card'
 
 registerLocaleData(localeEs);
 
+/**
+ * Actividades de las organizaciones de la persona mayor: se puede inscribir
+ * o cancelar la inscripción mientras la actividad no haya pasado.
+ */
 @Component({
   selector: 'app-actividades',
   standalone: true,
@@ -24,9 +28,11 @@ export class Actividades implements OnInit {
   protected readonly actividades = signal<ActividadDisponible[]>([]);
   protected readonly cargando = signal(true);
   protected readonly error = signal<string | null>(null);
+  /** Actividad cuya inscripción se está enviando; deshabilita su botón. */
   protected readonly procesandoId = signal<number | null>(null);
 
-  // Próximas (de la más cercana a la más lejana) e historial (de la más reciente a la más antigua)
+  // Próximas (de la más cercana a la más lejana) e historial (de la más
+  // reciente a la más antigua).
   protected readonly separadas = computed(() => separarPorFecha(this.actividades()));
 
   constructor(private actividadService: ActividadService) {
@@ -37,6 +43,7 @@ export class Actividades implements OnInit {
     this.cargar();
   }
 
+  /** Con mostrarCargando en false, la lista se actualiza sin parpadear (cambios en vivo). */
   private cargar(mostrarCargando = true): void {
     if (mostrarCargando) {
       this.cargando.set(true);

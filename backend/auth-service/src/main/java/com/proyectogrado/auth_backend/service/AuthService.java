@@ -31,6 +31,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Registro, inicio de sesión y recuperación de contraseña.
+ *
+ * Hay dos formas de entrar: con correo y contraseña, o con el celular y un
+ * código OTP que envía y verifica messaging-service. El celular siempre es
+ * obligatorio; el correo y la contraseña son opcionales, pero van juntos.
+ */
 @Service
 public class AuthService {
 
@@ -73,10 +80,7 @@ public class AuthService {
         this.emailValidationService = emailValidationService;
     }
 
-    // =========================================================
-    // LOGIN CON CORREO + CONTRASENA
-    // =========================================================
-
+    /** Inicio de sesión con correo y contraseña. */
     public LoginResponse login(LoginRequest request) {
 
         if (request == null
@@ -92,6 +96,8 @@ public class AuthService {
 
         String correo = request.getCorreo().trim().toLowerCase();
 
+        // El mensaje es el mismo si el correo no existe o si la contraseña no
+        // coincide, para no revelar qué correos tienen cuenta.
         Usuario usuario = usuarioRepository
                 .findByCorreo(correo)
                 .orElseThrow(() -> new RuntimeException(
@@ -114,10 +120,7 @@ public class AuthService {
         return generarRespuestaLogin(usuario, "Inicio de sesión exitoso");
     }
 
-    // =========================================================
-    // LOGIN CON CELULAR + OTP
-    // =========================================================
-
+    /** Inicio de sesión con el celular y el código OTP que llegó por SMS. */
     public LoginResponse loginConOtp(LoginOtpRequest request) {
 
         if (request == null
@@ -155,10 +158,10 @@ public class AuthService {
         return generarRespuestaLogin(usuario, "Inicio de sesión exitoso");
     }
 
-    // =========================================================
-// RESTABLECER CONTRASEÑA
-// =========================================================
-
+    /**
+     * Cambia la contraseña de quien la olvidó. La persona se identifica con
+     * su celular y el código OTP que recibió.
+     */
 public void restablecerContrasena(
         RestablecerContrasenaRequest request
 ) {
@@ -178,11 +181,6 @@ public void restablecerContrasena(
         );
     }
 
-
-    // ---------------------------------------------------------
-    // Validar que las contraseñas coincidan
-    // ---------------------------------------------------------
-
     if (!request.getContrasena().equals(
             request.getConfirmarContrasena())) {
 
@@ -191,22 +189,12 @@ public void restablecerContrasena(
         );
     }
 
-
-    // ---------------------------------------------------------
-    // Validar longitud de contraseña
-    // ---------------------------------------------------------
-
     if (request.getContrasena().length() < 6) {
 
         throw new RuntimeException(
                 "La contraseña debe tener mínimo 6 caracteres"
         );
     }
-
-
-    // ---------------------------------------------------------
-    // Buscar usuario por celular
-    // ---------------------------------------------------------
 
     String celular = request.getCelular().trim();
 
@@ -215,11 +203,6 @@ public void restablecerContrasena(
             .orElseThrow(() -> new RuntimeException(
                     "No existe una cuenta con ese celular"
             ));
-
-
-    // ---------------------------------------------------------
-    // Verificar OTP
-    // ---------------------------------------------------------
 
     boolean codigoValido =
             messagingClient.verificarOtp(
@@ -234,11 +217,6 @@ public void restablecerContrasena(
         );
     }
 
-
-    // ---------------------------------------------------------
-    // Actualizar contraseña
-    // ---------------------------------------------------------
-
     usuario.setContrasenaHash(
             passwordEncoder.encode(
                     request.getContrasena()
@@ -248,6 +226,7 @@ public void restablecerContrasena(
         usuarioRepository.save(usuario);
     }
 
+    /** Lo usa el login para no enviar un código por SMS a un celular sin cuenta. */
     public boolean existeCelular(String celular) {
     if (celular == null || celular.isBlank()) {
         return false;
@@ -256,6 +235,7 @@ public void restablecerContrasena(
         return usuarioRepository.existsByCelular(celular);
     }
 
+    /** Respuesta de login con un token nuevo. Si el usuario tiene varios roles, se usa el primero. */
     private LoginResponse generarRespuestaLogin(Usuario usuario, String mensaje) {
 
         List<UsuarioRol> usuariosRoles =
@@ -283,12 +263,10 @@ public void restablecerContrasena(
         );
     }
 
-// =========================================================
-// REGISTRO
-// celular obligatorio;
-// correo + contrasena opcionales, pero deben ir juntos
-// =========================================================
-
+    /**
+     * Crea la cuenta con su rol y devuelve un token para que la persona entre
+     * de una vez. Si trae correo, primero se valida con Hunter.
+     */
     @Transactional
     public LoginResponse registrar(RegistroRequest request) {
 
@@ -322,6 +300,7 @@ public void restablecerContrasena(
         );
 }
 
+        // Hunter confirma que el correo existe y puede recibir mensajes.
         if (correo != null) {
 
         JsonNode resultado =
@@ -345,10 +324,6 @@ public void restablecerContrasena(
                 .orElseThrow(() -> new RuntimeException(
                         "El rol solicitado no existe: " + rolNombre
                 ));
-
-        // -----------------------------------------------------
-        // Crear usuario
-        // -----------------------------------------------------
 
         Usuario usuario = new Usuario();
         usuario.setNombreUsuario(request.getNombreUsuario().trim());
@@ -380,10 +355,7 @@ usuario.setDireccion(request.getDireccion());
                 new UsuarioRol(usuarioGuardado, rol)
         );
 
-        // -----------------------------------------------------
-        // Crear el registro especifico segun el rol
-        // -----------------------------------------------------
-
+        // Además del usuario, cada rol tiene su propia tabla.
         switch (rolNombre) {
 
 case "PERSONA_MAYOR" -> {
@@ -403,6 +375,7 @@ case "ORGANIZACION" -> {
 
     organizacion = organizacionRepository.save(organizacion);
 
+    // La cuenta queda enlazada a la organización que acaba de crear.
     usuarioGuardado.setIdOrganizacion(organizacion.getIdOrganizacion());
     usuarioRepository.save(usuarioGuardado);
 }
@@ -430,6 +403,10 @@ case "ORGANIZACION" -> {
         );
     }
 
+    /**
+     * Revisa los datos del formulario antes de tocar la base de datos. Los
+     * campos obligatorios cambian según el rol.
+     */
     private void validarRegistro(RegistroRequest request) {
 
         if (request == null) {

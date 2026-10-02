@@ -2,9 +2,7 @@
 
   <div class="login-card">
 
-    <!-- =====================================================
-         MARCA
-         ===================================================== -->
+    <!-- Marca -->
 
     <div class="login-brand">
 
@@ -21,10 +19,6 @@
     </div>
 
 
-    <!-- =====================================================
-         VOLVER
-         ===================================================== -->
-
     <a
       routerLink="/"
       class="login-back"
@@ -33,18 +27,14 @@
     </a>
 
 
-    <!-- =====================================================
-         FORMULARIO
-         ===================================================== -->
+    <!-- Formulario: recuperación de contraseña o inicio de sesión -->
 
     <form
       (ngSubmit)="onSubmit()"
       class="login-form"
     >
 
-      <!-- ===================================================
-           RECUPERACIÓN DE CONTRASEÑA
-           =================================================== -->
+      <!-- Recuperación de contraseña -->
 
       @if (modoRecuperacion()) {
 
@@ -57,9 +47,7 @@
         </p>
 
 
-        <!-- ================================================
-             PASO 1: CELULAR
-             ================================================ -->
+        <!-- Paso 1: celular al que se envía el código -->
 
         @if (!recuperacionOtpEnviado()) {
 
@@ -104,9 +92,7 @@
         }
 
 
-        <!-- ================================================
-             PASO 2: CÓDIGO + NUEVA CONTRASEÑA
-             ================================================ -->
+        <!-- Paso 2: código y nueva contraseña -->
 
         @if (recuperacionOtpEnviado()) {
 
@@ -129,7 +115,7 @@
           />
 
 
-          <!-- REENVIAR CÓDIGO -->
+          <!-- Reenviar código: bloqueado mientras corre el contador -->
 
           @if (segundosReenvio() > 0) {
 
@@ -158,8 +144,6 @@
           }
 
 
-          <!-- NUEVA CONTRASEÑA -->
-
           <label
             class="login-label"
             for="nuevaContrasena"
@@ -180,8 +164,6 @@
             />
           </app-campo-contrasena>
 
-
-          <!-- CONFIRMAR CONTRASEÑA -->
 
           <label
             class="login-label"
@@ -219,9 +201,7 @@
         }
 
 
-        <!-- ================================================
-             MENSAJES DE RECUPERACIÓN
-             ================================================ -->
+        <!-- Mensajes de recuperación -->
 
         @if (infoMensaje()) {
 
@@ -240,9 +220,7 @@
         }
 
 
-        <!-- ================================================
-             VOLVER AL LOGIN
-             ================================================ -->
+        <!-- Volver al login -->
 
         <button
           type="button"
@@ -255,9 +233,7 @@
       }
 
 
-      <!-- ===================================================
-           INICIO DE SESIÓN
-           =================================================== -->
+      <!-- Inicio de sesión -->
 
       @else {
 
@@ -270,9 +246,7 @@
         </p>
 
 
-        <!-- ================================================
-             LOGIN POR CELULAR
-             ================================================ -->
+        <!-- Login por celular -->
 
         @if (modo() === 'celular') {
 
@@ -319,9 +293,7 @@
           }
 
 
-          <!-- ==============================================
-               CÓDIGO OTP
-               ============================================== -->
+          <!-- Código OTP: aparece cuando ya se pidió -->
 
           @if (otpEnviado()) {
 
@@ -344,7 +316,7 @@
             />
 
 
-            <!-- REENVIAR -->
+            <!-- Reenviar código: bloqueado mientras corre el contador -->
 
             @if (segundosReenvio() > 0) {
 
@@ -389,9 +361,7 @@
         }
 
 
-        <!-- ================================================
-             LOGIN POR CORREO
-             ================================================ -->
+        <!-- Login por correo -->
 
         @if (modo() === 'correo') {
 
@@ -433,7 +403,7 @@
           </app-campo-contrasena>
 
 
-          <!-- RECUPERAR CONTRASEÑA -->
+          <!-- Enlace a la recuperación de contraseña -->
 
           <button
             type="button"
@@ -458,9 +428,7 @@
         }
 
 
-        <!-- ================================================
-             MENSAJES DEL LOGIN
-             ================================================ -->
+        <!-- Mensajes del login -->
 
         @if (infoMensaje()) {
 
@@ -479,9 +447,7 @@
         }
 
 
-        <!-- ================================================
-             CAMBIAR MÉTODO DE LOGIN
-             ================================================ -->
+        <!-- Cambiar de método; se oculta mientras se espera el código -->
 
         @if (!otpEnviado()) {
 
@@ -528,9 +494,7 @@
     </form>
 
 
-    <!-- =====================================================
-         REGISTRO
-         ===================================================== -->
+    <!-- Enlace al registro -->
 
     <p class="login-footer">
 

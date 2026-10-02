@@ -14,6 +14,10 @@ import { Icon } from '../../../../shared/icon/icon';
 import { PersonCard } from '../../../../shared/person-card/person-card';
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
+/**
+ * Seguimiento de medicamentos: el acompañante elige una de sus personas
+ * mayores y ve sus medicamentos con la próxima toma.
+ */
 @Component({
   selector: 'app-seguimiento',
   standalone: true,
@@ -45,10 +49,6 @@ export class Seguimiento implements OnInit {
     this.cargarPersonasMayores();
   }
 
-  // =========================================================
-  // PERSONAS MAYORES
-  // =========================================================
-
   cargarPersonasMayores(): void {
     this.cargandoPersonas = true;
     this.errorPersonas = '';
@@ -58,8 +58,7 @@ export class Seguimiento implements OnInit {
         this.personasMayores = data;
         this.cargandoPersonas = false;
 
-        // Si solo existe una persona mayor,
-        // la seleccionamos automáticamente.
+        // Si acompaña a una sola persona mayor, se selecciona de una vez.
         if (this.personasMayores.length === 1) {
           this.seleccionarPersona(this.personasMayores[0]);
         }
@@ -82,7 +81,7 @@ export class Seguimiento implements OnInit {
     });
   }
 
-  // Recarga por cambios de otros usuarios, sin perder la selección
+  /** Recarga por cambios de otros usuarios sin perder la persona seleccionada. */
   private recargar(): void {
     this.acompananteService.obtenerPersonasMayores().subscribe({
       next: (data) => {
@@ -105,10 +104,6 @@ export class Seguimiento implements OnInit {
     });
   }
 
-  // =========================================================
-  // SELECCIONAR PERSONA MAYOR
-  // =========================================================
-
   seleccionarPersona(
     persona: PersonaMayorAcompanada
   ): void {
@@ -118,10 +113,7 @@ export class Seguimiento implements OnInit {
     this.cargarMedicamentos(persona.idUsuario);
   }
 
-  // =========================================================
-  // MEDICAMENTOS
-  // =========================================================
-
+  /** Con mostrarCargando en false, la lista se actualiza sin parpadear (cambios en vivo). */
   cargarMedicamentos(
     idPersonaMayor: number,
     mostrarCargando = true
@@ -162,10 +154,6 @@ export class Seguimiento implements OnInit {
       });
   }
 
-  // =========================================================
-  // PRÓXIMA TOMA
-  // =========================================================
-
   obtenerProximaToma(
     medicamento: MedicamentoSeguimiento
   ): string {
@@ -177,15 +165,12 @@ export class Seguimiento implements OnInit {
     return formatearProximaToma(medicamento.proximaToma);
   }
 
+  /** Hora de referencia del medicamento (la de la primera toma). */
   obtenerPrimeraToma(
     medicamento: MedicamentoSeguimiento
   ): string {
     return formatearHora(medicamento.hora);
   }
-
-  // =========================================================
-  // ESTADO DEL MEDICAMENTO
-  // =========================================================
 
   obtenerEstado(
     medicamento: MedicamentoSeguimiento

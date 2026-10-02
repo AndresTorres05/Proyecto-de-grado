@@ -7,6 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * Un gusto o interés del catálogo (por ejemplo, "Boleros").
+ */
 @Entity
 @Table(name = "gusto")
 public class Gusto {
@@ -19,6 +22,7 @@ public class Gusto {
     @Column(name = "nombre", nullable = false, unique = true)
     private String nombre;
 
+    /** Grupo del gusto. El frontend trabaja con GUSTO, TALENTO y HOBBY. */
     @Column(name = "categoria", length = 20)
     private String categoria;
 

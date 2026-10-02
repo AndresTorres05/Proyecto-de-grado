@@ -1,22 +1,20 @@
-/* =========================================================
-   SECCIÓN CTA (CALL TO ACTION)
-   ========================================================= */
+/* Llamado a la acción */
 
-/* ---------- Contenedor principal ---------- */
+/* Contenedor principal */
 
 .cta {
   padding-block: 64px;
 }
 
 
-/* ---------- Contenido ---------- */
+/* Contenido */
 
 .cta__content {
   text-align: center;
 }
 
 
-/* ---------- Título ---------- */
+/* Título */
 
 .cta h2 {
   font-size: clamp(1.75rem, 3vw, 2.5rem);
@@ -24,14 +22,14 @@
 }
 
 
-/* ---------- Acento de color ---------- */
+/* Acento de color */
 
 .accent-gold {
   color: var(--vita-gold);
 }
 
 
-/* ---------- Texto principal ---------- */
+/* Texto principal */
 
 .cta__lead {
   color: rgba(255, 255, 255, 0.75);
@@ -41,9 +39,7 @@
 }
 
 
-/* =========================================================
-   ACCIONES
-   ========================================================= */
+/* Acciones */
 
 .cta__actions {
   display: flex;
@@ -54,9 +50,7 @@
 }
 
 
-/* =========================================================
-   ESTADÍSTICAS
-   ========================================================= */
+/* Estadísticas */
 
 .cta__stats {
   display: flex;
@@ -68,7 +62,7 @@
 }
 
 
-/* ---------- Elemento individual ---------- */
+/* Elemento individual */
 
 .cta__stat {
   display: flex;
@@ -95,9 +89,7 @@
 }
 
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
+/* Responsive */
 
 @media (max-width: 768px) {
   .cta__stats {

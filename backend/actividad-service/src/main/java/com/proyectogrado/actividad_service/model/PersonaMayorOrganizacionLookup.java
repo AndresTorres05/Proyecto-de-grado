@@ -6,12 +6,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 /**
- * Vista de SOLO LECTURA sobre "persona_mayor_organizacion". Esa relacion
- * la administran organizacion-service (lado organizacion) y
- * personamayor-service (lado persona mayor); actividad-service solo
- * necesita saber que organizaciones tiene ACEPTADAS una persona mayor
- * para decidir que actividades puede ver/en cuales puede inscribirse,
- * o para verificar antes de dejarla inscribirse en una actividad.
+ * Vista de solo lectura de persona_mayor_organizacion. Ese vínculo lo
+ * administran organizacion-service y persona-mayor-service; aquí solo se
+ * necesita saber con qué organizaciones tiene vínculo aceptado una persona
+ * mayor, para decidir qué actividades ve y en cuáles se puede inscribir.
  */
 @Entity
 @Table(name = "persona_mayor_organizacion")
@@ -23,8 +21,9 @@ public class PersonaMayorOrganizacionLookup {
     @Column(name = "estado", nullable = false)
     private String estado;
 
+    /** Lo exige JPA. */
+
     protected PersonaMayorOrganizacionLookup() {
-        // JPA
     }
 
     public PersonaMayorOrganizacionId getId() {

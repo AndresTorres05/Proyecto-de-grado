@@ -7,7 +7,7 @@
   </div>
 
   <div class="formulario-card">
-    <!-- Persona mayor -->
+    <!-- Persona mayor a la que se le toman los signos -->
     <div class="campo campo-completo">
       <label for="personaMayor">
         Persona mayor
@@ -29,7 +29,7 @@
       </select>
     </div>
 
-    <!-- Presión arterial -->
+    <!-- Mediciones: cada una es opcional, pero la presión va completa -->
     <div class="campo">
       <label for="presionSistolica"> Presión sistólica </label>
 
@@ -62,7 +62,6 @@
       </div>
     </div>
 
-    <!-- Frecuencia cardíaca -->
     <div class="campo">
       <label for="frecuenciaCardiaca"> Frecuencia cardíaca </label>
 
@@ -79,7 +78,6 @@
       </div>
     </div>
 
-    <!-- Frecuencia respiratoria -->
     <div class="campo">
       <label for="frecuenciaRespiratoria"> Frecuencia respiratoria </label>
 
@@ -96,7 +94,6 @@
       </div>
     </div>
 
-    <!-- Temperatura -->
     <div class="campo">
       <label for="temperatura"> Temperatura </label>
 
@@ -114,7 +111,6 @@
       </div>
     </div>
 
-    <!-- Saturación -->
     <div class="campo">
       <label for="saturacionOxigeno"> Saturación de oxígeno </label>
 
@@ -132,7 +128,6 @@
       </div>
     </div>
 
-    <!-- Peso -->
     <div class="campo">
       <label for="peso"> Peso </label>
 
@@ -150,7 +145,6 @@
       </div>
     </div>
 
-    <!-- Observaciones -->
     <div class="campo campo-completo">
       <label for="observaciones"> Observaciones </label>
 
@@ -177,7 +171,6 @@
       </div>
     }
 
-    <!-- Botones -->
     <div class="acciones campo-completo">
       <button
         type="button"
@@ -203,6 +196,7 @@
     </div>
   </div>
 </div>
+<!-- Modal de confirmación antes de guardar -->
 @if (mostrarConfirmacion) {
   <div class="modal-overlay">
     <div class="modal-confirmacion">

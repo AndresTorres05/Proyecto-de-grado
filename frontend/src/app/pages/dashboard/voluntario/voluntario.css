@@ -17,7 +17,7 @@
   font-size: 0.9rem;
 }
 
-/* ---------- Stats ---------- */
+/* Estadísticas */
 
 .stats-grid {
   display: grid;
@@ -48,7 +48,7 @@
   margin-top: 4px;
 }
 
-/* ---------- Featured ---------- */
+/* Tarjeta destacada */
 
 .featured {
   padding: 24px;
@@ -86,7 +86,7 @@
   font-size: 0.9rem;
 }
 
-/* ---------- Layout ---------- */
+/* Distribución */
 
 .main-grid {
   display: grid;
@@ -123,7 +123,7 @@
   color: var(--vita-navy-light);
 }
 
-/* ---------- Actividades ---------- */
+/* Actividades */
 
 .activity-list {
   list-style: none;
@@ -156,7 +156,7 @@
   color: var(--vita-text-gray);
 }
 
-/* ---------- Alertas ---------- */
+/* Alertas */
 
 .alerts-panel {
   padding-top: 20px;
@@ -212,7 +212,7 @@
   color: color-mix(in srgb, var(--vita-gold) 60%, var(--vita-navy));
 }
 
-/* ---------- Responsive ---------- */
+/* Responsive */
 
 @media (max-width: 960px) {
   .stats-grid {

@@ -8,6 +8,7 @@
       </p>
     </div>
 
+    <!-- Panel de ejemplo (decorativo) -->
     <div class="dashboard-card card">
       <div class="dashboard-card__header">
         <div class="dashboard-card__brand">
@@ -20,6 +21,7 @@
         </span>
       </div>
 
+      <!-- Pestañas -->
       <div class="dashboard-tabs">
         <div class="dashboard-tabs__list">
           <span class="dashboard-tabs__item dashboard-tabs__item--active">Resumen</span>
@@ -30,6 +32,7 @@
         <span class="dashboard-tabs__range">Últimos 7 meses ▾</span>
       </div>
 
+      <!-- Cifras -->
       <div class="dashboard-stats">
         @for (stat of stats; track stat.label) {
           <div class="dashboard-stats__card">
@@ -43,6 +46,7 @@
         }
       </div>
 
+      <!-- Gráficas dibujadas con SVG -->
       <div class="dashboard-charts">
         <div class="chart-panel">
           <h4>Crecimiento del programa</h4>

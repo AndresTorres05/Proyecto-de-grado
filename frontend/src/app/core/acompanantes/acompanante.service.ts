@@ -5,10 +5,7 @@ import { Observable } from 'rxjs';
 import { SignoVitalResponse } from '../signos-vitales/signos-vitales.services';
 import { AcompananteResumen } from '../../shared/acompanantes-modal/acompanantes-modal';
 
-// =========================================================
-// ACOMPAÑANTE
-// =========================================================
-
+/** Acompañante de una persona mayor, con su parentesco. */
 export interface Acompanante {
   idUsuario: number;
   nombre: string;
@@ -16,30 +13,21 @@ export interface Acompanante {
   relacion: string;
 }
 
-// =========================================================
-// PERSONAS MAYORES DEL ACOMPAÑANTE
-// =========================================================
-
+/** Persona mayor que el acompañante tiene a cargo. */
 export interface PersonaMayorAcompanada {
   idUsuario: number;
   nombre: string;
   celular: string;
 }
 
-// =========================================================
-// SOLICITUDES
-// =========================================================
-
+/** Solicitud de acompañamiento pendiente: datos de la persona mayor que la envió. */
 export interface SolicitudAcompanamiento {
   idUsuario: number;
   nombre: string;
   celular: string;
 }
 
-// =========================================================
-// PERFIL DEL ACOMPAÑANTE
-// =========================================================
-
+/** Datos de "Mi información" del acompañante. */
 export interface AcompanantePerfil {
   idUsuario: number;
   nombre: string;
@@ -58,10 +46,7 @@ export interface CambiarContrasenaRequest {
   nuevaContrasena: string;
 }
 
-// =========================================================
-// MEDICAMENTOS - SEGUIMIENTO
-// =========================================================
-
+/** Medicamento de una persona mayor, visto por su acompañante. */
 export interface MedicamentoSeguimiento {
   idMedicamento: number;
   nombre: string;
@@ -76,10 +61,7 @@ export interface MedicamentoSeguimiento {
   activo: boolean;
 }
 
-// =========================================================
-// ACTIVIDADES
-// =========================================================
-
+/** Resumen de una actividad que puede ver el acompañante. */
 export interface Actividad {
   idActividad: number;
   idOrganizacion: number;
@@ -89,10 +71,11 @@ export interface Actividad {
   tipo: string | null;
 }
 
-// =========================================================
-// SERVICIO
-// =========================================================
-
+/**
+ * Llamadas al backend sobre los vínculos entre personas mayores y
+ * acompañantes, y el seguimiento que hace el acompañante (medicamentos,
+ * signos vitales, contactos y actividades).
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -103,16 +86,14 @@ private readonly authUrl = 'http://localhost:8080/api/auth';
 
   constructor(private http: HttpClient) {}
 
-  // =========================================================
-  // ACOMPAÑANTES DE UNA PERSONA MAYOR
-  // =========================================================
-
+  /** Acompañantes de la persona mayor autenticada. */
   obtenerAcompanantes(): Observable<Acompanante[]> {
     return this.http.get<Acompanante[]>(
       `${this.apiUrl}/persona-mayor/acompanantes`
     );
   }
 
+  /** La persona mayor envía una solicitud de acompañamiento por celular. */
   agregarAcompanante(
     datos: {
       celular: string;
@@ -128,6 +109,7 @@ private readonly authUrl = 'http://localhost:8080/api/auth';
     );
   }
 
+  /** La persona mayor quita a uno de sus acompañantes. */
   cancelarAcompanante(
     idAcompanante: number
   ): Observable<string> {
@@ -139,16 +121,14 @@ private readonly authUrl = 'http://localhost:8080/api/auth';
     );
   }
 
-  // =========================================================
-  // PERSONAS MAYORES DEL ACOMPAÑANTE
-  // =========================================================
-
+  /** Personas mayores que acompaña el usuario. */
   obtenerPersonasMayores(): Observable<PersonaMayorAcompanada[]> {
     return this.http.get<PersonaMayorAcompanada[]>(
       `${this.apiUrl}/acompanante/personas-mayores`
     );
   }
 
+  /** El acompañante deja de acompañar a una persona mayor. */
   cancelarAsociacionPersonaMayor(
     idPersonaMayor: number
   ): Observable<string> {
@@ -160,10 +140,7 @@ private readonly authUrl = 'http://localhost:8080/api/auth';
     );
   }
 
-  // =========================================================
-  // SOLICITUDES
-  // =========================================================
-
+  /** Solicitudes de acompañamiento que el acompañante no ha respondido. */
   obtenerSolicitudes(): Observable<SolicitudAcompanamiento[]> {
     return this.http.get<SolicitudAcompanamiento[]>(
       `${this.apiUrl}/acompanante/personas-mayores/solicitudes`
@@ -194,10 +171,7 @@ private readonly authUrl = 'http://localhost:8080/api/auth';
     );
   }
 
-  // =========================================================
-  // INFORMACIÓN DEL ACOMPAÑANTE
-  // =========================================================
-
+  /** "Mi información" del acompañante (auth-service). */
   obtenerInformacion(): Observable<AcompanantePerfil> {
   return this.http.get<AcompanantePerfil>(
     `${this.authUrl}/informacion`
@@ -213,10 +187,6 @@ actualizarInformacion(
   );
 }
 
-  // =========================================================
-  // CONTRASEÑA
-  // =========================================================
-
   cambiarContrasena(
   datos: CambiarContrasenaRequest
 ): Observable<string> {
@@ -229,10 +199,7 @@ actualizarInformacion(
   );
 }
 
-  // =========================================================
-  // SEGUIMIENTO - MEDICAMENTOS
-  // =========================================================
-
+  /** Medicamentos de una persona mayor que el usuario acompaña. */
   obtenerMedicamentosSeguimiento(
     idPersonaMayor: number
   ): Observable<MedicamentoSeguimiento[]> {
@@ -240,10 +207,6 @@ actualizarInformacion(
       `${this.apiUrl}/acompanante/seguimiento/${idPersonaMayor}/medicamentos`
     );
   }
-
-  // =========================================================
-  // SEGUIMIENTO - SIGNOS VITALES
-  // =========================================================
 
   /** Últimos 10 registros de la persona mayor, del más reciente al más antiguo. */
   obtenerSignosVitalesSeguimiento(
@@ -254,10 +217,6 @@ actualizarInformacion(
     );
   }
 
-  // =========================================================
-  // SEGUIMIENTO - ACOMPAÑANTES
-  // =========================================================
-
   /** Acompañantes con relación aceptada de la persona mayor. */
   obtenerAcompanantesSeguimiento(
     idPersonaMayor: number
@@ -267,10 +226,7 @@ actualizarInformacion(
     );
   }
 
-  // =========================================================
-  // ACTIVIDADES - ACOMPAÑANTE
-  // =========================================================
-
+  /** Actividades de las organizaciones de las personas mayores que acompaña. */
   obtenerActividades(): Observable<Actividad[]> {
     return this.http.get<Actividad[]>(
       `${this.apiUrl}/actividades`

@@ -13,6 +13,11 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
+/**
+ * Validación de correos con la Email Verifier API de Hunter: comprueba que
+ * el correo exista y pueda recibir mensajes. Se usa en el registro y al
+ * cambiar el correo en "Mi información".
+ */
 @Service
 public class EmailValidationService {
 
@@ -26,9 +31,10 @@ public class EmailValidationService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    // Constructor injection: si algo intenta "new EmailValidationService()"
-    // sin pasar la clave, ya no compila. Y si Spring no resuelve la
-    // propiedad, falla al arrancar la app en vez de fallar en silencio.
+    /**
+     * Si hunter.api-key no está definida, el servicio no arranca: es mejor
+     * fallar al inicio que en silencio en cada registro.
+     */
     public EmailValidationService(
             @Value("${hunter.api-key:}") String apiKey
     ) {
@@ -43,14 +49,17 @@ public class EmailValidationService {
                 apiKey.length(), apiKey.substring(0, Math.min(4, apiKey.length())));
     }
 
-    // Misma regla que usa el registro: solo se acepta si Hunter
-    // responde status "valid" (el correo existe y puede recibir).
+    /**
+     * Misma regla del registro: el correo solo se acepta si Hunter responde
+     * con estado "valid" (existe y puede recibir mensajes).
+     */
     public boolean puedeRecibirCorreos(String correo) {
         return "valid".equalsIgnoreCase(
                 validarCorreo(correo).path("data").path("status").asText()
         );
     }
 
+    /** Consulta a Hunter y devuelve su respuesta tal cual. Si Hunter falla, lanza RuntimeException. */
     public JsonNode validarCorreo(String correo) {
 
         try {

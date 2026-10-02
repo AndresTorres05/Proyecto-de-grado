@@ -4,6 +4,11 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * Medición de signos vitales de una persona mayor. Cada valor es opcional.
+ * Unidades: presión en mmHg, frecuencias por minuto, temperatura en °C,
+ * saturación en % y peso en kg.
+ */
 @Entity
 @Table(name = "signo_vital")
 public class SignoVital {

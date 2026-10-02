@@ -1,10 +1,13 @@
 package com.proyectogrado.salud_backend.dto;
 
+/**
+ * Datos del formulario para crear o editar un medicamento.
+ */
 public class MedicamentoRequest {
 
     private String nombre;
     private String dosis;
-    private String frecuencia;
+    private String frecuencia;   // "Descripción" en pantalla
     private Integer intervaloHoras;
     private String hora;         // "HH:mm"
     private String fechaInicio;  // "yyyy-MM-dd", opcional

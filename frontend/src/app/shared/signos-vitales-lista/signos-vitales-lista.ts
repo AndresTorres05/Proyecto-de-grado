@@ -5,9 +5,9 @@ import { SignoVitalResponse } from '../../core/signos-vitales/signos-vitales.ser
 import { Icon } from '../icon/icon';
 
 /**
- * Lista de registros de signos vitales (con estados de cargando, error
- * y vacio). La usan el modal de organizacion/acompañante y la pagina de
- * historial de la persona mayor; cada una carga los registros con el
+ * Lista de registros de signos vitales, con sus estados de cargando, error y
+ * vacío. La usan el modal de la organización y del acompañante, y el
+ * historial de la persona mayor; cada página carga los registros con el
  * endpoint de su rol.
  */
 @Component({

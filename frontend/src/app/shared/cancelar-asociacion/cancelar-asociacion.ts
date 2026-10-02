@@ -2,9 +2,9 @@ import { Component, input, output } from '@angular/core';
 import { Icon } from '../icon/icon';
 
 /**
- * Confirmacion estandar para cancelar la asociacion con una persona
- * (persona mayor, acompanante u organizacion). La pagina decide cuando
- * mostrarlo y que hacer al confirmar.
+ * Confirmación estándar para cancelar el vínculo con una persona mayor, un
+ * acompañante o una organización. La página decide cuándo mostrarla y qué
+ * hacer al confirmar.
  */
 @Component({
   selector: 'app-cancelar-asociacion',
@@ -14,9 +14,10 @@ import { Icon } from '../icon/icon';
 })
 export class CancelarAsociacion {
 
+  /** Con quién se cancela el vínculo. */
   readonly nombre = input<string | null | undefined>(null);
 
-  /** Que pasa despues de cancelar, visto desde quien cancela. */
+  /** Qué pasa después de cancelar, visto desde quien cancela. */
   readonly advertencia = input('');
 
   readonly confirmar = output<void>();

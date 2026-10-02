@@ -12,6 +12,11 @@ import { SignosVitalesModal } from '../../../../shared/signos-vitales-modal/sign
 import { AcompanantesModal, AcompananteResumen } from '../../../../shared/acompanantes-modal/acompanantes-modal';
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
+/**
+ * Personas mayores del acompañante: solicitudes pendientes para aceptar o
+ * rechazar, la lista de personas a cargo con sus últimos signos vitales y
+ * sus acompañantes, y la opción de dejar de acompañar a alguien.
+ */
 @Component({
   selector: 'app-mis-personas-mayores',
   imports: [Icon, PersonCard, CancelarAsociacion, SignosVitalesModal, AcompanantesModal],
@@ -27,8 +32,10 @@ export class MisPersonasMayores implements OnInit {
   mensaje = '';
   error = '';
 
+  /** Persona del modal de "dejar de acompañar"; null si está cerrado. */
   personaACancelar: PersonaMayorAcompanada | null = null;
 
+  /** Persona del modal de signos vitales; null si está cerrado. */
   personaSignosVitales: PersonaMayorAcompanada | null = null;
   signosVitales: SignoVitalResponse[] = [];
   cargandoSignosVitales = false;
@@ -47,13 +54,13 @@ export class MisPersonasMayores implements OnInit {
       this.cargarPersonasMayores();
       this.cargarSolicitudes();
 
-      // Si el modal de acompañantes está abierto, se actualiza en vivo
+      // Si el modal de acompañantes está abierto, se actualiza en vivo.
       if (this.personaAcompanantes) {
         this.cargarAcompanantes(this.personaAcompanantes.idUsuario);
       }
     });
 
-    // Si el modal de signos vitales está abierto, se actualiza en vivo
+    // Si el modal de signos vitales está abierto, se actualiza en vivo.
     alCambiar(['signos-vitales'], () => {
       if (this.personaSignosVitales) {
         this.cargarSignosVitales(this.personaSignosVitales.idUsuario);
@@ -136,6 +143,7 @@ export class MisPersonasMayores implements OnInit {
     this.personaACancelar = null;
   }
 
+  /** Deja de acompañar a la persona del modal. */
   confirmarCancelacion(): void {
     const persona = this.personaACancelar;
 

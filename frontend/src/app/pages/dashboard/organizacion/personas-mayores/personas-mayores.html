@@ -1,6 +1,4 @@
-<!-- =========================
-     MENSAJES
-     ========================= -->
+<!-- Mensajes de éxito y error -->
 
 @if (mensaje(); as mensajeActual) {
   <div class="message message--success">
@@ -18,9 +16,7 @@
   </div>
 }
 
-<!-- =========================================================
-     PERSONAS MAYORES ASOCIADAS
-     ========================================================= -->
+<!-- Personas mayores vinculadas -->
 
 <section class="people-section">
   <div class="section-title">
@@ -45,9 +41,7 @@
     </div>
   </div>
 
-  <!-- =======================================================
-       ESTADO VACÍO
-       ======================================================= -->
+  <!-- Estado vacío -->
 
   @if (personasMayores().length === 0) {
     <div class="empty-state">
@@ -60,9 +54,7 @@
       <p>Cuando una persona mayor acepte tu solicitud de asociación, aparecerá aquí.</p>
     </div>
   } @else {
-    <!-- =====================================================
-         LISTA DE PERSONAS
-         ===================================================== -->
+    <!-- Lista: cada tarjeta tiene botones de acompañantes, signos vitales y cancelar -->
 
     <div class="people-list">
       @for (persona of personasMayores(); track persona.idUsuario) {
@@ -106,9 +98,7 @@
   }
 </section>
 
-<!-- =========================
-     MODAL
-     ========================= -->
+<!-- Modal para enviar una solicitud de vínculo por celular -->
 
 @if (mostrandoFormulario()) {
   <div class="modal-overlay">
@@ -177,6 +167,7 @@
   </div>
 }
 
+<!-- Modal para cancelar el vínculo -->
 @if (mostrandoConfirmacion()) {
   <app-cancelar-asociacion
     [nombre]="personaSeleccionada?.nombre"
@@ -186,6 +177,7 @@
   />
 }
 
+<!-- Modal de acompañantes -->
 @if (mostrandoAcompanantes()) {
   <app-acompanantes-modal
     [nombre]="personaMayorSeleccionada?.nombre"
@@ -195,6 +187,7 @@
   />
 }
 
+<!-- Modal de signos vitales -->
 @if (mostrandoSignosVitales()) {
   <app-signos-vitales-modal
     [nombre]="personaMayorSeleccionada?.nombre"

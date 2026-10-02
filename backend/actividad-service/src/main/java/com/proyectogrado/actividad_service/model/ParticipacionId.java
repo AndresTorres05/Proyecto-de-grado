@@ -5,6 +5,9 @@ import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Llave compuesta de participacion: persona mayor más actividad.
+ */
 @Embeddable
 public class ParticipacionId implements Serializable {
 

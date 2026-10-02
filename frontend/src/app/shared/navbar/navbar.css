@@ -1,6 +1,4 @@
-/* =========================================================
-   NAVBAR
-   ========================================================= */
+/* Barra de navegación */
 
 .navbar {
   position: sticky;
@@ -10,7 +8,7 @@
   border-bottom: 1px solid var(--vita-border);
 }
 
-/* ---------- Contenedor ---------- */
+/* Contenedor */
 
 .navbar__inner {
   display: flex;
@@ -19,9 +17,7 @@
   padding-block: 16px;
 }
 
-/* =========================================================
-   MARCA
-   ========================================================= */
+/* Marca */
 
 .navbar__brand {
   display: flex;
@@ -47,9 +43,7 @@
   color: var(--vita-text-gray-light);
 }
 
-/* =========================================================
-   NAVEGACIÓN
-   ========================================================= */
+/* Navegación */
 
 .navbar__links {
   display: flex;
@@ -70,9 +64,7 @@
   }
 }
 
-/* =========================================================
-   ACCIONES
-   ========================================================= */
+/* Acciones */
 
 .navbar__actions {
   display: flex;
@@ -85,11 +77,9 @@
   color: var(--vita-navy-light);
 }
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
+/* Responsive */
 
-/* ---------- Tablets ---------- */
+/* Tablets */
 
 @media (max-width: 900px) {
   .navbar__nav {
@@ -97,7 +87,7 @@
   }
 }
 
-/* ---------- Móviles ---------- */
+/* Móviles */
 
 @media (max-width: 600px) {
   .navbar__login-link {
@@ -105,9 +95,7 @@
   }
 }
 
-/* =========================================================
-   USUARIO AUTENTICADO
-   ========================================================= */
+/* Usuario autenticado */
 
 .navbar__user {
   position: relative;
@@ -116,7 +104,7 @@
   gap: 10px;
 }
 
-/* ---------- Avatar ---------- */
+/* Avatar */
 
 .navbar__user-avatar {
   width: 42px;
@@ -134,7 +122,7 @@
   pointer-events: auto;
 }
 
-/* ---------- Cerrar sesión ---------- */
+/* Cerrar sesión */
 
 .navbar__logout {
   width: 38px;
@@ -160,9 +148,7 @@
   }
 }
 
-/* =========================================================
-   MENÚ DEL USUARIO
-   ========================================================= */
+/* Menú del usuario */
 
 .navbar__user-menu {
   position: absolute;
@@ -176,7 +162,7 @@
   overflow: hidden;
 }
 
-/* ---------- Opciones ---------- */
+/* Opciones */
 
 .navbar__user-menu button {
   width: 100%;

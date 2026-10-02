@@ -9,6 +9,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * Carga los usuarios para Spring Security. Un usuario se puede identificar
+ * por correo o por celular, porque quien se registra con OTP puede no
+ * tener correo.
+ */
 @Service
 public class UsuarioDetailsService implements UserDetailsService {
 
@@ -23,6 +28,7 @@ public class UsuarioDetailsService implements UserDetailsService {
         this.usuarioRolRepository = usuarioRolRepository;
     }
 
+    /** Busca primero por correo y, si no lo encuentra, por celular. */
     @Override
     public UserDetails loadUserByUsername(String identificador)
             throws UsernameNotFoundException {
@@ -38,6 +44,7 @@ public class UsuarioDetailsService implements UserDetailsService {
         return construirUserDetails(usuario);
     }
 
+    /** Lo usa JwtAuthenticationFilter, ya que el token trae el id del usuario. */
     public UserDetails loadUserById(Integer idUsuario)
             throws UsernameNotFoundException {
 
@@ -51,6 +58,11 @@ public class UsuarioDetailsService implements UserDetailsService {
         return construirUserDetails(usuario);
     }
 
+    /**
+     * Los roles quedan como ROLE_NOMBRE. Spring exige una contraseña, así que a
+     * quien entra solo con OTP se le pone un texto fijo que no sirve para
+     * iniciar sesión.
+     */
     private UserDetails construirUserDetails(Usuario usuario) {
 
         String[] authorities = usuarioRolRepository

@@ -13,9 +13,12 @@ import { ReporteActividades } from './reportes/reporte-actividades';
 import { ReportePoblacion } from './reportes/reporte-poblacion';
 import { ReporteSalud } from './reportes/reporte-salud';
 
+/** Pestañas del informe. */
 type Reporte = 'actividades' | 'salud' | 'poblacion';
+/** Período de los filtros, en días; "todo" no tiene límite. */
 type Periodo = '30' | '90' | '365' | 'todo';
 
+/** Estado de carga de un reporte. */
 interface Estado<T> {
   datos: T | null;
   cargando: boolean;
@@ -23,6 +26,7 @@ interface Estado<T> {
   actualizado: Date | null;
 }
 
+/** Estado inicial de un reporte: sin datos. */
 const vacio = <T>(): Estado<T> => ({ datos: null, cargando: false, error: null, actualizado: null });
 
 /**
@@ -117,7 +121,7 @@ export class Analitica implements OnInit {
     }
   }
 
-  // ---------- Carga ----------
+  // Carga de cada reporte
 
   private cargarActividades(): void {
     const hasta = this.periodo() === 'todo' ? null : new Date().toLocaleDateString('en-CA');
@@ -144,6 +148,7 @@ export class Analitica implements OnInit {
     });
   }
 
+  /** Hora de la última actualización, para mostrarla junto al reporte. */
   protected hora(fecha: Date | null): string {
     return fecha ? fecha.toLocaleTimeString('es-CO', { hour: 'numeric', minute: '2-digit' }) : '';
   }

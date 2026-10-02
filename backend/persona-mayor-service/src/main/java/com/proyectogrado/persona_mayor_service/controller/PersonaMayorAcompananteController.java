@@ -23,11 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * Lado "persona mayor" de la relacion con acompanantes.
+ * Lado de la persona mayor en el vínculo con sus acompañantes: los agrega
+ * por celular (queda una solicitud PENDIENTE que el acompañante acepta o
+ * rechaza), los lista y los quita.
  *
- * El id del usuario autenticado llega en el header X-User-Id, puesto
- * por el api-gateway despues de validar el JWT. Este servicio no valida
- * tokens.
+ * El id del usuario autenticado llega en el encabezado X-User-Id, que pone
+ * el gateway después de validar el token. Este servicio no valida tokens.
  */
 @RestController
 @RequestMapping("/api/persona-mayor/acompanantes")
@@ -47,6 +48,7 @@ public class PersonaMayorAcompananteController {
         this.acompananteLookupRepository = acompananteLookupRepository;
     }
 
+    /** Acompañantes que ya aceptaron la solicitud. */
     @GetMapping
     public ResponseEntity<List<AcompananteResponse>> listarAcompanantes(
             @RequestHeader("X-User-Id") Integer idPersonaMayor
@@ -61,6 +63,11 @@ public class PersonaMayorAcompananteController {
         return ResponseEntity.ok(respuesta);
     }
 
+    /**
+     * Envía una solicitud de acompañamiento al usuario con ese celular, que
+     * debe estar registrado como acompañante. También guarda la relación que
+     * indica la persona mayor (por ejemplo, "Hija").
+     */
     @PostMapping
     public ResponseEntity<?> agregarAcompanante(
             @RequestHeader("X-User-Id") Integer idPersonaMayor,
@@ -124,6 +131,7 @@ public class PersonaMayorAcompananteController {
         return ResponseEntity.ok("Solicitud de acompañamiento enviada correctamente");
     }
 
+    /** Quita el vínculo con un acompañante, esté en el estado que esté. */
     @DeleteMapping("/{idAcompanante}")
     public ResponseEntity<String> cancelarAsociacion(
             @RequestHeader("X-User-Id") Integer idPersonaMayor,

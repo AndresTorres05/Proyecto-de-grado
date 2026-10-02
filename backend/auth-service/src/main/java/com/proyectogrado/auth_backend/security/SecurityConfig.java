@@ -14,6 +14,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Configuración de Spring Security de auth-service: qué rutas son públicas,
+ * cuáles exigen token y cómo se guardan las contraseñas (hash BCrypt).
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -29,19 +33,17 @@ public class SecurityConfig {
         this.usuarioDetailsService = usuarioDetailsService;
     }
 
-    // =========================================================
-    // PASSWORD ENCODER
-    // =========================================================
-
+    /** Hash de contraseñas. Lo usan el registro, el login y el cambio de contraseña. */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // =========================================================
-    // AUTHENTICATION PROVIDER
-    // =========================================================
-
+    /**
+     * Proveedor estándar de Spring Security para usuario y contraseña. El
+     * login de la aplicación no pasa por aquí: AuthService compara la
+     * contraseña directamente con el PasswordEncoder.
+     */
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
 
@@ -53,10 +55,6 @@ public class SecurityConfig {
         return provider;
     }
 
-    // =========================================================
-    // AUTHENTICATION MANAGER
-    // =========================================================
-
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration config
@@ -65,10 +63,7 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 
-    // =========================================================
-    // SECURITY FILTER CHAIN
-    // =========================================================
-
+    /** Reglas de acceso a las rutas de auth-service. */
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http
@@ -76,32 +71,22 @@ public class SecurityConfig {
 
         http
 
-                // -------------------------------------------------
-                // CSRF
-                // -------------------------------------------------
-
+                // La API no usa cookies de sesión sino el token, así que la
+                // protección CSRF no aplica.
                 .csrf(csrf -> csrf.disable())
 
-                // -------------------------------------------------
-                // SESIONES
-                // -------------------------------------------------
-
+                // No se guarda sesión en el servidor: cada petición trae su token.
                 .sessionManagement(sm ->
                         sm.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS
                         )
                 )
 
-                // -------------------------------------------------
-                // AUTORIZACIÓN
-                // -------------------------------------------------
-
                 .authorizeHttpRequests(auth -> auth
 
-                        // Login, registro y OTP: públicos.
-                        // Son la puerta para conseguir el token,
-                        // no lo requieren.
-
+                        // Rutas públicas: login, registro, recuperación de
+                        // contraseña y las validaciones del formulario de
+                        // registro. Son los pasos para conseguir el token.
                         .requestMatchers(
                                 "/api/auth/login",
                                 "/api/auth/login-otp",
@@ -113,43 +98,26 @@ public class SecurityConfig {
                         )
                         .permitAll()
 
-                        // Cualquier otra cosa bajo /api/auth
-                        // requiere autenticación.
-
+                        // Todo lo demás exige un token válido.
                         .requestMatchers("/api/auth/**")
                         .authenticated()
-
-                        // Todo lo relacionado con persona mayor.
 
                         .requestMatchers("/api/persona-mayor/**")
                         .authenticated()
 
-                        // Todo lo relacionado con organización.
-
                         .requestMatchers("/api/organizacion/**")
                         .authenticated()
 
-                        // Todo lo relacionado con acompañante.
-
                         .requestMatchers("/api/acompanante/**")
                         .authenticated()
-
-                        // Todo lo demás necesita autenticación.
 
                         .anyRequest()
                         .authenticated()
                 )
 
-                // -------------------------------------------------
-                // AUTHENTICATION PROVIDER
-                // -------------------------------------------------
-
                 .authenticationProvider(authenticationProvider())
 
-                // -------------------------------------------------
-                // JWT FILTER
-                // -------------------------------------------------
-
+                // El token se revisa antes del filtro de usuario y contraseña de Spring.
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class

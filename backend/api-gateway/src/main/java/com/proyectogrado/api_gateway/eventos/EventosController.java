@@ -26,16 +26,18 @@ import java.util.Date;
 /**
  * Stream SSE con los avisos de cambio de datos (ver CambiosPublisher).
  *
- * Lo atiende el propio gateway (no hay microservicio detras). El CORS se
- * declara aqui porque globalcors del application.yml solo aplica a las
- * rutas del gateway, no a los controladores.
+ * Lo atiende el propio gateway, sin ningún servicio detrás. El CORS se
+ * declara aquí porque el globalcors de application.yml solo aplica a las
+ * rutas del gateway, no a sus controladores.
  */
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 public class EventosController {
 
-    // Mantiene viva la conexion a traves de proxies y permite detectar
-    // clientes que se fueron.
+    /**
+     * Cada cuánto se manda un latido. Mantiene viva la conexión a través de
+     * proxies y permite detectar los clientes que ya se desconectaron.
+     */
     private static final Duration LATIDO = Duration.ofSeconds(25);
 
     private final CambiosPublisher publisher;
@@ -46,6 +48,10 @@ public class EventosController {
         this.signingKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
+    /**
+     * Abre el stream de avisos para un usuario con sesión. El token llega en
+     * el encabezado Authorization, igual que en el resto de peticiones.
+     */
     @GetMapping(value = "/api/eventos", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ServerSentEvent<String>> eventos(
             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader) {
@@ -60,8 +66,8 @@ public class EventosController {
 
         Flux<ServerSentEvent<String>> flujo = Flux.merge(cambios, latidos);
 
-        // Al vencer el token se cierra el stream; el frontend intentara
-        // reconectarse y recibira 401.
+        // Al vencer el token se cierra el stream; el frontend intentará
+        // reconectarse y recibirá 401.
         if (expiracion != null) {
             Duration restante = Duration.ofMillis(Math.max(0, expiracion.getTime() - System.currentTimeMillis()));
             flujo = flujo.takeUntilOther(Mono.delay(restante));
@@ -70,6 +76,7 @@ public class EventosController {
         return flujo;
     }
 
+    /** Valida el token y devuelve su fecha de expiración. Si no es válido, responde 401. */
     private Date validarToken(String authHeader) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);

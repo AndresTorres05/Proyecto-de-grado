@@ -16,15 +16,16 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 
 /**
- * Filtro de gateway que valida el JWT emitido por auth-backend.
+ * Filtro "JwtAuth" del gateway: valida el token que emite auth-service.
  *
- * auth-backend es el UNICO que genera tokens. Este filtro no genera
- * nada, solo verifica la firma/expiracion y, si es valido, reemplaza
- * el header Authorization por headers internos (X-User-Id, X-User-Rol)
- * para que los servicios de abajo no tengan que saber nada de JWT.
+ * Los tokens solo los genera auth-service; aquí únicamente se revisan la
+ * firma y la expiración. Si el token es válido, la petición sigue hacia el
+ * servicio con los encabezados X-User-Id y X-User-Rol, así los servicios
+ * saben quién hace la petición sin tener que leer el JWT. Si el cliente
+ * manda esos encabezados por su cuenta, se sobrescriben.
  *
- * Uso en application.yml (shorthand, quitando el sufijo
- * GatewayFilterFactory del nombre de la clase):
+ * Se activa por ruta en application.yml (el nombre del filtro es el de la
+ * clase sin el sufijo GatewayFilterFactory):
  *   filters:
  *     - JwtAuth
  */
@@ -83,7 +84,7 @@ public class JwtAuthGatewayFilterFactory extends AbstractGatewayFilterFactory<Jw
         };
     }
 
+    /** El filtro no recibe parámetros desde application.yml. */
     public static class Config {
-        // Sin parametros por ahora
     }
 }

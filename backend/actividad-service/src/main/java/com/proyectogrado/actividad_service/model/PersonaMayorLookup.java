@@ -6,10 +6,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * Vista de SOLO LECTURA sobre "persona_mayor" (tabla de
- * auth-backend/personamayor-service). Aqui solo se usa para confirmar
- * que el X-User-Id autenticado corresponde a una persona mayor; el
- * id_usuario es el mismo id que usa "usuario" y "actividad"/"participacion".
+ * Vista de solo lectura de la tabla persona_mayor. Aquí solo sirve para
+ * confirmar que el usuario autenticado (X-User-Id) es una persona mayor; su
+ * id es el mismo de la tabla usuario.
  */
 @Entity
 @Table(name = "persona_mayor")
@@ -19,8 +18,9 @@ public class PersonaMayorLookup {
     @Column(name = "id_usuario")
     private Integer idUsuario;
 
+    /** Lo exige JPA. */
+
     protected PersonaMayorLookup() {
-        // JPA
     }
 
     public Integer getIdUsuario() {

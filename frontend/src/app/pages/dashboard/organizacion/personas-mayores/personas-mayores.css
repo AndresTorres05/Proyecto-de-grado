@@ -3,7 +3,7 @@
   font-size: 1.1rem;
 }
 
-/* ---------- Encabezado ---------- */
+/* Encabezado */
 
 .page-header {
   margin-bottom: 28px;
@@ -22,7 +22,7 @@
 }
 
 
-/* ---------- Mensajes ---------- */
+/* Mensajes */
 
 .message {
   display: flex;
@@ -63,18 +63,14 @@
 }
 
 
-/* =========================================================
-   PERSONAS MAYORES
-   ========================================================= */
+/* Personas mayores */
 
 .people-section {
   width: 100%;
 }
 
 
-/* =========================================================
-   TÍTULO DE SECCIÓN
-   ========================================================= */
+/* Título de sección */
 
 .section-title {
   display: flex;
@@ -104,9 +100,7 @@
 }
 
 
-/* =========================================================
-   ACCIONES DE LA SECCIÓN
-   ========================================================= */
+/* Acciones de la sección */
 
 .people-section__actions {
   display: flex;
@@ -118,9 +112,7 @@
 }
 
 
-/* =========================================================
-   CONTADOR
-   ========================================================= */
+/* Contador */
 
 .people-count {
   padding: 8px 14px;
@@ -138,9 +130,7 @@
 }
 
 
-/* =========================================================
-   BOTÓN ASOCIAR
-   ========================================================= */
+/* Botón de asociar */
 
 .add-button {
   display: inline-flex;
@@ -190,9 +180,7 @@
 }
 
 
-/* =========================================================
-   LISTA
-   ========================================================= */
+/* Lista */
 
 .people-list {
   display: flex;
@@ -204,9 +192,7 @@
 }
 
 
-/* =========================================================
-   ETIQUETA SUPERIOR
-   ========================================================= */
+/* Etiqueta superior */
 
 .eyebrow {
   display: block;
@@ -222,9 +208,7 @@
 
 
 
-/* =========================================================
-   ESTADO VACÍO
-   ========================================================= */
+/* Estado vacío */
 
 .empty-state {
   display: flex;
@@ -287,7 +271,7 @@
 }
 
 
-/* ---------- Modal ---------- */
+/* Modal */
 
 .modal-overlay {
   position: fixed;
@@ -324,9 +308,7 @@
 }
 
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
+/* Responsive */
 
 @media (max-width: 650px) {
 
@@ -375,7 +357,7 @@
 }
 
 
-/* ---------- Header modal ---------- */
+/* Encabezado del modal */
 
 .modal__header {
   display: flex;
@@ -427,7 +409,7 @@
 }
 
 
-/* ---------- Descripción modal ---------- */
+/* Descripción del modal */
 
 .modal__description {
   margin-bottom: 26px;
@@ -440,7 +422,7 @@
 }
 
 
-/* ---------- Formulario ---------- */
+/* Formulario */
 
 .form-group {
   margin-bottom: 20px;
@@ -494,7 +476,7 @@
 }
 
 
-/* ---------- Error del modal ---------- */
+/* Error del modal */
 
 .modal__error {
   display: flex;
@@ -523,7 +505,7 @@
 }
 
 
-/* ---------- Acciones del modal ---------- */
+/* Acciones del modal */
 
 .modal__actions {
   display: flex;
@@ -539,7 +521,7 @@
 }
 
 
-/* ---------- Responsive ---------- */
+/* Responsive */
 
 @media (max-width: 600px) {
 

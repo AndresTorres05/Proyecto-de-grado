@@ -1,4 +1,5 @@
 
+  <!-- Saludo -->
   <div class="page-header">
     <div>
       <h1>¡Hola, {{ nombreUsuario }}! 👋</h1>
@@ -7,6 +8,7 @@
     <button type="button" class="btn btn-primary">+ Registrar visita / seguimiento</button>
   </div>
 
+  <!-- Personas mayores que acompaña -->
   <section class="elders-grid" aria-label="Mis personas mayores acompañadas">
     @for (p of personasMayores(); track p.idUsuario) {
       <div class="elder-card card">
@@ -21,6 +23,7 @@
     }
   </section>
 
+  <!-- Recordatorios y alertas (datos de ejemplo) y próximas actividades -->
   <section class="main-grid">
     <div class="col">
       <div class="panel card">

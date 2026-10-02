@@ -18,18 +18,19 @@ export type Recurso =
   | 'notificaciones'    // SMS de emergencia enviados, notificaciones leídas
   | 'usuarios';         // nombres/datos de perfil, registros nuevos
 
-// "*" = recargar todo (cuenta eliminada o reconexión tras un corte).
+/** Aviso especial: recargar todo (cuenta eliminada o reconexión tras un corte). */
 const TODOS = '*';
 
+/** Espera máxima entre reintentos de conexión. */
 const REINTENTO_MAXIMO_MS = 30_000;
 
 /**
  * Mantiene abierta una conexión SSE con el gateway mientras hay sesión y
- * reparte los avisos de cambio. Los avisos solo dicen QUÉ cambió; cada
+ * reparte los avisos de cambio. Los avisos solo dicen qué cambió; cada
  * página vuelve a pedir sus datos por los endpoints de siempre.
  *
  * Se usa fetch y no EventSource porque EventSource no permite enviar el
- * header Authorization (y el token no debe ir en la URL).
+ * encabezado Authorization, y el token no debe ir en la URL.
  */
 @Injectable({ providedIn: 'root' })
 export class TiempoRealService {
@@ -42,8 +43,10 @@ export class TiempoRealService {
   private temporizadorReintento?: ReturnType<typeof setTimeout>;
   private intentos = 0;
 
-  // Si ya hubo una conexión en esta sesión, al reconectar se pudieron
-  // perder avisos: se pide recargar todo.
+  /**
+   * Si ya hubo una conexión en esta sesión, al reconectar se pudieron
+   * perder avisos, así que se pide recargar todo.
+   */
   private conectadoAntes = false;
 
   constructor(private authService: AuthService) {
@@ -66,6 +69,7 @@ export class TiempoRealService {
     );
   }
 
+  /** Abre la conexión SSE y lee avisos hasta que se cierre. */
   private async conectar(): Promise<void> {
     this.detener();
 
@@ -106,27 +110,31 @@ export class TiempoRealService {
       // Error de red o servidor caído: se reintenta abajo.
     }
 
-    // Si no fue cancelada a propósito (logout / nueva conexión), el
-    // servidor la cerró o se cayó: reintentar con espera creciente.
+    // Si no se canceló a propósito (logout o una conexión nueva), el
+    // servidor la cerró o se cayó: se reintenta con espera creciente.
     if (!controlador.signal.aborted) {
       this.programarReintento();
     }
   }
 
+  /** Cierra la conexión actual y cancela el reintento pendiente, si lo hay. */
   private detener(): void {
     clearTimeout(this.temporizadorReintento);
     this.controlador?.abort();
     this.controlador = null;
   }
 
+  /** Espera 1 s, 2 s, 4 s... (hasta 30 s) antes de volver a conectar. */
   private programarReintento(): void {
     const espera = Math.min(REINTENTO_MAXIMO_MS, 1000 * 2 ** this.intentos);
     this.intentos++;
     this.temporizadorReintento = setTimeout(() => this.conectar(), espera);
   }
 
-  // Formato SSE: bloques separados por una línea en blanco, con líneas
-  // "event: ..." y "data: ...". Las que empiezan por ":" son latidos.
+  /**
+   * Lee el stream SSE: bloques separados por una línea en blanco, con
+   * líneas "event: ..." y "data: ...". Las que empiezan por ":" son latidos.
+   */
   private async leer(cuerpo: ReadableStream<Uint8Array>): Promise<void> {
     const lector = cuerpo.getReader();
     const decodificador = new TextDecoder();
@@ -148,6 +156,7 @@ export class TiempoRealService {
     }
   }
 
+  /** Interpreta un bloque SSE y reparte el aviso si es de tipo "cambio". */
   private procesarBloque(bloque: string): void {
     let evento = 'message';
     const datos: string[] = [];

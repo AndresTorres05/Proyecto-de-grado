@@ -2,6 +2,10 @@ package com.proyectogrado.auth_backend.model;
 
 import jakarta.persistence.*;
 
+/**
+ * Datos propios del acompañante (familiar o cuidador de una persona mayor).
+ * Comparte la llave con usuario (id_usuario).
+ */
 @Entity
 @Table(name = "acompanante")
 public class Acompanante {
@@ -15,6 +19,7 @@ public class Acompanante {
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
+    /** Parentesco con la persona mayor (por ejemplo, "Hija"). Lo indica ella al agregarlo. */
     @Column(name = "relacion")
     private String relacion;
 

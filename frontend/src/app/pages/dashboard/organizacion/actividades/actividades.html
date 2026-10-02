@@ -27,9 +27,7 @@
 
   @if (!cargando()) {
 
-    <!-- =========================
-         PRÓXIMAS ACTIVIDADES
-         ========================= -->
+    <!-- Próximas actividades -->
 
     <section class="activities-section">
 
@@ -100,9 +98,7 @@
     </section>
 
 
-    <!-- =========================
-         HISTORIAL
-         ========================= -->
+    <!-- Historial -->
 
     <section class="activities-section history-section">
 
@@ -164,9 +160,7 @@
 
 
 
-<!-- =====================================================
-     MODAL CREAR ACTIVIDAD
-     ===================================================== -->
+<!-- Modal para crear una actividad -->
 
 @if (mostrarFormulario()) {
 
@@ -213,7 +207,6 @@
         (ngSubmit)="crearActividad()"
       >
 
-        <!-- Nombre -->
         <div class="form-group">
 
           <label for="nombreActividad">
@@ -233,7 +226,6 @@
         </div>
 
 
-        <!-- Descripción -->
         <div class="form-group">
 
           <label for="descripcionActividad">
@@ -251,7 +243,7 @@
         </div>
 
 
-        <!-- Fecha + Hora -->
+        <!-- Fecha y hora en la misma fila -->
         <div class="form-row">
 
           <div class="form-group">
@@ -290,7 +282,6 @@
         </div>
 
 
-        <!-- Lugar -->
         <div class="form-group">
 
 <label for="lugarActividad">
@@ -310,7 +301,7 @@
         </div>
 
 
-        <!-- Tipo + Cupos -->
+        <!-- Tipo y cupos en la misma fila -->
         <div class="form-row">
 
           <div class="form-group">
@@ -351,7 +342,6 @@
         </div>
 
 
-<!-- Responsable -->
 <div class="form-group">
 
   <label for="responsableActividad">
@@ -377,7 +367,6 @@
     </div>
   }
 
-        <!-- Botones -->
         <div class="modal-actions">
 
           <button
@@ -407,9 +396,7 @@
 
 
 
-<!-- =====================================================
-     MODAL EDITAR ACTIVIDAD
-     ===================================================== -->
+<!-- Modal para editar una actividad -->
 
 @if (actividadEditandoId !== null) {
 
@@ -450,7 +437,6 @@
         (ngSubmit)="guardarActividad()"
       >
 
-        <!-- Nombre -->
         <div class="form-group">
 
           <label for="editarNombreActividad">
@@ -469,7 +455,6 @@
         </div>
 
 
-        <!-- Descripción -->
         <div class="form-group">
 
           <label for="editarDescripcionActividad">
@@ -487,7 +472,7 @@
         </div>
 
 
-        <!-- Fecha + Hora -->
+        <!-- Fecha y hora en la misma fila -->
         <div class="form-row">
 
           <div class="form-group">
@@ -524,7 +509,6 @@
         </div>
 
 
-        <!-- Lugar -->
         <div class="form-group">
 
           <label for="editarLugarActividad">
@@ -542,7 +526,7 @@
         </div>
 
 
-        <!-- Tipo + Cupos -->
+        <!-- Tipo y cupos en la misma fila -->
         <div class="form-row">
 
           <div class="form-group">
@@ -589,7 +573,6 @@
   </div>
 }
 
-        <!-- Botones -->
         <div class="modal-actions">
 
           <button
@@ -619,9 +602,7 @@
 
 
 
-<!-- =====================================================
-     MODAL PARTICIPANTES
-     ===================================================== -->
+<!-- Modal de participantes -->
 
 @if (actividadParticipantes(); as actividad) {
 
@@ -683,7 +664,7 @@
       } @else {
 
 
-        <!-- Resumen -->
+        <!-- Resumen: inscritos y asistentes -->
         <div class="participants-summary">
 
           <div class="summary-item">
@@ -761,7 +742,7 @@
 
               <div class="participant-row">
 
-                <!-- Datos -->
+                <!-- Datos del inscrito -->
                 <div class="participant-info">
 
                   <div class="participant-avatar">
@@ -787,7 +768,7 @@
                 </div>
 
 
-<!-- Asistencia -->
+<!-- Asistencia: en actividades pasadas solo se muestra; en las demás se puede marcar -->
 <div class="attendance-actions">
 
   @if (actividadParticipantes()?.fecha && actividadParticipantes()!.fecha! < fechaHoy()) {

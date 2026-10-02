@@ -7,9 +7,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+/**
+ * Envío y verificación de códigos OTP por SMS. El envío es público a
+ * través del gateway; la verificación solo la usa auth-service.
+ */
 @RestController
 @RequestMapping("/api/otp")
-//@CrossOrigin(origins = "http://localhost:4200")
 public class OtpController {
 
     private final TextBeeOtpService textBeeOtpService;
@@ -19,16 +22,10 @@ public class OtpController {
     }
 
     /**
-     * Envía un código OTP al número de celular indicado.
+     * Envía un código OTP al celular. Si ya se pidió uno hace menos de 30
+     * segundos, responde 429.
      *
-     * Ejemplo de petición:
-     *
-     * POST /api/otp/send
-     *
-     * Body:
-     * {
-     *   "phoneNumber": "+573001234567"
-     * }
+     * Cuerpo: { "phoneNumber": "+573001234567" }
      */
     @PostMapping("/send")
     public ResponseEntity<?> sendOtp(
@@ -75,18 +72,10 @@ public class OtpController {
     }
 
     /**
-     * Verifica un código OTP. Solo lo llama auth-backend directamente
-     * (localhost:8082); el api-gateway NO lo expone al público.
+     * Verifica un código OTP. Solo lo llama auth-service directamente
+     * (localhost:8082); el gateway no expone esta ruta al público.
      *
-     * Ejemplo de petición:
-     *
-     * POST /api/otp/verify
-     *
-     * Body:
-     * {
-     *   "phoneNumber": "+573001234567",
-     *   "code": "123456"
-     * }
+     * Cuerpo: { "phoneNumber": "+573001234567", "code": "123456" }
      */
     @PostMapping("/verify")
     public ResponseEntity<?> verifyOtp(

@@ -1,5 +1,8 @@
 package com.proyectogrado.persona_mayor_service.dto;
 
+/**
+ * Datos para crear o editar un gusto del catálogo.
+ */
 public class GustoRequest {
 
     private String nombre;

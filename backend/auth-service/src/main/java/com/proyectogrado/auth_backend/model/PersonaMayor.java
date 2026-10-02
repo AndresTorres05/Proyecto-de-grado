@@ -2,6 +2,10 @@ package com.proyectogrado.auth_backend.model;
 
 import jakarta.persistence.*;
 
+/**
+ * Datos propios de la persona mayor. Comparte la llave con usuario
+ * (id_usuario): cada persona mayor es también un usuario.
+ */
 @Entity
 @Table(name = "persona_mayor")
 public class PersonaMayor {
@@ -15,11 +19,11 @@ public class PersonaMayor {
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
-    // Entidad promotora de salud (afiliación)
+    /** Entidad promotora de salud a la que está afiliada. */
     @Column(name = "eps")
     private String eps;
 
-    // Institución prestadora de salud (donde lo atienden)
+    /** Institución prestadora de salud donde la atienden. */
     @Column(name = "ips")
     private String ips;
 

@@ -2,6 +2,7 @@ import { Component, input, output, signal } from '@angular/core';
 
 import { ClicGrafica, EChart, OpcionesGrafica } from '../../../../../shared/echart/echart';
 
+/** Los mismos datos de la gráfica, en forma de tabla. */
 export interface TablaGrafica {
   columnas: string[];
   filas: (string | number)[][];
@@ -25,6 +26,7 @@ export class GraficaCard {
   readonly opciones = input.required<OpcionesGrafica>();
   readonly tabla = input.required<TablaGrafica>();
   readonly alto = input(300);
+  /** Si es true, en lugar de la gráfica se muestra textoVacio. */
   readonly vacio = input(false);
   readonly textoVacio = input('No hay datos para mostrar en este período.');
 

@@ -9,7 +9,9 @@ import { OpcionesGrafica } from '../../../../../shared/echart/echart';
 import { GraficaCard, TablaGrafica } from '../componentes/grafica-card';
 import { Kpi } from '../componentes/kpi';
 
+/** Abreviaturas de los meses para las etiquetas del eje. */
 const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+/** Porcentaje entero; 0 si el total es 0. */
 const pct = (parte: number, total: number) => (total > 0 ? Math.round((parte / total) * 100) : 0);
 
 /**
@@ -26,7 +28,7 @@ export class ReporteActividades {
 
   readonly actividades = input.required<ActividadAnalitica[]>();
 
-  // ---------- Indicadores ----------
+  // Indicadores
 
   protected readonly kpis = computed(() => {
     const lista = this.actividades();
@@ -53,7 +55,7 @@ export class ReporteActividades {
     };
   });
 
-  // ---------- 1. Inscritos y asistentes por mes ----------
+  // Gráfica 1: inscritos y asistentes por mes
 
   private readonly porMes = computed(() => {
     const meses = new Map<string, { actividades: number; inscritos: number; asistentes: number }>();
@@ -94,7 +96,7 @@ export class ReporteActividades {
     filas: this.porMes().map((d) => [d.etiqueta, d.actividades, d.inscritos, d.asistentes])
   }));
 
-  // ---------- 2. Participación por tipo ----------
+  // Gráfica 2: participación por tipo
 
   private readonly porTipo = computed(() => {
     const tipos = new Map<string, { actividades: number; inscritos: number }>();
@@ -133,7 +135,7 @@ export class ReporteActividades {
     filas: this.porTipo().map((d) => [d.tipo, d.actividades, d.inscritos])
   }));
 
-  // ---------- 3. Ocupación de cupos por actividad ----------
+  // Gráfica 3: ocupación de cupos por actividad
 
   private readonly ocupacion = computed(() =>
     this.actividades()

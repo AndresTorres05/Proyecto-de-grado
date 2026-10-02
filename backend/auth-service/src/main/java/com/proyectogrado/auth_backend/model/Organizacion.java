@@ -2,6 +2,11 @@ package com.proyectogrado.auth_backend.model;
 
 import jakarta.persistence.*;
 
+/**
+ * Organización que atiende personas mayores. Se crea al registrar una
+ * cuenta con rol ORGANIZACION, y esa cuenta queda enlazada por
+ * usuario.id_organizacion.
+ */
 @Entity
 @Table(name = "organizacion")
 public class Organizacion {

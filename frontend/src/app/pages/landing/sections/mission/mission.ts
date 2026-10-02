@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 
+/**
+ * Sección "Nuestra misión" de la landing: introducción y los tres pilares
+ * del proyecto.
+ */
 @Component({
   selector: 'app-mission',
   imports: [],

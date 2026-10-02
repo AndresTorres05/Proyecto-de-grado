@@ -1,8 +1,8 @@
 package com.proyectogrado.acompanante_service.dto;
 
 /**
- * Misma forma que el SignoVitalResponse de salud-backend, para que el
- * frontend use una sola interfaz.
+ * Misma forma que SignoVitalResponse de salud-service, para que el frontend
+ * use una sola interfaz.
  */
 public record SignoVitalSeguimientoResponse(
         Integer idSignoVital,

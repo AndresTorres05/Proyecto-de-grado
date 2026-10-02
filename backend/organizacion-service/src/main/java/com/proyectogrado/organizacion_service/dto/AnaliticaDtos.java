@@ -12,8 +12,7 @@ public final class AnaliticaDtos {
     private AnaliticaDtos() {
     }
 
-    // ---------- Actividades ----------
-
+    /** Una actividad del período con sus inscritos y asistentes. */
     public record ActividadAnalitica(
             Integer idActividad,
             String nombre,
@@ -26,11 +25,11 @@ public final class AnaliticaDtos {
     ) {
     }
 
-    // ---------- Salud ----------
-
+    /** Persona mayor vinculada a la organización. */
     public record PersonaAnalitica(Integer idUsuario, String nombre) {
     }
 
+    /** Una medición de signos vitales. */
     public record MedicionAnalitica(
             Integer idPersonaMayor,
             String fechaHora,      // YYYY-MM-DDTHH:mm
@@ -44,14 +43,14 @@ public final class AnaliticaDtos {
     ) {
     }
 
+    /** Respuesta de /salud: las personas y todas sus mediciones. */
     public record SaludAnalitica(
             List<PersonaAnalitica> personas,
             List<MedicionAnalitica> mediciones
     ) {
     }
 
-    // ---------- Población ----------
-
+    /** Datos de una persona para el perfil de la población. */
     public record PersonaPoblacion(
             Integer idUsuario,
             String nombre,
@@ -61,9 +60,11 @@ public final class AnaliticaDtos {
     ) {
     }
 
+    /** Cuántas personas tienen marcado un gusto. */
     public record InteresConteo(String nombre, String categoria, long personas) {
     }
 
+    /** Respuesta de /poblacion. */
     public record PoblacionAnalitica(
             List<PersonaPoblacion> personas,
             List<InteresConteo> intereses,

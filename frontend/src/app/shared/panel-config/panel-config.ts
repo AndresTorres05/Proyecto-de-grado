@@ -1,15 +1,19 @@
 import { ShellNavItem } from '../dashboard-shell/dashboard-shell';
 
+/** Lo que cambia entre los paneles: nombre del rol, color de acento y menú lateral. */
 export interface PanelConfig {
   roleLabel: string;
   roleAccent: string;
   navItems: ShellNavItem[];
 }
 
-// Convención de la barra lateral: "Inicio" siempre va primero y "Perfil" siempre
-// al final; en medio, las secciones de más a menos importantes. Los nombres son
-// cortos y sin posesivos ("Recordatorios", no "Mis recordatorios"), y una misma
-// sección se llama igual y usa el mismo ícono en todos los roles.
+/**
+ * Configuración del panel de cada rol. Convención de la barra lateral:
+ * "Inicio" siempre va primero y "Perfil" siempre al final; en medio, las
+ * secciones de más a menos importantes. Los nombres son cortos y sin
+ * posesivos ("Recordatorios", no "Mis recordatorios"), y una misma sección
+ * se llama igual y usa el mismo ícono en todos los roles.
+ */
 export const PANEL_CONFIG: Record<string, PanelConfig> = {
   PERSONA_MAYOR: {
     roleLabel: 'Persona mayor',
@@ -36,11 +40,9 @@ export const PANEL_CONFIG: Record<string, PanelConfig> = {
       { icon: 'calendar', label: 'Actividades', path: '/panel/organizacion/actividades' },
       { icon: 'bar-chart', label: 'Analítica', path: '/panel/organizacion/analitica' },
       { icon: 'star', label: 'Voluntarios', path: '/panel/organizacion/voluntarios' },
-      //{ icon: 'users', label: 'Acompañantes', path: '/panel/organizacion/acompanantes' },
-      //{ icon: 'bell', label: 'Alertas', path: '/panel/organizacion/alertas' },
-      //{ icon: 'pill', label: 'Medicamentos', path: '/panel/organizacion/medicamentos' },
-      //{ icon: 'gift', label: 'Donaciones', path: '/panel/organizacion/donaciones' },
-      //{ icon: 'map', label: 'Mapa', path: '/panel/organizacion/mapa' },
+      // Acompañantes, alertas, medicamentos, donaciones y mapa irán aquí, en
+      // ese orden, cuando existan. Mientras tanto no aparecen en el menú y sus
+      // rutas muestran EnConstruccion.
       { icon: 'user', label: 'Perfil', path: '/panel/organizacion/perfil' }
     ]
   },

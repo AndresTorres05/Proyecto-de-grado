@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, switchMap } from 'rxjs';
 
+/** Datos de la organización para "Mi información". */
 export interface OrganizacionResponse {
   idOrganizacion: number;
   nombre: string;
@@ -10,12 +11,14 @@ export interface OrganizacionResponse {
   correo: string;
 }
 
+/** Persona mayor vinculada a la organización. */
 export interface PersonaMayorOrganizacion {
   idUsuario: number;
   nombre: string;
   celular: string;
 }
 
+/** Organización vinculada a la persona mayor, o que le envió una solicitud. */
 export interface OrganizacionSolicitud {
   idOrganizacion: number;
   nombre: string;
@@ -24,6 +27,7 @@ export interface OrganizacionSolicitud {
   direccion: string;
 }
 
+/** Acompañante de una persona mayor, visto por la organización. */
 export interface AcompanantePersonaMayor {
   idUsuario: number;
   nombre: string;
@@ -31,6 +35,10 @@ export interface AcompanantePersonaMayor {
   relacion: string | null;
 }
 
+/**
+ * Vínculos entre organizaciones y personas mayores, vistos desde los dos
+ * lados, y el perfil de la organización.
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -44,9 +52,11 @@ export class OrganizacionService {
     return this.http.get<OrganizacionResponse>(`${this.apiUrl}/informacion`);
   }
 
-  // nombre/correo son de identidad (auth-backend); organizacion-service
-  // solo guarda la dirección. Primero se guarda la identidad para que la
-  // respuesta de organizacion-service ya traiga el nombre nuevo.
+  /**
+   * El nombre y el correo son de la cuenta (auth-service); organizacion-service
+   * solo guarda la dirección. Primero se guarda la cuenta para que la
+   * respuesta de organizacion-service ya traiga el nombre nuevo.
+   */
   actualizarInformacion(informacion: OrganizacionResponse): Observable<OrganizacionResponse> {
     return this.http
       .put(this.authInformacionUrl, {
@@ -61,10 +71,12 @@ export class OrganizacionService {
         ),
       );
   }
+  /** Personas mayores con vínculo aceptado. */
   obtenerPersonasMayores(): Observable<PersonaMayorOrganizacion[]> {
     return this.http.get<PersonaMayorOrganizacion[]>(`${this.apiUrl}/personas-mayores`);
   }
 
+  /** Envía una solicitud de vínculo a la persona mayor con ese celular. */
   asociarPersonaMayor(celular: string): Observable<string> {
     return this.http.post(`${this.apiUrl}/personas-mayores`, { celular }, { responseType: 'text' });
   }
@@ -75,6 +87,7 @@ export class OrganizacionService {
     });
   }
 
+  /** Lado de la persona mayor: solicitudes de organizaciones que no ha respondido. */
   obtenerSolicitudesOrganizaciones(): Observable<OrganizacionSolicitud[]> {
     return this.http.get<OrganizacionSolicitud[]>(
       'http://localhost:8080/api/persona-mayor/organizaciones/solicitudes',
@@ -96,11 +109,13 @@ export class OrganizacionService {
       { responseType: 'text' },
     );
   }
+  /** Lado de la persona mayor: organizaciones con vínculo aceptado. */
   obtenerOrganizaciones(): Observable<OrganizacionSolicitud[]> {
     return this.http.get<OrganizacionSolicitud[]>(
       'http://localhost:8080/api/persona-mayor/organizaciones',
     );
   }
+  /** La persona mayor deshace el vínculo con una organización. */
   cancelarAsociacionOrganizacion(idOrganizacion: number): Observable<string> {
     return this.http.delete(
       `http://localhost:8080/api/persona-mayor/organizaciones/${idOrganizacion}`,
@@ -108,6 +123,7 @@ export class OrganizacionService {
     );
   }
 
+  /** Acompañantes de una persona mayor vinculada (lo atiende persona-mayor-service). */
   obtenerAcompanantesPersonaMayor(idPersonaMayor: number): Observable<AcompanantePersonaMayor[]> {
     return this.http.get<AcompanantePersonaMayor[]>(
       `${this.apiUrl}/personas-mayores/${idPersonaMayor}/acompanantes`,

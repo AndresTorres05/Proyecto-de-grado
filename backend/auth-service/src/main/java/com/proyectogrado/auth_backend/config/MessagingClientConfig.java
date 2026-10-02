@@ -6,10 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
 
 /**
- * Cliente HTTP hacia messaging-backend.
- *
- * auth-backend NUNCA envia ni valida OTP por su cuenta: siempre le
- * pregunta a messaging-backend, que es el unico dueno de esa logica.
+ * Cliente HTTP hacia messaging-service, que es el único que envía y valida
+ * códigos OTP. La URL sale de messaging.service.url.
  */
 @Configuration
 public class MessagingClientConfig {

@@ -1,5 +1,8 @@
 package com.proyectogrado.organizacion_service.dto;
 
+/**
+ * Datos de la organización tal como los recibe el frontend.
+ */
 public class OrganizacionInformacionResponse {
 
     private Integer idOrganizacion;

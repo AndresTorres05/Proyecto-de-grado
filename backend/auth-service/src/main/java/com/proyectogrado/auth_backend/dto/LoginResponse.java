@@ -1,9 +1,16 @@
 package com.proyectogrado.auth_backend.dto;
 
+/**
+ * Respuesta del login y del registro. Si algo falla, solo viene el mensaje
+ * con el motivo.
+ */
 public class LoginResponse {
 
     private String token;
+
+    /** Con el rol, el frontend decide a qué panel enviar al usuario. */
     private String rol;
+
     private String mensaje;
     private Integer idUsuario;
     private String nombreUsuario;

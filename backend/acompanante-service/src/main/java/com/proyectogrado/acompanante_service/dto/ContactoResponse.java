@@ -1,5 +1,9 @@
 package com.proyectogrado.acompanante_service.dto;
 
+/**
+ * Un acompañante de la persona mayor, con su parentesco, tal como lo ve otro
+ * acompañante en la sección de contactos.
+ */
 public class ContactoResponse {
 
     private Integer idUsuario;

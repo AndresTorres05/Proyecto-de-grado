@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Perfil propio de la organizacion: solo "direccion".
+ * Perfil propio de la organización; aquí solo se edita la dirección.
  *
- * nombre/correo/celular son de identidad (auth-backend) y solo se leen
- * aqui via UsuarioLookup; para editarlos, PUT /api/auth/informacion.
+ * El nombre, el correo y el celular son de la cuenta (auth-service): aquí
+ * solo se leen con UsuarioLookup, y se editan con PUT /api/auth/informacion.
  */
 @RestController
 @RequestMapping("/api/organizacion/informacion")
@@ -37,6 +37,7 @@ public class OrganizacionInformacionController {
         this.organizacionLookupRepository = organizacionLookupRepository;
     }
 
+    /** Datos de la organización del usuario autenticado. */
     @GetMapping
     public ResponseEntity<?> obtenerInformacion(
             @RequestHeader("X-User-Id") Integer idUsuario
@@ -59,6 +60,7 @@ public class OrganizacionInformacionController {
         return ResponseEntity.ok(aRespuesta(usuario, organizacion));
     }
 
+    /** Cambia la dirección de la organización. */
     @PutMapping
     public ResponseEntity<?> actualizarInformacion(
             @RequestHeader("X-User-Id") Integer idUsuario,

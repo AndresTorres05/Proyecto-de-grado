@@ -1,6 +1,4 @@
-/* =========================================================
-   TARJETA DE PERSONA (compartida)
-   ========================================================= */
+/* Tarjeta de persona (compartida) */
 
 :host {
   display: grid;
@@ -52,7 +50,7 @@
 }
 
 
-/* ---------- Identidad ---------- */
+/* Identidad */
 
 .person-card__identity {
   display: flex;
@@ -102,7 +100,7 @@
 }
 
 
-/* ---------- Separadores ---------- */
+/* Separadores */
 
 .person-card__divider {
   width: 1px;
@@ -115,7 +113,7 @@
 }
 
 
-/* ---------- Detalles ---------- */
+/* Detalles */
 
 .person-card__details {
   display: flex;
@@ -162,7 +160,7 @@
 }
 
 
-/* ---------- Estado y acciones ---------- */
+/* Estado y acciones */
 
 .person-card__actions {
   display: flex;
@@ -205,7 +203,7 @@
 }
 
 
-/* ---------- Responsive ---------- */
+/* Responsive */
 
 @media (max-width: 1000px) {
 

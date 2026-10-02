@@ -27,8 +27,9 @@ import static org.mockito.Mockito.when;
 
 /**
  * Simula el scheduler minuto a minuto sobre un medicamento en memoria y
- * verifica que por cada toma salgan exactamente dos avisos (15 min antes
- * y a la hora exacta) a la persona mayor y al acompanante, sin repetirse.
+ * verifica que por cada toma salgan exactamente dos avisos (15 minutos
+ * antes y a la hora exacta) a la persona mayor y al acompañante, sin
+ * repetirse.
  */
 class MedicamentoReminderSchedulerTest {
 
@@ -119,6 +120,7 @@ class MedicamentoReminderSchedulerTest {
                 medicamentoRepository, relacionRepository, usuarioRepository, messagingClient);
     }
 
+    /** Copia del medicamento, como si viniera de una consulta nueva a la base de datos. */
     private static Medicamento copia(Medicamento original) {
         Medicamento m = new Medicamento();
         m.setIdMedicamento(original.getIdMedicamento());
@@ -137,8 +139,11 @@ class MedicamentoReminderSchedulerTest {
         simularMinutos(desde, hasta, 0);
     }
 
-    // desfaseMs simula que el scheduler se dispara unos milisegundos antes
-    // (negativo) o despues (positivo) del segundo 0 de cada minuto.
+    /**
+     * Ejecuta el scheduler una vez por minuto entre las dos fechas. desfaseMs
+     * simula que se dispara unos milisegundos antes (negativo) o después
+     * (positivo) del segundo 0.
+     */
     private void simularMinutos(LocalDateTime desde, LocalDateTime hasta, long desfaseMs) {
         for (reloj = desde; !reloj.isAfter(hasta); reloj = reloj.plusMinutes(1)) {
             scheduler.revisarRecordatorios(reloj.plusNanos(desfaseMs * 1_000_000));

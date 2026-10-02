@@ -17,8 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * Lado "acompanante" de la relacion con personas mayores:
- * ver sus personas mayores, ver solicitudes pendientes, aceptar/rechazar.
+ * Lado del acompañante en el vínculo con personas mayores: ver sus personas
+ * mayores y las solicitudes pendientes, y aceptarlas o rechazarlas.
+ *
+ * El gateway envía /api/acompanante/** a acompanante-service, que tiene su
+ * propia versión de estos endpoints, así que esta clase no recibe tráfico
+ * del frontend.
  */
 @RestController
 @RequestMapping("/api/acompanante/personas-mayores")
@@ -65,6 +69,7 @@ public class AcompananteRelacionController {
         return cambiarEstado(idAcompanante, idPersonaMayor, "RECHAZADA", "rechazada");
     }
 
+    /** Acepta o rechaza una solicitud; solo se puede si sigue PENDIENTE. */
     private ResponseEntity<String> cambiarEstado(
             Integer idAcompanante,
             Integer idPersonaMayor,

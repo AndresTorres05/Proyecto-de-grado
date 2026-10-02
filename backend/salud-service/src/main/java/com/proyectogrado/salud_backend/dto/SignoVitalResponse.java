@@ -1,9 +1,13 @@
 package com.proyectogrado.salud_backend.dto;
 
+/**
+ * Medición tal como la recibe el frontend. Usa las mismas unidades que
+ * SignoVitalRequest.
+ */
 public class SignoVitalResponse {
 
     private Integer idSignoVital;
-    private String fechaHora;
+    private String fechaHora;   // "yyyy-MM-ddTHH:mm"
     private Integer presionSistolica;
     private Integer presionDiastolica;
     private Integer frecuenciaCardiaca;

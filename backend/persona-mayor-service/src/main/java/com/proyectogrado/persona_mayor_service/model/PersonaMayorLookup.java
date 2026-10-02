@@ -8,10 +8,10 @@ import jakarta.persistence.Table;
 import java.time.LocalDate;
 
 /**
- * "PersonaMayor" nace en auth-backend junto con el Usuario (misma
- * transaccion del registro). Pero fechaNacimiento/genero/direccion son
- * datos de perfil propio, no de identidad -> este servicio SI puede
- * escribirlos, a diferencia de UsuarioLookup (100% solo lectura).
+ * Fila de persona_mayor. La crea auth-service durante el registro, pero la
+ * fecha de nacimiento, el género y la dirección de esta tabla son datos de
+ * perfil, así que este servicio sí puede modificarlos (a diferencia de
+ * UsuarioLookup, que es solo de lectura).
  */
 @Entity
 @Table(name = "persona_mayor")
@@ -30,8 +30,8 @@ public class PersonaMayorLookup {
     @Column(name = "direccion")
     private String direccion;
 
+    /** Lo exige JPA. */
     protected PersonaMayorLookup() {
-        // JPA
     }
 
     public Integer getIdUsuario() {

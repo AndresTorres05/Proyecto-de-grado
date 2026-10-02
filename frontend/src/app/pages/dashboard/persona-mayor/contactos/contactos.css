@@ -3,7 +3,7 @@
   font-size: 1.1rem;
 }
 
-/* ---------- Encabezado ---------- */
+/* Encabezado */
 
 .page-header {
   margin-bottom: 28px;
@@ -20,7 +20,7 @@
   font-size: 1.1rem;
 }
 
-/* ---------- Secciones ---------- */
+/* Secciones */
 
 .section-block {
   margin-bottom: 32px;
@@ -32,7 +32,7 @@
   margin-bottom: 16px;
 }
 
-/* ---------- Emergencia ---------- */
+/* Emergencia */
 
 .emergency-card {
   display: flex;
@@ -86,7 +86,7 @@
   background: #b83232;
 }
 
-/* ---------- Confirmación de emergencia ---------- */
+/* Confirmación de emergencia */
 
 .emergency-confirmation {
   display: flex;
@@ -138,7 +138,7 @@
   background: #b83232;
 }
 
-/* ---------- Resultado de emergencia ---------- */
+/* Resultado de emergencia */
 
 .emergency-success,
 .emergency-error {
@@ -161,7 +161,7 @@
   color: #9e2929;
 }
 
-/* ---------- Mis contactos ---------- */
+/* Mis contactos */
 
 .contacts-section {
   margin-bottom: 32px;
@@ -213,7 +213,7 @@
   gap: 18px;
 }
 
-/* ---------- Modal añadir acompañante ---------- */
+/* Modal para añadir un acompañante */
 
 .add-companion-overlay {
   position: fixed;
@@ -351,7 +351,7 @@
   min-width: 130px;
 }
 
-/* ---------- Mensajes del formulario ---------- */
+/* Mensajes del formulario */
 
 .add-companion-modal__error,
 .add-companion-modal__success {
@@ -376,7 +376,7 @@
   color: var(--vita-navy);
 }
 
-/* ---------- Sin contactos ---------- */
+/* Sin contactos */
 
 .empty-contacts {
   display: flex;
@@ -390,7 +390,7 @@
   font-size: 1.7rem;
 }
 
-/* ---------- Responsive ---------- */
+/* Responsive */
 
 @media (max-width: 600px) {
 

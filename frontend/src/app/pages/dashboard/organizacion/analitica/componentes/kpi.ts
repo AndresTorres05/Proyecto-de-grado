@@ -2,6 +2,7 @@ import { Component, input } from '@angular/core';
 
 import { Icon } from '../../../../../shared/icon/icon';
 
+/** Estado de la tarjeta: neutro, bueno (verde) o alerta (rojo). */
 export type TonoKpi = 'neutro' | 'bueno' | 'alerta';
 
 /**

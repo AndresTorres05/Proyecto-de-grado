@@ -6,9 +6,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * Solo lectura sobre "usuario" (dueno de auth-backend). Mismo patron que
- * ya usamos en personas-backend: necesitamos el nombre/celular de la
- * persona mayor y del acompanante para redactar y enviar el SMS.
+ * Vista de solo lectura de la tabla usuario, que pertenece a auth-service.
+ * Da el nombre y el celular de la persona mayor y de sus acompañantes para
+ * los recordatorios, y la organización a la que pertenece una cuenta.
  */
 @Entity
 @Table(name = "usuario")
@@ -27,8 +27,8 @@ public class UsuarioLookup {
     @Column(name = "id_organizacion")
 private Integer idOrganizacion;
 
+    /** Lo exige JPA. */
     protected UsuarioLookup() {
-        // JPA
     }
 
     public Integer getIdUsuario() {

@@ -20,8 +20,10 @@ import {
   OrganizacionResponse,
 } from '../../core/organizacion/organizacion.service';
 
+/** Rol del perfil que se muestra; llega en data.tipoPerfil de la ruta. */
 export type TipoPerfil = 'PERSONA_MAYOR' | 'ACOMPANANTE' | 'VOLUNTARIO' | 'ORGANIZACION';
 
+/** Datos que la página muestra y edita, comunes a todos los roles. */
 interface PerfilInformacion {
   idUsuario?: number;
   nombre: string;
@@ -30,12 +32,20 @@ interface PerfilInformacion {
   fechaNacimiento?: string;
   genero?: string;
   direccion?: string;
-  // Solo persona mayor
+  // Solo para la persona mayor.
   eps?: string;
   ips?: string;
   tieneContrasena: boolean;
 }
 
+/**
+ * Página "Mi información" de todos los roles: muestra los datos de la cuenta,
+ * permite editarlos, cambiar la contraseña y eliminar la cuenta. La
+ * organización además edita su dirección en organizacion-service.
+ *
+ * Los campos no son signals: después de cada respuesta del backend se llama
+ * a detectChanges() para que Angular vuelva a pintar la vista.
+ */
 @Component({
   selector: 'app-perfil',
   imports: [FormsModule, CampoContrasena, EliminarCuenta],
@@ -58,10 +68,7 @@ export class Perfil implements OnInit {
   guardandoInformacion = false;
   guardadoExitoso = false;
 
-  // =========================
-  // CONTRASEÑA
-  // =========================
-
+  // Modal de contraseña
   mostrandoContrasena = false;
   contrasenaActual = '';
   nuevaContrasena = '';
@@ -84,10 +91,6 @@ export class Perfil implements OnInit {
     this.cargarInformacion();
   }
 
-  // =========================================================
-  // CONFIGURACIÓN DEL PERFIL
-  // =========================================================
-
   get esPersonaMayor(): boolean {
     return this.tipoPerfil === 'PERSONA_MAYOR';
   }
@@ -96,6 +99,7 @@ export class Perfil implements OnInit {
     return this.tipoPerfil === 'ORGANIZACION';
   }
 
+  /** Solo el perfil de la persona mayor muestra los datos personales. */
   get tieneDatosPersonales(): boolean {
     return this.tipoPerfil === 'PERSONA_MAYOR';
   }
@@ -116,15 +120,16 @@ export class Perfil implements OnInit {
       : 'Cargando tu información...';
   }
 
-  // =========================================================
-  // CARGAR INFORMACIÓN
-  // =========================================================
-
+  /**
+   * Carga los datos según el rol. La organización junta dos respuestas: la
+   * de organizacion-service (dirección) y la de auth-service (id y
+   * tieneContrasena).
+   */
   cargarInformacion(): void {
     this.informacion = null;
     this.cargando = true;
 
-    // PERSONA MAYOR, ACOMPAÑANTE Y VOLUNTARIO
+    // Persona mayor, acompañante y voluntario: todo sale de auth-service.
     if (
       this.esPersonaMayor ||
       this.tipoPerfil === 'ACOMPANANTE' ||
@@ -155,7 +160,7 @@ export class Perfil implements OnInit {
       return;
     }
 
-    // ORGANIZACIÓN
+    // Organización
     if (this.esOrganizacion) {
       this.organizacionService.obtenerInformacion().subscribe({
         next: (data) => {
@@ -179,6 +184,7 @@ export class Perfil implements OnInit {
     }
   }
 
+  /** Hoy no se usa: el perfil de la persona mayor se lee de auth-service. */
   private normalizarPersonaMayor(data: PersonaMayorResponse): PerfilInformacion {
     return {
       idUsuario: data.idUsuario,
@@ -192,6 +198,7 @@ export class Perfil implements OnInit {
     };
   }
 
+  /** Hoy no se usa: el perfil del acompañante se lee de auth-service. */
   private normalizarAcompanante(data: AcompanantePerfil): PerfilInformacion {
     return {
       idUsuario: data.idUsuario,
@@ -202,6 +209,7 @@ export class Perfil implements OnInit {
     };
   }
 
+  /** Une los datos de la organización con los de su cuenta. */
   private normalizarOrganizacion(data: OrganizacionResponse, identidad: any): PerfilInformacion {
     return {
       idUsuario: identidad.idUsuario,
@@ -225,10 +233,7 @@ export class Perfil implements OnInit {
     this.cdr.detectChanges();
   }
 
-  // =========================================================
-  // EDICIÓN
-  // =========================================================
-
+  /** Abre el formulario con una copia de los datos actuales. */
   abrirEdicion(): void {
     if (!this.informacion) {
       return;
@@ -242,6 +247,7 @@ export class Perfil implements OnInit {
     this.editando = true;
   }
 
+  /** Antes de guardar se pide confirmación. */
   guardarCambios(): void {
     if (!this.formulario) {
       return;
@@ -253,6 +259,7 @@ export class Perfil implements OnInit {
     this.mostrandoConfirmacion = true;
   }
 
+  /** Guarda según el rol. Si el backend tarda más de 10 segundos, se muestra el error. */
   confirmarGuardado(): void {
     if (!this.formulario || this.guardandoInformacion) {
       return;
@@ -343,7 +350,7 @@ export class Perfil implements OnInit {
       return;
     }
 
-    // VOLUNTARIO
+    // No se llega aquí: los cuatro roles se atienden arriba.
     this.http
       .put<any>('http://localhost:8080/api/auth/informacion', {
         nombre: this.formulario.nombre,
@@ -366,6 +373,10 @@ export class Perfil implements OnInit {
       });
   }
 
+  /**
+   * Muestra el mensaje de éxito un momento y cierra el formulario. También
+   * actualiza el nombre que se ve en el panel.
+   */
   private finalizarGuardado(nombre: string): void {
     this.guardandoInformacion = false;
     this.guardadoExitoso = true;
@@ -384,6 +395,7 @@ export class Perfil implements OnInit {
     }, 1500);
   }
 
+  /** Si el backend responde con un texto (por ejemplo, correo rechazado), se muestra tal cual. */
   private manejarErrorGuardado(error: any): void {
     console.error('Error al actualizar la información:', error);
 
@@ -408,12 +420,8 @@ export class Perfil implements OnInit {
     this.errorGuardado = '';
   }
 
-  // =========================================================
-  // CONTRASEÑA
-  // =========================================================
-
   abrirModalContrasena(): void {
-    // El cambio de contraseña requiere que exista un correo registrado
+    // Para tener contraseña hay que tener un correo registrado.
     if (!this.informacion?.correo?.trim()) {
       this.errorContrasena =
         'Para cambiar tu contraseña primero debes registrar un correo electrónico.';
@@ -448,6 +456,7 @@ export class Perfil implements OnInit {
     this.mensajeContrasena = '';
   }
 
+  /** Revisa en el navegador las mismas reglas del backend y guarda la contraseña. */
   guardarContrasena(): void {
     this.errorContrasena = '';
     this.mensajeContrasena = '';

@@ -21,7 +21,7 @@
   padding: 32px;
 }
 
-/* ---------- Marca ---------- */
+/* Marca */
 
 .login-brand {
   display: flex;
@@ -42,7 +42,7 @@
   color: var(--vita-navy);
 }
 
-/* ---------- Cabecera ---------- */
+/* Encabezado */
 
 .login-back {
   display: inline-block;
@@ -69,7 +69,7 @@
   font-size: 0.9rem;
 }
 
-/* ---------- Formulario ---------- */
+/* Formulario */
 
 .login-form {
   display: flex;
@@ -105,7 +105,7 @@
   border-color: var(--vita-orange);
 }
 
-/* ---------- Mensajes ---------- */
+/* Mensajes */
 
 .login-error {
   color: #c23b3b;
@@ -127,7 +127,7 @@
   margin-bottom: 0;
 }
 
-/* ---------- Botón principal ---------- */
+/* Botón principal */
 
 .login-submit {
   margin-top: 22px;
@@ -141,7 +141,7 @@
   cursor: not-allowed;
 }
 
-/* ---------- Teléfono ---------- */
+/* Teléfono */
 
 .login-phone-row {
   display: flex;
@@ -164,7 +164,7 @@
   flex: 1;
 }
 
-/* ---------- Métodos de inicio de sesión ---------- */
+/* Métodos de inicio de sesión */
 
 .login-method-divider {
   display: flex;
@@ -214,7 +214,7 @@
   text-decoration: underline;
 }
 
-/* ---------- Cambiar teléfono ---------- */
+/* Cambiar teléfono */
 
 .login-change-phone {
   display: block;
@@ -234,7 +234,7 @@
   text-decoration: underline;
 }
 
-/* ---------- Reenviar código ---------- */
+/* Reenviar código */
 
 .login-resend {
   display: block;
@@ -259,7 +259,7 @@
   opacity: 0.7;
 }
 
-/* ---------- Recuperar contraseña ---------- */
+/* Recuperar contraseña */
 
 .login-forgot-password {
   display: block;
@@ -279,7 +279,7 @@
   text-decoration: underline;
 }
 
-/* ---------- Recuperación de contraseña ---------- */
+/* Recuperación de contraseña */
 
 .login-recovery-title {
   margin-bottom: 0;
@@ -289,7 +289,7 @@
   margin-bottom: 4px;
 }
 
-/* ---------- Volver al inicio de sesión ---------- */
+/* Volver al inicio de sesión */
 
 .login-recovery-back {
   display: block;
@@ -311,7 +311,7 @@
   text-decoration: underline;
 }
 
-/* ---------- Footer ---------- */
+/* Pie de página */
 
 .login-footer {
   text-align: center;

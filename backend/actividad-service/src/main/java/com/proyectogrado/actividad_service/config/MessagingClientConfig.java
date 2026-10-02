@@ -5,6 +5,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
 
+/**
+ * Cliente HTTP hacia messaging-service. La URL sale de messaging.service.url.
+ */
 @Configuration
 public class MessagingClientConfig {
 

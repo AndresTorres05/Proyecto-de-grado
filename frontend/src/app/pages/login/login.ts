@@ -9,8 +9,14 @@ import { CampoContrasena } from '../../shared/campo-contrasena/campo-contrasena'
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 
+/** Método de inicio de sesión que está en pantalla. */
 type ModoLogin = 'correo' | 'celular';
 
+/**
+ * Inicio de sesión con dos métodos: celular con código OTP o correo y
+ * contraseña. También tiene el flujo para recuperar la contraseña con un
+ * código enviado al celular.
+ */
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -24,25 +30,16 @@ export class Login implements OnDestroy {
 
   modoRecuperacion = signal(false);
 
-  // =========================================================
-  // CORREO / CONTRASEÑA
-  // =========================================================
-
+  // Login con correo y contraseña
   correo = '';
   contrasena = '';
 
 
-  // =========================================================
-  // CELULAR / OTP
-  // =========================================================
-
+  // Login con celular y código OTP
   celularLocal = '';
   codigo = '';
 
-  // =========================================================
-// RECUPERACIÓN DE CONTRASEÑA
-// =========================================================
-
+// Recuperación de contraseña
 recuperacionOtpEnviado = signal(false);
 
 recuperacionCodigo = '';
@@ -51,18 +48,16 @@ nuevaContrasena = '';
 
 confirmarNuevaContrasena = '';
 
+  /** Si ya se pidió el código del login; con eso aparece el campo para escribirlo. */
   otpEnviado = signal(false);
 
-  // Contador para reenviar código
+  /** Segundos que faltan para poder pedir otro código (30, igual que en messaging-service). */
   segundosReenvio = signal(0);
 
   private intervaloReenvio: ReturnType<typeof setInterval> | null = null;
 
 
-  // =========================================================
-  // ESTADO
-  // =========================================================
-
+  // Estado de la pantalla
   cargando = signal(false);
 
   enviandoCodigo = signal(false);
@@ -77,41 +72,29 @@ confirmarNuevaContrasena = '';
   ) {}
 
 
-  // =========================================================
-  // CELULAR COMPLETO
-  // =========================================================
-
+  /** Celular con el indicativo de Colombia, como lo guarda el backend: +57 y 10 dígitos. */
   get celularCompleto(): string {
 
     return `+57${this.celularLocal.replace(/\D/g, '')}`;
   }
 
 
-  // =========================================================
-  // CAMBIAR MODO
-  // =========================================================
-
+  /** Cambia entre celular y correo, y reinicia el flujo del código. */
 cambiarModo(modo: ModoLogin): void {
 
   this.modo.set(modo);
 
-  // Reiniciar el flujo OTP al cambiar de método
   this.otpEnviado.set(false);
   this.codigo = '';
 
-  // Limpiar mensajes
   this.errorMensaje.set(null);
   this.infoMensaje.set(null);
 
-  // Reiniciar contador
   this.detenerContador();
   this.segundosReenvio.set(0);
 }
 
-// =========================================================
-// ABRIR RECUPERACIÓN DE CONTRASEÑA
-// =========================================================
-
+/** Abre el flujo de recuperación de contraseña con el formulario limpio. */
 abrirRecuperacion(): void {
 
   this.modoRecuperacion.set(true);
@@ -135,10 +118,7 @@ abrirRecuperacion(): void {
   this.segundosReenvio.set(0);
 }
 
-// =========================================================
-// VOLVER AL LOGIN
-// =========================================================
-
+/** Vuelve al login con correo, que es el método que usa contraseña. */
 volverAlLogin(): void {
 
   this.modoRecuperacion.set(false);
@@ -163,10 +143,7 @@ volverAlLogin(): void {
   this.segundosReenvio.set(0);
 }
 
-// =========================================================
-// ENVIAR CÓDIGO PARA RECUPERAR CONTRASEÑA
-// =========================================================
-
+/** Paso 1 de la recuperación: comprueba que el celular tenga cuenta y pide el código. */
 enviarCodigoRecuperacion(): void {
 
   this.errorMensaje.set(null);
@@ -190,10 +167,7 @@ enviarCodigoRecuperacion(): void {
 
   this.enviandoCodigo.set(true);
 
-  // ---------------------------------------------------------
-  // Verificar que exista una cuenta
-  // ---------------------------------------------------------
-
+  // Primero se comprueba que el celular tenga cuenta, para no enviar un SMS en vano.
   this.authService
     .celularExiste(this.celularCompleto)
     .subscribe({
@@ -211,11 +185,8 @@ enviarCodigoRecuperacion(): void {
           return;
         }
 
-        // ---------------------------------------------------
-        // Mostrar inmediatamente la pantalla para ingresar
-        // el código y la nueva contraseña
-        // ---------------------------------------------------
-
+        // Se muestra de una vez la pantalla del código y la nueva contraseña,
+        // porque el SMS puede tardar unos segundos.
         this.recuperacionOtpEnviado.set(true);
 
         this.infoMensaje.set(
@@ -224,13 +195,8 @@ enviarCodigoRecuperacion(): void {
 
         this.iniciarContador();
 
-        // Ya no dejamos la pantalla bloqueada mostrando
-        // "Enviando..." mientras TextBee responde.
+        // No se deja la pantalla en "Enviando..." mientras TextBee responde.
         this.enviandoCodigo.set(false);
-
-        // ---------------------------------------------------
-        // Enviar OTP
-        // ---------------------------------------------------
 
         this.authService
           .enviarOtp(this.celularCompleto)
@@ -283,10 +249,7 @@ enviarCodigoRecuperacion(): void {
     });
 }
 
-// =========================================================
-// RESTABLECER CONTRASEÑA
-// =========================================================
-
+/** Paso 2: valida el formulario y cambia la contraseña con el código recibido. */
 restablecerContrasena(): void {
 
   this.errorMensaje.set(null);
@@ -414,10 +377,7 @@ restablecerContrasena(): void {
     });
 }
 
-  // =========================================================
-  // ENVIAR / REENVIAR CÓDIGO
-  // =========================================================
-
+  /** Pide (o vuelve a pedir) el código para entrar con el celular. */
   enviarCodigo(): void {
 
     this.errorMensaje.set(null);
@@ -425,19 +385,12 @@ restablecerContrasena(): void {
     this.infoMensaje.set(null);
 
 
-    // ---------------------------------------------------------
-    // Comprobar si todavía está bloqueado el reenvío
-    // ---------------------------------------------------------
-
+    // Mientras corre el contador no se puede pedir otro código.
     if (this.segundosReenvio() > 0) {
 
       return;
     }
 
-
-    // ---------------------------------------------------------
-    // Validar celular
-    // ---------------------------------------------------------
 
     const celular =
       this.celularLocal.replace(/\D/g, '');
@@ -451,10 +404,6 @@ restablecerContrasena(): void {
       return;
     }
 
-
-    // ---------------------------------------------------------
-    // Enviar OTP
-    // ---------------------------------------------------------
 
     this.enviandoCodigo.set(true);
 
@@ -523,13 +472,10 @@ this.authService
   });
   }
 
-  // =========================================================
-  // INICIAR CONTADOR
-  // =========================================================
-
+  /** Arranca el contador de 30 segundos para volver a pedir el código. */
   private iniciarContador(): void {
 
-    // Evitar varios intervalos al mismo tiempo
+    // Evita que queden dos intervalos corriendo.
     this.detenerContador();
 
     this.segundosReenvio.set(30);
@@ -559,10 +505,6 @@ this.authService
   }
 
 
-  // =========================================================
-  // DETENER CONTADOR
-  // =========================================================
-
   private detenerContador(): void {
 
     if (this.intervaloReenvio !== null) {
@@ -574,10 +516,7 @@ this.authService
   }
 
 
-  // =========================================================
-  // SUBMIT
-  // =========================================================
-
+  /** Envía el formulario según el método elegido. */
   onSubmit(): void {
 
     this.errorMensaje.set(null);
@@ -594,10 +533,7 @@ this.authService
   }
 
 
-  // =========================================================
-  // LOGIN POR CORREO
-  // =========================================================
-
+  /** Login con correo y contraseña. */
   private loginPorCorreo(): void {
 
     this.cargando.set(true);
@@ -623,6 +559,8 @@ this.authService
 
 if (err.status === 401) {
 
+  // Pensado para cuentas sin contraseña (registradas solo con celular). Hoy
+  // el backend responde "Correo o contraseña incorrectos" en ambos casos.
   const mensaje =
     err.error?.mensaje ||
     err.error?.message ||
@@ -657,10 +595,7 @@ if (err.status === 401) {
   }
 
 
-  // =========================================================
-  // LOGIN POR CELULAR
-  // =========================================================
-
+  /** Login con el celular y el código que llegó por SMS. */
   private loginPorCelular(): void {
 
     if (!this.codigo.trim()) {
@@ -720,10 +655,6 @@ if (err.status === 401) {
       });
   }
 
-
-  // =========================================================
-  // DESTRUIR COMPONENTE
-  // =========================================================
 
   ngOnDestroy(): void {
 

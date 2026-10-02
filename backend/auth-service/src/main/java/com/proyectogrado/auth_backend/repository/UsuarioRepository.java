@@ -6,7 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 import java.util.List;
 
-
+/**
+ * Acceso a la tabla usuario. El correo y el celular sirven para encontrar
+ * a la persona al iniciar sesión.
+ */
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     Optional<Usuario> findByCorreo(String correo);

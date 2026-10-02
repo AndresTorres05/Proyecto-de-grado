@@ -2,10 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-// =========================================================
-// ACTIVIDAD
-// =========================================================
-
+/** Actividad tal como la devuelve actividad-service. */
 export interface Actividad {
   idActividad: number;
   idOrganizacion: number;
@@ -19,10 +16,7 @@ export interface Actividad {
   responsable: string | null;
 }
 
-// =========================================================
-// ACTIVIDAD DISPONIBLE PARA PERSONA MAYOR
-// =========================================================
-
+/** Actividad vista por la persona mayor; inscrito indica si ya se inscribió. */
 export interface ActividadDisponible {
   idActividad: number;
   nombre: string;
@@ -35,10 +29,7 @@ export interface ActividadDisponible {
   inscrito: boolean;
 }
 
-// =========================================================
-// CREAR / ACTUALIZAR ACTIVIDAD
-// =========================================================
-
+/** Datos para crear o editar una actividad. */
 export interface ActividadRequest {
   nombre: string;
   descripcion: string | null;
@@ -50,10 +41,7 @@ export interface ActividadRequest {
   responsable: string | null;
 }
 
-// =========================================================
-// PARTICIPANTES
-// =========================================================
-
+/** Persona inscrita en una actividad. asistio es null mientras no se registre la asistencia. */
 export interface ParticipanteActividad {
   idPersonaMayor: number;
   nombre: string;
@@ -61,18 +49,14 @@ export interface ParticipanteActividad {
   asistio: boolean | null;
 }
 
-// =========================================================
-// PRÓXIMAS / HISTORIAL (mismo criterio en todos los perfiles)
-// =========================================================
-
 /** Fecha de hoy YYYY-MM-DD en hora local (toISOString() usaría UTC). */
 export function fechaHoy(): string {
   return new Date().toLocaleDateString('en-CA');
 }
 
 /**
- * Separa las actividades en próximas (desde hoy) e historial, en orden
- * cronológico:
+ * Separa las actividades en próximas (desde hoy) e historial, con el mismo
+ * criterio en los paneles de todos los roles:
  *  - Próximas: de la más cercana a la más lejana. Las que no tienen fecha
  *    van al final.
  *  - Historial: de la más reciente a la más antigua.
@@ -97,10 +81,10 @@ export function separarPorFecha<T extends { fecha: string | null; hora: string |
   return { proximas, pasadas };
 }
 
-// =========================================================
-// SERVICIO
-// =========================================================
-
+/**
+ * Llamadas a actividad-service. El backend decide qué actividades ve cada
+ * usuario según su rol.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -110,37 +94,24 @@ export class ActividadService {
 
   constructor(private http: HttpClient) {}
 
-  // =========================================================
-  // LISTAR ACTIVIDADES
-  // =========================================================
-
+  /** Actividades que puede ver el usuario según su rol. */
   listar(): Observable<Actividad[]> {
     return this.http.get<Actividad[]>(this.apiUrl);
   }
 
-  // =========================================================
-  // ACTIVIDADES DE MI ORGANIZACIÓN
-  // =========================================================
-
+  /** Actividades de la organización del usuario. */
   listarMias(): Observable<Actividad[]> {
     return this.http.get<Actividad[]>(
       `${this.apiUrl}/mias`
     );
   }
 
-  // =========================================================
-  // ACTIVIDADES DISPONIBLES PARA PERSONA MAYOR
-  // =========================================================
-
+  /** Actividades que puede ver la persona mayor, marcando en cuáles está inscrita. */
   listarDisponibles(): Observable<ActividadDisponible[]> {
     return this.http.get<ActividadDisponible[]>(
       `${this.apiUrl}/disponibles`
     );
   }
-
-  // =========================================================
-  // INSCRIBIRSE EN UNA ACTIVIDAD
-  // =========================================================
 
   inscribirse(id: number): Observable<void> {
     return this.http.post<void>(
@@ -149,19 +120,11 @@ export class ActividadService {
     );
   }
 
-  // =========================================================
-  // CANCELAR INSCRIPCIÓN
-  // =========================================================
-
   cancelarInscripcion(id: number): Observable<void> {
     return this.http.delete<void>(
       `${this.apiUrl}/${id}/inscribirse`
     );
   }
-
-  // =========================================================
-  // CREAR ACTIVIDAD
-  // =========================================================
 
   crear(request: ActividadRequest): Observable<Actividad> {
     return this.http.post<Actividad>(
@@ -169,10 +132,6 @@ export class ActividadService {
       request
     );
   }
-
-  // =========================================================
-  // ACTUALIZAR ACTIVIDAD
-  // =========================================================
 
   actualizar(
     id: number,
@@ -184,20 +143,13 @@ export class ActividadService {
     );
   }
 
-  // =========================================================
-  // ELIMINAR ACTIVIDAD
-  // =========================================================
-
   eliminar(id: number): Observable<void> {
     return this.http.delete<void>(
       `${this.apiUrl}/${id}`
     );
   }
 
-  // =========================================================
-  // LISTAR PARTICIPANTES
-  // =========================================================
-
+  /** Inscritos en una actividad (solo para la organización dueña). */
   listarParticipantes(
     id: number
   ): Observable<ParticipanteActividad[]> {
@@ -206,10 +158,7 @@ export class ActividadService {
     );
   }
 
-  // =========================================================
-  // REGISTRAR ASISTENCIA
-  // =========================================================
-
+  /** Marca si una persona inscrita asistió (solo para la organización dueña). */
   registrarAsistencia(
     idActividad: number,
     idPersonaMayor: number,

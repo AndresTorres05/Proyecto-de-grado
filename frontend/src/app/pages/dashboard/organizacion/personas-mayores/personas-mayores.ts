@@ -20,6 +20,11 @@ import { SignosVitalesModal } from '../../../../shared/signos-vitales-modal/sign
 import { AcompanantesModal } from '../../../../shared/acompanantes-modal/acompanantes-modal';
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
+/**
+ * Personas mayores de la organización: lista de vinculadas, solicitud de
+ * vínculo por celular, cancelación del vínculo y dos modales de consulta
+ * (acompañantes y últimos signos vitales).
+ */
 @Component({
   selector: 'app-personas-mayores',
   standalone: true,
@@ -50,6 +55,7 @@ protected readonly cargandoAcompanantes =
 protected readonly acompanantes =
   signal<AcompanantePersonaMayor[]>([]);
 
+/** Persona de los modales de acompañantes o signos vitales. */
 protected personaMayorSeleccionada:
   PersonaMayorOrganizacion | null = null;
 
@@ -67,6 +73,7 @@ protected readonly signosVitales =
 
   protected readonly error = signal<string | null>(null);
   protected readonly mostrandoConfirmacion = signal(false);
+  /** Persona del modal de cancelar el vínculo. */
   protected personaSeleccionada: PersonaMayorOrganizacion | null = null;
   protected celular = '';
 
@@ -77,7 +84,7 @@ constructor(
 ) {
   alCambiar(['organizaciones', 'usuarios'], () => this.cargarPersonasMayores());
 
-  // Modales abiertos: se actualizan en vivo sin mostrar "cargando"
+  // Si hay un modal abierto, se actualiza en vivo sin mostrar "cargando".
   alCambiar(['acompanamientos', 'usuarios'], () => {
     const persona = this.personaMayorSeleccionada;
     if (this.mostrandoAcompanantes() && persona) {
@@ -102,16 +109,13 @@ constructor(
 ngOnInit(): void {
   this.cargarPersonasMayores();
 
+  // Desde las acciones rápidas del inicio se llega con ?abrir=registrar.
   this.route.queryParams.subscribe(params => {
     if (params['abrir'] === 'registrar') {
       this.mostrarFormulario();
     }
   });
 }
-
-  // ==========================================
-  // CARGAR PERSONAS MAYORES
-  // ==========================================
 
   cargarPersonasMayores(): void {
 
@@ -132,10 +136,6 @@ ngOnInit(): void {
   }
 
 
-  // ==========================================
-  // MOSTRAR FORMULARIO
-  // ==========================================
-
   mostrarFormulario(): void {
 
     this.mostrandoFormulario.set(true);
@@ -146,10 +146,6 @@ ngOnInit(): void {
     this.error.set(null);
   }
 
-
-  // ==========================================
-  // CERRAR FORMULARIO
-  // ==========================================
 
   cancelarFormulario(): void {
 
@@ -162,10 +158,7 @@ ngOnInit(): void {
   }
 
 
-  // ==========================================
-  // ASOCIAR PERSONA MAYOR
-  // ==========================================
-
+  /** Envía la solicitud de vínculo a la persona mayor con ese celular (10 dígitos, sin +57). */
   asociarPersonaMayor(): void {
 
     this.mensaje.set(null);
@@ -174,10 +167,6 @@ ngOnInit(): void {
     const celularIngresado =
       this.celular.trim();
 
-
-    // ==========================================
-    // VALIDAR CAMPO
-    // ==========================================
 
     if (!celularIngresado) {
 
@@ -189,10 +178,6 @@ ngOnInit(): void {
     }
 
 
-    // ==========================================
-    // VALIDAR FORMATO
-    // ==========================================
-
     if (!/^\d{10}$/.test(celularIngresado)) {
 
       this.error.set(
@@ -203,20 +188,13 @@ ngOnInit(): void {
     }
 
 
-    // ==========================================
-    // FORMATO COLOMBIANO
-    // ==========================================
-
+    // El backend guarda el celular con el indicativo de Colombia.
     const celular =
       '+57' + celularIngresado;
 
 
     this.agregandoPersonaMayor.set(true);
 
-
-    // ==========================================
-    // ENVIAR SOLICITUD
-    // ==========================================
 
     this.organizacionService
       .asociarPersonaMayor(celular)
@@ -232,7 +210,6 @@ ngOnInit(): void {
 
           this.mensaje.set(respuesta);
 
-          // Actualizar la lista
           this.cargarPersonasMayores();
         },
 
@@ -261,6 +238,7 @@ cerrarConfirmacion(): void {
   this.personaSeleccionada = null;
 }
 
+/** Cancela el vínculo con la persona del modal. */
 confirmarCancelacion(): void {
   if (!this.personaSeleccionada) return;
 
@@ -288,6 +266,7 @@ confirmarCancelacion(): void {
     });
 }
 
+/** Abre el modal con los acompañantes de la persona mayor. */
 mostrarAcompanantes(persona: PersonaMayorOrganizacion): void {
 
   this.personaMayorSeleccionada = persona;
@@ -335,6 +314,7 @@ cerrarAcompanantes(): void {
   this.acompanantes.set([]);
 }
 
+/** Abre el modal con los últimos 10 registros de signos vitales. */
 mostrarSignosVitales(persona: PersonaMayorOrganizacion): void {
 
   this.personaMayorSeleccionada = persona;

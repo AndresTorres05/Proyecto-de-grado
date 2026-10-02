@@ -4,9 +4,7 @@
   margin: 0 auto;
 }
 
-/* =========================
-   ENCABEZADO
-   ========================= */
+/* Encabezado */
 
 .informacion__header {
   display: flex;
@@ -29,9 +27,7 @@
   font-size: 1rem;
 }
 
-/* =========================
-   BOTÓN EDITAR
-   ========================= */
+/* Botón de editar */
 
 .informacion__edit-button {
   padding: 11px 18px;
@@ -61,9 +57,7 @@
   transform: translateY(-1px);
 }
 
-/* =========================
-   TARJETA PRINCIPAL
-   ========================= */
+/* Tarjeta principal */
 
 .informacion__card {
   background: var(--vita-white);
@@ -76,9 +70,7 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
 }
 
-/* =========================
-   SECCIONES
-   ========================= */
+/* Secciones */
 
 .informacion__section {
   padding-bottom: 28px;
@@ -98,9 +90,7 @@
   font-weight: 700;
 }
 
-/* =========================
-   GRID DE INFORMACIÓN
-   ========================= */
+/* Cuadrícula de información */
 
 .informacion__grid {
   display: grid;
@@ -131,9 +121,7 @@
   font-size: 1rem;
 }
 
-/* =========================
-   CAMPOS DE EDICIÓN
-   ========================= */
+/* Campos de edición */
 
 .informacion__field input {
   width: 100%;
@@ -164,9 +152,7 @@
   box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.12);
 }
 
-/* =========================
-   SELECT DE GÉNERO
-   ========================= */
+/* Selector de género */
 
 .informacion__field select {
   width: 100%;
@@ -198,9 +184,7 @@
   box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.12);
 }
 
-/* =========================
-   MODAL EDITAR INFORMACIÓN
-   ========================= */
+/* Modal para editar la información */
 
 .informacion__edit-overlay {
   position: fixed;
@@ -291,9 +275,7 @@
   line-height: 1.5;
 }
 
-/* =========================
-   ACCIONES
-   ========================= */
+/* Acciones */
 
 .informacion__actions {
   display: flex;
@@ -343,9 +325,7 @@
   transform: translateY(-1px);
 }
 
-/* =========================
-   CARGANDO
-   ========================= */
+/* Cargando */
 
 .informacion__loading {
   display: flex;
@@ -367,9 +347,7 @@
   font-size: 1rem;
 }
 
-/* =========================
-   ERROR
-   ========================= */
+/* Error */
 
 .informacion__error {
   padding: 32px;
@@ -396,9 +374,7 @@
   color: var(--vita-text-muted);
 }
 
-/* =========================
-   CONFIRMACIÓN DE GUARDADO
-   ========================= */
+/* Confirmación de guardado */
 
 .informacion__confirm-overlay {
   position: fixed;
@@ -457,9 +433,7 @@
   margin-top: 26px;
 }
 
-/* =========================
-   RESPONSIVE
-   ========================= */
+/* Responsive */
 
 @media (max-width: 768px) {
 
@@ -484,7 +458,7 @@
     width: 100%;
   }
 
-  /* MODAL DE EDICIÓN */
+  /* Modal de edición */
 
   .informacion__edit-overlay {
     padding: 14px;
@@ -499,7 +473,7 @@
     font-size: 1.35rem;
   }
 
-  /* ACCIONES */
+  /* Acciones */
 
   .informacion__actions {
     flex-direction: column;
@@ -510,7 +484,7 @@
     width: 100%;
   }
 
-  /* MODAL DE CONFIRMACIÓN */
+  /* Modal de confirmación */
 
   .informacion__confirm-modal {
     padding: 24px 20px;

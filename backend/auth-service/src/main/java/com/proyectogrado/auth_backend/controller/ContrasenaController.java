@@ -15,10 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Cambiar/agregar contrasena, valido para cualquier rol. Antes estaba
- * duplicado en PersonaMayorController y AcompananteController (misma
- * logica exacta) -- centralizado aqui porque la contrasena es del
- * Usuario, no de un rol especifico.
+ * Cambio de contraseña desde "Mi información", para cualquier rol. Está en
+ * auth-service porque la contraseña es del usuario, no de un rol.
  */
 @RestController
 @RequestMapping("/api/auth/contrasena")
@@ -38,11 +36,16 @@ public class ContrasenaController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Guarda la nueva contraseña. Si el usuario ya tenía una, primero se
+     * comprueba la actual; si se registró solo con OTP, se crea sin pedirla.
+     */
     @PutMapping
     public ResponseEntity<String> cambiarContrasena(
             @RequestHeader("Authorization") String authorizationHeader,
             @RequestBody CambiarContrasenaRequest request
     ) {
+        // En /api/auth el gateway no agrega X-User-Id: el id se saca del token.
         String token = authorizationHeader.substring(7);
         Integer idUsuario = jwtService.extraerIdUsuario(token);
 

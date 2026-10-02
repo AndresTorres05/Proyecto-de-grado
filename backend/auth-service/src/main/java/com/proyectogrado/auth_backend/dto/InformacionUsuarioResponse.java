@@ -2,6 +2,9 @@ package com.proyectogrado.auth_backend.dto;
 
 import java.time.LocalDate;
 
+/**
+ * Datos que muestra "Mi información" para cualquier rol.
+ */
 public class InformacionUsuarioResponse {
 
     private Integer idUsuario;
@@ -11,9 +14,12 @@ public class InformacionUsuarioResponse {
     private LocalDate fechaNacimiento;
     private String genero;
     private String direccion;
-    // Solo personas mayores (null para los demás roles)
+
+    // Solo para personas mayores; null en los demás roles.
     private String eps;
     private String ips;
+
+    /** Si es false, el usuario entra solo con OTP y puede crear una contraseña sin dar la actual. */
     private boolean tieneContrasena;
 
     public InformacionUsuarioResponse(

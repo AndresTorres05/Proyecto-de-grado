@@ -2,6 +2,9 @@ package com.proyectogrado.actividad_service.dto;
 
 import java.time.LocalDate;
 
+/**
+ * Datos del formulario para crear o editar una actividad.
+ */
 public class ActividadRequest {
 
     private String nombre;

@@ -6,15 +6,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 /**
- * Relacion persona mayor <-> acompanante.
+ * Vínculo entre una persona mayor y un acompañante.
  *
- * OJO: aqui NO se referencia a PersonaMayor ni Acompanante como entidades
- * JPA (esos son de auth-backend). Solo se guardan sus IDs. Para mostrar
- * nombre/celular en las respuestas se usa UsuarioLookup (solo lectura).
+ * Solo se guardan los ids, porque las tablas persona_mayor y acompanante son
+ * de auth-service. Para mostrar nombre y celular se usa UsuarioLookup.
  *
- * Esta misma tabla también la usa personamayor-service desde el otro
- * lado de la relación (agregar/listar acompañantes); acá solo se lee
- * y se actualiza el estado (aceptar/rechazar solicitudes).
+ * persona-mayor-service usa esta misma tabla desde el otro lado (agregar y
+ * listar acompañantes); aquí se lee y se cambia el estado al aceptar o
+ * rechazar solicitudes.
  */
 @Entity
 @Table(name = "persona_mayor_acompanante")
@@ -23,6 +22,7 @@ public class PersonaMayorAcompanante {
     @EmbeddedId
     private PersonaMayorAcompananteId id;
 
+    /** PENDIENTE hasta que el acompañante responde; luego ACEPTADA o RECHAZADA. */
     @Column(name = "estado", nullable = false)
     private String estado = "PENDIENTE";
 

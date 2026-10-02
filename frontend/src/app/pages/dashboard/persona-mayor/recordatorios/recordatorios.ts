@@ -11,9 +11,14 @@ import {
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 import { Icon } from '../../../../shared/icon/icon';
 
-// Opciones de "Cada cuántas horas": de 1 a 12, más una vez al día.
+/** Opciones de "Cada cuántas horas": de 1 a 12, más una vez al día. */
 const INTERVALOS_HORAS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24];
 
+/**
+ * Medicamentos de la persona mayor: lista con la próxima toma y un
+ * formulario para agregarlos o editarlos. salud-service envía los
+ * recordatorios por SMS antes de cada toma.
+ */
 @Component({
   selector: 'app-recordatorios',
   standalone: true,
@@ -51,8 +56,10 @@ export class Recordatorios implements OnInit, OnDestroy {
     alCambiar(['medicamentos'], () => this.cargar(false));
   }
 
-  // Si un medicamento ya guardado tiene un intervalo fuera de la lista,
-  // se agrega para no perderlo al editar.
+  /**
+   * Si un medicamento ya guardado tiene un intervalo fuera de la lista, se
+   * agrega para no perderlo al editar.
+   */
   protected opcionesIntervalo(): number[] {
     const actual = this.intervaloHoras;
     if (actual && !INTERVALOS_HORAS.includes(actual)) {
@@ -61,8 +68,7 @@ export class Recordatorios implements OnInit, OnDestroy {
     return INTERVALOS_HORAS;
   }
 
-  // Abre el selector de hora al hacer clic en cualquier parte del campo,
-  // no solo en el iconito del reloj.
+  /** Abre el selector de hora al hacer clic en cualquier parte del campo, no solo en el reloj. */
   protected abrirSelectorHora(event: Event): void {
     const input = event.target as HTMLInputElement;
     try {
@@ -91,6 +97,7 @@ export class Recordatorios implements OnInit, OnDestroy {
     clearInterval(this.intervaloReloj);
   }
 
+  /** Con mostrarCargando en false, la lista se actualiza sin parpadear. */
   private cargar(mostrarCargando = true): void {
     if (mostrarCargando) {
       this.cargando.set(true);
@@ -109,9 +116,11 @@ export class Recordatorios implements OnInit, OnDestroy {
     });
   }
 
-  // Horas del día en que toca el medicamento, p. ej. cada 8 horas desde
-  // las 8:00 -> "8:00 a. m. · 4:00 p. m. · 12:00 a. m.". Solo cuando el
-  // intervalo cabe exacto en el día y no son demasiadas horas para leer.
+  /**
+   * Horas del día en que toca el medicamento; por ejemplo, cada 8 horas
+   * desde las 8:00 da "8:00 a. m. · 4:00 p. m. · 12:00 a. m.". Solo cuando
+   * el intervalo cabe exacto en el día y no son demasiadas horas para leer.
+   */
   protected horarioDelDia(medicamento: Medicamento): string | null {
     const intervalo = medicamento.intervaloHoras;
     if (!medicamento.hora || !intervalo || 24 % intervalo !== 0 || 24 / intervalo > 6) {
@@ -161,6 +170,7 @@ export class Recordatorios implements OnInit, OnDestroy {
     this.fechaFin = '';
   }
 
+  /** Crea o actualiza el medicamento, según si se está editando. */
   guardar(): void {
     if (!this.nombre.trim() || !this.hora.trim() || !this.intervaloHoras) {
       this.errorFormulario.set('Escribe el nombre, cada cuántas horas y a qué hora te lo tomas.');

@@ -1,8 +1,6 @@
 <div class="seguimiento">
 
-  <!-- =====================================================
-       HEADER
-  ====================================================== -->
+  <!-- Encabezado -->
 
   <header class="seguimiento__header">
     <h1>Seguimiento</h1>
@@ -14,9 +12,7 @@
   </header>
 
 
-  <!-- =====================================================
-       CARGANDO / ERROR / SIN PERSONAS
-  ====================================================== -->
+  <!-- Cargando, error o sin personas -->
 
   @if (cargandoPersonas) {
 
@@ -59,9 +55,7 @@
   }
 
 
-  <!-- =====================================================
-       PERSONAS MAYORES
-  ====================================================== -->
+  <!-- Personas mayores -->
 
   @if (
     !cargandoPersonas &&
@@ -99,9 +93,7 @@
     </section>
 
 
-    <!-- ===================================================
-         MEDICAMENTOS DE LA PERSONA SELECCIONADA
-    ==================================================== -->
+    <!-- Medicamentos de la persona seleccionada -->
 
     @if (personaSeleccionada) {
 
@@ -161,7 +153,7 @@
         }
 
 
-        <!-- LISTA DE MEDICAMENTOS -->
+        <!-- Lista de medicamentos -->
 
         @if (
           !cargandoMedicamentos &&

@@ -1,3 +1,4 @@
+<!-- Estados: cargando, error o sin registros -->
 @if (cargando()) {
   <div class="signos-loading">Cargando signos vitales...</div>
 } @else if (error(); as errorActual) {
@@ -17,6 +18,7 @@
     <p>{{ textoVacio() }}</p>
   </div>
 } @else {
+  <!-- Cada registro muestra solo los valores que se midieron -->
   <div class="signos-list" [class.signos-list--compacta]="compacta()">
     @for (registro of registros(); track registro.idSignoVital) {
       <div class="signo-item">

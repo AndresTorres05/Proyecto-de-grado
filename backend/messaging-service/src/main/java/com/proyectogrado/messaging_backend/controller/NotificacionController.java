@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Notificaciones (SMS enviados) del usuario autenticado, para la
- * campanita del panel. Pasa por el gateway con JwtAuth, que pone el
- * header X-User-Id; cada usuario solo ve las de su propio celular.
+ * Notificaciones (SMS enviados) del usuario autenticado, para la campanita
+ * del panel. Pasa por el gateway con JwtAuth, que agrega el encabezado
+ * X-User-Id; cada usuario solo ve las de su propio celular.
  */
 @RestController
 @RequestMapping("/api/notificaciones")
@@ -71,6 +71,7 @@ public class NotificacionController {
         return ResponseEntity.noContent().build();
     }
 
+    /** Celular del usuario, o null si no tiene. Las notificaciones se guardan por celular. */
     private String celularDe(Integer idUsuario) {
         return usuarioLookupRepository.findById(idUsuario)
                 .map(UsuarioLookup::getCelular)
@@ -78,6 +79,7 @@ public class NotificacionController {
                 .orElse(null);
     }
 
+    /** Notificación tal como la recibe el frontend. */
     public record NotificacionResponse(Long id, String mensaje, Instant fechaEnvio, boolean leida) {
         static NotificacionResponse de(Notificacion n) {
             return new NotificacionResponse(n.getIdNotificacion(), n.getMensaje(), n.getFechaEnvio(), n.isLeida());

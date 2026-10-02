@@ -1,5 +1,6 @@
 <div class="mis-personas">
 
+  <!-- Encabezado -->
   <div class="mis-personas__header">
     <div>
       <h1>Personas mayores</h1>
@@ -9,6 +10,7 @@
     </div>
   </div>
 
+  <!-- Mensajes de éxito y error -->
   @if (mensaje) {
     <div class="mis-personas__message mis-personas__message--success">
       {{ mensaje }}
@@ -21,6 +23,7 @@
     </div>
   }
 
+  <!-- Solicitudes pendientes (solo aparece si hay) -->
   @if (solicitudes.length > 0) {
 
     <section class="mis-personas__section">
@@ -78,6 +81,7 @@
 
   }
 
+  <!-- Personas mayores a cargo -->
   <section class="mis-personas__section">
 
     @if (cargando) {
@@ -153,6 +157,7 @@
 
 </div>
 
+<!-- Modal para dejar de acompañar -->
 @if (personaACancelar) {
   <app-cancelar-asociacion
     [nombre]="personaACancelar.nombre"
@@ -162,6 +167,7 @@
   />
 }
 
+<!-- Modal de signos vitales -->
 @if (personaSignosVitales) {
   <app-signos-vitales-modal
     [nombre]="personaSignosVitales.nombre"
@@ -172,6 +178,7 @@
   />
 }
 
+<!-- Modal de acompañantes -->
 @if (personaAcompanantes) {
   <app-acompanantes-modal
     [nombre]="personaAcompanantes.nombre"

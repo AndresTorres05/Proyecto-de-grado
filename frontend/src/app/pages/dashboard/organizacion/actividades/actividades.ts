@@ -18,6 +18,11 @@ import { Icon } from '../../../../shared/icon/icon';
 import { ActividadCard } from '../../../../shared/actividad-card/actividad-card';
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
+/**
+ * Actividades de la organización: crear, editar y borrar (siempre con
+ * confirmación), ver los inscritos y registrar su asistencia. Las
+ * actividades que ya pasaron no se pueden editar.
+ */
 @Component({
   selector: 'app-actividades',
   standalone: true,
@@ -39,11 +44,12 @@ export class Actividades implements OnInit {
 
   protected readonly nombreUsuario = signal('');
 
-  // Crear actividad
+  // Formulario de nueva actividad y modales de confirmación
   protected mostrarFormulario = signal(false);
 
   protected mostrarConfirmacion = signal(false);
 
+  /** El mismo modal de confirmación sirve para crear y para editar. */
   protected tipoConfirmacion: 'crear' | 'editar' = 'crear';
 
   protected actividadEliminando: Actividad | null = null;
@@ -74,7 +80,7 @@ protected actividadEditando: ActividadRequest = {
   responsable: null
 };
 
-  // Participantes
+  // Modal de participantes
   protected actividadParticipantes = signal<Actividad | null>(null);
   protected participantes = signal<ParticipanteActividad[]>([])
   protected cargandoParticipantes = signal(false);
@@ -108,6 +114,7 @@ ngOnInit(): void {
   this.cargarActividades();
   this.cargarInformacionOrganizacion();
 
+  // Desde las acciones rápidas del inicio se llega con ?abrir=registrar.
   this.route.queryParams.subscribe(params => {
     if (params['abrir'] === 'registrar') {
       this.abrirFormulario();
@@ -129,6 +136,7 @@ ngOnInit(): void {
     });
   }
 
+  /** Con mostrarCargando en false, la lista se actualiza sin parpadear (cambios en vivo). */
   private cargarActividades(mostrarCargando = true): void {
     if (mostrarCargando) {
       this.cargando.set(true);
@@ -187,6 +195,7 @@ this.nuevaActividad = {
     this.mostrarFormulario.set(false);
   }
 
+/** Valida el formulario y pide confirmación antes de crear. */
 protected crearActividad(): void {
 
   if (!this.nuevaActividad.nombre.trim()) {
@@ -223,6 +232,7 @@ protected crearActividad(): void {
   this.mostrarConfirmacion.set(true);
 }
 
+/** Crea la actividad o guarda la edición, según lo que se esté confirmando. */
 protected confirmarCreacion(): void {
   this.mostrarConfirmacion.set(false);
 
@@ -264,6 +274,7 @@ protected cancelarConfirmacion(): void {
   this.mostrarConfirmacion.set(false);
 }
 
+  /** Pasa la actividad a modo edición. Las que ya pasaron no se pueden editar. */
   protected editarActividad(actividad: Actividad): void {
     if (actividad.fecha && actividad.fecha < this.fechaHoy()) {
       return;
@@ -298,6 +309,7 @@ this.actividadEditando = {
 };
   }
 
+/** Pide confirmación antes de guardar la edición. */
 protected guardarActividad(): void {
   if (
     this.actividadEditandoId === null ||
@@ -311,6 +323,7 @@ protected guardarActividad(): void {
   this.mostrarConfirmacion.set(true);
 }
 
+ /** Abre la confirmación para borrar la actividad. */
  protected eliminarActividad(actividad: Actividad): void {
   this.actividadEliminando = actividad;
   this.error.set(null);
@@ -344,6 +357,7 @@ protected cancelarEliminacion(): void {
   this.actividadEliminando = null;
 }
 
+  /** Abre el modal con los inscritos de la actividad. */
   protected verParticipantes(actividad: Actividad): void {
     this.actividadParticipantes.set(actividad);
     this.participantes.set([]);
@@ -369,6 +383,10 @@ next: (participantes) => {
     this.participantes.set([]);
   }
 
+  /**
+   * Marca si un inscrito asistió. Solo se puede en actividades de hoy en
+   * adelante; en las que ya pasaron la asistencia queda fija.
+   */
   protected registrarAsistencia(
     participante: ParticipanteActividad,
     asistio: boolean
@@ -414,6 +432,7 @@ if (actividad.fecha && actividad.fecha < this.fechaHoy()) {
     ).length;
   }
 
+  /** Número de inscritos. */
   protected contarConfirmados(): number {
     return this.participantes().length;
   }

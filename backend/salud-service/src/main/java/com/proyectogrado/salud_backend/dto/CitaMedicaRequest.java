@@ -1,11 +1,14 @@
 package com.proyectogrado.salud_backend.dto;
 
+/**
+ * Datos para crear o editar una cita médica.
+ */
 public class CitaMedicaRequest {
 
     private String titulo;
     private String lugar;
-    private String fecha;
-    private String hora;
+    private String fecha;   // "yyyy-MM-dd"
+    private String hora;    // "HH:mm"
     private String observaciones;
 
     public CitaMedicaRequest() {

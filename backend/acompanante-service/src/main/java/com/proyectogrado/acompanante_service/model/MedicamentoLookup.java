@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /**
- * Solo lectura sobre "medicamento" (dueno de salud-backend). Necesario
- * para que un acompanante vea los medicamentos de una persona mayor que
- * acompana, sin duplicar la logica de medicamento aqui.
+ * Vista de solo lectura de la tabla medicamento, que pertenece a
+ * salud-service. Permite que el acompañante vea los medicamentos de la
+ * persona mayor sin repetir aquí esa lógica.
  */
 @Entity
 @Table(name = "medicamento")
@@ -58,8 +58,9 @@ public class MedicamentoLookup {
     @Column(name = "activo")
     private Boolean activo;
 
+    /** Lo exige JPA. */
+
     protected MedicamentoLookup() {
-        // JPA
     }
 
     public Integer getIdMedicamento() {

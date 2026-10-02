@@ -9,15 +9,19 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Lectura de la tabla usuario (ver UsuarioLookup).
+ */
 public interface UsuarioLookupRepository extends JpaRepository<UsuarioLookup, Integer> {
 
     Optional<UsuarioLookup> findByCelular(String celular);
 
+    /** Cuentas de usuario que pertenecen a una organización. */
     List<UsuarioLookup> findByIdOrganizacion(Integer idOrganizacion);
 
     /**
      * Acompañantes y voluntarios que nacieron en ese mes y alguno de esos
-     * dias. Su fecha de nacimiento solo vive en "usuario" (las personas
+     * días. Su fecha de nacimiento solo vive en "usuario" (las personas
      * mayores se buscan aparte, con PersonaMayorLookupRepository).
      */
     @Query(value = """

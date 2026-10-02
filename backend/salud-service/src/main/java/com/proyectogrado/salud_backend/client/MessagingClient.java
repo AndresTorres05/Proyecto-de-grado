@@ -5,6 +5,9 @@ import org.springframework.web.client.RestClient;
 
 import java.util.Map;
 
+/**
+ * Cliente de messaging-service para enviar los recordatorios por SMS.
+ */
 @Component
 public class MessagingClient {
 
@@ -14,6 +17,7 @@ public class MessagingClient {
         this.restClient = messagingRestClient;
     }
 
+    /** Devuelve true si el SMS salió; ante cualquier error devuelve false sin lanzar excepción. */
     public boolean enviarMensaje(String celular, String mensaje) {
         try {
             Map<?, ?> respuesta = restClient.post()

@@ -19,10 +19,13 @@ import com.proyectogrado.auth_backend.dto.RestablecerContrasenaRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.proyectogrado.auth_backend.service.EmailValidationService;
 
-
+/**
+ * Endpoints públicos de autenticación: login (con contraseña o con OTP),
+ * registro y recuperación de contraseña. Cuando algo falla, el motivo va en
+ * el campo "mensaje" de la respuesta.
+ */
 @RestController
 @RequestMapping("/api/auth")
-//@CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {
 
     private final AuthService authService;
@@ -34,6 +37,7 @@ public class AuthController {
         this.emailValidationService = emailValidationService;
     }
 
+    /** Login con correo y contraseña. Si falla, responde 401. */
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(
             @RequestBody LoginRequest request
@@ -57,6 +61,7 @@ public class AuthController {
         }
     }
 
+    /** Login con celular y código OTP. Si falla, responde 401. */
     @PostMapping("/login-otp")
     public ResponseEntity<LoginResponse> loginOtp(
             @RequestBody LoginOtpRequest request
@@ -80,6 +85,7 @@ public class AuthController {
         }
     }
 
+    /** Crea la cuenta y responde 201 con el token, o 400 si algún dato no es válido. */
     @PostMapping("/registro")
     public ResponseEntity<LoginResponse> registro(
             @RequestBody RegistroRequest request
@@ -105,6 +111,7 @@ public class AuthController {
         }
     }
 
+    /** Indica si ya hay una cuenta con ese celular. */
     @GetMapping("/celular-existe")
 public ResponseEntity<Boolean> celularExiste(
         @RequestParam String celular
@@ -114,10 +121,7 @@ public ResponseEntity<Boolean> celularExiste(
     );
 }
 
-// =========================================================
-// RESTABLECER CONTRASEÑA
-// =========================================================
-
+/** Cambia la contraseña olvidada con el código OTP que llegó al celular. */
 @PostMapping("/restablecer-contrasena")
 public ResponseEntity<LoginResponse> restablecerContrasena(
         @RequestBody RestablecerContrasenaRequest request
@@ -153,6 +157,7 @@ public ResponseEntity<LoginResponse> restablecerContrasena(
     }
 }
 
+/** Devuelve la respuesta completa de Hunter para un correo. Si Hunter no responde, 502. */
 @GetMapping("/validar-correo")
 public ResponseEntity<?> validarCorreo(
         @RequestParam String correo

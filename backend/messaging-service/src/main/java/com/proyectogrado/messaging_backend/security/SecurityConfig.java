@@ -7,12 +7,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
- * messaging-backend no valida JWT ni conoce usuarios: quien decide si una
- * peticion puede llegar aqui es el api-gateway (o, mientras no exista,
- * quien llame directamente a este servicio en desarrollo).
+ * messaging-service no valida tokens: quien decide si una petición puede
+ * llegar aquí es el gateway. Los demás servicios lo llaman directamente.
  *
- * Sin esta clase, Spring Security activa su configuracion por defecto y
- * bloquea con 401 todos los endpoints, incluido /api/otp/**.
+ * Sin esta clase, Spring Security activa su configuración por defecto y
+ * responde 401 en todos los endpoints, incluido /api/otp/**.
  */
 @Configuration
 @EnableWebSecurity

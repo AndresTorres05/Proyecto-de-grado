@@ -20,13 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * Lado "acompanante" de la relacion con personas mayores:
- * ver sus personas mayores, ver solicitudes pendientes, aceptar/rechazar,
- * cancelar la asociación.
+ * Lado del acompañante en el vínculo con personas mayores: ver sus personas
+ * mayores y las solicitudes pendientes, aceptarlas o rechazarlas, y
+ * cancelar un vínculo.
  *
- * El id del usuario autenticado llega en el header X-User-Id, puesto
- * por el api-gateway despues de validar el JWT. Este servicio no valida
- * tokens.
+ * El id del usuario autenticado llega en el encabezado X-User-Id, que pone
+ * el gateway después de validar el token. Este servicio no valida tokens.
  */
 @RestController
 @RequestMapping("/api/acompanante/personas-mayores")
@@ -43,6 +42,7 @@ public class AcompananteRelacionController {
         this.usuarioLookupRepository = usuarioLookupRepository;
     }
 
+    /** Personas mayores con vínculo aceptado. */
     @GetMapping
     public ResponseEntity<List<PersonaMayorResponse>> obtenerPersonasMayores(
             @RequestHeader("X-User-Id") Integer idAcompanante
@@ -50,6 +50,7 @@ public class AcompananteRelacionController {
         return ResponseEntity.ok(listarPorEstado(idAcompanante, "ACEPTADA"));
     }
 
+    /** Solicitudes de personas mayores que el acompañante aún no ha respondido. */
     @GetMapping("/solicitudes")
     public ResponseEntity<List<PersonaMayorResponse>> obtenerSolicitudesPendientes(
             @RequestHeader("X-User-Id") Integer idAcompanante
@@ -73,6 +74,7 @@ public class AcompananteRelacionController {
         return cambiarEstado(idAcompanante, idPersonaMayor, "RECHAZADA", "rechazada");
     }
 
+    /** Quita el vínculo con una persona mayor, esté en el estado que esté. */
     @DeleteMapping("/{idPersonaMayor}")
     public ResponseEntity<String> cancelarAsociacion(
             @RequestHeader("X-User-Id") Integer idAcompanante,
@@ -95,6 +97,7 @@ public class AcompananteRelacionController {
         return ResponseEntity.ok("Asociación cancelada correctamente");
     }
 
+    /** Acepta o rechaza una solicitud; solo se puede si sigue PENDIENTE. */
     private ResponseEntity<String> cambiarEstado(
             Integer idAcompanante,
             Integer idPersonaMayor,

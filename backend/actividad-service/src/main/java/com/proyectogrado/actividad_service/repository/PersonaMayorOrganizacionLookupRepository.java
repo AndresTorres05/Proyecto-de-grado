@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+/**
+ * Lectura de los vínculos entre personas mayores y organizaciones.
+ */
 public interface PersonaMayorOrganizacionLookupRepository
         extends JpaRepository<PersonaMayorOrganizacionLookup, PersonaMayorOrganizacionId> {
 

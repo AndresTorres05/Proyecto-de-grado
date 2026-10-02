@@ -5,6 +5,9 @@ import org.springframework.web.client.RestClient;
 
 import java.util.Map;
 
+/**
+ * Cliente de messaging-service para enviar las alertas de emergencia por SMS.
+ */
 @Component
 public class MessagingClient {
 
@@ -14,9 +17,7 @@ public class MessagingClient {
         this.restClient = messagingRestClient;
     }
 
-    /**
-     * @return true si messaging-backend confirmo el envio.
-     */
+    /** Devuelve true si messaging-service confirmó el envío; ante cualquier error, false. */
     public boolean enviarMensaje(String celular, String mensaje) {
 
         try {

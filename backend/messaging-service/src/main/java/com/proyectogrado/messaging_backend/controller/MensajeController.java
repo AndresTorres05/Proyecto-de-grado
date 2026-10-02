@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 /**
- * Endpoint generico de envio de SMS libre (no OTP).
+ * Envío de SMS con texto libre (no OTP).
  *
- * Lo usan otros servicios (personas-backend hoy, salud-backend a futuro
- * para recordatorios) que ya saben A QUIEN avisar y QUE decir, pero no
- * tienen ni deben tener credenciales de TextBee. messaging-backend sigue
- * siendo el UNICO que sabe enviar SMS.
+ * Lo usan persona-mayor-service (emergencias), salud-service (recordatorios
+ * de medicamentos) y actividad-service (recordatorios de actividades). Esos
+ * servicios saben a quién avisar y qué decir, pero no tienen credenciales
+ * de TextBee: solo messaging-service envía SMS.
  *
- * No lleva JwtAuth en el gateway: se llama servicio-a-servicio, nunca
- * directo desde el frontend.
+ * El gateway no expone esta ruta; se llama de servicio a servicio, nunca
+ * desde el frontend.
  */
 @RestController
 @RequestMapping("/api/mensajes")
@@ -39,6 +39,11 @@ public class MensajeController {
         this.notificacionRepository = notificacionRepository;
     }
 
+    /**
+     * Envía el SMS y guarda una copia para la campanita.
+     *
+     * Cuerpo: { "celular": "+573001234567", "mensaje": "..." }
+     */
     @PostMapping("/enviar")
     public ResponseEntity<?> enviar(@RequestBody Map<String, String> request) {
 

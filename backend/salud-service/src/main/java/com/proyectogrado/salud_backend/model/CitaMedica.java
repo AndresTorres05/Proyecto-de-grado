@@ -5,6 +5,10 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+/**
+ * Cita médica de una persona mayor. idPersonaMayor es un Integer simple y
+ * no una relación JPA, porque la tabla persona_mayor es de auth-service.
+ */
 @Entity
 @Table(name = "cita_medica")
 public class CitaMedica {

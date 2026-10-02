@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
 
+// Prueba básica: el componente raíz se crea sin errores.
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({

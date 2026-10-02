@@ -24,6 +24,7 @@ import localeEs from '@angular/common/locales/es-CO';
 
 registerLocaleData(localeEs);
 
+/** Tarjeta de indicador. */
 interface StatCard {
   icon: string;
   value: string;
@@ -31,6 +32,7 @@ interface StatCard {
   label: string;
 }
 
+/** Alerta de la organización. */
 interface Alerta {
   prioridad: 'Alta' | 'Media' | 'Baja';
   nombre: string;
@@ -38,19 +40,26 @@ interface Alerta {
   tiempo: string;
 }
 
+/** Botón de acceso rápido a otra sección del panel. */
 interface AccionRapida {
   icon: string;
   label: string;
   route: string;
+  /**
+   * Si es true, el enlace lleva ?abrir=registrar para que la página destino
+   * (Personas mayores o Actividades) abra su formulario de una vez.
+   */
   abrirFormulario?: boolean;
 }
 
+/** Insumo del inventario. */
 interface Inventario {
   nombre: string;
   estado: string;
   detalle: string;
 }
 
+/** Donación recibida. */
 interface Donacion {
   donante: string;
   tipo: string;
@@ -58,12 +67,19 @@ interface Donacion {
   fecha: string;
 }
 
+/** Entrada de la bitácora de cambios. */
 interface Bitacora {
   usuario: string;
   accion: string;
   tiempo: string;
 }
 
+/**
+ * Inicio del panel de la organización. Las actividades (con su CRUD rápido)
+ * y el nombre de la organización vienen del backend; los indicadores, las
+ * alertas, las gráficas, el inventario, las donaciones y la bitácora todavía
+ * son datos de ejemplo.
+ */
 @Component({
   selector: 'app-organizacion-dashboard',
   imports: [FormsModule, Icon, DatePipe, RouterLink],
@@ -72,26 +88,16 @@ interface Bitacora {
 })
 export class OrganizacionDashboard implements OnInit {
 
-  // =========================================================
-  // CONFIGURACIÓN DEL PANEL
-  // =========================================================
-
   protected readonly panelConfig = PANEL_CONFIG['ORGANIZACION'];
 
   protected readonly navItems = this.panelConfig.navItems;
 
   protected readonly fechaActual = new Date();
 
-  // =========================================================
-  // USUARIO
-  // =========================================================
-
+  /** Nombre de la organización; se actualiza si lo cambian en "Mi información". */
   protected readonly nombreUsuario = signal('');
 
-  // =========================================================
-  // ESTADÍSTICAS
-  // =========================================================
-
+  /** Datos de ejemplo. */
   protected readonly stats: StatCard[] = [
     {
       icon: 'user',
@@ -119,10 +125,7 @@ export class OrganizacionDashboard implements OnInit {
     }
   ];
 
-  // =========================================================
-  // ALERTAS
-  // =========================================================
-
+  /** Datos de ejemplo. */
   protected readonly alertas: Alerta[] = [
     {
       prioridad: 'Alta',
@@ -154,10 +157,6 @@ export class OrganizacionDashboard implements OnInit {
     }
   ];
 
-  // =========================================================
-  // ACCIONES RÁPIDAS
-  // =========================================================
-
 protected readonly accionesRapidas: AccionRapida[] = [
   {
     icon: 'user',
@@ -179,18 +178,15 @@ protected readonly accionesRapidas: AccionRapida[] = [
   {
     icon: 'clipboard',
     label: 'Generar reporte',
-    route: '/panel/organizacion/reportes'
+    route: '/panel/organizacion/reportes' // esta ruta todavía no existe
   }
 ];
-
-  // =========================================================
-  // ACTIVIDADES
-  // =========================================================
 
   protected readonly actividades = signal<Actividad[]>([]);
 
   protected readonly errorActividades = signal<string | null>(null);
 
+  /** Formulario rápido de nueva actividad. */
   protected nuevaActividad: ActividadRequest = {
   nombre: '',
   descripcion: null,
@@ -202,6 +198,7 @@ protected readonly accionesRapidas: AccionRapida[] = [
   responsable: null
 };
 
+  /** Actividad que se está editando en la lista; null si ninguna. */
   protected actividadEditandoId: number | null = null;
 
   protected actividadEditando: ActividadRequest = {
@@ -215,10 +212,6 @@ protected readonly accionesRapidas: AccionRapida[] = [
   responsable: null
 };
 
-  // =========================================================
-  // CONSTRUCTOR
-  // =========================================================
-
 constructor(
   private actividadService: ActividadService,
   private authService: AuthService,
@@ -229,10 +222,6 @@ constructor(
   alCambiar(['actividades'], () => this.cargarActividades());
   alCambiar(['usuarios'], () => this.cargarInformacionOrganizacion());
 }
-
-  // =========================================================
-  // INICIALIZACIÓN
-  // =========================================================
 
 ngOnInit(): void {
   this.cargarActividades();
@@ -263,15 +252,10 @@ private cargarInformacionOrganizacion(): void {
   });
 }
 
-  // =========================================================
-  // CARGAR ACTIVIDADES
-  // =========================================================
-
-
   private cargarActividades(): void {
     this.actividadService.listarMias().subscribe({
       next: (actividades) => {
-        // Próximas primero (más cercana arriba) y luego las ya realizadas
+        // Primero las próximas (la más cercana arriba) y luego las ya realizadas.
         const { proximas, pasadas } = separarPorFecha(actividades);
         this.actividades.set([...proximas, ...pasadas]);
       },
@@ -282,10 +266,6 @@ private cargarInformacionOrganizacion(): void {
       }
     });
   }
-
-  // =========================================================
-  // CREAR ACTIVIDAD
-  // =========================================================
 
   crearActividad(): void {
     if (!this.nuevaActividad.nombre.trim()) {
@@ -318,10 +298,7 @@ this.nuevaActividad = {
     });
   }
 
-  // =========================================================
-  // EDITAR ACTIVIDAD
-  // =========================================================
-
+  /** Pasa una fila de la lista a modo edición. */
   editarActividad(actividad: Actividad): void {
     this.actividadEditandoId = actividad.idActividad;
 
@@ -337,10 +314,6 @@ this.actividadEditando = {
 };
   }
 
-  // =========================================================
-  // CANCELAR EDICIÓN
-  // =========================================================
-
   cancelarEdicionActividad(): void {
     this.actividadEditandoId = null;
 
@@ -355,10 +328,6 @@ this.actividadEditando = {
   responsable: null
 };
   }
-
-  // =========================================================
-  // GUARDAR ACTIVIDAD EDITADA
-  // =========================================================
 
   guardarActividad(): void {
     if (
@@ -389,10 +358,6 @@ this.actividadEditando = {
       });
   }
 
-  // =========================================================
-  // ELIMINAR ACTIVIDAD
-  // =========================================================
-
   eliminarActividad(actividad: Actividad): void {
     this.errorActividades.set(null);
 
@@ -411,10 +376,7 @@ this.actividadEditando = {
       });
   }
 
-  // =========================================================
-  // INVENTARIO
-  // =========================================================
-
+  /** Datos de ejemplo. */
   protected readonly inventario: Inventario[] = [
     {
       nombre: 'Losartán 50mg',
@@ -433,10 +395,7 @@ this.actividadEditando = {
     }
   ];
 
-  // =========================================================
-  // DONACIONES
-  // =========================================================
-
+  /** Datos de ejemplo. */
   protected readonly donaciones: Donacion[] = [
     {
       donante: 'Fundación Manos Amigas',
@@ -458,10 +417,7 @@ this.actividadEditando = {
     }
   ];
 
-  // =========================================================
-  // BITÁCORA
-  // =========================================================
-
+  /** Datos de ejemplo. */
   protected readonly bitacora: Bitacora[] = [
     {
       usuario: 'Voluntario · Camilo Rey',
@@ -488,10 +444,7 @@ this.actividadEditando = {
     }
   ];
 
-  // =========================================================
-  // GRÁFICA
-  // =========================================================
-
+  /** Leyenda de la gráfica de dona (datos de ejemplo). */
   protected readonly donutLegend = [
     {
       color: 'var(--vita-navy)',

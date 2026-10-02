@@ -1,7 +1,11 @@
 package com.proyectogrado.auth_backend.dto;
 
+/**
+ * Datos para cambiar la contraseña desde "Mi información".
+ */
 public class CambiarContrasenaRequest {
 
+    /** Solo se exige si el usuario ya tenía contraseña. */
     private String contrasenaActual;
     private String nuevaContrasena;
 

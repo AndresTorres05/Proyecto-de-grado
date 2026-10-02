@@ -19,19 +19,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Informacion de identidad (nombre/correo/celular), valida para
- * cualquier rol: persona mayor, acompanante u organizacion. El celular
- * NUNCA se edita aqui porque se usa para login por OTP.
+ * "Mi información": nombre, correo, celular, fecha de nacimiento, género y
+ * dirección del usuario, para cualquier rol. Los paneles de todos los roles
+ * usan este endpoint en lugar de repetir la lógica en cada servicio. A la
+ * persona mayor también se le guardan aquí la EPS y la IPS.
  *
- * Sirve tanto para persona-mayor-service como para acompanante-service
- * y organizacion-service: todos apuntan aqui en vez de duplicar esta
- * logica, porque nombre/correo son de identidad, no de perfil de rol.
+ * El celular no se edita aquí porque es con el que se inicia sesión por OTP.
  */
 @RestController
 @RequestMapping("/api/auth/informacion")
 public class UsuarioInformacionController {
 
-    // Largo máximo del nombre de la EPS / IPS
+    /** Largo máximo del nombre de la EPS o la IPS. */
     private static final int MAX_SALUD = 120;
 
     private final UsuarioRepository usuarioRepository;
@@ -51,6 +50,7 @@ public class UsuarioInformacionController {
         this.emailValidationService = emailValidationService;
     }
 
+    /** Datos del usuario autenticado. */
     @GetMapping
     public ResponseEntity<InformacionUsuarioResponse> obtenerInformacion(
             @RequestHeader("Authorization") String authorizationHeader
@@ -60,6 +60,7 @@ public class UsuarioInformacionController {
         return ResponseEntity.ok(aRespuesta(usuario));
     }
 
+    /** Guarda los cambios. Si el correo cambió, antes se valida con Hunter. */
     @PutMapping
     public ResponseEntity<?> actualizarInformacion(
             @RequestHeader("Authorization") String authorizationHeader,
@@ -83,8 +84,8 @@ public class UsuarioInformacionController {
                 ? null
                 : request.getCorreo().trim().toLowerCase();
 
-        // Solo se verifica si el correo cambio (evita gastar consultas
-        // de Hunter cada vez que se edita solo el nombre).
+        // Solo se verifica si el correo cambió, para no gastar consultas de
+        // Hunter cada vez que se edita otro dato.
         if (correo != null && !correo.equalsIgnoreCase(usuario.getCorreo())) {
 
             if (usuarioRepository.existsByCorreo(correo)) {
@@ -113,8 +114,8 @@ usuario.setDireccion(request.getDireccion());
 
 usuario = usuarioRepository.save(usuario);
 
-        // EPS e IPS viven en la tabla persona_mayor: solo se guardan si el
-        // usuario es persona mayor (para los demás roles se ignoran).
+        // La EPS y la IPS están en la tabla persona_mayor: solo se guardan si
+        // el usuario es persona mayor. Para los demás roles se ignoran.
         personaMayorRepository.findById(usuario.getIdUsuario()).ifPresent(personaMayor -> {
             personaMayor.setEps(eps);
             personaMayor.setIps(ips);
@@ -124,6 +125,7 @@ usuario = usuarioRepository.save(usuario);
         return ResponseEntity.ok(aRespuesta(usuario));
     }
 
+    /** En /api/auth el gateway no agrega X-User-Id, así que el usuario se saca del token. */
     private Usuario usuarioDelToken(String authorizationHeader) {
         String token = authorizationHeader.substring(7);
         Integer idUsuario = jwtService.extraerIdUsuario(token);
@@ -132,6 +134,10 @@ usuario = usuarioRepository.save(usuario);
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 
+    /**
+     * tieneContrasena le indica al frontend si, para cambiar la contraseña,
+     * debe pedir la actual.
+     */
     private InformacionUsuarioResponse aRespuesta(Usuario usuario) {
         boolean tieneContrasena = usuario.getContrasenaHash() != null
                 && !usuario.getContrasenaHash().isBlank();
@@ -153,6 +159,7 @@ usuario = usuarioRepository.save(usuario);
         );
     }
 
+    /** Texto sin espacios sobrantes, o null si viene vacío. */
     private static String textoOpcional(String valor) {
         return valor == null || valor.isBlank() ? null : valor.trim();
     }

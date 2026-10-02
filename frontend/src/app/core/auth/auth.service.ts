@@ -3,11 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 
+/** Login con correo y contraseña. */
 export interface LoginRequest {
   correo: string;
   contrasena: string;
 }
 
+/** Datos del formulario de registro (ver RegistroRequest en auth-service). */
 export interface RegistroRequest {
   nombreUsuario: string;
   correo?: string;
@@ -20,20 +22,24 @@ export interface RegistroRequest {
   codigo?: string;
 }
 
+/** Celular al que se envía el código OTP. */
 export interface EnviarOtpRequest {
   celular: string;
 }
 
+/** Respuesta de messaging-service al pedir un código. */
 export interface OtpEnviarResponse {
   success: boolean;
   message: string;
 }
 
+/** Login con celular y código OTP. */
 export interface OtpLoginRequest {
   celular: string;
   codigo: string;
 }
 
+/** Registro con código OTP (ver registroOtp). */
 export interface OtpRegistroRequest {
   celular: string;
   codigo: string;
@@ -45,6 +51,7 @@ export interface OtpRegistroRequest {
   direccion?: string;
 }
 
+/** Respuesta del login y del registro: el token y los datos que se guardan en la sesión. */
 export interface LoginResponse {
   token: string;
   rol: string;
@@ -53,6 +60,7 @@ export interface LoginResponse {
   nombreUsuario: string;
 }
 
+/** Recuperación de contraseña con el código OTP enviado al celular. */
 export interface RestablecerContrasenaRequest {
   celular: string;
   codigo: string;
@@ -60,15 +68,18 @@ export interface RestablecerContrasenaRequest {
   confirmarContrasena: string;
 }
 
-// Cada pestaña guarda su sesión en sessionStorage (así se pueden tener
-// varias cuentas abiertas a la vez). Además se guarda una copia de la
-// última sesión iniciada en localStorage, que sobrevive al cerrar el
-// navegador: al abrir una ventana nueva sin sesión se restaura esa copia.
+/**
+ * Cada pestaña guarda su sesión en sessionStorage (así se pueden tener
+ * varias cuentas abiertas a la vez). Además se guarda una copia de la
+ * última sesión iniciada en localStorage, que sobrevive al cerrar el
+ * navegador: al abrir una ventana nueva sin sesión se restaura esa copia.
+ */
 const CLAVES_SESION = ['token', 'rol', 'idUsuario', 'nombreUsuario'] as const;
 const CLAVE_SESION_RECORDADA = 'sesionRecordada';
 
 type Sesion = Record<(typeof CLAVES_SESION)[number], string>;
 
+/** Revisa solo la fecha de vencimiento del token; la firma la valida el backend. */
 function tokenVigente(token: string): boolean {
   try {
     const payload = JSON.parse(
@@ -102,8 +113,10 @@ function escribirSesionRecordada(sesion: Sesion | null): void {
   }
 }
 
-// Si esta pestaña no tiene sesión, intenta recuperar la última recordada.
-// Devuelve si la pestaña quedó con sesión.
+/**
+ * Si esta pestaña no tiene sesión, intenta recuperar la última recordada.
+ * Devuelve si la pestaña quedó con sesión.
+ */
 function restaurarSesion(): boolean {
   if (sessionStorage.getItem('token')) {
     return true;
@@ -127,6 +140,7 @@ function restaurarSesion(): boolean {
   return true;
 }
 
+/** Panel al que se envía a cada rol después de iniciar sesión. */
 const RUTAS_POR_ROL: Record<string, string> = {
   ORGANIZACION: '/panel/organizacion',
   VOLUNTARIO: '/panel/voluntario',
@@ -134,6 +148,10 @@ const RUTAS_POR_ROL: Record<string, string> = {
   PERSONA_MAYOR: '/panel/persona-mayor'
 };
 
+/**
+ * Sesión del usuario: login (con contraseña o con OTP), registro, cierre de
+ * sesión y los datos de la sesión guardados en el navegador.
+ */
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
@@ -142,8 +160,10 @@ export class AuthService {
 
   private readonly autenticadoSignal = signal(restaurarSesion());
 
-  // Nombre mostrado en el panel (arriba a la derecha). Es un signal
-  // para que al editarlo en "Mi información" se vea al instante.
+  /**
+   * Nombre que se muestra en el panel (arriba a la derecha). Es un signal
+   * para que al editarlo en "Mi información" se vea al instante.
+   */
   private readonly nombreUsuarioSignal = signal(
     sessionStorage.getItem('nombreUsuario') ?? 'Usuario'
   );
@@ -187,9 +207,11 @@ restablecerContrasena(
   );
 }
 
-  // El envío de OTP vive en messaging-backend (/api/otp/send),
-  // no en auth-backend. Espera "phoneNumber", no "celular", y
-  // responde {success, message}, no un LoginResponse.
+  /**
+   * El envío del código está en messaging-service (/api/otp/send), no en
+   * auth-service. Espera "phoneNumber" en lugar de "celular" y responde
+   * { success, message }, no un LoginResponse.
+   */
   enviarOtp(celular: string): Observable<OtpEnviarResponse> {
     return this.http.post<OtpEnviarResponse>(
       `${this.otpApiUrl}/send`,
@@ -208,9 +230,11 @@ restablecerContrasena(
       );
   }
 
-  // El registro por OTP usa el MISMO /api/auth/registro de siempre;
-  // auth-backend decide internamente si valida el codigo o no según
-  // si viene correo+contrasena. No existe un endpoint separado.
+  /**
+   * Registro con código OTP. Usa el mismo /api/auth/registro que el
+   * registro normal; el backend no recibe ni verifica el código. Hoy
+   * ninguna página lo usa.
+   */
   registroOtp(request: OtpRegistroRequest): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>(
@@ -222,14 +246,14 @@ restablecerContrasena(
       );
   }
 
-  // Borra la cuenta del usuario autenticado (cualquier rol).
-  // El backend toma el id del token.
+  /** Borra la cuenta del usuario autenticado, sea cual sea su rol. El backend toma el id del token. */
   eliminarCuenta(): Observable<string> {
     return this.http.delete(`${this.apiUrl}/cuenta`, {
       responseType: 'text'
     });
   }
 
+  /** Guarda la sesión en la pestaña y una copia "recordada" para las ventanas nuevas. */
   private guardarSesion(response: LoginResponse): void {
     sessionStorage.setItem('token', response.token);
     sessionStorage.setItem('rol', response.rol);
@@ -244,7 +268,7 @@ restablecerContrasena(
       nombreUsuario: response.nombreUsuario
     });
 
-    // Avisar a toda la aplicación que hay una sesión
+    // Avisa a toda la aplicación que hay una sesión.
     this.autenticadoSignal.set(true);
   }
 
@@ -254,8 +278,8 @@ restablecerContrasena(
   }
 
   logout(): void {
-    // Solo se olvida la sesión recordada si es la de esta pestaña;
-    // así cerrar sesión aquí no afecta a otra cuenta abierta en otra.
+    // Solo se olvida la sesión recordada si es la de esta pestaña; así,
+    // cerrar sesión aquí no afecta a otra cuenta abierta en otra pestaña.
     if (leerSesionRecordada()?.token === sessionStorage.getItem('token')) {
       escribirSesionRecordada(null);
     }
@@ -266,7 +290,7 @@ restablecerContrasena(
     sessionStorage.removeItem('nombreUsuario');
     this.nombreUsuarioSignal.set('Usuario');
 
-    // Avisar a toda la aplicación que la sesión terminó
+    // Avisa a toda la aplicación que la sesión terminó.
     this.autenticadoSignal.set(false);
 
     this.router.navigateByUrl('/');
@@ -281,13 +305,12 @@ restablecerContrasena(
     return idUsuario ? Number(idUsuario) : null;
   }
 
-  // Lee un signal: usado dentro de computed()/plantillas se
-  // actualiza solo cuando cambia el nombre.
+  /** Lee un signal, así que dentro de computed() o de una plantilla se actualiza solo. */
   getNombreUsuario(): string {
     return this.nombreUsuarioSignal();
   }
 
-  // Llamar después de guardar un nombre nuevo (cualquier rol).
+  /** Se llama después de guardar un nombre nuevo en "Mi información". */
   actualizarNombreUsuario(nombre: string): void {
     sessionStorage.setItem('nombreUsuario', nombre);
     this.nombreUsuarioSignal.set(nombre);
@@ -306,6 +329,7 @@ restablecerContrasena(
     return this.autenticadoSignal();
   }
 
+  /** El signal de la sesión, para reaccionar con effect() (ver TiempoRealService). */
   estaAutenticadoSignal() {
     return this.autenticadoSignal;
   }

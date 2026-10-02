@@ -2,6 +2,9 @@ package com.proyectogrado.actividad_service.dto;
 
 import java.time.LocalDate;
 
+/**
+ * Actividad tal como la ve la persona mayor; inscrito indica si ya se inscribió.
+ */
 public class ActividadDisponibleResponse {
 
     private Integer idActividad;

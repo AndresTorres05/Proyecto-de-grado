@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+/**
+ * Medicamento tal como lo devuelve salud-service. hora va en "HH:mm";
+ * proximaToma y ultimaToma, en "yyyy-MM-ddTHH:mm".
+ */
 export interface Medicamento {
   idMedicamento: number;
   nombre: string;
@@ -16,6 +20,7 @@ export interface Medicamento {
   activo: boolean;
 }
 
+/** Datos del formulario de medicamento. frecuencia es la descripción opcional. */
 export interface MedicamentoRequest {
   nombre: string;
   dosis: string;
@@ -26,11 +31,13 @@ export interface MedicamentoRequest {
   fechaFin?: string;
 }
 
-// Minutos antes de cada toma en que se envía el primer aviso.
-// Debe coincidir con MINUTOS_AVISO_PREVIO de salud-service.
+/**
+ * Minutos antes de cada toma en que se envía el primer aviso. Debe
+ * coincidir con MINUTOS_AVISO_PREVIO de salud-service.
+ */
 export const MINUTOS_AVISO_PREVIO = 15;
 
-// "08:00" -> "8:00 a. m."
+/** Hora para mostrar: "08:00" -> "8:00 a. m." */
 export function formatearHora(hora: string | null | undefined): string {
   if (!hora) {
     return '';
@@ -41,7 +48,7 @@ export function formatearHora(hora: string | null | undefined): string {
   return fecha.toLocaleTimeString('es-CO', { hour: 'numeric', minute: '2-digit' });
 }
 
-// "2026-09-29T16:00" -> "Hoy, 4:00 p. m." / "Mañana, ..." / "2 oct, ..."
+/** Próxima toma para mostrar: "Hoy, 4:00 p. m.", "Mañana, ..." o "2 oct, ...". */
 export function formatearProximaToma(proximaToma: string | null | undefined): string {
   if (!proximaToma) {
     return '';
@@ -64,6 +71,7 @@ export function formatearProximaToma(proximaToma: string | null | undefined): st
   return `${fecha.toLocaleDateString('es-CO', { day: 'numeric', month: 'short' })}, ${hora}`;
 }
 
+/** Medicamentos de la persona mayor autenticada (salud-service). */
 @Injectable({ providedIn: 'root' })
 export class MedicamentoService {
 

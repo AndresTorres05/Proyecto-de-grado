@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Eliminar la cuenta del usuario autenticado, valido para cualquier rol.
- * El id sale del token, asi que cada usuario solo puede borrar la suya.
+ * Eliminación de la cuenta del usuario autenticado, para cualquier rol.
+ * El id sale del token, así que cada usuario solo puede borrar la suya.
  */
 @RestController
 @RequestMapping("/api/auth/cuenta")
@@ -26,6 +26,7 @@ public class CuentaController {
         this.jwtService = jwtService;
     }
 
+    /** Borra la cuenta y todo lo relacionado con ella (ver CuentaService). */
     @DeleteMapping
     public ResponseEntity<String> eliminarCuenta(
             @RequestHeader("Authorization") String authorizationHeader

@@ -10,11 +10,13 @@ export interface Notificacion {
   leida: boolean;
 }
 
+/** Respuesta de /api/notificaciones. */
 export interface NotificacionesResponse {
   noLeidas: number;
   notificaciones: Notificacion[];
 }
 
+/** Notificaciones de la campanita del panel (messaging-service). */
 @Injectable({ providedIn: 'root' })
 export class NotificacionService {
 
@@ -27,6 +29,7 @@ export class NotificacionService {
     return this.http.get<NotificacionesResponse>(this.apiUrl);
   }
 
+  /** Marca todas como leídas; se llama al abrir la campanita. */
   marcarLeidas(): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/leidas`, {});
   }

@@ -34,7 +34,7 @@ export class ActividadCard {
 
   @Input({ required: true }) actividad!: ActividadTarjeta;
 
-  // Las actividades que ya pasaron se ven atenuadas (como en el historial).
+  /** Las actividades que ya pasaron se ven atenuadas, como en el historial. */
   protected get pasada(): boolean {
     const fecha = this.actividad.fecha;
     return !!fecha && fecha < fechaHoy();

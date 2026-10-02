@@ -1,3 +1,4 @@
+/* Personas que requieren atención: encabezado, filtro y tabla */
 .atencion {
   padding: 20px 22px;
 }
@@ -39,6 +40,7 @@
   cursor: pointer;
 }
 
+/* Sin personas por atender */
 .atencion__vacio {
   display: flex;
   align-items: center;
@@ -48,6 +50,7 @@
   font-weight: 600;
 }
 
+/* Tabla de personas y motivos */
 .atencion__tabla {
   overflow-x: auto;
 }
@@ -103,6 +106,7 @@
   color: #8a5a00;
 }
 
+/* Oculto a la vista, pero lo leen los lectores de pantalla */
 .sr-only {
   position: absolute;
   width: 1px;

@@ -5,6 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
+/**
+ * Acceso al catálogo de roles.
+ */
 public interface RolRepository extends JpaRepository<Rol, Integer> {
 
     Optional<Rol> findByNombre(String nombre);

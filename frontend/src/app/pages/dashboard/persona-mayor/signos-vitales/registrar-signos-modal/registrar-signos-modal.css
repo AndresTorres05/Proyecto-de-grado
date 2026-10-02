@@ -1,8 +1,5 @@
-/* =========================================================
-   REGISTRAR SIGNOS VITALES (persona mayor)
-   Mismo estilo que el formulario de signos vitales de la
-   organización, adaptado a un modal.
-   ========================================================= */
+/* Registrar signos vitales (persona mayor): mismo estilo que el formulario
+   de signos vitales de la organización, adaptado a un modal. */
 
 .modal-overlay {
   position: fixed;
@@ -38,7 +35,7 @@
   animation: aparecerModal 0.2s ease-out;
 }
 
-/* ---------- Encabezado ---------- */
+/* Encabezado */
 
 .modal__header {
   display: flex;
@@ -93,7 +90,7 @@
   line-height: 1.5;
 }
 
-/* ---------- Formulario ---------- */
+/* Formulario */
 
 .formulario {
   display: grid;
@@ -184,7 +181,7 @@
   line-height: 1.4;
 }
 
-/* ---------- Confirmación ---------- */
+/* Confirmación */
 
 .confirmacion {
   text-align: center;
@@ -243,7 +240,7 @@
   font-size: 15px;
 }
 
-/* ---------- Botones ---------- */
+/* Botones */
 
 .modal-acciones {
   display: flex;
@@ -310,7 +307,7 @@
   }
 }
 
-/* ---------- Responsive ---------- */
+/* Responsive */
 
 @media (max-width: 600px) {
   .modal {

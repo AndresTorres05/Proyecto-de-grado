@@ -2,6 +2,10 @@ import { inject } from '@angular/core';
 import { HttpInterceptorFn } from '@angular/common/http';
 import { AuthService } from './auth.service';
 
+/**
+ * Agrega el token (Authorization: Bearer ...) a cada petición al backend,
+ * menos a las de login, registro y envío del código OTP.
+ */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   const rutasPublicas = [
@@ -15,14 +19,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     req.url.includes(ruta)
   );
 
-  // Estas rutas no necesitan token
+  // Estas rutas no necesitan token.
   if (esRutaPublica) {
     return next(req);
   }
 
-  // Para las demás peticiones sí enviamos el token
-  // Se lee a través de AuthService para que antes se haya restaurado
-  // la sesión recordada (si esta pestaña se acaba de abrir).
+  // Se lee a través de AuthService para que, si la pestaña se acaba de
+  // abrir, primero se restaure la sesión recordada.
   const token = inject(AuthService).getToken();
 
   if (!token) {

@@ -45,7 +45,7 @@ public class AnaliticaController {
     private static final DateTimeFormatter FORMATO_FECHA_HORA =
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
-    // Personas mayores asociadas a la organización (subconsulta reutilizada)
+    /** Subconsulta con las personas mayores vinculadas a la organización; la usan todas las consultas. */
     private static final String PERSONAS_ASOCIADAS = """
             SELECT po.id_persona_mayor
               FROM persona_mayor_organizacion po
@@ -64,13 +64,9 @@ public class AnaliticaController {
         this.usuarioLookupRepository = usuarioLookupRepository;
     }
 
-    // =========================================================
-    // ACTIVIDADES Y PARTICIPACIÓN
-    // =========================================================
-
     /**
-     * Una fila por actividad de la organización con fecha dentro del
-     * período (sin fechas = todas las que tienen fecha).
+     * Actividades y participación: una fila por actividad de la organización
+     * con fecha dentro del período. Sin fechas, trae todas las que tienen fecha.
      */
     @GetMapping("/actividades")
     public ResponseEntity<?> actividades(
@@ -113,14 +109,10 @@ public class AnaliticaController {
         return ResponseEntity.ok(filas);
     }
 
-    // =========================================================
-    // SALUD DE LA POBLACIÓN
-    // =========================================================
-
     /**
-     * Personas asociadas y TODAS sus mediciones de signos vitales. El
-     * frontend filtra por período para las tendencias y usa la última
-     * medición de cada persona para el estado actual.
+     * Salud de la población: las personas vinculadas y todas sus mediciones
+     * de signos vitales. El frontend filtra por período para las tendencias
+     * y usa la última medición de cada persona para el estado actual.
      */
     @GetMapping("/salud")
     public ResponseEntity<?> salud(@RequestHeader("X-User-Id") Integer idUsuario) {
@@ -162,10 +154,10 @@ public class AnaliticaController {
         return ResponseEntity.ok(new SaludAnalitica(personas, mediciones));
     }
 
-    // =========================================================
-    // PERFIL DE LA POBLACIÓN
-    // =========================================================
-
+    /**
+     * Perfil de la población: fecha de nacimiento, género y EPS de cada
+     * persona vinculada, y cuántas personas tienen marcado cada gusto.
+     */
     @GetMapping("/poblacion")
     public ResponseEntity<?> poblacion(@RequestHeader("X-User-Id") Integer idUsuario) {
         Integer idOrganizacion = obtenerIdOrganizacion(idUsuario);
@@ -175,9 +167,9 @@ public class AnaliticaController {
 
         MapSqlParameterSource params = new MapSqlParameterSource("org", idOrganizacion);
 
-        // Fecha de nacimiento y género pueden estar en persona_mayor (si se
-        // editaron en "Mi información") o en usuario (registro): se usa el
-        // primero que exista.
+        // La fecha de nacimiento y el género pueden estar en persona_mayor (los
+        // guarda /api/persona-mayor/perfil) o en usuario (registro y "Mi
+        // información"): se usa el primero que exista.
         List<PersonaPoblacion> personas = jdbc.query("""
                 SELECT u.id_usuario, u.nombre_usuario,
                        COALESCE(pm.fecha_nacimiento, u.fecha_nacimiento) AS fecha_nacimiento,
@@ -220,10 +212,7 @@ public class AnaliticaController {
                 personas, intereses, conIntereses != null ? conIntereses : 0));
     }
 
-    // =========================================================
-    // UTILIDADES
-    // =========================================================
-
+    /** Organización de la cuenta, o null si el usuario no es una organización. */
     private Integer obtenerIdOrganizacion(Integer idUsuario) {
         return usuarioLookupRepository.findById(idUsuario)
                 .map(UsuarioLookup::getIdOrganizacion)
@@ -234,6 +223,9 @@ public class AnaliticaController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body("Solo una organización puede ver la analítica");
     }
+
+    // Lectores de columnas que pueden venir en null (getInt, por ejemplo,
+    // devolvería 0 en lugar de null).
 
     private static Integer entero(ResultSet rs, String columna) throws SQLException {
         Number valor = (Number) rs.getObject(columna);

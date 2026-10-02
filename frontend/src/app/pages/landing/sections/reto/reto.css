@@ -1,35 +1,35 @@
 .reto-section {
-  background-color: var(--vita-navy, #0c2b54); /* Fondo azul oscuro institucional */
+  background-color: var(--vita-navy, #0c2b54);
   color: #ffffff;
   padding: 6rem 1.5rem;
   font-family: 'Sora', sans-serif;
-  overflow-x: hidden; /* Evita desbordamientos generales en la página */
+  overflow-x: hidden; /* el carrusel es más ancho que la pantalla */
 }
 
 .reto-section .reto-container {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Divide estrictamente la pantalla en dos columnas iguales */
+  grid-template-columns: 1fr 1fr;
   gap: 50px;
   align-items: flex-start;
 }
 
 @media (max-width: 968px) {
   .reto-section .reto-container {
-    grid-template-columns: 1fr; /* Se vuelve una sola columna en pantallas pequeñas */
+    grid-template-columns: 1fr;
     gap: 3rem;
   }
 }
 
-/* CONTENEDOR IZQUIERDO: Agrupa texto y carrusel exclusivamente en la columna izquierda */
+/* Columna izquierda: texto y carrusel de fotos */
 .reto-section .reto-left-column {
   display: flex;
   flex-direction: column;
-  gap: 2.5rem; /* Espacio entre el texto y el carrusel debajo de él */
-  min-width: 0; /* CRÍTICO: Evita que el carrusel desborde el ancho de la columna izquierda */
+  gap: 2.5rem;
+  min-width: 0; /* sin esto, el carrusel ensancha la columna del grid */
   width: 100%;
-  overflow: hidden; /* Contiene el carrusel dentro de su mitad de pantalla */
+  overflow: hidden;
 }
 
 /* Texto de la izquierda */
@@ -65,7 +65,7 @@
   line-height: 1.7;
 }
 
-/* CARRUSEL: Ubicado exactamente debajo del texto, confinado a la izquierda */
+/* Carrusel de fotos. Los bordes se desvanecen con mask-image. */
 .reto-section .reto-left-column .carousel-container {
   width: 100%;
   overflow: hidden;
@@ -107,6 +107,8 @@
   transform: scale(1.06);
 }
 
+/* La pista tiene las fotos dos veces: al correrla la mitad (más medio gap)
+   queda igual que al inicio y el ciclo no se nota. */
 @keyframes scrollSlides {
   0% {
     transform: translateX(0);
@@ -116,7 +118,7 @@
   }
 }
 
-/* COLUMNA DERECHA: Flujo de tarjetas con flechas */
+/* Columna derecha: del problema a la solución, en tarjetas unidas con flechas */
 .reto-section .reto-flow {
   display: flex;
   flex-direction: column;

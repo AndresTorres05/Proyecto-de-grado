@@ -10,6 +10,10 @@ import { Icon } from '../../../../shared/icon/icon';
 import { PersonCard } from '../../../../shared/person-card/person-card';
 import { CancelarAsociacion } from '../../../../shared/cancelar-asociacion/cancelar-asociacion';
 
+/**
+ * Contactos de la persona mayor: botón de emergencia, sus acompañantes y el
+ * formulario para agregar uno nuevo por celular.
+ */
 @Component({
   selector: 'app-contactos',
   standalone: true,
@@ -21,11 +25,13 @@ export class Contactos implements OnInit {
 
   protected readonly acompanantes = signal<Acompanante[]>([]);
 
+  // Botón de emergencia
   protected readonly mostrandoConfirmacionEmergencia = signal(false);
   protected readonly enviandoEmergencia = signal(false);
   protected readonly mensajeEmergencia = signal<string | null>(null);
   protected readonly errorEmergencia = signal<string | null>(null);
 
+  // Formulario para agregar un acompañante
   protected readonly mostrandoFormularioAcompanante = signal(false);
 
   protected celularAcompanante = '';
@@ -35,6 +41,7 @@ export class Contactos implements OnInit {
   protected readonly errorAcompanante = signal<string | null>(null);
   protected readonly mensajeAcompanante = signal<string | null>(null);
 
+  // Modal para quitar un acompañante
   protected readonly acompananteACancelar = signal<Acompanante | null>(null);
   protected readonly mensajeCancelacion = signal<string | null>(null);
   protected readonly errorCancelacion = signal<string | null>(null);
@@ -71,6 +78,7 @@ export class Contactos implements OnInit {
     this.acompananteACancelar.set(null);
   }
 
+  /** Quita al acompañante del modal. */
   confirmarCancelacion(): void {
     const acompanante = this.acompananteACancelar();
 
@@ -106,6 +114,7 @@ export class Contactos implements OnInit {
     this.errorAcompanante.set(null);
 }
 
+/** Envía la solicitud de acompañamiento; el acompañante la acepta desde su panel. */
 agregarAcompanante(): void {
 
   this.errorAcompanante.set(null);
@@ -150,7 +159,7 @@ this.acompananteService.agregarAcompanante({
       this.celularAcompanante = '';
       this.relacionAcompanante = '';
 
-      // Actualizar la tarjeta del acompañante
+      // Recarga la lista de acompañantes.
       this.acompananteService.obtenerAcompanantes().subscribe({
         next: (acompanantes) => {
           this.acompanantes.set(acompanantes);
@@ -181,6 +190,7 @@ this.acompananteService.agregarAcompanante({
     this.mostrandoConfirmacionEmergencia.set(false);
   }
 
+  /** Envía la alerta por SMS a los acompañantes y organizaciones. */
   confirmarEmergencia(): void {
     this.enviandoEmergencia.set(true);
     this.errorEmergencia.set(null);

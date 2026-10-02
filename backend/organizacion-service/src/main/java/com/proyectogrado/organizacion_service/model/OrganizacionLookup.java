@@ -6,11 +6,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * "Organizacion" (id_organizacion + direccion) nace en auth-backend
- * junto con el Usuario, en la misma transaccion del registro. Pero
- * "direccion" es un dato de perfil propio, no de identidad -> este
- * servicio SI puede escribirlo, a diferencia de nombre/correo/celular
- * (esos viven en UsuarioLookup, 100% solo lectura).
+ * Fila de la tabla organizacion, que crea auth-service durante el registro.
+ * La dirección es un dato de perfil, así que este servicio sí puede
+ * modificarla; el nombre, el correo y el celular son de la cuenta y se leen
+ * con UsuarioLookup.
  */
 @Entity
 @Table(name = "organizacion")
@@ -23,8 +22,9 @@ public class OrganizacionLookup {
     @Column(name = "direccion")
     private String direccion;
 
+    /** Lo exige JPA. */
+
     protected OrganizacionLookup() {
-        // JPA
     }
 
     public Integer getIdOrganizacion() {

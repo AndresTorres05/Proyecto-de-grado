@@ -1,4 +1,5 @@
 
+  <!-- Saludo -->
   <div class="page-header">
     <div>
       <h1>¡Hola, {{ nombreUsuario }}! 👋</h1>
@@ -6,6 +7,7 @@
     </div>
   </div>
 
+  <!-- Indicadores (datos de ejemplo) -->
   <section class="stats-grid" aria-label="Mis indicadores">
     @for (stat of stats; track stat.label) {
       <div class="stat-card card">
@@ -16,6 +18,7 @@
     }
   </section>
 
+  <!-- Próxima actividad destacada (datos de ejemplo) -->
   <section class="featured card">
     <div class="featured__tag">Tu próxima actividad</div>
     <div class="featured__body">
@@ -28,6 +31,7 @@
     </div>
   </section>
 
+  <!-- Actividades programadas y alertas -->
   <section class="main-grid">
     <div class="col col--wide">
       <div class="panel card">

@@ -12,6 +12,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Acceso a las inscripciones (tabla participacion).
+ */
 public interface ParticipacionRepository extends JpaRepository<Participacion, ParticipacionId> {
 
     List<Participacion> findById_IdPersonaMayor(Integer idPersonaMayor);
@@ -22,9 +25,9 @@ public interface ParticipacionRepository extends JpaRepository<Participacion, Pa
 
     /**
      * Reserva el recordatorio de 1 hora antes para el inicio indicado. Solo
-     * afecta una fila si todavia no se habia enviado para ese inicio, asi
-     * el aviso sale una sola vez aunque el servicio se reinicie o haya dos
-     * instancias del scheduler. Si la persona cancelo la inscripcion, la
+     * afecta una fila si todavía no se había enviado para ese inicio; así el
+     * aviso sale una sola vez aunque el servicio se reinicie o haya dos
+     * instancias del scheduler. Si la persona canceló la inscripción, la
      * fila ya no existe y no se avisa.
      */
     @Modifying

@@ -9,7 +9,7 @@
   background: var(--vita-cream);
 }
 
-/* ---------- Sidebar ---------- */
+/* Barra lateral */
 
 .shell__sidebar {
   position: sticky;
@@ -134,7 +134,7 @@
   font-weight: 600;
 }
 
-/* ---------- Main / topbar ---------- */
+/* Contenido y barra superior */
 
 .shell__main {
   display: flex;
@@ -201,7 +201,7 @@
   justify-content: center;
 }
 
-/* ---------- Notificaciones (campanita) ---------- */
+/* Notificaciones (campanita) */
 
 .shell__notif {
   position: relative;
@@ -417,7 +417,7 @@
   padding: 32px;
 }
 
-/* ---------- Modo accesible (Persona mayor) ---------- */
+/* Modo accesible: letra e iconos más grandes */
 
 :host(.shell-host--accessible) .shell__nav-link {
   font-size: 1.05rem;
@@ -442,7 +442,7 @@
   font-size: 0.85rem;
 }
 
-/* ---------- Responsive ---------- */
+/* Responsive */
 
 @media (max-width: 1080px) {
   .shell {

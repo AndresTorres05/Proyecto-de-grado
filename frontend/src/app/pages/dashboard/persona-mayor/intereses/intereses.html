@@ -1,6 +1,6 @@
 <div class="intereses-page">
 
-  <!-- ENCABEZADO -->
+  <!-- Encabezado -->
   <section class="intereses-header">
     <div>
       <span class="intereses-header__eyebrow">Mi perfil</span>
@@ -9,7 +9,7 @@
     </div>
   </section>
 
-  <!-- CARGANDO -->
+  <!-- Cargando -->
   @if (cargando()) {
     <div class="estado-card">
       <span class="estado-card__icon"><app-icon name="hourglass" /></span>
@@ -22,7 +22,7 @@
 
   @if (!cargando()) {
 
-    <!-- CATEGORÍAS -->
+    <!-- Categorías -->
     <section class="categorias-card">
       <h2 class="categorias-title">¿Qué quieres contarnos sobre ti?</h2>
 
@@ -52,7 +52,7 @@
       </div>
     </section>
 
-    <!-- OPCIONES -->
+    <!-- Opciones -->
     <section class="opciones-section">
       <div class="opciones-header">
         <div>
@@ -105,7 +105,7 @@
         }
       </div>
 
-      <!-- ERROR -->
+      <!-- Error -->
       @if (errorGustos()) {
         <div class="error-message">
           <span><app-icon name="alert-circle" /></span>
@@ -113,7 +113,7 @@
         </div>
       }
 
-      <!-- GUARDAR -->
+      <!-- Guardar -->
       <div class="guardar-section">
         <div class="guardar-info">
           <span class="guardar-info__icon"><app-icon name="heart" /></span>

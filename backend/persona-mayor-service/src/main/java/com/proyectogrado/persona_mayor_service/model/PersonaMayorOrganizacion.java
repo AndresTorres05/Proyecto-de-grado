@@ -5,6 +5,9 @@ import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
+/**
+ * Vínculo entre una persona mayor y una organización.
+ */
 @Entity
 @Table(name = "persona_mayor_organizacion")
 public class PersonaMayorOrganizacion {
@@ -12,6 +15,7 @@ public class PersonaMayorOrganizacion {
     @EmbeddedId
     private PersonaMayorOrganizacionId id;
 
+    /** PENDIENTE hasta que la persona mayor responde; luego ACEPTADA o RECHAZADA. */
     @Column(name = "estado", nullable = false)
     private String estado = "PENDIENTE";
 

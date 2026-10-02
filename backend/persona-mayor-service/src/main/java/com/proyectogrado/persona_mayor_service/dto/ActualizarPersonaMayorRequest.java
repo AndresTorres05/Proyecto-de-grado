@@ -1,5 +1,8 @@
 package com.proyectogrado.persona_mayor_service.dto;
 
+/**
+ * Cambios del perfil de la persona mayor (ver PersonaMayorInformacionController).
+ */
 public class ActualizarPersonaMayorRequest {
 
     private String fechaNacimiento; // "yyyy-MM-dd", opcional

@@ -31,6 +31,7 @@ type EstadoEvento =
   | 'siguiente'  // lo próximo que viene
   | 'pendiente'; // más tarde hoy
 
+/** Elemento de la agenda de hoy: una toma de medicamento o una actividad. */
 interface EventoAgenda {
   clave: string;
   tipo: 'medicamento' | 'actividad';
@@ -54,7 +55,7 @@ const HORA = 60 * MINUTO;
 
 /**
  * Inicio de la persona mayor, en forma de "agenda del día":
- *  1. Saludo + botón de emergencia (lo más urgente, siempre arriba).
+ *  1. Saludo y botón de emergencia (lo más urgente, siempre arriba).
  *  2. Tu día de hoy: medicamentos y actividades de hoy en orden de hora.
  *  3. Tu acompañante y tu salud (última medición).
  *  4. Próximamente: actividades de los siguientes días.
@@ -69,8 +70,10 @@ export class PersonaMayorDashboard implements OnInit, OnDestroy {
 
   protected readonly nombreUsuario: string;
 
-  // Hora actual; se refresca cada minuto para que la agenda cambie sola
-  // (lo que pasó se atenúa, "Siguiente" avanza).
+  /**
+   * Hora actual. Se refresca cada minuto para que la agenda cambie sola: lo
+   * que pasó se atenúa y "Siguiente" avanza.
+   */
   protected readonly ahora = signal(new Date());
   private intervaloReloj?: ReturnType<typeof setInterval>;
 
@@ -82,12 +85,12 @@ export class PersonaMayorDashboard implements OnInit, OnDestroy {
   protected readonly cargandoAgenda = signal(true);
   protected readonly cargandoAcompanante = signal(true);
   protected readonly cargandoSignos = signal(true);
-  private pendientesAgenda = 2; // medicamentos + actividades
+  private pendientesAgenda = 2; // medicamentos y actividades
 
   protected readonly formatearHora = formatearHora;
   protected readonly formatearProximaToma = formatearProximaToma;
 
-  // ---------- Emergencia ----------
+  // Botón de emergencia
   protected readonly mostrandoConfirmacionEmergencia = signal(false);
   protected readonly enviandoEmergencia = signal(false);
   protected readonly mensajeEmergencia = signal<string | null>(null);
@@ -130,6 +133,7 @@ export class PersonaMayorDashboard implements OnInit, OnDestroy {
     });
   }
 
+  /** Solo interesan las actividades en las que está inscrita. */
   private cargarActividades(): void {
     this.actividadService.listarDisponibles().subscribe({
       next: (actividades) => this.actividades.set(actividades.filter((a) => a.inscrito)),
@@ -138,6 +142,7 @@ export class PersonaMayorDashboard implements OnInit, OnDestroy {
     });
   }
 
+  /** En el inicio se muestra solo el primer acompañante. */
   private cargarAcompanante(): void {
     this.acompananteService.obtenerAcompanantes().subscribe({
       next: (acompanantes) => this.acompanante.set(acompanantes[0] ?? null),
@@ -146,6 +151,7 @@ export class PersonaMayorDashboard implements OnInit, OnDestroy {
     });
   }
 
+  /** La lista llega de la más reciente a la más antigua: basta con la primera. */
   private cargarSignosVitales(): void {
     this.signosVitalesService.listarPropios().subscribe({
       next: (registros) => this.ultimoSignoVital.set(registros[0] ?? null),
@@ -154,6 +160,7 @@ export class PersonaMayorDashboard implements OnInit, OnDestroy {
     });
   }
 
+  /** La agenda deja de mostrar "cargando" cuando llegan medicamentos y actividades. */
   private terminarCargaAgenda(): void {
     this.pendientesAgenda--;
     if (this.pendientesAgenda <= 0) {
@@ -161,10 +168,10 @@ export class PersonaMayorDashboard implements OnInit, OnDestroy {
     }
   }
 
-  // =========================================================
-  // AGENDA DE HOY
-  // =========================================================
-
+  /**
+   * Agenda de hoy: tomas de medicamentos y actividades en orden de hora,
+   * cada una con su estado (ver EstadoEvento).
+   */
   protected readonly agendaHoy = computed<EventoAgenda[]>(() => {
     const ahora = this.ahora();
     const inicioHoy = new Date(ahora);
@@ -175,7 +182,7 @@ export class PersonaMayorDashboard implements OnInit, OnDestroy {
     const eventos: Omit<EventoAgenda, 'estado'>[] = [];
     const estados = new Map<string, EstadoEvento>();
 
-    // Medicamentos: la toma ya registrada hoy + las que faltan hoy
+    // Medicamentos: la toma ya hecha hoy y las que faltan hoy.
     for (const med of this.medicamentos()) {
       if (med.activo === false || (med.fechaFin && med.fechaFin < hoy)) {
         continue;
@@ -199,7 +206,7 @@ export class PersonaMayorDashboard implements OnInit, OnDestroy {
       const intervalo = Math.max(1, med.intervaloHoras || 24) * HORA;
       let toma = new Date(med.proximaToma);
 
-      // Si quedó pendiente desde antes de hoy, se muestra como atrasada
+      // Si quedó pendiente desde antes de hoy, se muestra como atrasada.
       if (toma < inicioHoy) {
         const clave = `m${med.idMedicamento}-atrasado`;
         eventos.push({ clave, tipo: 'medicamento', momento: toma, titulo: med.nombre, detalle: med.dosis || null, enlace });
@@ -215,7 +222,7 @@ export class PersonaMayorDashboard implements OnInit, OnDestroy {
       }
     }
 
-    // Actividades de hoy a las que confirmó asistencia
+    // Actividades de hoy en las que está inscrita.
     for (const act of this.actividades()) {
       if (act.fecha !== hoy) {
         continue;
@@ -234,12 +241,12 @@ export class PersonaMayorDashboard implements OnInit, OnDestroy {
       estados.set(clave, momento && momento < ahora ? 'pasado' : 'pendiente');
     }
 
-    // Orden por hora (las que no tienen hora, al final)
+    // Orden por hora; las que no tienen hora van al final.
     eventos.sort((a, b) =>
       (a.momento?.getTime() ?? Number.MAX_SAFE_INTEGER) - (b.momento?.getTime() ?? Number.MAX_SAFE_INTEGER)
     );
 
-    // El primer pendiente es "lo siguiente"
+    // El primer pendiente es "lo siguiente".
     const siguiente = eventos.find((e) => estados.get(e.clave) === 'pendiente');
     if (siguiente) {
       estados.set(siguiente.clave, 'siguiente');
@@ -278,12 +285,10 @@ export class PersonaMayorDashboard implements OnInit, OnDestroy {
       .slice(0, 3);
   });
 
-  // =========================================================
-  // SALUD
-  // =========================================================
-
-  // Rangos de referencia en core/signos-vitales/rangos.ts (los mismos que
-  // usa la analítica de la organización).
+  /**
+   * Resumen de la última medición. Los rangos de referencia están en
+   * core/signos-vitales/rangos.ts y son los mismos de la analítica.
+   */
   protected readonly signosResumen = computed<SignoResumen[]>(() => {
     const s = this.ultimoSignoVital();
     if (!s) {
@@ -320,6 +325,7 @@ export class PersonaMayorDashboard implements OnInit, OnDestroy {
     this.signosResumen().some((s) => !s.normal)
   );
 
+  /** "hoy", "ayer" o "hace N días". */
   protected hace(fechaHora: string): string {
     const dias = Math.floor(
       (this.inicioDelDia(this.ahora()).getTime() - this.inicioDelDia(new Date(fechaHora)).getTime())
@@ -330,17 +336,13 @@ export class PersonaMayorDashboard implements OnInit, OnDestroy {
     return `hace ${dias} días`;
   }
 
-  // =========================================================
-  // UTILIDADES
-  // =========================================================
-
   protected horaDe(fecha: Date | null): string {
     return fecha
       ? fecha.toLocaleTimeString('es-CO', { hour: 'numeric', minute: '2-digit' })
       : 'Sin hora';
   }
 
-  // "Hoy", "Mañana" o "jueves 2 de octubre"
+  /** "Hoy", "Mañana" o "jueves 2 de octubre". */
   protected formatearDia(fecha: string | null): string {
     if (!fecha) {
       return 'Sin fecha';
@@ -357,6 +359,7 @@ export class PersonaMayorDashboard implements OnInit, OnDestroy {
       .toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' });
   }
 
+  /** Une una fecha "yyyy-MM-dd" y una hora "HH:mm" en un Date local. */
   private combinar(fecha: string, hora: string): Date {
     const [anio, mes, dia] = fecha.split('-').map(Number);
     const [h, m] = hora.split(':').map(Number);
@@ -369,14 +372,10 @@ export class PersonaMayorDashboard implements OnInit, OnDestroy {
     return d;
   }
 
-  // YYYY-MM-DD en hora local (toISOString() usaría UTC)
+  /** Fecha YYYY-MM-DD en hora local (toISOString() usaría UTC). */
   private fechaLocal(fecha: Date): string {
     return fecha.toLocaleDateString('en-CA');
   }
-
-  // =========================================================
-  // EMERGENCIA
-  // =========================================================
 
   activarConfirmacionEmergencia(): void {
     this.mostrandoConfirmacionEmergencia.set(true);
@@ -388,6 +387,7 @@ export class PersonaMayorDashboard implements OnInit, OnDestroy {
     this.mostrandoConfirmacionEmergencia.set(false);
   }
 
+  /** Envía la alerta a los acompañantes y organizaciones de la persona mayor. */
   confirmarEmergencia(): void {
     this.enviandoEmergencia.set(true);
     this.errorEmergencia.set(null);

@@ -2,6 +2,9 @@ package com.proyectogrado.auth_backend.model;
 
 import jakarta.persistence.*;
 
+/**
+ * Datos propios del voluntario. Comparte la llave con usuario (id_usuario).
+ */
 @Entity
 @Table(name = "voluntario")
 public class Voluntario {

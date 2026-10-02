@@ -6,11 +6,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 /**
- * Vista de SOLO LECTURA sobre "persona_mayor_acompanante". Esa relacion
- * la administran personamayor-service y acompanante-service;
- * actividad-service solo necesita saber que personas mayores acompaña
- * un acompañante (estado ACEPTADA) para poder mostrarle las actividades
- * de esas personas mayores.
+ * Vista de solo lectura de persona_mayor_acompanante. Ese vínculo lo
+ * administran persona-mayor-service y acompanante-service; aquí solo se
+ * necesita saber qué personas mayores acompaña un acompañante (vínculos
+ * aceptados) para mostrarle sus actividades.
  */
 @Entity
 @Table(name = "persona_mayor_acompanante")
@@ -22,8 +21,9 @@ public class PersonaMayorAcompananteLookup {
     @Column(name = "estado", nullable = false)
     private String estado;
 
+    /** Lo exige JPA. */
+
     protected PersonaMayorAcompananteLookup() {
-        // JPA
     }
 
     public PersonaMayorAcompananteId getId() {

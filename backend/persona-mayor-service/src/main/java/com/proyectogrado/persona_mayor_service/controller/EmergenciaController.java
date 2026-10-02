@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * Reconstruida aqui (ya no en messaging-backend): personamayor-service es
- * quien conoce las relaciones persona mayor <-> acompanante/organizacion,
- * y le delega a messaging-backend SOLO el envio del SMS.
+ * Botón de emergencia de la persona mayor: envía un SMS a todos sus
+ * acompañantes y organizaciones con vínculo aceptado. Este servicio decide
+ * a quién avisar; messaging-service solo hace el envío.
  */
 @RestController
 @RequestMapping("/api/persona-mayor/emergencia")
@@ -42,6 +42,7 @@ public class EmergenciaController {
         this.messagingClient = messagingClient;
     }
 
+    /** Envía la alerta. Responde 400 si no se pudo avisar a nadie. */
     @PostMapping
     public ResponseEntity<String> enviarEmergencia(
             @RequestHeader("X-User-Id") Integer idPersonaMayor
@@ -84,6 +85,7 @@ public class EmergenciaController {
 
             Integer idOrganizacion = relacion.getId().getIdOrganizacion();
 
+            // De cada organización se avisa al celular de su primera cuenta.
             List<UsuarioLookup> usuariosOrganizacion =
                     usuarioLookupRepository.findByIdOrganizacion(idOrganizacion);
 

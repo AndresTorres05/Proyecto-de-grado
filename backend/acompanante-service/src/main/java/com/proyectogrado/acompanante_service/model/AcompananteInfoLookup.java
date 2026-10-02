@@ -6,11 +6,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * Solo lectura sobre "acompanante" (dueno de auth-backend). Aqui solo
- * se necesita leer el relacion de OTROS acompanantes (los contactos
- * de la persona mayor que se esta consultando) -- por eso es solo
- * lectura, a diferencia de como personamayor-service escribe este mismo
- * campo cuando el propio acompanante es agregado.
+ * Vista de solo lectura de la tabla acompanante, que pertenece a
+ * auth-service. Aquí solo se lee la relación de los otros acompañantes de
+ * la persona mayor consultada; ese campo lo escribe persona-mayor-service
+ * cuando la persona mayor agrega a un acompañante.
  */
 @Entity
 @Table(name = "acompanante")
@@ -23,8 +22,9 @@ public class AcompananteInfoLookup {
     @Column(name = "relacion")
     private String relacion;
 
+    /** Lo exige JPA. */
+
     protected AcompananteInfoLookup() {
-        // JPA
     }
 
     public Integer getIdUsuario() {

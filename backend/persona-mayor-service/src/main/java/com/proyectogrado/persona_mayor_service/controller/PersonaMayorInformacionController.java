@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 
 /**
- * Perfil propio de la persona mayor: fechaNacimiento/genero/direccion.
+ * Perfil de la persona mayor: fecha de nacimiento, género y dirección,
+ * guardados en la tabla persona_mayor.
  *
- * nombre/correo/celular son de identidad (auth-backend) y solo se leen
- * aqui (UsuarioLookup); NO se editan desde este servicio.
+ * El nombre, el correo y el celular son de la cuenta (auth-service): aquí
+ * solo se leen con UsuarioLookup y no se editan.
  */
 @RestController
 @RequestMapping("/api/persona-mayor/perfil")
@@ -38,6 +39,7 @@ public class PersonaMayorInformacionController {
         this.usuarioLookupRepository = usuarioLookupRepository;
     }
 
+    /** Perfil de la persona mayor autenticada. */
     @GetMapping
     public ResponseEntity<?> obtenerInformacion(
             @RequestHeader("X-User-Id") Integer idUsuario
@@ -53,6 +55,7 @@ public class PersonaMayorInformacionController {
         return ResponseEntity.ok(aRespuesta(personaMayor, usuario));
     }
 
+    /** Guarda los cambios del perfil. La fecha de nacimiento solo cambia si viene. */
     @PutMapping
     public ResponseEntity<?> actualizarInformacion(
             @RequestHeader("X-User-Id") Integer idUsuario,

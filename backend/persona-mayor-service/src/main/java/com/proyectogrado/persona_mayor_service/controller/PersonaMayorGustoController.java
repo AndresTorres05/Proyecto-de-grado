@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Gustos que tiene marcados cada persona mayor. Cualquier usuario con
+ * sesión puede consultarlos, pero solo la propia persona mayor los cambia.
+ */
 @RestController
 @RequestMapping("/api/persona-mayor/{idPersonaMayor}/gustos")
 public class PersonaMayorGustoController {
@@ -42,6 +46,7 @@ public class PersonaMayorGustoController {
                 .toList();
     }
 
+    /** Reemplaza todos los gustos de la persona mayor por los de la lista. */
     @PutMapping
     public ResponseEntity<?> asignar(
             @RequestHeader("X-User-Id") Integer idUsuarioAutenticado,

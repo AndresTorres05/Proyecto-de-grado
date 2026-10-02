@@ -6,8 +6,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * Vista de SOLO LECTURA sobre la tabla "usuario" (duena: auth-backend).
- * Solo se usa para saber el celular del usuario autenticado y asi
+ * Vista de solo lectura de la tabla usuario, que pertenece a auth-service.
+ * Solo se usa para saber el celular del usuario autenticado y así
  * encontrar sus notificaciones.
  */
 @Entity
@@ -21,8 +21,8 @@ public class UsuarioLookup {
     @Column(name = "Celular")
     private String celular;
 
+    /** Lo exige JPA. */
     protected UsuarioLookup() {
-        // JPA
     }
 
     public Integer getIdUsuario() {

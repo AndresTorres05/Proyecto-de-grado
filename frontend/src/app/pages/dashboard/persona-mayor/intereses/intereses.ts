@@ -10,15 +10,18 @@ import {
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 import { Icon } from '../../../../shared/icon/icon';
 
+/** Pestaña de categoría. */
 interface CategoriaTab {
   valor: CategoriaGusto;
   label: string;
   icon: string;
 }
 
-// Mapeo exacto: nombre del gusto tal como está en la base de datos -> ícono.
-// Si en el futuro agregas un gusto nuevo que no esté aquí, se usa el ícono
-// por defecto de su categoría (ver iconoPorDefecto).
+/**
+ * Icono de cada gusto, por su nombre exacto en la base de datos. Un gusto
+ * que no esté aquí usa el icono por defecto de su categoría
+ * (ver ICONO_POR_DEFECTO).
+ */
 const NOMBRE_A_ICONO: Record<string, string> = {
   // GUSTO
   'Leer': 'book',
@@ -57,12 +60,17 @@ const NOMBRE_A_ICONO: Record<string, string> = {
   'Voluntariado': 'users'
 };
 
+/** Icono de los gustos que no están en NOMBRE_A_ICONO. */
 const ICONO_POR_DEFECTO: Record<CategoriaGusto, string> = {
   GUSTO: 'heart',
   TALENTO: 'sparkles',
   HOBBY: 'target'
 };
 
+/**
+ * Intereses de la persona mayor: marca sus gustos, talentos y pasatiempos
+ * en tres pestañas y los guarda todos de una vez.
+ */
 @Component({
   selector: 'app-intereses',
   standalone: true,
@@ -80,6 +88,7 @@ export class Intereses implements OnInit {
 
   protected readonly categoriaActiva = signal<CategoriaGusto>('GUSTO');
   protected readonly gustosDisponibles = signal<Gusto[]>([]);
+  /** Ids marcados en pantalla; se guardan al pulsar "Guardar". */
   protected readonly gustosSeleccionados = signal<Set<number>>(new Set());
   protected readonly guardandoGustos = signal(false);
   protected readonly cargando = signal(true);
@@ -114,6 +123,7 @@ export class Intereses implements OnInit {
     this.cargarIntereses(idPersonaMayor);
   }
 
+  /** Carga el catálogo y después los gustos que ya tenía marcados. */
   private cargarIntereses(idPersonaMayor: number): void {
     this.cargando.set(true);
     this.errorGustos.set(null);
@@ -170,6 +180,7 @@ export class Intereses implements OnInit {
     this.gustosSeleccionados.set(seleccionados);
   }
 
+  /** Reemplaza en el backend todos los gustos marcados por la selección actual. */
   guardarGustos(): void {
     const idPersonaMayor = this.authService.getIdUsuario();
     if (idPersonaMayor === null) {
@@ -193,10 +204,9 @@ export class Intereses implements OnInit {
   }
 
   /**
-   * Devuelve el nombre del ícono (para <app-icon [name]="...">) que
-   * corresponde a este gusto, según su nombre exacto en la base de datos.
-   * Si el nombre no está mapeado (por ejemplo un gusto nuevo agregado
-   * directamente en la BD), cae al ícono por defecto de su categoría.
+   * Nombre del icono (para <app-icon [name]="...">) que corresponde al
+   * gusto, según su nombre exacto en la base de datos. Si no está en la
+   * lista, usa el icono por defecto de su categoría.
    */
   obtenerIcono(gusto: Gusto): string {
     return NOMBRE_A_ICONO[gusto.nombre] ?? ICONO_POR_DEFECTO[gusto.categoria];

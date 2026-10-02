@@ -7,9 +7,7 @@
 }
 
 
-/* =========================================================
-   ENCABEZADO
-   ========================================================= */
+/* Encabezado */
 
 .page-header {
   margin-bottom: 30px;
@@ -36,9 +34,7 @@
 }
 
 
-/* =========================================================
-   MENSAJES
-   ========================================================= */
+/* Mensajes */
 
 .message {
   display: flex;
@@ -91,9 +87,7 @@
 }
 
 
-/* =========================================================
-   TÍTULOS DE SECCIÓN
-   ========================================================= */
+/* Títulos de sección */
 
 .section-title {
   display: flex;
@@ -127,9 +121,7 @@
 }
 
 
-/* =========================================================
-   CONTADOR DE SOLICITUDES
-   ========================================================= */
+/* Contador de solicitudes */
 
 .request-count {
   flex-shrink: 0;
@@ -147,9 +139,7 @@
 }
 
 
-/* =========================================================
-   NO HAY SOLICITUDES
-   ========================================================= */
+/* No hay solicitudes */
 
 .no-pending {
   display: flex;
@@ -213,9 +203,7 @@
 }
 
 
-/* =========================================================
-   SOLICITUDES
-   ========================================================= */
+/* Solicitudes */
 
 .requests-section {
   margin-bottom: 42px;
@@ -229,7 +217,7 @@
 }
 
 
-/* ---------- Tarjeta de solicitud ---------- */
+/* Tarjeta de solicitud */
 
 .request-card {
   display: grid;
@@ -265,7 +253,7 @@
 }
 
 
-/* ---------- Organización ---------- */
+/* Organización */
 
 .request-card__organization {
   display: flex;
@@ -277,7 +265,7 @@
 }
 
 
-/* ---------- Iconos ---------- */
+/* Iconos */
 
 .organization-icon {
   width: 58px;
@@ -303,7 +291,7 @@
 }
 
 
-/* ---------- Nombre ---------- */
+/* Nombre */
 
 .eyebrow {
   display: block;
@@ -327,7 +315,7 @@
 }
 
 
-/* ---------- Información solicitud ---------- */
+/* Información de la solicitud */
 
 .request-card__info {
   display: flex;
@@ -379,7 +367,7 @@
 }
 
 
-/* ---------- Acciones solicitud ---------- */
+/* Acciones de la solicitud */
 
 .request-card__actions {
   display: flex;
@@ -395,9 +383,7 @@
 }
 
 
-/* =========================================================
-   BOTONES
-   ========================================================= */
+/* Botones */
 
 .btn {
   display: inline-flex;
@@ -460,9 +446,7 @@
 }
 
 
-/* =========================================================
-   ORGANIZACIONES ASOCIADAS
-   ========================================================= */
+/* Organizaciones asociadas */
 
 .organizations-section {
   width: 100%;
@@ -478,7 +462,7 @@
 }
 
 
-/* ---------- Tarjeta horizontal ---------- */
+/* Tarjeta horizontal */
 
 .organization-card {
   display: grid;
@@ -523,7 +507,7 @@
 }
 
 
-/* ---------- Identidad ---------- */
+/* Identidad */
 
 .organization-card__identity {
   display: flex;
@@ -547,7 +531,7 @@
 }
 
 
-/* ---------- Separadores ---------- */
+/* Separadores */
 
 .organization-card__divider {
   width: 1px;
@@ -561,7 +545,7 @@
 }
 
 
-/* ---------- Detalles ---------- */
+/* Detalles */
 
 .organization-card__detail {
   display: flex;
@@ -608,9 +592,7 @@
 }
 
 
-/* =========================================================
-   ESTADO DE ASOCIACIÓN
-   ========================================================= */
+/* Estado de asociación */
 
 .organization-status {
   display: inline-flex;
@@ -647,9 +629,7 @@
   background: var(--vita-green);
 }
 
-/* =========================================================
-   ACCIONES DE ASOCIACIÓN
-   ========================================================= */
+/* Acciones de asociación */
 
 .organization-card__actions {
   display: flex;
@@ -696,9 +676,7 @@
 }
 
 
-/* =========================================================
-   ESTADO VACÍO
-   ========================================================= */
+/* Estado vacío */
 
 .empty-state {
   display: flex;
@@ -760,9 +738,7 @@
 }
 
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
+/* Responsive */
 
 @media (max-width: 1200px) {
 
@@ -797,9 +773,7 @@
 }
 
 
-/* =========================================================
-   TABLET
-   ========================================================= */
+/* Tablets */
 
 @media (max-width: 950px) {
 
@@ -847,9 +821,7 @@
 }
 
 
-/* =========================================================
-   MÓVIL
-   ========================================================= */
+/* Móviles */
 
 @media (max-width: 650px) {
 
@@ -947,9 +919,7 @@
 }
 
 
-/* =========================================================
-   MÓVIL PEQUEÑO
-   ========================================================= */
+/* Móviles pequeños */
 
 @media (max-width: 420px) {
 
@@ -967,9 +937,7 @@
 
 }
 
-/* =========================================================
-   MODAL DE CONFIRMACIÓN
-   ========================================================= */
+/* Modal de confirmación */
 
 .modal-overlay {
   position: fixed;
@@ -1191,9 +1159,7 @@
   }
 }
 
-/* =========================================================
-   BOTONES DE SOLICITUDES
-   ========================================================= */
+/* Botones de solicitudes */
 
 .btn-accept {
   background: var(--vita-green);

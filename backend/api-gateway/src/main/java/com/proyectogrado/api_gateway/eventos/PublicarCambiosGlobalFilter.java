@@ -17,12 +17,12 @@ import java.util.Set;
 
 /**
  * Detecta cada escritura exitosa (POST/PUT/DELETE/PATCH con respuesta 2xx)
- * que pasa por el gateway y avisa que recurso cambio, para que los demas
- * usuarios vean el cambio sin recargar la pagina.
+ * que pasa por el gateway y avisa qué recurso cambió, para que los demás
+ * usuarios vean el cambio sin recargar la página.
  *
- * Como todo el trafico del frontend pasa por aqui, los microservicios no
- * tienen que publicar nada. Si se agrega un endpoint nuevo que modifica
- * datos compartidos, basta con agregar su ruta en RECURSOS_POR_RUTA.
+ * Como todo el tráfico del frontend pasa por aquí, los servicios no tienen
+ * que publicar nada. Si se agrega un endpoint nuevo que modifica datos
+ * compartidos, basta con agregar su ruta en RECURSOS_POR_RUTA.
  */
 @Component
 public class PublicarCambiosGlobalFilter implements GlobalFilter, Ordered {
@@ -30,9 +30,12 @@ public class PublicarCambiosGlobalFilter implements GlobalFilter, Ordered {
     private static final Set<HttpMethod> METODOS_DE_ESCRITURA =
             Set.of(HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.PATCH);
 
-    // Se usa la primera coincidencia. Las rutas que no aparecen (login,
-    // OTP, contrasena) no cambian datos que vean otros.
-    // "*" = cambia de todo (al borrar una cuenta se borran sus relaciones).
+    /**
+     * Ruta del gateway y recurso que cambia cuando se escribe en ella. Gana
+     * la primera coincidencia. Las rutas que no aparecen (login, OTP,
+     * contraseña) no cambian datos que vean otros usuarios. "*" significa
+     * que cambia todo: al borrar una cuenta se borran también sus relaciones.
+     */
     private static final Map<String, String> RECURSOS_POR_RUTA = new LinkedHashMap<>();
 
     static {
@@ -85,8 +88,8 @@ public class PublicarCambiosGlobalFilter implements GlobalFilter, Ordered {
             return chain.filter(exchange);
         }
 
-        // Se avisa despues de que el servicio respondio (el cambio ya
-        // quedo guardado) y solo si la operacion fue exitosa.
+        // Se avisa después de que el servicio respondió (el cambio ya
+        // quedó guardado) y solo si la operación fue exitosa.
         return chain.filter(exchange).then(Mono.fromRunnable(() -> {
             HttpStatusCode estado = exchange.getResponse().getStatusCode();
             if (estado != null && estado.is2xxSuccessful()) {
@@ -95,6 +98,7 @@ public class PublicarCambiosGlobalFilter implements GlobalFilter, Ordered {
         }));
     }
 
+    /** Recurso de la primera regla que coincide con la ruta, o null si la ruta no está en la lista. */
     private String resolverRecurso(String ruta) {
         for (Map.Entry<String, String> regla : RECURSOS_POR_RUTA.entrySet()) {
             if (matcher.match(regla.getKey(), ruta)) {

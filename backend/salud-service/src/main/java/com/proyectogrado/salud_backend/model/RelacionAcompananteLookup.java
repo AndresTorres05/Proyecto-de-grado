@@ -6,11 +6,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 /**
- * Solo lectura sobre "persona_mayor_acompanante" (dueno de
- * personas-backend). El scheduler de recordatorios necesita saber a que
- * acompanantes ACEPTADOS avisar, y una llamada HTTP por cada medicamento
- * vencido, cada minuto, no tiene sentido -> lectura directa, igual que
- * los demas Lookup de este proyecto.
+ * Vista de solo lectura de persona_mayor_acompanante. El scheduler de
+ * recordatorios necesita saber a qué acompañantes aceptados avisar, y
+ * hacer una llamada HTTP por cada medicamento, cada minuto, no tiene
+ * sentido: se lee la tabla directamente, como en los demás Lookup del
+ * proyecto.
  */
 @Entity
 @Table(name = "persona_mayor_acompanante")
@@ -19,11 +19,12 @@ public class RelacionAcompananteLookup {
     @EmbeddedId
     private RelacionAcompananteId id;
 
+    /** PENDIENTE, ACEPTADA o RECHAZADA. */
     @Column(name = "estado")
     private String estado;
 
+    /** Lo exige JPA. */
     protected RelacionAcompananteLookup() {
-        // JPA
     }
 
     public RelacionAcompananteId getId() {

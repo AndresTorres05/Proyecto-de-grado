@@ -2,11 +2,13 @@ import { Routes } from '@angular/router';
 
 import { authGuard } from './core/auth/auth.guard';
 
+/**
+ * Rutas de la aplicación. Cada panel carga PanelShellLayout (barra lateral
+ * y superior) y authGuard, que exige sesión con el rol de data.rol. Las
+ * secciones que aún no existen muestran EnConstruccion con data.titulo.
+ */
 export const routes: Routes = [
-  // =========================
-  // PÁGINAS PÚBLICAS
-  // =========================
-
+  // Páginas públicas
   {
     path: '',
     loadComponent: () => import('./pages/landing/landing').then((m) => m.Landing),
@@ -22,10 +24,7 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/registro/registro').then((m) => m.Registro),
   },
 
-  // =========================
-  // PANEL ORGANIZACIÓN
-  // =========================
-
+  // Panel de la organización
   {
     path: 'panel/organizacion',
     loadComponent: () =>
@@ -129,10 +128,7 @@ export const routes: Routes = [
     ],
   },
 
-  // =========================
-  // PANEL VOLUNTARIO
-  // =========================
-
+  // Panel del voluntario
   {
     path: 'panel/voluntario',
     loadComponent: () =>
@@ -180,10 +176,7 @@ export const routes: Routes = [
     ],
   },
 
-  // =========================
-  // PANEL ACOMPAÑANTE
-  // =========================
-
+  // Panel del acompañante
   {
     path: 'panel/acompanante',
     loadComponent: () =>
@@ -231,10 +224,7 @@ export const routes: Routes = [
     ],
   },
 
-  // =========================
-  // PANEL PERSONA MAYOR
-  // =========================
-
+  // Panel de la persona mayor
   {
     path: 'panel/persona-mayor',
 

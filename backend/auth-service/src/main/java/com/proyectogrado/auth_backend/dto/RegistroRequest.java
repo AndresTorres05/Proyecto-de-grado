@@ -1,17 +1,27 @@
 package com.proyectogrado.auth_backend.dto;
 
+/**
+ * Datos del formulario de registro. Las reglas de qué campos son
+ * obligatorios están en AuthService.validarRegistro.
+ */
 public class RegistroRequest {
 
     private String nombreUsuario;
+
+    // Opcionales, pero van juntos.
     private String correo;
     private String contrasena;
+
+    /** PERSONA_MAYOR, ACOMPANANTE, ORGANIZACION o VOLUNTARIO. */
     private String rol;
 
-    // Persona mayor, acompañante y voluntario    
-    private String fechaNacimiento;
+    // Obligatorios para persona mayor, acompañante y voluntario. La
+    // dirección también lo es para la organización.
+    private String fechaNacimiento; // "yyyy-MM-dd"
     private String genero;
     private String direccion;
 
+    /** Obligatorio para todos: +57 seguido de 10 dígitos. */
     private String celular;
 
     public RegistroRequest() {

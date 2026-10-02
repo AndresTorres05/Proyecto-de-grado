@@ -11,8 +11,8 @@ import { Icon } from '../../../../shared/icon/icon';
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
 /**
- * Historial de signos vitales de la persona mayor. Usa la misma lista
- * que el modal de "Últimos signos vitales" de organización/acompañante.
+ * Historial de signos vitales de la persona mayor. Usa la misma lista que el
+ * modal de "Últimos signos vitales" de la organización y del acompañante.
  * La persona mayor también puede registrar sus propios signos vitales.
  */
 @Component({

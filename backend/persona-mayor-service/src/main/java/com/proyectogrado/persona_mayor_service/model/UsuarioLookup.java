@@ -8,12 +8,11 @@ import jakarta.persistence.Table;
 import java.time.LocalDate;
 
 /**
- * Vista de SOLO LECTURA sobre la tabla "usuario", que es dueno de
- * auth-backend. personamayor-service NUNCA crea, edita ni borra usuarios;
- * esto existe solo para poder mostrar nombre/celular/correo en las
- * respuestas de relaciones sin tener que llamar por HTTP a auth-backend
- * en cada consulta (valido en arquitectura de servicios con BD compartida,
- * NO seria valido en microservicios estrictos).
+ * Vista de solo lectura de la tabla usuario, que pertenece a auth-service.
+ * Este servicio nunca crea, edita ni borra usuarios: la vista existe para
+ * leer nombre, celular, correo y fecha de nacimiento sin llamar por HTTP a
+ * auth-service en cada consulta. Es válido porque todos los servicios
+ * comparten la misma base de datos.
  */
 @Entity
 @Table(name = "usuario")
@@ -38,8 +37,8 @@ public class UsuarioLookup {
     @Column(name = "fecha_nacimiento")
     private LocalDate fechaNacimiento;
 
+    /** Lo exige JPA. */
     protected UsuarioLookup() {
-        // JPA
     }
 
     public Integer getIdUsuario() {

@@ -122,7 +122,7 @@
   overflow-wrap: anywhere;
 }
 
-/* ---------- Próxima toma ---------- */
+/* Próxima toma */
 
 .medicamento-card__proxima {
   display: flex;
@@ -155,7 +155,7 @@
   font-weight: 700;
 }
 
-/* ---------- Datos ---------- */
+/* Datos */
 
 .medicamento-card__datos {
   display: grid;
@@ -233,7 +233,7 @@
   margin-bottom: 4px;
 }
 
-/* ---------- Modal ---------- */
+/* Modal */
 
 .modal-backdrop {
   position: fixed;

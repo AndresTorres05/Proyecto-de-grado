@@ -2,6 +2,7 @@ spring:
   application:
     name: api-gateway
 
+  # No se usa descubrimiento de servicios: cada ruta apunta a una URL fija.
   autoconfigure:
     exclude:
       - org.springframework.cloud.client.discovery.simple.SimpleDiscoveryClientAutoConfiguration
@@ -10,6 +11,8 @@ spring:
     gateway:
       server:
         webflux:
+          # CORS para el frontend (Angular en localhost:4200). Aplica a las
+          # rutas de abajo, no a los controladores del gateway (ver EventosController).
           globalcors:
             cors-configurations:
               '[/**]':
@@ -23,22 +26,28 @@ spring:
                 allowedHeaders: "*"
                 allowCredentials: true
 
+          # Rutas hacia cada servicio. Gana la primera que coincide, por eso las
+          # más específicas van antes que las generales. JwtAuth exige un token
+          # válido (ver JwtAuthGatewayFilterFactory).
           routes:
 
+            # Login, registro y cuenta. No lleva JwtAuth porque el login y el
+            # registro son públicos; auth-service valida el token por su cuenta
+            # en las demás rutas.
             - id: auth-backend
               uri: http://localhost:8081
               predicates:
                 - Path=/api/auth/**
 
-            # Solo el envío es público. /api/otp/verify NO se expone: lo
-            # llama auth-backend directo al servicio, y abierto permitiria
-            # adivinar codigos de otros celulares sin pasar por el login.
+            # Solo el envío del código es público. /api/otp/verify no se expone:
+            # lo llama auth-service directamente, y si estuviera abierto se
+            # podrían adivinar códigos de otros celulares sin pasar por el login.
             - id: messaging-otp
               uri: http://localhost:8082
               predicates:
                 - Path=/api/otp/send
 
-            # Campanita del panel: SMS enviados al usuario autenticado
+            # Campanita del panel: SMS enviados al usuario autenticado.
             - id: messaging-notificaciones
               uri: http://localhost:8082
               predicates:
@@ -46,6 +55,8 @@ spring:
               filters:
                 - JwtAuth
 
+            # Perfil, gustos, acompañantes, organizaciones y botón de emergencia
+            # de la persona mayor.
             - id: personamayor-service
               uri: http://localhost:8085
               predicates:
@@ -53,6 +64,7 @@ spring:
               filters:
                 - JwtAuth
 
+            # Personas mayores a cargo del acompañante y su seguimiento.
             - id: acompanante-service
               uri: http://localhost:8086
               predicates:
@@ -60,6 +72,9 @@ spring:
               filters:
                 - JwtAuth
 
+            # Acompañantes de una persona mayor, consultados por la organización.
+            # Los atiende persona-mayor-service. Va antes de organizacion-service
+            # porque /api/organizacion/** la capturaría.
             - id: organizacion-personas-mayores-acompanantes
               uri: http://localhost:8085
               predicates:
@@ -67,7 +82,8 @@ spring:
               filters:
                 - JwtAuth
 
-            # Antes de organizacion-service: /api/organizacion/** la capturaria.
+            # Signos vitales que registra la organización (salud-service). Va
+            # antes de organizacion-service porque /api/organizacion/** la capturaría.
             - id: organizacion-signos-vitales
               uri: http://localhost:8084
               predicates:
@@ -75,6 +91,7 @@ spring:
               filters:
                 - JwtAuth
 
+            # Información de la organización, sus personas mayores y la analítica.
             - id: organizacion-service
               uri: http://localhost:8088
               predicates:
@@ -82,6 +99,7 @@ spring:
               filters:
                 - JwtAuth
 
+            # Perfil del voluntario.
             - id: voluntario-service
               uri: http://localhost:8087
               predicates:
@@ -89,6 +107,7 @@ spring:
               filters:
                 - JwtAuth
 
+            # Medicamentos y recordatorios de la persona mayor.
             - id: salud-backend
               uri: http://localhost:8084
               predicates:
@@ -97,10 +116,10 @@ spring:
                 - JwtAuth
 
             # Signos vitales de la persona mayor: ver su historial y registrar
-            # una medicion propia. No se exponen el PUT/DELETE de este
-            # controlador (los registros no se editan ni se borran). OPTIONS
-            # es necesario para el preflight de CORS del navegador (si no, no
-            # hay ruta y el gateway responde sin cabeceras CORS).
+            # una medición propia. No se exponen el PUT/DELETE de este
+            # controlador, porque los registros no se editan ni se borran.
+            # OPTIONS hace falta para el preflight de CORS del navegador: sin
+            # él no hay ruta y el gateway responde sin cabeceras CORS.
             - id: salud-signos-vitales-persona-mayor
               uri: http://localhost:8084
               predicates:
@@ -109,6 +128,7 @@ spring:
               filters:
                 - JwtAuth
 
+            # Actividades de las organizaciones y participación en ellas.
             - id: actividad-service
               uri: http://localhost:8089
               predicates:
@@ -116,8 +136,10 @@ spring:
               filters:
                 - JwtAuth
 
+# Puerto del gateway; es el único que usa el frontend.
 server:
   port: 8080
 
+# Clave para validar los tokens. Tiene que ser igual a jwt.secret de auth-service.
 jwt:
   secret: cambia_esto_por_una_clave_larga_y_secreta_1234567890abcdef

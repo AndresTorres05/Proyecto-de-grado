@@ -4,6 +4,10 @@ import { DashboardShell, ShellNavItem } from '../dashboard-shell/dashboard-shell
 import { AuthService } from '../../core/auth/auth.service';
 import { PANEL_CONFIG } from '../panel-config/panel-config';
 
+/**
+ * Plantilla de los paneles: arma DashboardShell con la configuración del rol
+ * de la ruta (data.rol) y muestra la página hija adentro.
+ */
 @Component({
   selector: 'app-panel-shell-layout',
   standalone: true,
@@ -22,8 +26,7 @@ import { PANEL_CONFIG } from '../panel-config/panel-config';
   `
 })
 export class PanelShellLayout {
-  // Se recalculan solos cuando el nombre cambia en AuthService
-  // (por ejemplo, al guardarlo en "Mi información").
+  /** Se recalcula solo cuando cambia el nombre en AuthService (por ejemplo, en "Mi información"). */
   protected readonly nombreUsuario = computed(() => this.authService.getNombreUsuario());
   protected readonly iniciales = computed(() => this.nombreUsuario().charAt(0).toUpperCase());
 

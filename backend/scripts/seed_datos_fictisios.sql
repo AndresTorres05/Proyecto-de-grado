@@ -1,6 +1,5 @@
--- =====================================================================
 -- VITA+ — Script de datos ficticios para pruebas y analítica
--- =====================================================================
+--
 -- Genera:
 --   - 5 organizaciones (con su cuenta de usuario)
 --   - 200 personas mayores con fecha de nacimiento, género, dirección,
@@ -18,7 +17,7 @@
 --   - notificaciones del panel (recordatorios y alertas de emergencia)
 --
 -- Cómo correrlo:
---   - Todos los servicios apuntan a la MISMA base de datos Postgres en
+--   - Todos los servicios apuntan a la misma base de datos Postgres en
 --     Supabase, con los datos de conexión que están en el
 --     application.properties de cualquiera de ellos
 --     (spring.datasource.url/username/password).
@@ -28,7 +27,7 @@
 --     archivo completo en un Query Tool y ejecútalo.
 --   - psql: psql "<cadena de conexión>" -f seed_datos_fictisios.sql
 --
--- Es SEGURO volver a correrlo: al inicio borra únicamente lo que este
+-- Es seguro volver a correrlo: al inicio borra únicamente lo que este
 -- mismo script generó antes (todo correo termina en @vitaplus.test, y
 -- las organizaciones se reconocen por su cuenta org%@vitaplus.test), así
 -- que nunca toca tus usuarios reales.
@@ -47,14 +46,13 @@
 --   - Los celulares ficticios tampoco reciben el código OTP, así que
 --     para entrar con estas cuentas usa correo y contraseña.
 --
--- Los voluntarios NO tienen una tabla que los conecte con personas
+-- Los voluntarios no tienen una tabla que los conecte con personas
 -- mayores (no existe en el modelo actual): quedan conectados de forma
 -- indirecta a través de la organización a la que pertenecen.
 --
 -- Todas las fechas y horas se calculan en hora de Colombia
 -- (America/Bogota), que es la que usan los servicios; la base de datos
 -- de Supabase está en UTC.
--- =====================================================================
 
 BEGIN;
 
@@ -65,9 +63,7 @@ CREATE TEMP TABLE seed_reloj ON COMMIT DROP AS
 SELECT date_trunc('minute', now() AT TIME ZONE 'America/Bogota') AS ahora,
        (now() AT TIME ZONE 'America/Bogota')::date                AS hoy;
 
--- ---------------------------------------------------------------------
 -- 0. Limpieza idempotente (solo borra lo generado por este script)
--- ---------------------------------------------------------------------
 CREATE TEMP TABLE seed_usuarios_viejos ON COMMIT DROP AS
 SELECT id_usuario, celular FROM usuario WHERE correo LIKE '%@vitaplus.test';
 
@@ -113,17 +109,13 @@ DELETE FROM persona_mayor  WHERE id_usuario IN (SELECT id_usuario FROM seed_usua
 DELETE FROM usuario        WHERE id_usuario IN (SELECT id_usuario FROM seed_usuarios_viejos);
 DELETE FROM organizacion   WHERE id_organizacion IN (SELECT id_organizacion FROM seed_orgs_viejas);
 
--- ---------------------------------------------------------------------
 -- 1. Roles base (por si esta base de datos nunca ha arrancado el backend)
--- ---------------------------------------------------------------------
 INSERT INTO rol (nombre)
 SELECT r FROM (VALUES ('ORGANIZACION'), ('VOLUNTARIO'), ('ACOMPANANTE'), ('PERSONA_MAYOR')) AS v(r)
 ON CONFLICT (nombre) DO NOTHING;
 
--- ---------------------------------------------------------------------
 -- 2. Organizaciones ficticias (+ su cuenta de usuario, como lo hace el
 --    registro real: la organización inicia sesión con su correo)
--- ---------------------------------------------------------------------
 WITH datos_org AS (
     SELECT * FROM (VALUES
       ('Fundación Entrenubes Usme',                     'Calle 91 Sur # 3-15, Usme Centro',      'org01@vitaplus.test'),
@@ -152,12 +144,10 @@ SELECT iu.id_usuario, r.id_rol
 FROM ins_usuario iu, rol r
 WHERE r.nombre = 'ORGANIZACION';
 
--- ---------------------------------------------------------------------
 -- 3. Catálogo de gustos, talentos y pasatiempos (las 3 categorías que
 --    muestra la pantalla "Intereses"). Si un nombre ya existe con una
 --    categoría vieja que el frontend ya no muestra (MUSICA, ARTE...), se
 --    le corrige; si ya tiene una categoría vigente, no se toca.
--- ---------------------------------------------------------------------
 INSERT INTO gusto (nombre, categoria)
 VALUES
  ('Boleros', 'GUSTO'),
@@ -190,9 +180,7 @@ ON CONFLICT (nombre) DO UPDATE
    SET categoria = EXCLUDED.categoria
  WHERE gusto.categoria IS NULL OR gusto.categoria NOT IN ('GUSTO', 'TALENTO', 'HOBBY');
 
--- ---------------------------------------------------------------------
 -- 4. 200 personas mayores (usuario + persona_mayor con EPS e IPS)
--- ---------------------------------------------------------------------
 WITH datos AS (
     SELECT
         i,
@@ -277,9 +265,7 @@ INSERT INTO persona_mayor (id_usuario, eps, ips)
 SELECT u.id_usuario, c.eps, c.ips
 FROM ins_usuario u JOIN con_ips c ON c.correo = u.correo;
 
--- ---------------------------------------------------------------------
 -- 5. 25 acompañantes (usuario + acompanante)
--- ---------------------------------------------------------------------
 WITH datos AS (
     SELECT
         i,
@@ -326,10 +312,8 @@ INSERT INTO acompanante (id_usuario, relacion)
 SELECT u.id_usuario, f.relacion
 FROM ins_usuario u JOIN filas f ON f.correo = u.correo;
 
--- ---------------------------------------------------------------------
 -- 6. 25 voluntarios (usuario + voluntario), cada uno asignado a una de
 --    las 5 organizaciones ficticias
--- ---------------------------------------------------------------------
 WITH orgs AS (
     SELECT id_organizacion, row_number() OVER (ORDER BY id_organizacion) AS rn
     FROM usuario WHERE correo LIKE 'org%@vitaplus.test'
@@ -377,9 +361,7 @@ INSERT INTO voluntario (id_usuario)
 SELECT u.id_usuario
 FROM ins_usuario u;
 
--- ---------------------------------------------------------------------
 -- 7. Roles de las 250 cuentas de personas
--- ---------------------------------------------------------------------
 INSERT INTO usuario_rol (id_usuario, id_rol)
 SELECT u.id_usuario, r.id_rol
 FROM usuario u JOIN rol r ON r.nombre = 'PERSONA_MAYOR'
@@ -398,12 +380,10 @@ FROM usuario u JOIN rol r ON r.nombre = 'VOLUNTARIO'
 WHERE u.correo LIKE 'vol%@vitaplus.test'
 ON CONFLICT DO NOTHING;
 
--- ---------------------------------------------------------------------
 -- 8. Vínculo persona mayor - acompañante. Cada persona mayor tiene un
 --    acompañante principal (85% ACEPTADA) y ~30% tiene además un
 --    segundo acompañante (70% ACEPTADA), para probar personas con
 --    varios contactos.
--- ---------------------------------------------------------------------
 WITH pm AS (
     SELECT id_usuario, row_number() OVER (ORDER BY id_usuario) AS rn
     FROM usuario WHERE correo LIKE 'pm%@vitaplus.test'
@@ -431,12 +411,10 @@ SELECT id_persona_mayor, id_acompanante,
 FROM vinculos
 ON CONFLICT DO NOTHING;
 
--- ---------------------------------------------------------------------
 -- 9. Vínculo persona mayor - organización. Cada persona mayor queda con
 --    una organización principal (75% ACEPTADA, 15% PENDIENTE, 10%
 --    RECHAZADA; el botón de emergencia solo notifica organizaciones
 --    ACEPTADAS) y ~12% además con una segunda organización.
--- ---------------------------------------------------------------------
 WITH pm AS (
     SELECT id_usuario, row_number() OVER (ORDER BY id_usuario) AS rn
     FROM usuario WHERE correo LIKE 'pm%@vitaplus.test'
@@ -467,10 +445,8 @@ SELECT id_persona_mayor, id_organizacion,
 FROM asignaciones
 ON CONFLICT DO NOTHING;
 
--- ---------------------------------------------------------------------
 -- 10. Entre 3 y 6 gustos/talentos/pasatiempos por persona mayor (solo
 --     de las categorías que muestra el frontend)
--- ---------------------------------------------------------------------
 WITH gusto_ids AS (
     SELECT array_agg(id_gusto) AS ids FROM gusto
     WHERE categoria IN ('GUSTO', 'TALENTO', 'HOBBY')
@@ -492,13 +468,11 @@ INSERT INTO persona_mayor_gusto (id_persona_mayor, id_gusto)
 SELECT DISTINCT id_persona_mayor, id_gusto FROM asignaciones
 ON CONFLICT DO NOTHING;
 
--- ---------------------------------------------------------------------
 -- 11. Perfil de salud de cada persona mayor (tabla temporal, no se
 --     guarda). Sirve para que medicamentos, signos vitales y citas sean
 --     coherentes entre sí: quien es hipertenso tiene la presión más alta,
 --     toma antihipertensivos y va a control de hipertensión.
 --     Prevalencias aproximadas en mayores de 60 años en Colombia.
--- ---------------------------------------------------------------------
 CREATE TEMP TABLE seed_perfil ON COMMIT DROP AS
 WITH base AS (
     SELECT u.id_usuario, u.nombre_usuario, u.genero, pm.ips,
@@ -531,11 +505,9 @@ SELECT b.*,
        2 + floor(random() * 5)::int                AS n_citas
 FROM base b;
 
--- ---------------------------------------------------------------------
 -- 12. Medicamentos según el perfil de salud.
---     proxima_toma queda en el FUTURO (3 a 6 días) a propósito: ver la
+--     proxima_toma queda en el futuro (3 a 6 días) a propósito: ver la
 --     nota de SMS al inicio del archivo.
--- ---------------------------------------------------------------------
 WITH catalogo AS (
     SELECT * FROM (VALUES
         ('hta',     'Losartán',                '50 mg',              24, '08:00'::time),
@@ -593,7 +565,6 @@ SELECT e.id_usuario, e.nombre, e.dosis,
        e.r_activo >= 0.10   -- ~10% suspendidos
 FROM elegidos e CROSS JOIN seed_reloj r;
 
--- ---------------------------------------------------------------------
 -- 13. Historial de signos vitales (últimos 6 meses).
 --     - Cada medición varía alrededor de los valores habituales de la
 --       persona (hipertensos con la presión alta, EPOC con la saturación
@@ -605,7 +576,6 @@ FROM elegidos e CROSS JOIN seed_reloj r;
 --     - ~1.5% trae un error de digitación imposible (sistólica de 1300,
 --       saturación de 9, temperatura de 3.6) para probar cómo los
 --       reportes marcan "posible error de registro".
--- ---------------------------------------------------------------------
 WITH mediciones AS (
     SELECT p.*, k,
            CASE WHEN k = 1
@@ -664,12 +634,10 @@ SELECT v.id_usuario, v.fecha_hora,
             ELSE NULL END
 FROM valores v;
 
--- ---------------------------------------------------------------------
 -- 14. Citas médicas (pasadas y futuras, entre -150 y +75 días).
 --     Los títulos dependen del perfil de salud; los controles y la
 --     medicina general son en la IPS de la persona y las especialidades
 --     en un hospital. Horas entre 7:00 y 16:00 cada media hora.
--- ---------------------------------------------------------------------
 WITH catalogo AS (
     SELECT row_number() OVER () AS id, * FROM (VALUES
         ('general', 'Medicina general',                         false, NULL),
@@ -725,12 +693,10 @@ SELECT ci.id_usuario, c.titulo,
 FROM citas ci
 JOIN catalogo c ON c.id = ci.id_catalogo;
 
--- ---------------------------------------------------------------------
 -- 15. Actividades de las 5 organizaciones (16 plantillas x 3 rondas =
 --     48 actividades). La ronda 1 cae en los próximos 10 días (para ver
 --     actividades "de hoy" y "de esta semana"), la 2 en los últimos 4
 --     meses y la 3 entre 2 meses atrás y 2 meses adelante.
--- ---------------------------------------------------------------------
 WITH orgs AS (
     SELECT id_organizacion, row_number() OVER (ORDER BY id_organizacion) AS rn
     FROM usuario WHERE correo LIKE 'org%@vitaplus.test'
@@ -793,7 +759,6 @@ CROSS JOIN seed_reloj r
 JOIN n_org ON true
 JOIN orgs o ON o.rn = 1 + ((p.rn + ronda - 2) % n_org.n);
 
--- ---------------------------------------------------------------------
 -- 16. Participación en actividades (inscripciones + asistencia).
 --     - Solo se inscriben personas mayores cuya relación con la
 --       organización de la actividad esté ACEPTADA.
@@ -802,7 +767,6 @@ JOIN orgs o ON o.rn = 1 + ((p.rn + ronda - 2) % n_org.n);
 --       true/false (85%/15%) para las que ya pasaron.
 --     - recordatorio_enviado_para se llena con el inicio de la actividad:
 --       así el scheduler cree que ya avisó y no manda SMS.
--- ---------------------------------------------------------------------
 WITH actividades_ficticias AS (
     SELECT a.id_actividad, a.id_organizacion, a.fecha,
            a.fecha + a.hora::time AS inicio,
@@ -829,7 +793,6 @@ FROM candidatos c CROSS JOIN seed_reloj r
 WHERE c.rn <= c.n_inscritos
 ON CONFLICT DO NOTHING;
 
--- ---------------------------------------------------------------------
 -- 17. Notificaciones del panel (historial de los últimos 21 días), con
 --     los mismos textos que mandan los servicios:
 --     - recordatorios de medicamentos a la persona mayor y a sus
@@ -838,7 +801,6 @@ ON CONFLICT DO NOTHING;
 --     - alertas de emergencia de ~5% de las personas mayores a sus
 --       acompañantes.
 --     Las de hace más de 2 días quedan casi todas leídas.
--- ---------------------------------------------------------------------
 CREATE TEMP TABLE seed_notif (celular text, mensaje text, fecha timestamp) ON COMMIT DROP;
 
 -- Hora con el formato de los SMS: "8:00 a. m."
@@ -913,9 +875,7 @@ WHERE n.celular IS NOT NULL
 
 COMMIT;
 
--- =====================================================================
 -- Resumen: qué quedó cargado
--- =====================================================================
 SELECT 'organizaciones' AS dato, count(*) AS cantidad FROM usuario WHERE correo LIKE 'org%@vitaplus.test'
 UNION ALL SELECT 'personas_mayores', count(*) FROM usuario WHERE correo LIKE 'pm%@vitaplus.test'
 UNION ALL SELECT 'acompanantes', count(*) FROM usuario WHERE correo LIKE 'acomp%@vitaplus.test'

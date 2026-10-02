@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 
+/** Portada de la landing: título, tarjetas flotantes y los roles de la plataforma. */
 @Component({
   selector: 'app-hero',
   imports: [],
@@ -7,6 +8,8 @@ import { Component } from '@angular/core';
   styleUrl: './hero.css'
 })
 export class Hero {
+  // Hoy la plantilla tiene estos textos escritos directamente y no usa
+  // estos arreglos.
   protected readonly stats = [
     { value: '2,200+', label: 'Personas mayores' },
     { value: '840+', label: 'Acompañantes activos' },

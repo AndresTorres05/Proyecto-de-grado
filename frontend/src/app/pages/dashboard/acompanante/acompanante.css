@@ -22,7 +22,7 @@
   font-size: 0.9rem;
 }
 
-/* ---------- Tarjetas de personas mayores ---------- */
+/* Tarjetas de personas mayores */
 
 .elders-grid {
   display: grid;
@@ -93,7 +93,7 @@
   color: var(--vita-orange);
 }
 
-/* ---------- Layout ---------- */
+/* Distribución */
 
 .main-grid {
   display: grid;
@@ -121,7 +121,7 @@
   font-weight: 700;
 }
 
-/* ---------- Recordatorios ---------- */
+/* Recordatorios */
 
 .reminder-list {
   list-style: none;
@@ -160,7 +160,7 @@
   color: var(--vita-text-gray);
 }
 
-/* ---------- Alertas ---------- */
+/* Alertas */
 
 .alert-list-simple {
   list-style: none;
@@ -212,7 +212,7 @@
   color: color-mix(in srgb, var(--vita-gold) 60%, var(--vita-navy));
 }
 
-/* ---------- Actividades ---------- */
+/* Actividades */
 
 .mini-activity-list {
   list-style: none;
@@ -240,7 +240,7 @@
   color: var(--vita-text-gray);
 }
 
-/* ---------- Responsive ---------- */
+/* Responsive */
 
 @media (max-width: 960px) {
   .main-grid {

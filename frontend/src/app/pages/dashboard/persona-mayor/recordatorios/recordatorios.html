@@ -1,8 +1,10 @@
+<!-- Encabezado -->
 <div class="page-header">
   <h1>Recordatorios</h1>
   <p>Administra tus medicamentos y cada cuánto te avisamos que los tomes.</p>
 </div>
 
+<!-- Cargando y error -->
 @if (cargando()) {
   <div class="estado-card">
     <span class="estado-card__icon"><app-icon name="hourglass" /></span>
@@ -19,6 +21,7 @@
   </div>
 }
 
+<!-- Medicamentos: cada tarjeta muestra la próxima toma y los horarios del día -->
 @if (!cargando()) {
 
   <section class="section-block">
@@ -120,6 +123,7 @@
 
 }
 
+<!-- Modal para agregar o editar un medicamento; un clic en el fondo lo cierra -->
 @if (mostrandoFormulario()) {
   <div class="modal-backdrop" (click)="cancelarFormulario()">
     <div class="modal-card card" (click)="$event.stopPropagation()">

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 
+/** Cifra del panel de ejemplo. */
 interface DashboardStat {
   icon: string;
   value: string;
@@ -7,6 +8,7 @@ interface DashboardStat {
   label: string;
 }
 
+/** Vista previa del panel con cifras de ejemplo. Está desactivada en la landing. */
 @Component({
   selector: 'app-dashboard-preview',
   imports: [],

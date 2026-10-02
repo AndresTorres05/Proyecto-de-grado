@@ -23,17 +23,17 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Avisa por SMS a cada persona mayor INSCRITA en una actividad 1 hora
- * antes de que empiece. Inscrita = tiene fila en "participacion"; al
- * cancelar la inscripcion la fila se borra y ya no se avisa.
+ * Avisa por SMS a cada persona mayor inscrita en una actividad 1 hora antes
+ * de que empiece. Estar inscrita es tener una fila en participacion; al
+ * cancelar la inscripción la fila se borra y ya no se avisa.
  *
  * El aviso se "reserva" en la base de datos antes de enviarlo (columna
- * recordatorio_enviado_para), asi sale una sola vez aunque el servicio se
- * reinicie o haya dos instancias. Si la organizacion cambia la fecha u
+ * recordatorio_enviado_para), así sale una sola vez aunque el servicio se
+ * reinicie o haya dos instancias. Si la organización cambia la fecha o la
  * hora, se vuelve a avisar para la nueva.
  *
- * Si la persona se inscribe cuando ya falta menos de 1 hora, el aviso sale
- * en el siguiente minuto con el tiempo real que falta.
+ * Si la persona se inscribe cuando falta menos de 1 hora, el aviso sale en
+ * el siguiente minuto con el tiempo real que falta.
  */
 @Component
 public class ActividadReminderScheduler {
@@ -60,21 +60,22 @@ public class ActividadReminderScheduler {
         this.messagingClient = messagingClient;
     }
 
-    @Scheduled(cron = "0 * * * * *", zone = "America/Bogota") // cada minuto, en el segundo 0
+    /** Se ejecuta cada minuto, en el segundo 0, con la hora de Colombia. */
+    @Scheduled(cron = "0 * * * * *", zone = "America/Bogota")
     public void revisarRecordatorios() {
         revisarRecordatorios(ZonaHoraria.ahora());
     }
 
-    // Separado para poder probar el flujo simulando el paso del tiempo.
+    /** Separado para que las pruebas puedan simular el paso del tiempo. */
     void revisarRecordatorios(LocalDateTime momento) {
-        // El scheduler puede dispararse unos milisegundos antes o despues del
+        // El scheduler puede dispararse unos milisegundos antes o después del
         // segundo 0 (en Windows pasa a menudo); las actividades empiezan en
-        // minutos exactos, asi que se redondea al minuto mas cercano para que
+        // minutos exactos, así que se redondea al minuto más cercano para que
         // el aviso no salga un minuto tarde.
         LocalDateTime ahora = momento.plusSeconds(30).truncatedTo(ChronoUnit.MINUTES);
         LocalDateTime limite = ahora.plusMinutes(MINUTOS_ANTES);
 
-        // hoy y mañana, por si la ventana cruza la medianoche
+        // Hoy y mañana, por si la ventana cruza la medianoche.
         List<Actividad> candidatas = actividadRepository.findByFechaBetween(
                 ahora.toLocalDate(), limite.toLocalDate()
         );
@@ -82,7 +83,7 @@ public class ActividadReminderScheduler {
         for (Actividad actividad : candidatas) {
             LocalDateTime inicio = inicioDe(actividad);
 
-            // Solo las que empiezan dentro de la proxima hora
+            // Solo las que empiezan dentro de la próxima hora.
             if (inicio == null || !inicio.isAfter(ahora) || inicio.isAfter(limite)) {
                 continue;
             }
@@ -109,6 +110,7 @@ public class ActividadReminderScheduler {
         }
     }
 
+    /** Arma el SMS ("En 1 hora, a las ..., empieza tu actividad ...") y lo envía. */
     private void enviarRecordatorio(Actividad actividad, Integer idPersonaMayor,
                                     LocalDateTime inicio, long minutosFaltantes) {
         String celular = usuarioLookupRepository.findById(idPersonaMayor)
@@ -123,7 +125,7 @@ public class ActividadReminderScheduler {
                 ? "En 1 hora"
                 : "En " + minutosFaltantes + (minutosFaltantes == 1 ? " minuto" : " minutos");
 
-        // Java usa espacios no separables en "p. m."; en un SMS se ven raros.
+        // Java usa espacios de no separación en "p. m."; en un SMS se ven raros.
         String hora = inicio.format(FORMATO_HORA).replace(' ', ' ').replace(' ', ' ');
 
         String mensaje = cuando + ", a las " + hora + ", empieza tu actividad \""
@@ -139,7 +141,7 @@ public class ActividadReminderScheduler {
                 + " -> \"" + mensaje + "\"");
     }
 
-    // fecha + hora ("HH:mm" del formulario); null si falta o no se entiende
+    /** Fecha más hora ("HH:mm" del formulario), o null si falta alguna o no se entiende. */
     private LocalDateTime inicioDe(Actividad actividad) {
         LocalDate fecha = actividad.getFecha();
         String hora = actividad.getHora();

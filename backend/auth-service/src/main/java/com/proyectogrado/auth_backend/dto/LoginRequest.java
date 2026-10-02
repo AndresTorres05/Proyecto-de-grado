@@ -1,5 +1,8 @@
 package com.proyectogrado.auth_backend.dto;
 
+/**
+ * Datos para iniciar sesión con correo y contraseña.
+ */
 public class LoginRequest {
 
     private String correo;

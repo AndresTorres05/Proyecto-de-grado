@@ -2,6 +2,10 @@ import { Component, HostListener } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 
+/**
+ * Barra de navegación de la landing: enlaces a cada sección y, si hay sesión,
+ * el menú del usuario.
+ */
 @Component({
   selector: 'app-navbar',
   imports: [RouterLink],
@@ -10,6 +14,7 @@ import { AuthService } from '../../core/auth/auth.service';
 })
 export class Navbar {
 
+  /** Secciones de la landing (anclas dentro de la misma página). */
   protected readonly navLinks = [
     { label: 'Inicio', href: '#hero' },
     { label: 'El Reto', href: '#reto' },
@@ -52,6 +57,7 @@ export class Navbar {
     console.log('Menú:', this.menuUsuarioAbierto);
   }
 
+  /** Por ahora lleva al inicio del panel del rol. */
   irAMiInformacion(): void {
     this.menuUsuarioAbierto = false;
 
@@ -62,6 +68,7 @@ export class Navbar {
     }
   }
 
+  /** Cierra el menú del usuario al hacer clic por fuera. */
   @HostListener('document:click', ['$event'])
   cerrarMenuAlHacerClickAfuera(event: MouseEvent): void {
     const target = event.target as HTMLElement;

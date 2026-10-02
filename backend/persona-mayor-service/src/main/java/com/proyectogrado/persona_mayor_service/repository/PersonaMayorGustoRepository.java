@@ -7,6 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Acceso a los gustos marcados por cada persona mayor.
+ */
 public interface PersonaMayorGustoRepository
         extends JpaRepository<PersonaMayorGusto, PersonaMayorGustoId> {
 
@@ -14,6 +17,7 @@ public interface PersonaMayorGustoRepository
 
     boolean existsByGusto_IdGusto(Integer idGusto);
 
+    /** Borra todos los gustos de la persona mayor, antes de guardar la lista nueva. */
     @Transactional
     void deleteById_IdPersonaMayor(Integer idPersonaMayor);
 }

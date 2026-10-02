@@ -5,6 +5,7 @@ import { Icon } from '../icon/icon';
 import { alCambiar } from '../../core/tiempo-real/tiempo-real.service';
 import { Notificacion, NotificacionService } from '../../core/notificaciones/notificacion.service';
 
+/** Opción del menú lateral. */
 export interface ShellNavItem {
   /** Nombre de icono (ver set en shared/icon/icon.ts). */
   icon: string;
@@ -13,7 +14,7 @@ export interface ShellNavItem {
   path?: string;
 }
 
-// Página de "Mi información" de cada rol (no todas se llaman igual).
+/** Página de "Mi información" de cada rol. */
 const RUTA_MI_INFORMACION: Record<string, string> = {
   PERSONA_MAYOR: '/panel/persona-mayor/perfil',
   ACOMPANANTE: '/panel/acompanante/perfil',
@@ -21,6 +22,10 @@ const RUTA_MI_INFORMACION: Record<string, string> = {
   VOLUNTARIO: '/panel/voluntario/perfil'
 };
 
+/**
+ * Estructura común de los paneles: barra lateral con el menú del rol y barra
+ * superior con la campanita de notificaciones y el menú del usuario.
+ */
 @Component({
   selector: 'app-dashboard-shell',
   imports: [RouterLink, RouterLinkActive, Icon],
@@ -34,15 +39,17 @@ const RUTA_MI_INFORMACION: Record<string, string> = {
 export class DashboardShell implements OnInit, OnDestroy {
 
   @Input() roleLabel = '';
+  /** Color de acento del rol; llega al CSS como --role-accent. */
   @Input() roleAccent = 'var(--vita-navy)';
   @Input() userName = '';
   @Input() userInitials = '';
   @Input() navItems: ShellNavItem[] = [];
+  /** Menú con letra e iconos más grandes. PanelShellLayout lo activa en todos los paneles. */
   @Input() accessible = false;
 
   menuUsuarioAbierto = false;
 
-  // ---------- Notificaciones (campanita) ----------
+  // Notificaciones (campanita)
   protected readonly notificaciones = signal<Notificacion[]>([]);
   protected readonly noLeidas = signal(0);
   protected readonly panelNotificacionesAbierto = signal(false);
@@ -55,7 +62,7 @@ export class DashboardShell implements OnInit, OnDestroy {
     private router: Router,
     private elementRef: ElementRef<HTMLElement>
   ) {
-    // Emergencias y notificaciones leídas en otra pestaña llegan al instante
+    // Las emergencias y las notificaciones leídas en otra pestaña llegan al instante.
     alCambiar(['notificaciones'], () => this.cargarNotificaciones());
   }
 
@@ -82,6 +89,7 @@ export class DashboardShell implements OnInit, OnDestroy {
     });
   }
 
+  /** Abre o cierra el panel de la campanita. */
   toggleNotificaciones(): void {
     const abrir = !this.panelNotificacionesAbierto();
     this.panelNotificacionesAbierto.set(abrir);
@@ -101,7 +109,7 @@ export class DashboardShell implements OnInit, OnDestroy {
     }
   }
 
-  // Cierra el panel de la campanita o el menú del usuario al hacer clic fuera
+  /** Cierra el panel de la campanita o el menú del usuario al hacer clic por fuera. */
   @HostListener('document:click', ['$event'])
   protected cerrarPanelSiClicFuera(evento: MouseEvent): void {
     if (this.menuUsuarioAbierto) {
@@ -121,7 +129,7 @@ export class DashboardShell implements OnInit, OnDestroy {
     }
   }
 
-  // "Hoy, 3:05 p. m.", "Ayer, 8:00 a. m." o "12 sep, 8:00 a. m."
+  /** Fecha corta para la campanita: "Hoy, 3:05 p. m.", "Ayer, 8:00 a. m." o "12 sep, 8:00 a. m.". */
   protected formatearFecha(fechaIso: string): string {
     const fecha = new Date(fechaIso);
     const hora = fecha.toLocaleTimeString('es-CO', { hour: 'numeric', minute: '2-digit' });

@@ -1,14 +1,18 @@
 package com.proyectogrado.salud_backend.dto;
 
+/**
+ * Una medición de signos vitales. Cada campo es opcional: se registra solo
+ * lo que se midió.
+ */
 public class SignoVitalRequest {
 
-    private Integer presionSistolica;
-    private Integer presionDiastolica;
-    private Integer frecuenciaCardiaca;
-    private Double temperatura;
-    private Integer saturacionOxigeno;
-    private Integer frecuenciaRespiratoria;
-    private Double peso;
+    private Integer presionSistolica;       // mmHg
+    private Integer presionDiastolica;      // mmHg
+    private Integer frecuenciaCardiaca;     // latidos por minuto
+    private Double temperatura;             // °C
+    private Integer saturacionOxigeno;      // %
+    private Integer frecuenciaRespiratoria; // respiraciones por minuto
+    private Double peso;                    // kg
     private String observaciones;
 
     public SignoVitalRequest() {

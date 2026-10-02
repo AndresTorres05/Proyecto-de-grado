@@ -1,6 +1,11 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
+/**
+ * Componente raíz: solo contiene el router. Además desactiva el
+ * autocompletado del navegador en todos los campos, también en los que
+ * aparecen después al cambiar de página o abrir un modal.
+ */
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet],
@@ -16,10 +21,10 @@ export class App implements AfterViewInit {
       });
     };
 
-    // Aplicar inicialmente
+    // Campos que ya están en pantalla.
     aplicarAutocompleteOff();
 
-    // Aplicar también cuando Angular cambie de página/componente
+    // Y los que se agreguen después al DOM.
     const observer = new MutationObserver(() => {
       aplicarAutocompleteOff();
     });

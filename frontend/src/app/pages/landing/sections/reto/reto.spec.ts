@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Reto } from './reto';
 
+// Prueba básica: el componente se crea sin errores.
 describe('Reto', () => {
   let component: Reto;
   let fixture: ComponentFixture<Reto>;

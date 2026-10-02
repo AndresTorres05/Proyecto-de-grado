@@ -25,6 +25,10 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * Endpoints con los que la persona mayor gestiona sus medicamentos. El id
+ * del usuario llega en el encabezado X-User-Id, que agrega el gateway.
+ */
 @RestController
 @RequestMapping("/api/persona-mayor/medicamentos")
 public class MedicamentoController {
@@ -35,6 +39,7 @@ public class MedicamentoController {
         this.medicamentoRepository = medicamentoRepository;
     }
 
+    /** Medicamentos de la persona mayor autenticada. */
     @GetMapping
     public ResponseEntity<List<MedicamentoResponse>> listar(
             @RequestHeader("X-User-Id") Integer idPersonaMayor
@@ -48,6 +53,7 @@ public class MedicamentoController {
         return ResponseEntity.ok(respuesta);
     }
 
+    /** Crea el medicamento y calcula su próxima toma. */
     @PostMapping
     public ResponseEntity<MedicamentoResponse> crear(
             @RequestHeader("X-User-Id") Integer idPersonaMayor,
@@ -63,6 +69,10 @@ public class MedicamentoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(aRespuesta(medicamento));
     }
 
+    /**
+     * Edita el medicamento y vuelve a calcular su próxima toma. Si no es de
+     * esta persona mayor, responde 403.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizar(
             @RequestHeader("X-User-Id") Integer idPersonaMayor,
@@ -83,6 +93,7 @@ public class MedicamentoController {
         return ResponseEntity.ok(aRespuesta(medicamento));
     }
 
+    /** Borra el medicamento; si no es de esta persona mayor, responde 403. */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(
             @RequestHeader("X-User-Id") Integer idPersonaMayor,
@@ -99,6 +110,7 @@ public class MedicamentoController {
         return ResponseEntity.noContent().build();
     }
 
+    /** El medicamento, o null si no existe o es de otra persona mayor. */
     private Medicamento obtenerPropio(Integer id, Integer idPersonaMayor) {
         Medicamento medicamento = medicamentoRepository.findById(id).orElse(null);
 
@@ -109,6 +121,7 @@ public class MedicamentoController {
         return medicamento;
     }
 
+    /** Copia los datos del formulario. Si no llega fecha de fin, el tratamiento queda sin fin. */
     private void aplicarCambios(Medicamento medicamento, MedicamentoRequest request) {
         medicamento.setNombre(request.getNombre());
         medicamento.setDosis(request.getDosis());
@@ -130,14 +143,18 @@ public class MedicamentoController {
         }
     }
 
+    /**
+     * Calcula la próxima toma a partir de la fecha de inicio y la hora, y
+     * reinicia el registro de avisos para que el scheduler la recuerde.
+     */
     private void recalcularProximaToma(Medicamento medicamento) {
         LocalDate fecha = medicamento.getFechaInicio() != null ? medicamento.getFechaInicio() : ZonaHoraria.hoy();
         LocalTime hora = medicamento.getHora() != null ? medicamento.getHora() : ZonaHoraria.ahora().toLocalTime();
 
         LocalDateTime proximaToma = LocalDateTime.of(fecha, hora);
 
-        // La hora puede ser la de la ultima toma (ya pasada): se avanza en
-        // saltos del intervalo hasta la siguiente toma pendiente.
+        // La hora puede ser la de una toma que ya pasó: se avanza en saltos
+        // del intervalo hasta la siguiente toma pendiente.
         Integer intervalo = medicamento.getIntervaloHoras();
         LocalDateTime ahora = ZonaHoraria.ahora();
         if (intervalo != null && intervalo > 0 && proximaToma.isBefore(ahora)) {
@@ -150,6 +167,7 @@ public class MedicamentoController {
         medicamento.setUltimoRecordatorioEnviado(null);
     }
 
+    /** Fechas en formato ISO y horas en "HH:mm", como las espera el frontend. */
     private MedicamentoResponse aRespuesta(Medicamento medicamento) {
         DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
         DateTimeFormatter formatoFechaHora = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");

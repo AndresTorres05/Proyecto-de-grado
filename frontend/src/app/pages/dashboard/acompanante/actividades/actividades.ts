@@ -9,6 +9,10 @@ import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 import { ActividadCard } from '../../../../shared/actividad-card/actividad-card';
 import { Icon } from '../../../../shared/icon/icon';
 
+/**
+ * Actividades que ve el acompañante: las de las organizaciones de las
+ * personas mayores que acompaña, separadas en próximas e historial.
+ */
 @Component({
   selector: 'app-actividades-acompanante',
   standalone: true,
@@ -18,7 +22,8 @@ import { Icon } from '../../../../shared/icon/icon';
 })
 export class ActividadesComponent implements OnInit {
 
-  // Próximas (de la más cercana a la más lejana) e historial (de la más reciente a la más antigua)
+  // Próximas (de la más cercana a la más lejana) e historial (de la más
+  // reciente a la más antigua).
   proximas: Actividad[] = [];
   pasadas: Actividad[] = [];
 
@@ -36,6 +41,7 @@ export class ActividadesComponent implements OnInit {
     this.cargarActividades();
   }
 
+  /** Con mostrarCargando en false, la lista se actualiza sin parpadear (cambios en vivo). */
   cargarActividades(mostrarCargando = true): void {
     if (mostrarCargando) {
       this.cargando = true;

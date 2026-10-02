@@ -5,6 +5,9 @@ import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Llave compuesta de persona_mayor_acompanante: persona mayor más acompañante.
+ */
 @Embeddable
 public class PersonaMayorAcompananteId implements Serializable {
 

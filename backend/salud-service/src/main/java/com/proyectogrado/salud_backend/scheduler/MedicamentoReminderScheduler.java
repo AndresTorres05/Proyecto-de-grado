@@ -22,15 +22,15 @@ import java.util.Locale;
 import java.util.UUID;
 
 /**
- * Recordatorios de medicamentos. Por cada toma se envian exactamente dos
- * mensajes, a la persona mayor y a sus acompanantes aceptados:
+ * Recordatorios de medicamentos. Por cada toma se envían exactamente dos
+ * mensajes, a la persona mayor y a sus acompañantes aceptados:
  *
  *   1. MINUTOS_AVISO_PREVIO minutos antes de la hora.
  *   2. A la hora exacta. En ese momento la toma se da por hecha y la
- *      proxima toma avanza sola segun el intervalo del medicamento.
+ *      próxima toma avanza sola según el intervalo del medicamento.
  *
- * No hay reintentos ni confirmacion manual: cada aviso se "reserva" en la
- * base de datos antes de enviarlo (ver MedicamentoRepository), asi que no
+ * No hay reintentos ni confirmación manual: cada aviso se "reserva" en la
+ * base de datos antes de enviarlo (ver MedicamentoRepository), así que no
  * se repite aunque el scheduler corra varias veces o haya dos instancias.
  */
 @Component
@@ -38,15 +38,19 @@ public class MedicamentoReminderScheduler {
 
     public static final long MINUTOS_AVISO_PREVIO = 15;
 
-    // Si el servicio estuvo apagado y la hora de la toma ya paso hace mas
-    // de esto, no se envia un aviso tardio: solo se avanza a la siguiente.
+    /**
+     * Si el servicio estuvo apagado y la hora de la toma pasó hace más de
+     * esto, no se envía un aviso tardío: solo se avanza a la siguiente toma.
+     */
     private static final long MINUTOS_TOLERANCIA_ATRASO = 10;
 
     private static final DateTimeFormatter FORMATO_LOG = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final DateTimeFormatter FORMATO_HORA = DateTimeFormatter.ofPattern("h:mm a", Locale.forLanguageTag("es-CO"));
 
-    // Identificador unico por arranque, util para detectar si hay dos
-    // instancias de este backend corriendo a la vez (dos schedulers).
+    /**
+     * Identificador único por arranque. Sirve para detectar en los logs si hay
+     * dos instancias de este servicio corriendo a la vez (dos schedulers).
+     */
     private final String instanciaId = UUID.randomUUID().toString().substring(0, 8);
 
     private final MedicamentoRepository medicamentoRepository;
@@ -71,18 +75,19 @@ public class MedicamentoReminderScheduler {
         System.out.println("[SCHEDULER " + instanciaId + "] Instancia creada al arrancar salud-backend.");
     }
 
-    @Scheduled(cron = "0 * * * * *", zone = "America/Bogota") // cada minuto, en el segundo 0
+    /** Se ejecuta cada minuto, en el segundo 0, con la hora de Colombia. */
+    @Scheduled(cron = "0 * * * * *", zone = "America/Bogota")
     public void revisarRecordatorios() {
         revisarRecordatorios(ZonaHoraria.ahora());
     }
 
-    // Separado para poder probar el flujo simulando el paso del tiempo.
+    /** Separado para que las pruebas puedan simular el paso del tiempo. */
     void revisarRecordatorios(LocalDateTime momento) {
-        // El scheduler puede dispararse unos milisegundos antes o despues del
-        // segundo 0 (en Windows pasa a menudo). Si corre a las 12:36:59.998
-        // la toma de las 12:37 "aun no ha llegado" y el aviso saldria un
-        // minuto tarde. Las tomas siempre caen en minutos exactos, asi que se
-        // redondea al minuto mas cercano.
+        // El scheduler puede dispararse unos milisegundos antes o después del
+        // segundo 0 (en Windows pasa a menudo). Si corre a las 12:36:59.998,
+        // la toma de las 12:37 "aún no ha llegado" y el aviso saldría un
+        // minuto tarde. Las tomas siempre caen en minutos exactos, así que se
+        // redondea al minuto más cercano.
         LocalDateTime ahora = momento.plusSeconds(30).truncatedTo(ChronoUnit.MINUTES);
 
         List<Medicamento> proximos = medicamentoRepository
@@ -103,10 +108,11 @@ public class MedicamentoReminderScheduler {
         }
     }
 
+    /** Decide si a este medicamento le toca el aviso previo o el de la hora exacta. */
     private void procesar(Medicamento medicamento, LocalDateTime ahora) {
         LocalDateTime toma = medicamento.getProximaToma();
 
-        // Tratamiento terminado: no se avisa mas.
+        // Tratamiento terminado: no se avisa más.
         if (medicamento.getFechaFin() != null
                 && toma.toLocalDate().isAfter(medicamento.getFechaFin())) {
             return;
@@ -120,7 +126,7 @@ public class MedicamentoReminderScheduler {
                     medicamento.getIdMedicamento(), toma, inicioVentana, ahora);
 
             if (reservado == 1) {
-                // Normalmente 15; menos si el medicamento se creo dentro de la ventana.
+                // Normalmente 15; menos si el medicamento se creó dentro de la ventana.
                 long minutosFaltantes = Duration.between(ahora, toma).toMinutes();
                 log("Aviso previo (" + minutosFaltantes + " min) de medicamento "
                         + medicamento.getIdMedicamento() + " para la toma de las " + toma.format(FORMATO_LOG));
@@ -129,7 +135,7 @@ public class MedicamentoReminderScheduler {
             return;
         }
 
-        // Ya es la hora (o paso): avanzar a la siguiente toma futura.
+        // Ya es la hora (o ya pasó): se avanza a la siguiente toma futura.
         LocalDateTime siguiente = calcularSiguienteToma(toma, medicamento.getIntervaloHoras(), ahora);
 
         int reservado = medicamentoRepository.avanzarToma(
@@ -153,6 +159,7 @@ public class MedicamentoReminderScheduler {
         }
     }
 
+    /** Primera toma posterior a "ahora", saltando de intervalo en intervalo (24 h si no hay intervalo). */
     private LocalDateTime calcularSiguienteToma(LocalDateTime toma, Integer intervaloHoras, LocalDateTime ahora) {
         int intervalo = intervaloHoras != null && intervaloHoras > 0 ? intervaloHoras : 24;
 
@@ -163,7 +170,10 @@ public class MedicamentoReminderScheduler {
         return siguiente;
     }
 
-    // minutosFaltantes == 0 -> aviso de la hora exacta.
+    /**
+     * Envía el SMS a la persona mayor y a sus acompañantes aceptados. Con
+     * minutosFaltantes en 0 es el aviso de la hora exacta.
+     */
     private void enviarAvisos(Medicamento medicamento, LocalDateTime toma, long minutosFaltantes) {
 
         boolean esLaHora = minutosFaltantes <= 0;
@@ -172,7 +182,7 @@ public class MedicamentoReminderScheduler {
         String medicina = medicamento.getNombre()
                 + (medicamento.getDosis() != null && !medicamento.getDosis().isBlank()
                     ? " (" + medicamento.getDosis() + ")" : "");
-        // Java usa espacios no separables en "a. m."; en un SMS se ven raros.
+        // Java usa espacios de no separación en "a. m."; en un SMS se ven raros.
         String hora = toma.format(FORMATO_HORA).replace(' ', ' ').replace(' ', ' ');
 
         UsuarioLookup personaMayor = usuarioLookupRepository
