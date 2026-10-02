@@ -1,12 +1,13 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CampoContrasena } from '../../shared/campo-contrasena/campo-contrasena';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 
 @Component({
   selector: 'app-registro',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, CampoContrasena, RouterLink],
   templateUrl: './registro.html',
   styleUrl: './registro.css'
 })

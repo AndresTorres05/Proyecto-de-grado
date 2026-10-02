@@ -5,6 +5,7 @@ import {
 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
+import { CampoContrasena } from '../../shared/campo-contrasena/campo-contrasena';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 
@@ -13,7 +14,7 @@ type ModoLogin = 'correo' | 'celular';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, CampoContrasena, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })

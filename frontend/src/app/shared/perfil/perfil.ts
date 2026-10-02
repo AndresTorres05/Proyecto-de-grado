@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CampoContrasena } from '../campo-contrasena/campo-contrasena';
 import { HttpClient } from '@angular/common/http';
 import { timeout } from 'rxjs';
 
@@ -37,7 +38,7 @@ interface PerfilInformacion {
 
 @Component({
   selector: 'app-perfil',
-  imports: [FormsModule, EliminarCuenta],
+  imports: [FormsModule, CampoContrasena, EliminarCuenta],
   templateUrl: './perfil.html',
   styleUrl: './perfil.css',
 })

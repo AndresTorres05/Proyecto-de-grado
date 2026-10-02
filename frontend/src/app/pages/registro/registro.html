@@ -164,15 +164,17 @@
           Contraseña (opcional)
         </label>
 
-        <input
-          id="contrasenaCelular"
-          name="contrasenaCelular"
-          type="password"
-          class="login-input"
-          [(ngModel)]="contrasena"
-          minlength="6"
-          placeholder="Mínimo 6 caracteres"
-        />
+        <app-campo-contrasena>
+          <input
+            id="contrasenaCelular"
+            name="contrasenaCelular"
+            type="password"
+            class="login-input"
+            [(ngModel)]="contrasena"
+            minlength="6"
+            placeholder="Mínimo 6 caracteres"
+          />
+        </app-campo-contrasena>
 
         <label
           class="login-label"
@@ -181,15 +183,17 @@
           Confirmar contraseña
         </label>
 
-        <input
-          id="confirmarContrasena"
-          name="confirmarContrasena"
-          type="password"
-          class="login-input"
-          [(ngModel)]="confirmarContrasena"
-          minlength="6"
-          placeholder="Repite tu contraseña"
-        />
+        <app-campo-contrasena>
+          <input
+            id="confirmarContrasena"
+            name="confirmarContrasena"
+            type="password"
+            class="login-input"
+            [(ngModel)]="confirmarContrasena"
+            minlength="6"
+            placeholder="Repite tu contraseña"
+          />
+        </app-campo-contrasena>
 
         <p class="login-info">
           Si ingresas una contraseña, también debes ingresar

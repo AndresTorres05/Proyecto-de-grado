@@ -167,16 +167,18 @@
             Nueva contraseña
           </label>
 
-          <input
-            id="nuevaContrasena"
-            name="nuevaContrasena"
-            type="password"
-            class="login-input"
-            [(ngModel)]="nuevaContrasena"
-            required
-            minlength="6"
-            placeholder="••••••••"
-          />
+          <app-campo-contrasena>
+            <input
+              id="nuevaContrasena"
+              name="nuevaContrasena"
+              type="password"
+              class="login-input"
+              [(ngModel)]="nuevaContrasena"
+              required
+              minlength="6"
+              placeholder="••••••••"
+            />
+          </app-campo-contrasena>
 
 
           <!-- CONFIRMAR CONTRASEÑA -->
@@ -188,16 +190,18 @@
             Confirmar nueva contraseña
           </label>
 
-          <input
-            id="confirmarNuevaContrasena"
-            name="confirmarNuevaContrasena"
-            type="password"
-            class="login-input"
-            [(ngModel)]="confirmarNuevaContrasena"
-            required
-            minlength="6"
-            placeholder="••••••••"
-          />
+          <app-campo-contrasena>
+            <input
+              id="confirmarNuevaContrasena"
+              name="confirmarNuevaContrasena"
+              type="password"
+              class="login-input"
+              [(ngModel)]="confirmarNuevaContrasena"
+              required
+              minlength="6"
+              placeholder="••••••••"
+            />
+          </app-campo-contrasena>
 
 
           <button
@@ -416,15 +420,17 @@
             Contraseña
           </label>
 
-          <input
-            id="contrasena"
-            name="contrasena"
-            type="password"
-            class="login-input"
-            [(ngModel)]="contrasena"
-            required
-            placeholder="••••••••"
-          />
+          <app-campo-contrasena>
+            <input
+              id="contrasena"
+              name="contrasena"
+              type="password"
+              class="login-input"
+              [(ngModel)]="contrasena"
+              required
+              placeholder="••••••••"
+            />
+          </app-campo-contrasena>
 
 
           <!-- RECUPERAR CONTRASEÑA -->

@@ -328,33 +328,39 @@
         @if (informacion?.tieneContrasena) {
           <div class="informacion__field">
             <label for="contrasenaActual"> Contraseña actual </label>
-            <input
-              id="contrasenaActual"
-              type="password"
-              [(ngModel)]="contrasenaActual"
-              placeholder="Ingresa tu contraseña actual"
-            />
+            <app-campo-contrasena>
+              <input
+                id="contrasenaActual"
+                type="password"
+                [(ngModel)]="contrasenaActual"
+                placeholder="Ingresa tu contraseña actual"
+              />
+            </app-campo-contrasena>
           </div>
         }
         <!-- NUEVA CONTRASEÑA -->
         <div class="informacion__field">
           <label for="nuevaContrasena"> Nueva contraseña </label>
-          <input
-            id="nuevaContrasena"
-            type="password"
-            [(ngModel)]="nuevaContrasena"
-            placeholder="Mínimo 6 caracteres"
-          />
+          <app-campo-contrasena>
+            <input
+              id="nuevaContrasena"
+              type="password"
+              [(ngModel)]="nuevaContrasena"
+              placeholder="Mínimo 6 caracteres"
+            />
+          </app-campo-contrasena>
         </div>
         <!-- CONFIRMAR CONTRASEÑA -->
         <div class="informacion__field">
           <label for="confirmarContrasena"> Confirmar contraseña </label>
-          <input
-            id="confirmarContrasena"
-            type="password"
-            [(ngModel)]="confirmarContrasena"
-            placeholder="Repite la nueva contraseña"
-          />
+          <app-campo-contrasena>
+            <input
+              id="confirmarContrasena"
+              type="password"
+              [(ngModel)]="confirmarContrasena"
+              placeholder="Repite la nueva contraseña"
+            />
+          </app-campo-contrasena>
         </div>
         @if (errorContrasena) {
           <p class="informacion__error">{{ errorContrasena }}</p>
