@@ -48,7 +48,8 @@ public final class SignoVitalValidador {
             return error;
         }
 
-        if (sis != null && sis <= dia) {
+        // Arriba ya se exigió la presión completa; dia != null lo deja explícito
+        if (sis != null && dia != null && sis <= dia) {
             return "La presión sistólica debe ser mayor que la diastólica.";
         }
 
