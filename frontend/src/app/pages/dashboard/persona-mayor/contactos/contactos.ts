@@ -9,15 +9,20 @@ import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 import { Icon } from '../../../../shared/icon/icon';
 import { PersonCard } from '../../../../shared/person-card/person-card';
 import { CancelarAsociacion } from '../../../../shared/cancelar-asociacion/cancelar-asociacion';
+import {
+  SolicitudAcompanamientoModal,
+  DatosSolicitudAcompanamiento
+} from '../../../../shared/solicitud-acompanamiento/solicitud-acompanamiento';
 
 /**
- * Contactos de la persona mayor: botón de emergencia, sus acompañantes y el
- * formulario para agregar uno nuevo por celular.
+ * Contactos de la persona mayor: botón de emergencia, sus acompañantes, el
+ * formulario para agregar uno nuevo por celular y las solicitudes que le
+ * envían los acompañantes (para aceptarlas o rechazarlas).
  */
 @Component({
   selector: 'app-contactos',
   standalone: true,
-  imports: [Icon, FormsModule, PersonCard, CancelarAsociacion],
+  imports: [Icon, FormsModule, PersonCard, CancelarAsociacion, SolicitudAcompanamientoModal],
   templateUrl: './contactos.html',
   styleUrl: './contactos.css'
 })
@@ -34,12 +39,13 @@ export class Contactos implements OnInit {
   // Formulario para agregar un acompañante
   protected readonly mostrandoFormularioAcompanante = signal(false);
 
-  protected celularAcompanante = '';
-  protected relacionAcompanante = '';
-
   protected readonly agregandoAcompanante = signal(false);
   protected readonly errorAcompanante = signal<string | null>(null);
   protected readonly mensajeAcompanante = signal<string | null>(null);
+
+  // Solicitudes que le enviaron acompañantes
+  protected readonly solicitudes = signal<Acompanante[]>([]);
+  protected readonly solicitudProcesando = signal<number | null>(null);
 
   // Modal para quitar un acompañante
   protected readonly acompananteACancelar = signal<Acompanante | null>(null);
@@ -50,11 +56,47 @@ export class Contactos implements OnInit {
     private acompananteService: AcompananteService,
     private emergenciaService: EmergenciaService
   ) {
-    alCambiar(['acompanamientos', 'usuarios'], () => this.cargarAcompanantes());
+    alCambiar(['acompanamientos', 'usuarios'], () => {
+      this.cargarAcompanantes();
+      this.cargarSolicitudes();
+    });
   }
 
   ngOnInit(): void {
     this.cargarAcompanantes();
+    this.cargarSolicitudes();
+  }
+
+  cargarSolicitudes(): void {
+    this.acompananteService.obtenerSolicitudesDeAcompanantes().subscribe({
+      next: (solicitudes) => this.solicitudes.set(solicitudes),
+      error: () => this.solicitudes.set([])
+    });
+  }
+
+  /** Acepta o rechaza la solicitud que le envió un acompañante. */
+  responderSolicitud(solicitud: Acompanante, aceptar: boolean): void {
+    this.mensajeAcompanante.set(null);
+    this.errorCancelacion.set(null);
+    this.solicitudProcesando.set(solicitud.idUsuario);
+
+    this.acompananteService
+      .responderSolicitudDeAcompanante(solicitud.idUsuario, aceptar)
+      .subscribe({
+        next: (respuesta) => {
+          this.solicitudProcesando.set(null);
+          this.mensajeAcompanante.set(respuesta);
+          this.cargarSolicitudes();
+          this.cargarAcompanantes();
+        },
+        error: (error) => {
+          this.solicitudProcesando.set(null);
+          this.errorCancelacion.set(
+            error?.error || 'No se pudo responder la solicitud.'
+          );
+          this.cargarSolicitudes();
+        }
+      });
   }
 
   cargarAcompanantes(): void {
@@ -107,75 +149,31 @@ export class Contactos implements OnInit {
 
   cancelarFormularioAcompanante(): void {
     this.mostrandoFormularioAcompanante.set(false);
-
-    this.celularAcompanante = '';
-    this.relacionAcompanante = '';
-
     this.errorAcompanante.set(null);
-}
-
-/** Envía la solicitud de acompañamiento; el acompañante la acepta desde su panel. */
-agregarAcompanante(): void {
-
-  this.errorAcompanante.set(null);
-  this.mensajeAcompanante.set(null);
-
-  if (
-    !this.celularAcompanante.trim() ||
-    !this.relacionAcompanante.trim()
-  ) {
-    this.errorAcompanante.set(
-      'Por favor completa todos los campos.'
-    );
-    return;
   }
 
+/**
+ * Envía la solicitud de acompañamiento que ya validó el formulario; el
+ * acompañante la acepta desde su panel.
+ */
+agregarAcompanante(datos: DatosSolicitudAcompanamiento): void {
+  this.errorAcompanante.set(null);
+  this.mensajeAcompanante.set(null);
   this.agregandoAcompanante.set(true);
 
-  const celularIngresado = this.celularAcompanante.trim();
-
-if (!/^\d{10}$/.test(celularIngresado)) {
-  this.errorAcompanante.set(
-    'Ingresa un número de celular válido de 10 dígitos.'
-  );
-  return;
-}
-
-const celular = '+57' + celularIngresado;
-
-this.agregandoAcompanante.set(true);
-
-this.acompananteService.agregarAcompanante({
-  celular: celular,
-  relacion: this.relacionAcompanante
-}).subscribe({
+  this.acompananteService.agregarAcompanante(datos).subscribe({
     next: (respuesta) => {
-
       this.agregandoAcompanante.set(false);
       this.mostrandoFormularioAcompanante.set(false);
-
       this.mensajeAcompanante.set(respuesta);
-
-      this.celularAcompanante = '';
-      this.relacionAcompanante = '';
-
-      // Recarga la lista de acompañantes.
-      this.acompananteService.obtenerAcompanantes().subscribe({
-        next: (acompanantes) => {
-          this.acompanantes.set(acompanantes);
-        }
-      });
+      this.cargarAcompanantes();
     },
 
     error: (error) => {
-
       this.agregandoAcompanante.set(false);
-
-      const mensaje =
-        error?.error ||
-        'No se pudo agregar el acompañante.';
-
-      this.errorAcompanante.set(mensaje);
+      this.errorAcompanante.set(
+        error?.error || 'No se pudo agregar el acompañante.'
+      );
     }
   });
 }

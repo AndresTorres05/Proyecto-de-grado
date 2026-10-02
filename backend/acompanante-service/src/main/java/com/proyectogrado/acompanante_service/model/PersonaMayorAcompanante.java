@@ -19,12 +19,23 @@ import jakarta.persistence.Table;
 @Table(name = "persona_mayor_acompanante")
 public class PersonaMayorAcompanante {
 
+    public static final String PERSONA_MAYOR = "PERSONA_MAYOR";
+    public static final String ACOMPANANTE = "ACOMPANANTE";
+
     @EmbeddedId
     private PersonaMayorAcompananteId id;
 
-    /** PENDIENTE hasta que el acompañante responde; luego ACEPTADA o RECHAZADA. */
+    /** PENDIENTE hasta que el otro lado responde; luego ACEPTADA o RECHAZADA. */
     @Column(name = "estado", nullable = false)
     private String estado = "PENDIENTE";
+
+    /**
+     * Quién envió la solicitud: PERSONA_MAYOR o ACOMPANANTE. Responde el
+     * otro. null en vínculos creados antes de que existiera el campo, que
+     * siempre los enviaba la persona mayor.
+     */
+    @Column(name = "solicitada_por")
+    private String solicitadaPor;
 
     public PersonaMayorAcompanante() {
     }
@@ -47,5 +58,18 @@ public class PersonaMayorAcompanante {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public String getSolicitadaPor() {
+        return solicitadaPor;
+    }
+
+    public void setSolicitadaPor(String solicitadaPor) {
+        this.solicitadaPor = solicitadaPor;
+    }
+
+    /** true si la solicitud la envió el acompañante (la responde la persona mayor). */
+    public boolean laEnvioElAcompanante() {
+        return ACOMPANANTE.equals(solicitadaPor);
     }
 }

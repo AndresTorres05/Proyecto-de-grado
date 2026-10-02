@@ -1,0 +1,100 @@
+<div class="add-companion-overlay">
+
+  <div
+    class="add-companion-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="solicitudAcompanamientoTitulo"
+  >
+
+    <div class="add-companion-modal__header">
+
+      <h2 id="solicitudAcompanamientoTitulo">
+        {{ titulo() }}
+      </h2>
+
+      <button
+        type="button"
+        class="add-companion-modal__close"
+        (click)="cerrar.emit()"
+        aria-label="Cerrar"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <p class="add-companion-modal__description">
+      {{ descripcion() }}
+    </p>
+
+    <div class="add-companion-modal__form-group">
+
+      <label for="celularSolicitud">
+        {{ etiquetaCelular() }}
+      </label>
+
+      <input
+        id="celularSolicitud"
+        type="tel"
+        [(ngModel)]="celular"
+        placeholder="Ej. 3001234567"
+      />
+
+    </div>
+
+    <div class="add-companion-modal__form-group">
+
+      <label for="relacionSolicitud">
+        Relación
+      </label>
+
+      <input
+        id="relacionSolicitud"
+        type="text"
+        [(ngModel)]="relacion"
+        [placeholder]="placeholderRelacion()"
+      />
+
+    </div>
+
+    @if (error() || errorServidor(); as mensaje) {
+
+      <div class="add-companion-modal__error">
+        <app-icon name="alert-circle" />
+        {{ mensaje }}
+      </div>
+
+    }
+
+    <div class="add-companion-modal__actions">
+
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="cerrar.emit()"
+        [disabled]="enviando()"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-gold"
+        (click)="validarYEnviar()"
+        [disabled]="enviando()"
+      >
+
+        @if (enviando()) {
+          Enviando...
+        } @else {
+          Enviar solicitud
+        }
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

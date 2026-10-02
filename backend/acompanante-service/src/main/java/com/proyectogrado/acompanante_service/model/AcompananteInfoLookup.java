@@ -34,4 +34,9 @@ public class AcompananteInfoLookup {
     public String getRelacion() {
         return relacion;
     }
+
+    /** La escribe el acompañante cuando le envía una solicitud a una persona mayor. */
+    public void setRelacion(String relacion) {
+        this.relacion = relacion;
+    }
 }

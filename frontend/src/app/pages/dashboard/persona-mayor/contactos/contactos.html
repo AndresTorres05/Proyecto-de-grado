@@ -129,6 +129,61 @@
   </div>
 
 
+  @if (mensajeAcompanante(); as mensaje) {
+
+    <div class="emergency-success">
+      <app-icon name="check-circle" />
+      {{ mensaje }}
+    </div>
+
+  }
+
+
+  <!-- Solicitudes que le enviaron acompañantes -->
+
+  @if (solicitudes().length > 0) {
+
+    <div class="companions-list">
+
+      @for (solicitud of solicitudes(); track solicitud.idUsuario) {
+
+        <app-person-card
+          etiqueta="Quiere ser tu acompañante"
+          [nombre]="solicitud.nombre"
+          [celular]="solicitud.celular"
+          [relacion]="solicitud.relacion"
+          estado="Solicitud pendiente"
+          estadoTipo="pendiente"
+        >
+          <div card-actions class="person-card-actions">
+            <button
+              type="button"
+              class="person-card-action"
+              (click)="responderSolicitud(solicitud, false)"
+              [disabled]="solicitudProcesando() === solicitud.idUsuario"
+            >
+              Rechazar
+            </button>
+
+            <button
+              type="button"
+              class="person-card-action"
+              (click)="responderSolicitud(solicitud, true)"
+              [disabled]="solicitudProcesando() === solicitud.idUsuario"
+            >
+              <app-icon name="check" />
+              Aceptar
+            </button>
+          </div>
+        </app-person-card>
+
+      }
+
+    </div>
+
+  }
+
+
   <!-- Lista de acompañantes -->
 
   @if (mensajeCancelacion(); as mensaje) {
@@ -197,122 +252,20 @@
 </section>
 
 
-<!-- Modal para añadir un acompañante -->
+<!-- Modal para añadir un acompañante (formulario compartido con el acompañante) -->
 
 @if (mostrandoFormularioAcompanante()) {
-
-  <div class="add-companion-overlay">
-
-    <div
-      class="add-companion-modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="addCompanionTitle"
-    >
-
-      <div class="add-companion-modal__header">
-
-        <h2 id="addCompanionTitle">
-          Añadir acompañante
-        </h2>
-
-        <button
-          type="button"
-          class="add-companion-modal__close"
-          (click)="cancelarFormularioAcompanante()"
-          aria-label="Cerrar"
-        >
-          ×
-        </button>
-
-      </div>
-
-      <p class="add-companion-modal__description">
-        Ingresa los datos del acompañante que deseas agregar.
-        Se enviará una solicitud que deberá ser aceptada por el acompañante.
-      </p>
-
-      <div class="add-companion-modal__form-group">
-
-        <label for="celularAcompanante">
-          Celular del acompañante
-        </label>
-
-        <input
-          id="celularAcompanante"
-          type="tel"
-          [(ngModel)]="celularAcompanante"
-          placeholder="Ej. 3001234567"
-        />
-
-      </div>
-
-      <div class="add-companion-modal__form-group">
-
-        <label for="relacionAcompanante">
-          Relacion
-        </label>
-
-        <input
-          id="relacionAcompanante"
-          type="text"
-          [(ngModel)]="relacionAcompanante"
-          placeholder="Ej. Hijo, hija, hermano..."
-        />
-
-      </div>
-
-      @if (errorAcompanante(); as error) {
-
-        <div class="add-companion-modal__error">
-          <app-icon name="alert-circle" />
-          {{ error }}
-        </div>
-
-      }
-
-      @if (mensajeAcompanante(); as mensaje) {
-
-        <div class="add-companion-modal__success">
-          <app-icon name="check-circle" />
-          {{ mensaje }}
-        </div>
-
-      }
-
-      <div class="add-companion-modal__actions">
-
-        <button
-          type="button"
-          class="btn btn-secondary"
-          (click)="cancelarFormularioAcompanante()"
-          [disabled]="agregandoAcompanante()"
-        >
-          Cancelar
-        </button>
-
-        <button
-          type="button"
-          class="btn btn-gold"
-          (click)="agregarAcompanante()"
-          [disabled]="agregandoAcompanante()"
-        >
-
-          @if (agregandoAcompanante()) {
-            Enviando...
-          } @else {
-            Enviar solicitud
-          }
-
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
+  <app-solicitud-acompanamiento
+    titulo="Añadir acompañante"
+    descripcion="Ingresa los datos del acompañante que deseas agregar. Se enviará una solicitud que deberá ser aceptada por el acompañante."
+    etiquetaCelular="Celular del acompañante"
+    [enviando]="agregandoAcompanante()"
+    [errorServidor]="errorAcompanante()"
+    (enviar)="agregarAcompanante($event)"
+    (cerrar)="cancelarFormularioAcompanante()"
+  />
 }
+
 @if (acompananteACancelar(); as acompanante) {
   <app-cancelar-asociacion
     [nombre]="acompanante.nombre"

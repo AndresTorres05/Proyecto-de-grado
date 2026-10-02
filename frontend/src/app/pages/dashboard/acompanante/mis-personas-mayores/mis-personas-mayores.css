@@ -27,6 +27,28 @@
   font-size: 1rem;
 }
 
+/* Mismo estilo que "Añadir acompañante" de la persona mayor */
+.mis-personas__add-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border: none;
+  border-radius: 10px;
+  background: var(--vita-orange);
+  color: var(--vita-white);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.mis-personas__add-button:hover {
+  transform: translateY(-1px);
+}
+
 /* Mensajes de éxito y error */
 .mis-personas__message {
   padding: 14px 18px;
@@ -156,6 +178,12 @@
 @media (max-width: 768px) {
   .mis-personas {
     padding: 20px;
+  }
+
+  .mis-personas__header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
   }
 
   .mis-personas__actions {

@@ -5,9 +5,18 @@
     <div>
       <h1>Personas mayores</h1>
       <p>
-        Administra las personas mayores que te han solicitado acompañamiento.
+        Administra las personas mayores que acompañas y envía solicitudes a nuevas.
       </p>
     </div>
+
+    <button
+      type="button"
+      class="mis-personas__add-button"
+      (click)="mostrarFormulario()"
+    >
+      <app-icon name="plus" />
+      Añadir persona mayor
+    </button>
   </div>
 
   <!-- Mensajes de éxito y error -->
@@ -82,6 +91,53 @@
   }
 
   <!-- Personas mayores a cargo -->
+  @if (enviadas.length > 0) {
+
+    <section class="mis-personas__section">
+
+      <div class="mis-personas__section-header">
+        <div>
+          <h2>Solicitudes enviadas</h2>
+          <p>
+            Estas personas mayores aún no responden tu solicitud.
+          </p>
+        </div>
+
+        <span class="mis-personas__badge">
+          {{ enviadas.length }}
+        </span>
+      </div>
+
+      <div class="mis-personas__requests">
+
+        @for (solicitud of enviadas; track solicitud.idUsuario) {
+
+          <app-person-card
+            etiqueta="Persona mayor"
+            [nombre]="solicitud.nombre"
+            [celular]="solicitud.celular"
+            estado="Esperando respuesta"
+            estadoTipo="pendiente"
+          >
+            <div card-actions class="mis-personas__actions">
+              <button
+                type="button"
+                class="mis-personas__reject-button"
+                (click)="cancelarSolicitudEnviada(solicitud)"
+              >
+                Cancelar solicitud
+              </button>
+            </div>
+          </app-person-card>
+
+        }
+
+      </div>
+
+    </section>
+
+  }
+
   <section class="mis-personas__section">
 
     @if (cargando) {
@@ -158,6 +214,19 @@
 </div>
 
 <!-- Modal para dejar de acompañar -->
+@if (mostrandoFormulario) {
+  <app-solicitud-acompanamiento
+    titulo="Añadir persona mayor"
+    descripcion="Ingresa los datos de la persona mayor que quieres acompañar. Se enviará una solicitud que deberá ser aceptada por la persona mayor."
+    etiquetaCelular="Celular de la persona mayor"
+    placeholderRelacion="Tu relación con ella. Ej. Hijo, hija, sobrino..."
+    [enviando]="enviandoSolicitud"
+    [errorServidor]="errorSolicitud"
+    (enviar)="enviarSolicitud($event)"
+    (cerrar)="cerrarFormulario()"
+  />
+}
+
 @if (personaACancelar) {
   <app-cancelar-asociacion
     [nombre]="personaACancelar.nombre"

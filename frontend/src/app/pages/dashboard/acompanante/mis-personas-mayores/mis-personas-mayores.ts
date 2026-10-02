@@ -11,6 +11,10 @@ import { CancelarAsociacion } from '../../../../shared/cancelar-asociacion/cance
 import { SignosVitalesModal } from '../../../../shared/signos-vitales-modal/signos-vitales-modal';
 import { AcompanantesModal, AcompananteResumen } from '../../../../shared/acompanantes-modal/acompanantes-modal';
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
+import {
+  SolicitudAcompanamientoModal,
+  DatosSolicitudAcompanamiento
+} from '../../../../shared/solicitud-acompanamiento/solicitud-acompanamiento';
 
 /**
  * Personas mayores del acompañante: solicitudes pendientes para aceptar o
@@ -19,7 +23,7 @@ import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
  */
 @Component({
   selector: 'app-mis-personas-mayores',
-  imports: [Icon, PersonCard, CancelarAsociacion, SignosVitalesModal, AcompanantesModal],
+  imports: [Icon, PersonCard, CancelarAsociacion, SignosVitalesModal, AcompanantesModal, SolicitudAcompanamientoModal],
   templateUrl: './mis-personas-mayores.html',
   styleUrl: './mis-personas-mayores.css'
 })
@@ -27,6 +31,12 @@ export class MisPersonasMayores implements OnInit {
 
   personasMayores: PersonaMayorAcompanada[] = [];
   solicitudes: SolicitudAcompanamiento[] = [];
+  enviadas: SolicitudAcompanamiento[] = [];
+
+  // Formulario para enviar una solicitud a una persona mayor
+  mostrandoFormulario = false;
+  enviandoSolicitud = false;
+  errorSolicitud: string | null = null;
 
   cargando = true;
   mensaje = '';
@@ -53,6 +63,7 @@ export class MisPersonasMayores implements OnInit {
     alCambiar(['acompanamientos', 'usuarios'], () => {
       this.cargarPersonasMayores();
       this.cargarSolicitudes();
+      this.cargarEnviadas();
 
       // Si el modal de acompañantes está abierto, se actualiza en vivo.
       if (this.personaAcompanantes) {
@@ -71,6 +82,68 @@ export class MisPersonasMayores implements OnInit {
   ngOnInit(): void {
     this.cargarPersonasMayores();
     this.cargarSolicitudes();
+    this.cargarEnviadas();
+  }
+
+  cargarEnviadas(): void {
+    this.acompananteService.obtenerSolicitudesEnviadas().subscribe({
+      next: (data) => {
+        this.enviadas = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error al cargar las solicitudes enviadas:', error);
+      }
+    });
+  }
+
+  mostrarFormulario(): void {
+    this.mensaje = '';
+    this.error = '';
+    this.errorSolicitud = null;
+    this.mostrandoFormulario = true;
+  }
+
+  cerrarFormulario(): void {
+    this.mostrandoFormulario = false;
+    this.errorSolicitud = null;
+  }
+
+  /** Envía la solicitud que ya validó el formulario; la persona mayor la acepta desde Contactos. */
+  enviarSolicitud(datos: DatosSolicitudAcompanamiento): void {
+    this.enviandoSolicitud = true;
+    this.errorSolicitud = null;
+
+    this.acompananteService.agregarPersonaMayor(datos).subscribe({
+      next: (respuesta) => {
+        this.enviandoSolicitud = false;
+        this.mostrandoFormulario = false;
+        this.mensaje = respuesta;
+        this.cargarEnviadas();
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.enviandoSolicitud = false;
+        this.errorSolicitud = error?.error || 'No se pudo enviar la solicitud.';
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  /** Retira una solicitud que la persona mayor aún no responde. */
+  cancelarSolicitudEnviada(solicitud: SolicitudAcompanamiento): void {
+    this.acompananteService.cancelarAsociacionPersonaMayor(solicitud.idUsuario).subscribe({
+      next: () => {
+        this.mensaje = 'Solicitud cancelada correctamente';
+        this.error = '';
+        this.cargarEnviadas();
+      },
+      error: (error) => {
+        console.error('Error al cancelar la solicitud:', error);
+        this.error = error?.error || 'No se pudo cancelar la solicitud.';
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   cargarPersonasMayores(): void {

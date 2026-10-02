@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +26,9 @@ import java.util.List;
 /**
  * Lado de la persona mayor en el vínculo con sus acompañantes: los agrega
  * por celular (queda una solicitud PENDIENTE que el acompañante acepta o
- * rechaza), los lista y los quita.
+ * rechaza), responde las solicitudes que le envían los acompañantes, los
+ * lista y los quita. Responde siempre quien no envió la solicitud (ver
+ * solicitadaPor).
  *
  * El id del usuario autenticado llega en el encabezado X-User-Id, que pone
  * el gateway después de validar el token. Este servicio no valida tokens.
@@ -61,6 +64,37 @@ public class PersonaMayorAcompananteController {
                 .toList();
 
         return ResponseEntity.ok(respuesta);
+    }
+
+    /** Solicitudes que le enviaron acompañantes y que aún no ha respondido. */
+    @GetMapping("/solicitudes")
+    public ResponseEntity<List<AcompananteResponse>> listarSolicitudes(
+            @RequestHeader("X-User-Id") Integer idPersonaMayor
+    ) {
+        List<AcompananteResponse> respuesta = relacionRepository
+                .findById_IdPersonaMayorAndEstado(idPersonaMayor, "PENDIENTE")
+                .stream()
+                .filter(PersonaMayorAcompanante::laEnvioElAcompanante)
+                .map(relacion -> construirRespuesta(relacion.getId().getIdAcompanante()))
+                .toList();
+
+        return ResponseEntity.ok(respuesta);
+    }
+
+    @PutMapping("/solicitudes/{idAcompanante}/aceptar")
+    public ResponseEntity<String> aceptarSolicitud(
+            @RequestHeader("X-User-Id") Integer idPersonaMayor,
+            @PathVariable Integer idAcompanante
+    ) {
+        return responderSolicitud(idPersonaMayor, idAcompanante, "ACEPTADA", "aceptada");
+    }
+
+    @PutMapping("/solicitudes/{idAcompanante}/rechazar")
+    public ResponseEntity<String> rechazarSolicitud(
+            @RequestHeader("X-User-Id") Integer idPersonaMayor,
+            @PathVariable Integer idAcompanante
+    ) {
+        return responderSolicitud(idPersonaMayor, idAcompanante, "RECHAZADA", "rechazada");
     }
 
     /**
@@ -111,12 +145,14 @@ public class PersonaMayorAcompananteController {
             }
 
             if ("PENDIENTE".equals(relacionExistente.getEstado())) {
-                return ResponseEntity.badRequest()
-                        .body("Ya existe una solicitud pendiente para este acompañante");
+                return ResponseEntity.badRequest().body(relacionExistente.laEnvioElAcompanante()
+                        ? "Este acompañante ya te envió una solicitud: acéptala en tus contactos"
+                        : "Ya existe una solicitud pendiente para este acompañante");
             }
 
             // Estaba RECHAZADA: se permite volver a intentar.
             relacionExistente.setEstado("PENDIENTE");
+            relacionExistente.setSolicitadaPor(PersonaMayorAcompanante.PERSONA_MAYOR);
             relacionRepository.saveAndFlush(relacionExistente);
 
             return ResponseEntity.ok("Solicitud de acompañamiento enviada correctamente");
@@ -126,6 +162,7 @@ public class PersonaMayorAcompananteController {
                 new PersonaMayorAcompanante(idPersonaMayor, acompanante.getIdUsuario());
 
         relacion.setEstado("PENDIENTE");
+        relacion.setSolicitadaPor(PersonaMayorAcompanante.PERSONA_MAYOR);
         relacionRepository.saveAndFlush(relacion);
 
         return ResponseEntity.ok("Solicitud de acompañamiento enviada correctamente");
@@ -151,6 +188,31 @@ public class PersonaMayorAcompananteController {
         relacionRepository.flush();
 
         return ResponseEntity.ok("Asociación cancelada correctamente");
+    }
+
+    /** Solo se responde una solicitud PENDIENTE que haya enviado el acompañante. */
+    private ResponseEntity<String> responderSolicitud(
+            Integer idPersonaMayor,
+            Integer idAcompanante,
+            String nuevoEstado,
+            String participioParaMensaje
+    ) {
+        PersonaMayorAcompanante relacion = relacionRepository
+                .findById(new PersonaMayorAcompananteId(idPersonaMayor, idAcompanante))
+                .orElse(null);
+
+        if (relacion == null || !relacion.laEnvioElAcompanante()) {
+            return ResponseEntity.status(404).body("No se encontró la solicitud de este acompañante");
+        }
+
+        if (!"PENDIENTE".equals(relacion.getEstado())) {
+            return ResponseEntity.badRequest().body("Esta solicitud ya fue procesada");
+        }
+
+        relacion.setEstado(nuevoEstado);
+        relacionRepository.saveAndFlush(relacion);
+
+        return ResponseEntity.ok("Solicitud de acompañamiento " + participioParaMensaje);
     }
 
     private AcompananteResponse construirRespuesta(Integer idAcompanante) {

@@ -20,7 +20,7 @@ export interface PersonaMayorAcompanada {
   celular: string;
 }
 
-/** Solicitud de acompañamiento pendiente: datos de la persona mayor que la envió. */
+/** Solicitud de acompañamiento pendiente: datos de la persona mayor (que la envió o a quien se le envió). */
 export interface SolicitudAcompanamiento {
   idUsuario: number;
   nombre: string;
@@ -109,6 +109,27 @@ private readonly authUrl = 'http://localhost:8080/api/auth';
     );
   }
 
+  /** Solicitudes que le enviaron acompañantes a la persona mayor y aún no responde. */
+  obtenerSolicitudesDeAcompanantes(): Observable<Acompanante[]> {
+    return this.http.get<Acompanante[]>(
+      `${this.apiUrl}/persona-mayor/acompanantes/solicitudes`
+    );
+  }
+
+  /** La persona mayor acepta o rechaza la solicitud de un acompañante. */
+  responderSolicitudDeAcompanante(
+    idAcompanante: number,
+    aceptar: boolean
+  ): Observable<string> {
+    return this.http.put(
+      `${this.apiUrl}/persona-mayor/acompanantes/solicitudes/${idAcompanante}/${aceptar ? 'aceptar' : 'rechazar'}`,
+      {},
+      {
+        responseType: 'text'
+      }
+    );
+  }
+
   /** La persona mayor quita a uno de sus acompañantes. */
   cancelarAcompanante(
     idAcompanante: number
@@ -140,7 +161,30 @@ private readonly authUrl = 'http://localhost:8080/api/auth';
     );
   }
 
-  /** Solicitudes de acompañamiento que el acompañante no ha respondido. */
+  /** El acompañante envía una solicitud de acompañamiento a una persona mayor por celular. */
+  agregarPersonaMayor(
+    datos: {
+      celular: string;
+      relacion: string;
+    }
+  ): Observable<string> {
+    return this.http.post(
+      `${this.apiUrl}/acompanante/personas-mayores`,
+      datos,
+      {
+        responseType: 'text'
+      }
+    );
+  }
+
+  /** Solicitudes que envió el acompañante y la persona mayor aún no responde. */
+  obtenerSolicitudesEnviadas(): Observable<SolicitudAcompanamiento[]> {
+    return this.http.get<SolicitudAcompanamiento[]>(
+      `${this.apiUrl}/acompanante/personas-mayores/solicitudes/enviadas`
+    );
+  }
+
+  /** Solicitudes que le enviaron personas mayores al acompañante y aún no responde. */
   obtenerSolicitudes(): Observable<SolicitudAcompanamiento[]> {
     return this.http.get<SolicitudAcompanamiento[]>(
       `${this.apiUrl}/acompanante/personas-mayores/solicitudes`
