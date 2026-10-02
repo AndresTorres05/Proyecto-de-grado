@@ -6,18 +6,22 @@ export interface PanelConfig {
   navItems: ShellNavItem[];
 }
 
+// Convención de la barra lateral: "Inicio" siempre va primero y "Perfil" siempre
+// al final; en medio, las secciones de más a menos importantes. Los nombres son
+// cortos y sin posesivos ("Recordatorios", no "Mis recordatorios"), y una misma
+// sección se llama igual y usa el mismo ícono en todos los roles.
 export const PANEL_CONFIG: Record<string, PanelConfig> = {
   PERSONA_MAYOR: {
     roleLabel: 'Persona mayor',
     roleAccent: 'var(--vita-green)',
     navItems: [
       { icon: 'home', label: 'Inicio', path: '/panel/persona-mayor' },
+      { icon: 'clock', label: 'Recordatorios', path: '/panel/persona-mayor/recordatorios' },
+      { icon: 'phone', label: 'Contactos', path: '/panel/persona-mayor/contactos' },
+      { icon: 'activity', label: 'Signos vitales', path: '/panel/persona-mayor/signos-vitales' },
       { icon: 'calendar', label: 'Actividades', path: '/panel/persona-mayor/actividades' },
-      { icon: 'heart', label: 'Mis intereses', path: '/panel/persona-mayor/intereses' },
-      { icon: 'clock', label: 'Mis recordatorios', path: '/panel/persona-mayor/recordatorios' },
-      { icon: 'clipboard', label: 'Mis signos vitales', path: '/panel/persona-mayor/signos-vitales' },
-      { icon: 'phone', label: 'Mis contactos', path: '/panel/persona-mayor/contactos' },
-      { icon: 'building', label: 'Mis organizaciones', path: '/panel/persona-mayor/organizaciones' },
+      { icon: 'building', label: 'Organizaciones', path: '/panel/persona-mayor/organizaciones' },
+      { icon: 'heart', label: 'Intereses', path: '/panel/persona-mayor/intereses' },
       { icon: 'user', label: 'Perfil', path: '/panel/persona-mayor/perfil' }
     ]
   },
@@ -27,17 +31,17 @@ export const PANEL_CONFIG: Record<string, PanelConfig> = {
     roleAccent: 'var(--vita-navy)',
     navItems: [
       { icon: 'home', label: 'Inicio', path: '/panel/organizacion' },
-      { icon: 'user', label: 'Personas mayores', path: '/panel/organizacion/personas-mayores' },
-      //{ icon: 'users', label: 'Acompañantes', path: '/panel/organizacion/acompanantes' },
+      { icon: 'users', label: 'Personas mayores', path: '/panel/organizacion/personas-mayores' },
+      { icon: 'activity', label: 'Signos vitales', path: '/panel/organizacion/signos-vitales' },
       { icon: 'calendar', label: 'Actividades', path: '/panel/organizacion/actividades' },
+      { icon: 'bar-chart', label: 'Analítica', path: '/panel/organizacion/analitica' },
       { icon: 'star', label: 'Voluntarios', path: '/panel/organizacion/voluntarios' },
-      { icon: 'activity', label: 'Registro signos vitales', path: '/panel/organizacion/signos-vitales'},
+      //{ icon: 'users', label: 'Acompañantes', path: '/panel/organizacion/acompanantes' },
+      //{ icon: 'bell', label: 'Alertas', path: '/panel/organizacion/alertas' },
       //{ icon: 'pill', label: 'Medicamentos', path: '/panel/organizacion/medicamentos' },
       //{ icon: 'gift', label: 'Donaciones', path: '/panel/organizacion/donaciones' },
-      //{ icon: 'bell', label: 'Alertas', path: '/panel/organizacion/alertas' },
-      { icon: 'bar-chart', label: 'Analítica', path: '/panel/organizacion/analitica' },
       //{ icon: 'map', label: 'Mapa', path: '/panel/organizacion/mapa' },
-      { icon: 'settings', label: 'Perfil', path: '/panel/organizacion/perfil' }
+      { icon: 'user', label: 'Perfil', path: '/panel/organizacion/perfil' }
     ]
   },
 
@@ -46,7 +50,7 @@ export const PANEL_CONFIG: Record<string, PanelConfig> = {
     roleAccent: 'var(--vita-complemento)',
     navItems: [
       { icon: 'home', label: 'Inicio', path: '/panel/acompanante' },
-      { icon: 'users', label: 'Mis personas mayores', path: '/panel/acompanante/personas-mayores' },
+      { icon: 'users', label: 'Personas mayores', path: '/panel/acompanante/personas-mayores' },
       { icon: 'clipboard', label: 'Seguimiento', path: '/panel/acompanante/seguimiento' },
       { icon: 'calendar', label: 'Actividades', path: '/panel/acompanante/actividades' },
       { icon: 'user', label: 'Perfil', path: '/panel/acompanante/perfil' }
@@ -58,10 +62,10 @@ export const PANEL_CONFIG: Record<string, PanelConfig> = {
     roleAccent: 'var(--vita-gold)',
     navItems: [
       { icon: 'home', label: 'Inicio', path: '/panel/voluntario' },
+      { icon: 'users', label: 'Personas mayores', path: '/panel/voluntario/personas' },
+      { icon: 'bell', label: 'Alertas', path: '/panel/voluntario/alertas' },
       { icon: 'calendar', label: 'Actividades', path: '/panel/voluntario/actividades' },
       { icon: 'clock', label: 'Disponibilidad', path: '/panel/voluntario/disponibilidad' },
-      { icon: 'bell', label: 'Alertas', path: '/panel/voluntario/alertas' },
-      { icon: 'users', label: 'Personas que acompaño', path: '/panel/voluntario/personas' },
       { icon: 'user', label: 'Perfil', path: '/panel/voluntario/perfil' }
     ]
   }

@@ -81,7 +81,7 @@ export const routes: Routes = [
           import('./pages/dashboard/organizacion/signos-vitales/signos-vitales').then(
             (m) => m.SignosVitales,
           ),
-        data: { titulo: 'Registro signos vitales' },
+        data: { titulo: 'Signos vitales' },
       },
 
       {
@@ -152,7 +152,7 @@ export const routes: Routes = [
         path: 'actividades',
         loadComponent: () =>
           import('./shared/en-construccion/en-construccion').then((m) => m.EnConstruccion),
-        data: { titulo: 'Mis actividades' },
+        data: { titulo: 'Actividades' },
       },
 
       {
@@ -173,7 +173,7 @@ export const routes: Routes = [
         path: 'personas',
         loadComponent: () =>
           import('./shared/en-construccion/en-construccion').then((m) => m.EnConstruccion),
-        data: { titulo: 'Personas que acompaño' },
+        data: { titulo: 'Personas mayores' },
       },
 
       {
