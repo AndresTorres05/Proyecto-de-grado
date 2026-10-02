@@ -1,5 +1,5 @@
-# Dockerfile compartido por los 10 servicios. Render lo construye una vez por
-# servicio, usando la carpeta de ese servicio como contexto (ver render.yaml).
+# Dockerfile del servicio para Render. El contexto de construcción es la
+# carpeta de este servicio (ver render.yaml en la raíz del repo).
 
 FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /src

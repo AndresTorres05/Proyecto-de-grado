@@ -8,9 +8,8 @@ services:
     name: vitamas-tesis-gateway
     runtime: docker
     plan: free
-    rootDir: backend
-    dockerfilePath: ./Dockerfile
-    dockerContext: ./api-gateway
+    dockerfilePath: ./backend/api-gateway/Dockerfile
+    dockerContext: ./backend/api-gateway
     envVars:
       - { key: AUTH_URL,          value: https://vitamas-tesis-auth.onrender.com }
       - { key: MESSAGING_URL,     value: https://vitamas-tesis-messaging.onrender.com }
@@ -26,9 +25,8 @@ services:
     name: vitamas-tesis-auth
     runtime: docker
     plan: free
-    rootDir: backend
-    dockerfilePath: ./Dockerfile
-    dockerContext: ./auth-service
+    dockerfilePath: ./backend/auth-service/Dockerfile
+    dockerContext: ./backend/auth-service
     envVars:
       - { key: MESSAGING_SERVICE_URL, value: https://vitamas-tesis-messaging.onrender.com }
 
@@ -36,17 +34,15 @@ services:
     name: vitamas-tesis-messaging
     runtime: docker
     plan: free
-    rootDir: backend
-    dockerfilePath: ./Dockerfile
-    dockerContext: ./messaging-service
+    dockerfilePath: ./backend/messaging-service/Dockerfile
+    dockerContext: ./backend/messaging-service
 
   - type: web
     name: vitamas-tesis-salud
     runtime: docker
     plan: free
-    rootDir: backend
-    dockerfilePath: ./Dockerfile
-    dockerContext: ./salud-service
+    dockerfilePath: ./backend/salud-service/Dockerfile
+    dockerContext: ./backend/salud-service
     envVars:
       - { key: MESSAGING_SERVICE_URL, value: https://vitamas-tesis-messaging.onrender.com }
 
@@ -54,9 +50,8 @@ services:
     name: vitamas-tesis-persona-mayor
     runtime: docker
     plan: free
-    rootDir: backend
-    dockerfilePath: ./Dockerfile
-    dockerContext: ./persona-mayor-service
+    dockerfilePath: ./backend/persona-mayor-service/Dockerfile
+    dockerContext: ./backend/persona-mayor-service
     envVars:
       - { key: MESSAGING_SERVICE_URL, value: https://vitamas-tesis-messaging.onrender.com }
 
@@ -64,33 +59,29 @@ services:
     name: vitamas-tesis-acompanante
     runtime: docker
     plan: free
-    rootDir: backend
-    dockerfilePath: ./Dockerfile
-    dockerContext: ./acompanante-service
+    dockerfilePath: ./backend/acompanante-service/Dockerfile
+    dockerContext: ./backend/acompanante-service
 
   - type: web
     name: vitamas-tesis-voluntario
     runtime: docker
     plan: free
-    rootDir: backend
-    dockerfilePath: ./Dockerfile
-    dockerContext: ./voluntario-service
+    dockerfilePath: ./backend/voluntario-service/Dockerfile
+    dockerContext: ./backend/voluntario-service
 
   - type: web
     name: vitamas-tesis-organizacion
     runtime: docker
     plan: free
-    rootDir: backend
-    dockerfilePath: ./Dockerfile
-    dockerContext: ./organizacion-service
+    dockerfilePath: ./backend/organizacion-service/Dockerfile
+    dockerContext: ./backend/organizacion-service
 
   - type: web
     name: vitamas-tesis-actividad
     runtime: docker
     plan: free
-    rootDir: backend
-    dockerfilePath: ./Dockerfile
-    dockerContext: ./actividad-service
+    dockerfilePath: ./backend/actividad-service/Dockerfile
+    dockerContext: ./backend/actividad-service
     envVars:
       - { key: MESSAGING_SERVICE_URL, value: https://vitamas-tesis-messaging.onrender.com }
 
@@ -98,6 +89,5 @@ services:
     name: vitamas-tesis-analitica
     runtime: docker
     plan: free
-    rootDir: backend
-    dockerfilePath: ./Dockerfile
-    dockerContext: ./analitica-service
+    dockerfilePath: ./backend/analitica-service/Dockerfile
+    dockerContext: ./backend/analitica-service
