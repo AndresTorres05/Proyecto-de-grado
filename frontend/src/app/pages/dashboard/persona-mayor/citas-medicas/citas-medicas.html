@@ -1,0 +1,224 @@
+<!-- Encabezado -->
+<header class="page-header">
+  <div>
+    <h1>Citas médicas</h1>
+    <p>Registra tus citas y te las recordaremos {{ textoAvisos }}.</p>
+  </div>
+
+  <button type="button" class="btn btn-primary" (click)="abrirFormularioNuevo()">
+    <app-icon name="plus" />
+    Registrar cita
+  </button>
+</header>
+
+<!-- Cargando y error -->
+@if (cargando()) {
+  <div class="estado-card">
+    <span class="estado-card__icon"><app-icon name="hourglass" /></span>
+    <h2>Cargando tus citas médicas...</h2>
+  </div>
+}
+
+@if (error()) {
+  <div class="error-message">
+    <app-icon name="alert-circle" />
+    {{ error() }}
+  </div>
+}
+
+@if (!cargando()) {
+
+  <!-- Próximas citas: la más cercana primero -->
+  <section class="section-block" aria-labelledby="proximasTitulo">
+    <h2 id="proximasTitulo" class="section-block__title">Próximas citas</h2>
+
+    <div class="citas-grid">
+      @for (cita of proximas(); track cita.idCita; let primera = $first) {
+        <article class="cita-card" [class.cita-card--siguiente]="primera">
+          <div class="cita-card__header">
+            <span class="cita-card__icon" aria-hidden="true">
+              <app-icon name="stethoscope" />
+            </span>
+
+            <div class="cita-card__titulo">
+              <span class="cita-card__eyebrow">{{ primera ? 'Tu próxima cita' : 'Cita médica' }}</span>
+              <h3>{{ cita.titulo }}</h3>
+            </div>
+          </div>
+
+          <div class="cita-card__cuando">
+            <app-icon name="calendar" />
+            <div>
+              <strong>{{ fechaDe(cita) }}, {{ formatearHora(cita.hora) }}</strong>
+              @if (faltaPara(cita); as falta) {
+                <span class="cita-card__falta">{{ falta }}</span>
+              }
+            </div>
+          </div>
+
+          <div class="cita-card__datos">
+            <div class="dato">
+              <span>Lugar</span>
+              <strong>{{ cita.lugar }}</strong>
+            </div>
+
+            @if (cita.observaciones) {
+              <div class="dato">
+                <span>Indicaciones</span>
+                <strong>{{ cita.observaciones }}</strong>
+              </div>
+            }
+          </div>
+
+          <p class="cita-card__aviso">
+            <app-icon name="bell" />
+            Te avisaremos {{ textoAvisos }}.
+          </p>
+
+          <div class="cita-card__acciones">
+            <button type="button" class="btn btn-secondary" (click)="abrirFormularioEditar(cita)">
+              Editar
+            </button>
+            <button type="button" class="btn btn-danger" (click)="eliminar(cita)">
+              Eliminar
+            </button>
+          </div>
+        </article>
+      } @empty {
+        <div class="empty-card">
+          <span><app-icon name="stethoscope" /></span>
+          <h3>No tienes citas próximas</h3>
+          <p>Cuando te asignen una cita, regístrala aquí para recibir los recordatorios por SMS.</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Historial: la más reciente primero -->
+  <section class="section-block" aria-labelledby="pasadasTitulo">
+    <h2 id="pasadasTitulo" class="section-block__title">Citas pasadas</h2>
+
+    @if (pasadas().length > 0) {
+      <ul class="historial card">
+        @for (cita of pasadasVisibles(); track cita.idCita) {
+          <li class="historial__item">
+            <div class="historial__fecha">
+              <strong>{{ fechaDe(cita) }}</strong>
+              <span>{{ formatearHora(cita.hora) }}</span>
+            </div>
+
+            <div class="historial__cuerpo">
+              <strong>{{ cita.titulo }}</strong>
+              <span>{{ cita.lugar }}</span>
+              @if (cita.observaciones) {
+                <span class="historial__nota">{{ cita.observaciones }}</span>
+              }
+            </div>
+
+            <div class="historial__acciones">
+              <button
+                type="button"
+                class="btn-icono"
+                (click)="abrirFormularioEditar(cita)"
+                [attr.aria-label]="'Editar la cita ' + cita.titulo"
+              >
+                <app-icon name="pen" />
+              </button>
+              <button
+                type="button"
+                class="btn-icono btn-icono--peligro"
+                (click)="eliminar(cita)"
+                [attr.aria-label]="'Eliminar la cita ' + cita.titulo"
+              >
+                <app-icon name="x" />
+              </button>
+            </div>
+          </li>
+        }
+      </ul>
+
+      @if (pasadas().length > pasadasVisibles().length || verTodasLasPasadas()) {
+        <button type="button" class="btn btn-secondary historial__mas" (click)="verTodasLasPasadas.set(!verTodasLasPasadas())">
+          {{ verTodasLasPasadas() ? 'Ver menos' : 'Ver todas (' + pasadas().length + ')' }}
+        </button>
+      }
+    } @else {
+      <p class="texto-suave">Aquí aparecerán las citas a las que ya fuiste.</p>
+    }
+  </section>
+
+}
+
+<!-- Modal para registrar o editar una cita; un clic en el fondo lo cierra -->
+@if (mostrandoFormulario()) {
+  <div class="modal-backdrop" (click)="cancelarFormulario()">
+    <div class="modal-card card" role="dialog" aria-labelledby="formularioTitulo" (click)="$event.stopPropagation()">
+      <h2 id="formularioTitulo">{{ idEditando() ? 'Editar cita' : 'Nueva cita médica' }}</h2>
+
+      <label class="form-label" for="titulo">¿Qué cita es?</label>
+      <input id="titulo" name="titulo" type="text" class="form-input" [(ngModel)]="titulo" placeholder="Ej. Control de hipertensión" />
+
+      <label class="form-label" for="lugar">¿Dónde es?</label>
+      <input id="lugar" name="lugar" type="text" class="form-input" [(ngModel)]="lugar" placeholder="Ej. Hospital San José, consultorio 204" />
+
+      <div class="form-fila">
+        <div>
+          <label class="form-label" for="fecha">Fecha</label>
+          <input
+            id="fecha"
+            name="fecha"
+            type="date"
+            class="form-input form-picker"
+            [(ngModel)]="fecha"
+            (click)="abrirSelector($event)"
+          />
+        </div>
+
+        <div>
+          <label class="form-label" for="hora">Hora</label>
+          <input
+            id="hora"
+            name="hora"
+            type="time"
+            class="form-input form-picker"
+            [(ngModel)]="hora"
+            (click)="abrirSelector($event)"
+          />
+        </div>
+      </div>
+
+      @if (fechaFormularioYaPaso()) {
+        <p class="form-hint form-hint--resumen">
+          Esta fecha ya pasó: la cita quedará en tu historial y no se enviarán recordatorios.
+        </p>
+      } @else if (fecha && hora) {
+        <p class="form-hint form-hint--resumen">
+          Te la recordaremos {{ textoAvisos }}.
+        </p>
+      }
+
+      <label class="form-label" for="observaciones">Indicaciones (opcional)</label>
+      <textarea
+        id="observaciones"
+        name="observaciones"
+        class="form-input"
+        rows="3"
+        [(ngModel)]="observaciones"
+        placeholder="Ej. Ir en ayunas, llevar exámenes anteriores"
+      ></textarea>
+
+      @if (errorFormulario()) {
+        <p class="error-message"><app-icon name="alert-circle" /> {{ errorFormulario() }}</p>
+      }
+
+      <div class="modal-card__acciones">
+        <button type="button" class="btn btn-secondary" (click)="cancelarFormulario()" [disabled]="guardando()">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" (click)="guardar()" [disabled]="guardando()">
+          {{ guardando() ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

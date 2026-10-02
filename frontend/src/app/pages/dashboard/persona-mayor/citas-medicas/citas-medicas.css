@@ -1,0 +1,452 @@
+:host {
+  display: block;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.page-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--vita-navy);
+}
+
+.page-header p {
+  margin-top: 4px;
+  color: var(--vita-text-gray);
+  font-size: 0.9rem;
+}
+
+.estado-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid var(--vita-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+}
+
+.estado-card h2 {
+  font-size: 1rem;
+  color: var(--vita-navy);
+}
+
+.estado-card__icon {
+  font-size: 1.5rem;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #c23b3b;
+  background: color-mix(in srgb, #d64545 12%, white);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+
+.texto-suave {
+  color: var(--vita-text-gray);
+  font-size: 0.9rem;
+}
+
+.section-block {
+  margin-bottom: 32px;
+}
+
+.section-block__title {
+  margin-bottom: 18px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--vita-navy);
+}
+
+.btn-secondary {
+  border: 1px solid var(--vita-border);
+  background: var(--vita-white);
+  color: var(--vita-navy);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #f7f9fb;
+}
+
+.btn-danger {
+  background: color-mix(in srgb, #d64545 12%, white);
+  color: #c23b3b;
+  border: 1px solid color-mix(in srgb, #d64545 30%, white);
+}
+
+/* Próximas citas */
+
+.citas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+}
+
+.cita-card {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  border-radius: 20px;
+  background: var(--vita-white);
+  box-shadow: 0 8px 26px rgba(20, 46, 78, 0.07);
+}
+
+.cita-card--siguiente {
+  outline: 2px solid color-mix(in srgb, var(--vita-green) 45%, white);
+}
+
+.cita-card__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.cita-card__icon {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 15px;
+  background: #edf5fc;
+  color: var(--vita-navy);
+  font-size: 1.5rem;
+}
+
+.cita-card__titulo {
+  min-width: 0;
+}
+
+.cita-card__eyebrow {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--vita-text-gray);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.cita-card h3 {
+  margin: 0;
+  color: var(--vita-navy);
+  font-size: 1.15rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.cita-card__cuando {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  background: rgba(45, 197, 191, 0.10);
+  color: var(--vita-green);
+}
+
+.cita-card__cuando > app-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.cita-card__cuando strong {
+  display: block;
+  color: var(--vita-navy);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.cita-card__cuando strong::first-letter,
+.cita-card__falta::first-letter {
+  text-transform: uppercase;
+}
+
+.cita-card__falta {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.cita-card__datos {
+  display: grid;
+  gap: 14px;
+  padding-top: 16px;
+  border-top: 1px solid var(--vita-border);
+}
+
+.dato span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--vita-text-gray);
+  font-size: 0.8rem;
+}
+
+.dato strong {
+  display: block;
+  color: var(--vita-navy);
+  font-size: 0.95rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.cita-card__aviso {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 16px 0 0;
+  color: var(--vita-text-gray);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.cita-card__acciones {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.cita-card__acciones .btn {
+  flex: 1;
+  font-size: 0.82rem;
+  padding: 8px 0;
+}
+
+.empty-card {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px;
+  border: 1px dashed var(--vita-border);
+  border-radius: var(--radius-md);
+  color: var(--vita-text-gray);
+}
+
+.empty-card span {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.empty-card h3 {
+  color: var(--vita-navy);
+  margin-bottom: 4px;
+}
+
+/* Historial de citas pasadas */
+
+.historial {
+  list-style: none;
+  margin: 0;
+  padding: 8px 20px;
+}
+
+.historial__item {
+  display: grid;
+  grid-template-columns: 170px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--vita-border);
+}
+
+.historial__item:last-child {
+  border-bottom: none;
+}
+
+.historial__fecha strong {
+  display: block;
+  color: var(--vita-navy);
+  font-size: 0.9rem;
+}
+
+.historial__fecha strong::first-letter {
+  text-transform: uppercase;
+}
+
+.historial__fecha span,
+.historial__cuerpo span {
+  display: block;
+  color: var(--vita-text-gray);
+  font-size: 0.85rem;
+}
+
+.historial__cuerpo {
+  min-width: 0;
+}
+
+.historial__cuerpo strong {
+  display: block;
+  color: var(--vita-navy);
+  overflow-wrap: anywhere;
+}
+
+.historial__cuerpo .historial__nota {
+  margin-top: 2px;
+  font-style: italic;
+}
+
+.historial__acciones {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-icono {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--vita-border);
+  border-radius: 10px;
+  background: var(--vita-white);
+  color: var(--vita-navy);
+  cursor: pointer;
+}
+
+.btn-icono:hover {
+  background: #f7f9fb;
+}
+
+.btn-icono--peligro {
+  color: #c23b3b;
+}
+
+.historial__mas {
+  margin-top: 12px;
+}
+
+/* Modal */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 440px;
+  padding: 28px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-card h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--vita-navy);
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--vita-navy);
+  margin-bottom: 6px;
+  margin-top: 14px;
+}
+
+.form-label:first-of-type {
+  margin-top: 0;
+}
+
+.form-fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-fila .form-label {
+  margin-top: 14px;
+}
+
+.form-hint--resumen {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--vita-green) 10%, white);
+  color: var(--vita-navy);
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--vita-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--vita-navy);
+}
+
+textarea.form-input {
+  resize: vertical;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--vita-orange);
+}
+
+.form-picker {
+  min-height: 46px;
+  font-size: 1rem;
+  background-color: var(--vita-white);
+  cursor: pointer;
+}
+
+.form-picker::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
+.modal-card__acciones {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.modal-card__acciones .btn {
+  flex: 1;
+}
+
+@media (max-width: 560px) {
+  .citas-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .historial__item {
+    grid-template-columns: 1fr auto;
+  }
+
+  .historial__fecha {
+    grid-column: 1 / -1;
+  }
+
+  .form-fila {
+    grid-template-columns: 1fr;
+  }
+}

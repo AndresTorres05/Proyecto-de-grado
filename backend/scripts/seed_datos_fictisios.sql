@@ -42,8 +42,9 @@
 --
 -- SMS: los celulares ficticios usan el prefijo +570000, que no existe en
 -- Colombia, para que ningún SMS llegue a una persona real. Aun así:
---   - las inscripciones a actividades quedan con el recordatorio marcado
---     como enviado, así el scheduler de actividades no manda nada;
+--   - las inscripciones a actividades y las citas médicas quedan con el
+--     recordatorio marcado como enviado, así esos schedulers no mandan
+--     nada;
 --   - los medicamentos quedan con la próxima toma a 3-6 días en el
 --     futuro. Cuando llegue esa fecha, si el backend está prendido, el
 --     scheduler de medicamentos intentará enviar el SMS a esos números
@@ -99,6 +100,11 @@ ALTER TABLE actividad ADD COLUMN IF NOT EXISTS estado varchar(255);
 -- Quién envió la solicitud de acompañamiento; la agregan
 -- persona-mayor-service y acompanante-service al arrancar.
 ALTER TABLE persona_mayor_acompanante ADD COLUMN IF NOT EXISTS solicitada_por varchar(255);
+
+-- Recordatorios de citas médicas ya enviados; los agrega salud-service al
+-- arrancar.
+ALTER TABLE cita_medica ADD COLUMN IF NOT EXISTS recordatorio_dia_enviado_para timestamp;
+ALTER TABLE cita_medica ADD COLUMN IF NOT EXISTS recordatorio_hora_enviado_para timestamp;
 
 CREATE TABLE seed_tmp.seed_usuarios_viejos AS
 SELECT id_usuario, celular FROM usuario WHERE correo LIKE '%@vitaplus.test';
@@ -753,7 +759,8 @@ citas AS (
     CROSS JOIN seed_tmp.seed_reloj r
     CROSS JOIN LATERAL generate_series(1, o.n_citas) AS k
 )
-INSERT INTO cita_medica (id_persona_mayor, titulo, lugar, fecha, hora, observaciones)
+INSERT INTO cita_medica (id_persona_mayor, titulo, lugar, fecha, hora, observaciones,
+                         recordatorio_dia_enviado_para, recordatorio_hora_enviado_para)
 SELECT ci.id_usuario, c.titulo,
        CASE WHEN c.especialista OR ci.ips IS NULL
             THEN (ARRAY['Hospital El Tunal', 'Hospital de Meissen', 'Hospital de Kennedy',
@@ -764,7 +771,8 @@ SELECT ci.id_usuario, c.titulo,
             WHEN ci.r_obs < 0.88 THEN NULL
             WHEN ci.r_obs < 0.92 THEN 'Llevar documento de identidad y carné de la EPS'
             WHEN ci.r_obs < 0.96 THEN 'Pedir la autorización en la EPS antes de la cita'
-            ELSE 'Llegar 20 minutos antes' END
+            ELSE 'Llegar 20 minutos antes' END,
+       ci.fecha + ci.hora, ci.fecha + ci.hora
 FROM citas ci
 JOIN catalogo c ON c.id = ci.id_catalogo;
 

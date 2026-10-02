@@ -11,13 +11,23 @@ import {
   formatearHora,
   formatearProximaToma
 } from '../../../../core/medicamentos/medicamento.service';
+import {
+  CitaMedica,
+  formatearFechaCita,
+  separarCitas,
+  tiempoParaCita
+} from '../../../../core/citas-medicas/cita-medica.service';
 import { Icon } from '../../../../shared/icon/icon';
 import { alCambiar } from '../../../../core/tiempo-real/tiempo-real.service';
 
+/** Citas pasadas que se muestran en el seguimiento (las más recientes). */
+const CITAS_PASADAS_VISIBLES = 5;
+
 /**
- * Seguimiento de medicamentos: el acompañante ve los medicamentos de una de
- * sus personas mayores con la próxima toma. Si acompaña a varias, la elige
- * en un selector (empieza con la primera).
+ * Seguimiento de medicamentos y citas médicas: el acompañante ve los
+ * medicamentos de una de sus personas mayores con la próxima toma, y sus
+ * citas próximas y recientes. Si acompaña a varias, la elige en un
+ * selector (empieza con la primera).
  */
 @Component({
   selector: 'app-seguimiento',
@@ -33,17 +43,24 @@ export class Seguimiento implements OnInit {
 
   medicamentos: MedicamentoSeguimiento[] = [];
 
+  citasProximas: CitaMedica[] = [];
+  citasPasadas: CitaMedica[] = [];
+
   cargandoPersonas = true;
   cargandoMedicamentos = false;
+  cargandoCitas = false;
 
   errorPersonas = '';
   errorMedicamentos = '';
+  errorCitas = '';
+
+  protected readonly formatearHora = formatearHora;
 
   constructor(
     private acompananteService: AcompananteService,
     private cdr: ChangeDetectorRef
   ) {
-    alCambiar(['acompanamientos', 'usuarios', 'medicamentos'], () => this.recargar());
+    alCambiar(['acompanamientos', 'usuarios', 'medicamentos', 'citas-medicas'], () => this.recargar());
   }
 
   ngOnInit(): void {
@@ -96,8 +113,11 @@ export class Seguimiento implements OnInit {
 
         if (this.personaSeleccionada) {
           this.cargarMedicamentos(this.personaSeleccionada.idUsuario, false);
+          this.cargarCitas(this.personaSeleccionada.idUsuario, false);
         } else {
           this.medicamentos = [];
+          this.citasProximas = [];
+          this.citasPasadas = [];
         }
 
         this.cdr.detectChanges();
@@ -111,8 +131,11 @@ export class Seguimiento implements OnInit {
   ): void {
     this.personaSeleccionada = persona;
     this.medicamentos = [];
+    this.citasProximas = [];
+    this.citasPasadas = [];
 
     this.cargarMedicamentos(persona.idUsuario);
+    this.cargarCitas(persona.idUsuario);
   }
 
   seleccionarPorId(idPersonaMayor: number): void {
@@ -162,6 +185,49 @@ export class Seguimiento implements OnInit {
           this.cdr.detectChanges();
         }
       });
+  }
+
+  /** Citas próximas (todas) y las pasadas más recientes. */
+  cargarCitas(
+    idPersonaMayor: number,
+    mostrarCargando = true
+  ): void {
+    if (mostrarCargando) {
+      this.cargandoCitas = true;
+    }
+    this.errorCitas = '';
+
+    this.acompananteService
+      .obtenerCitasMedicasSeguimiento(idPersonaMayor)
+      .subscribe({
+        next: (data) => {
+          const { proximas, pasadas } = separarCitas(data, new Date());
+          this.citasProximas = proximas;
+          this.citasPasadas = pasadas.slice(0, CITAS_PASADAS_VISIBLES);
+          this.cargandoCitas = false;
+
+          this.cdr.detectChanges();
+        },
+
+        error: (error) => {
+          console.error('Error al cargar citas médicas:', error);
+
+          this.cargandoCitas = false;
+          this.errorCitas = error.status === 403
+            ? 'No tienes autorización para consultar esta información.'
+            : 'No se pudieron cargar las citas médicas.';
+
+          this.cdr.detectChanges();
+        }
+      });
+  }
+
+  fechaDeCita(cita: CitaMedica): string {
+    return formatearFechaCita(cita.fecha);
+  }
+
+  faltaParaCita(cita: CitaMedica): string | null {
+    return tiempoParaCita(cita);
   }
 
   obtenerProximaToma(

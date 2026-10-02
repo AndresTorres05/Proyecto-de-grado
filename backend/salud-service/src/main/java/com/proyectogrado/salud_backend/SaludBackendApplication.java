@@ -6,8 +6,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Punto de entrada de salud-service (puerto 8084): medicamentos, signos
- * vitales y recordatorios. EnableScheduling activa la tarea que revisa cada
- * minuto los recordatorios de medicamentos.
+ * vitales, citas médicas y recordatorios. EnableScheduling activa las
+ * tareas que revisan cada minuto los recordatorios de medicamentos y de
+ * citas médicas.
  */
 @SpringBootApplication
 @EnableScheduling

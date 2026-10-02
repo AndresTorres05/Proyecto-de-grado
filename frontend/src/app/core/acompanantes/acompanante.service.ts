@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { SignoVitalResponse } from '../signos-vitales/signos-vitales.services';
+import { CitaMedica } from '../citas-medicas/cita-medica.service';
 import { AcompananteResumen } from '../../shared/acompanantes-modal/acompanantes-modal';
 
 /** Acompañante de una persona mayor, con su parentesco. */
@@ -74,7 +75,7 @@ export interface Actividad {
 /**
  * Llamadas al backend sobre los vínculos entre personas mayores y
  * acompañantes, y el seguimiento que hace el acompañante (medicamentos,
- * signos vitales, contactos y actividades).
+ * citas médicas, signos vitales, contactos y actividades).
  */
 @Injectable({
   providedIn: 'root'
@@ -249,6 +250,15 @@ actualizarInformacion(
   ): Observable<MedicamentoSeguimiento[]> {
     return this.http.get<MedicamentoSeguimiento[]>(
       `${this.apiUrl}/acompanante/seguimiento/${idPersonaMayor}/medicamentos`
+    );
+  }
+
+  /** Citas médicas (pasadas y futuras) de una persona mayor que el usuario acompaña. */
+  obtenerCitasMedicasSeguimiento(
+    idPersonaMayor: number
+  ): Observable<CitaMedica[]> {
+    return this.http.get<CitaMedica[]>(
+      `${this.apiUrl}/acompanante/seguimiento/${idPersonaMayor}/citas-medicas`
     );
   }
 

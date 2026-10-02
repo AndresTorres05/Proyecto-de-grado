@@ -1,5 +1,6 @@
 package com.proyectogrado.acompanante_service.controller;
 
+import com.proyectogrado.acompanante_service.dto.CitaMedicaSeguimientoResponse;
 import com.proyectogrado.acompanante_service.dto.ContactoResponse;
 import com.proyectogrado.acompanante_service.dto.MedicamentoSeguimientoResponse;
 import com.proyectogrado.acompanante_service.dto.SignoVitalSeguimientoResponse;
@@ -7,6 +8,7 @@ import com.proyectogrado.acompanante_service.model.AcompananteInfoLookup;
 import com.proyectogrado.acompanante_service.model.PersonaMayorAcompanante;
 import com.proyectogrado.acompanante_service.model.UsuarioLookup;
 import com.proyectogrado.acompanante_service.repository.AcompananteInfoLookupRepository;
+import com.proyectogrado.acompanante_service.repository.CitaMedicaLookupRepository;
 import com.proyectogrado.acompanante_service.repository.MedicamentoLookupRepository;
 import com.proyectogrado.acompanante_service.repository.PersonaMayorAcompananteRepository;
 import com.proyectogrado.acompanante_service.repository.SignoVitalLookupRepository;
@@ -25,11 +27,11 @@ import java.util.List;
 
 /**
  * Seguimiento de una persona mayor por parte de su acompañante: signos
- * vitales, medicamentos y los demás contactos. Solo responde si el vínculo
+ * vitales, medicamentos, citas médicas y los demás contactos. Solo responde si el vínculo
  * entre los dos está ACEPTADO.
  *
  * Cruza datos de varios servicios (la cuenta en auth-service, los vínculos
- * en este servicio, los medicamentos y signos vitales en salud-service)
+ * en este servicio, los medicamentos, signos vitales y citas en salud-service)
  * con entidades Lookup de solo lectura.
  */
 @RestController
@@ -41,19 +43,22 @@ public class AcompananteSeguimientoController {
     private final AcompananteInfoLookupRepository acompananteInfoLookupRepository;
     private final MedicamentoLookupRepository medicamentoLookupRepository;
     private final SignoVitalLookupRepository signoVitalLookupRepository;
+    private final CitaMedicaLookupRepository citaMedicaLookupRepository;
 
     public AcompananteSeguimientoController(
             PersonaMayorAcompananteRepository relacionRepository,
             UsuarioLookupRepository usuarioLookupRepository,
             AcompananteInfoLookupRepository acompananteInfoLookupRepository,
             MedicamentoLookupRepository medicamentoLookupRepository,
-            SignoVitalLookupRepository signoVitalLookupRepository
+            SignoVitalLookupRepository signoVitalLookupRepository,
+            CitaMedicaLookupRepository citaMedicaLookupRepository
     ) {
         this.relacionRepository = relacionRepository;
         this.usuarioLookupRepository = usuarioLookupRepository;
         this.acompananteInfoLookupRepository = acompananteInfoLookupRepository;
         this.medicamentoLookupRepository = medicamentoLookupRepository;
         this.signoVitalLookupRepository = signoVitalLookupRepository;
+        this.citaMedicaLookupRepository = citaMedicaLookupRepository;
     }
 
     /** Últimos 10 registros de signos vitales, del más reciente al más antiguo. */
@@ -116,6 +121,38 @@ public class AcompananteSeguimientoController {
                         m.getProximaToma() != null ? m.getProximaToma().format(formatoFechaHora) : null,
                         m.getUltimaToma() != null ? m.getUltimaToma().format(formatoFechaHora) : null,
                         m.getActivo()
+                ))
+                .toList();
+
+        return ResponseEntity.ok(respuesta);
+    }
+
+    /**
+     * Todas las citas médicas de la persona mayor, pasadas y futuras,
+     * ordenadas por fecha y hora. El frontend las separa en próximas y pasadas.
+     */
+    @GetMapping("/{idPersonaMayor}/citas-medicas")
+    public ResponseEntity<?> obtenerCitasMedicas(
+            @RequestHeader("X-User-Id") Integer idAcompanante,
+            @PathVariable Integer idPersonaMayor
+    ) {
+        if (!tieneRelacionAceptada(idAcompanante, idPersonaMayor)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("No tienes autorización para consultar a esta persona mayor");
+        }
+
+        DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
+
+        List<CitaMedicaSeguimientoResponse> respuesta = citaMedicaLookupRepository
+                .findByIdPersonaMayorOrderByFechaAscHoraAsc(idPersonaMayor)
+                .stream()
+                .map(c -> new CitaMedicaSeguimientoResponse(
+                        c.getIdCita(),
+                        c.getTitulo(),
+                        c.getLugar(),
+                        c.getFecha() != null ? c.getFecha().toString() : null,
+                        c.getHora() != null ? c.getHora().format(formatoHora) : null,
+                        c.getObservaciones()
                 ))
                 .toList();
 

@@ -3,10 +3,12 @@ package com.proyectogrado.salud_backend.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /**
- * Cita médica de una persona mayor. idPersonaMayor es un Integer simple y
+ * Cita médica de una persona mayor, con el estado de sus recordatorios
+ * (ver CitaMedicaReminderScheduler). idPersonaMayor es un Integer simple y
  * no una relación JPA, porque la tabla persona_mayor es de auth-service.
  */
 @Entity
@@ -35,6 +37,18 @@ public class CitaMedica {
 
     @Column(name = "observaciones")
     private String observaciones;
+
+    /**
+     * Inicio de la cita (fecha + hora) para el que ya se envió el aviso del
+     * día antes. Si la cita cambia de fecha u hora deja de coincidir y se
+     * vuelve a avisar (ver CitaMedicaRepository).
+     */
+    @Column(name = "recordatorio_dia_enviado_para")
+    private LocalDateTime recordatorioDiaEnviadoPara;
+
+    /** Lo mismo, para el aviso de una hora antes. */
+    @Column(name = "recordatorio_hora_enviado_para")
+    private LocalDateTime recordatorioHoraEnviadoPara;
 
     public CitaMedica() {
     }
@@ -93,5 +107,26 @@ public class CitaMedica {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+
+    public LocalDateTime getRecordatorioDiaEnviadoPara() {
+        return recordatorioDiaEnviadoPara;
+    }
+
+    public void setRecordatorioDiaEnviadoPara(LocalDateTime recordatorioDiaEnviadoPara) {
+        this.recordatorioDiaEnviadoPara = recordatorioDiaEnviadoPara;
+    }
+
+    public LocalDateTime getRecordatorioHoraEnviadoPara() {
+        return recordatorioHoraEnviadoPara;
+    }
+
+    public void setRecordatorioHoraEnviadoPara(LocalDateTime recordatorioHoraEnviadoPara) {
+        this.recordatorioHoraEnviadoPara = recordatorioHoraEnviadoPara;
+    }
+
+    /** Fecha y hora de la cita, o null si falta alguna. */
+    public LocalDateTime getInicio() {
+        return fecha != null && hora != null ? fecha.atTime(hora) : null;
     }
 }

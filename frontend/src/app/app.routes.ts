@@ -284,6 +284,14 @@ export const routes: Routes = [
       },
 
       {
+        path: 'citas-medicas',
+        loadComponent: () =>
+          import('./pages/dashboard/persona-mayor/citas-medicas/citas-medicas').then(
+            (m) => m.CitasMedicas,
+          ),
+      },
+
+      {
         path: 'perfil',
         loadComponent: () => import('./shared/perfil/perfil').then((m) => m.Perfil),
         data: { tipoPerfil: 'PERSONA_MAYOR' },

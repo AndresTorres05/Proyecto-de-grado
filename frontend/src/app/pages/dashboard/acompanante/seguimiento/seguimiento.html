@@ -233,6 +233,139 @@
 
       </section>
 
+
+      <!-- Citas médicas de la persona seleccionada -->
+
+      <section class="seguimiento__seccion">
+
+        <div class="seccion__header">
+          <h2>
+            <app-icon name="stethoscope" />
+            Citas médicas
+          </h2>
+
+          <p>
+            Próximas citas y las más recientes de
+            <strong>{{ personaSeleccionada.nombre }}</strong>.
+            Te avisamos un día antes y una hora antes de cada una.
+          </p>
+        </div>
+
+
+        @if (cargandoCitas) {
+
+          <div class="seguimiento__mensaje">
+            Cargando citas médicas...
+          </div>
+
+        }
+
+        @if (!cargandoCitas && errorCitas) {
+
+          <div class="seguimiento__error">
+            <app-icon name="alert-circle" />
+            {{ errorCitas }}
+          </div>
+
+        }
+
+        @if (!cargandoCitas && !errorCitas) {
+
+          <h3 class="citas__subtitulo">Próximas</h3>
+
+          @if (citasProximas.length > 0) {
+
+            <div class="medicamentos">
+
+              @for (cita of citasProximas; track cita.idCita) {
+
+                <article class="medicamento-card">
+
+                  <div class="medicamento-card__header">
+
+                    <div class="medicamento-card__icono" aria-hidden="true">
+                      <app-icon name="stethoscope" />
+                    </div>
+
+                    <div class="medicamento-card__titulo">
+                      <span class="medicamento-card__eyebrow">Cita médica</span>
+
+                      <h3>{{ cita.titulo }}</h3>
+                    </div>
+
+                    @if (faltaParaCita(cita); as falta) {
+                      <span class="medicamento-card__estado">
+                        <span class="medicamento-card__estado-dot"></span>
+                        {{ falta }}
+                      </span>
+                    }
+
+                  </div>
+
+
+                  <div class="medicamento-card__datos">
+
+                    <div class="dato">
+                      <span>Fecha</span>
+                      <strong class="citas__fecha">{{ fechaDeCita(cita) }}</strong>
+                    </div>
+
+                    <div class="dato">
+                      <span>Hora</span>
+                      <strong>{{ formatearHora(cita.hora) }}</strong>
+                    </div>
+
+                    <div class="dato dato--ancho">
+                      <span>Lugar</span>
+                      <strong>{{ cita.lugar }}</strong>
+                    </div>
+
+                    @if (cita.observaciones) {
+                      <div class="dato dato--ancho">
+                        <span>Indicaciones</span>
+                        <strong>{{ cita.observaciones }}</strong>
+                      </div>
+                    }
+
+                  </div>
+
+                </article>
+
+              }
+
+            </div>
+
+          } @else {
+
+            <p class="citas__vacio">No tiene citas próximas registradas.</p>
+
+          }
+
+
+          <h3 class="citas__subtitulo">Recientes</h3>
+
+          @if (citasPasadas.length > 0) {
+
+            <ul class="citas__historial">
+              @for (cita of citasPasadas; track cita.idCita) {
+                <li>
+                  <span class="citas__fecha">{{ fechaDeCita(cita) }}, {{ formatearHora(cita.hora) }}</span>
+                  <strong>{{ cita.titulo }}</strong>
+                  <span>{{ cita.lugar }}</span>
+                </li>
+              }
+            </ul>
+
+          } @else {
+
+            <p class="citas__vacio">Aún no hay citas pasadas registradas.</p>
+
+          }
+
+        }
+
+      </section>
+
     }
 
   }

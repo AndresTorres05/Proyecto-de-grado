@@ -23,6 +23,7 @@ export const PANEL_CONFIG: Record<string, PanelConfig> = {
       { icon: 'clock', label: 'Recordatorios', path: '/panel/persona-mayor/recordatorios' },
       { icon: 'phone', label: 'Contactos', path: '/panel/persona-mayor/contactos' },
       { icon: 'activity', label: 'Signos vitales', path: '/panel/persona-mayor/signos-vitales' },
+      { icon: 'stethoscope', label: 'Citas médicas', path: '/panel/persona-mayor/citas-medicas' },
       { icon: 'calendar', label: 'Actividades', path: '/panel/persona-mayor/actividades' },
       { icon: 'building', label: 'Organizaciones', path: '/panel/persona-mayor/organizaciones' },
       { icon: 'heart', label: 'Intereses', path: '/panel/persona-mayor/intereses' },

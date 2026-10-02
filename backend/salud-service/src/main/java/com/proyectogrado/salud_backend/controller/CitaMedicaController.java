@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 /**
- * Citas médicas de la persona mayor (crear, listar, editar y borrar).
- * Por ahora no tienen ruta en el gateway ni pantalla en el frontend.
+ * Citas médicas de la persona mayor autenticada: crear, listar, editar y
+ * borrar. Los recordatorios (un día y una hora antes) los envía
+ * CitaMedicaReminderScheduler; los acompañantes las consultan desde
+ * acompanante-service.
  */
 @RestController
 @RequestMapping("/api/persona-mayor/citas-medicas")
@@ -44,10 +47,15 @@ public class CitaMedicaController {
 
     /** Crea una cita para la persona mayor autenticada. */
     @PostMapping
-    public ResponseEntity<CitaMedicaResponse> crear(
+    public ResponseEntity<?> crear(
             @RequestHeader("X-User-Id") Integer idPersonaMayor,
             @RequestBody CitaMedicaRequest request
     ) {
+        String errorCita = validar(request);
+        if (errorCita != null) {
+            return ResponseEntity.badRequest().body(errorCita);
+        }
+
         CitaMedica cita = new CitaMedica();
 
         cita.setIdPersonaMayor(idPersonaMayor);
@@ -72,6 +80,11 @@ public class CitaMedicaController {
         if (cita == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("Esta cita médica no pertenece a este usuario");
+        }
+
+        String errorCita = validar(request);
+        if (errorCita != null) {
+            return ResponseEntity.badRequest().body(errorCita);
         }
 
         aplicarCambios(cita, request);
@@ -116,24 +129,45 @@ public class CitaMedicaController {
         return cita;
     }
 
-    /** Copia los datos del formulario; la fecha y la hora solo cambian si vienen. */
+    /** Mensaje de error si falta un dato obligatorio o la fecha/hora no se entiende; null si todo está bien. */
+    private String validar(CitaMedicaRequest request) {
+        if (estaVacio(request.getTitulo()) || estaVacio(request.getLugar())
+                || estaVacio(request.getFecha()) || estaVacio(request.getHora())) {
+            return "Escribe el motivo, el lugar, la fecha y la hora de la cita";
+        }
+
+        try {
+            LocalDate.parse(request.getFecha());
+            LocalTime.parse(request.getHora());
+        } catch (DateTimeParseException e) {
+            return "La fecha o la hora de la cita no son válidas";
+        }
+
+        return null;
+    }
+
+    private boolean estaVacio(String texto) {
+        return texto == null || texto.isBlank();
+    }
+
+    /**
+     * Copia los datos del formulario (ya validados). Si cambian la fecha o
+     * la hora, el scheduler vuelve a enviar los recordatorios para el nuevo
+     * horario.
+     */
     private void aplicarCambios(
             CitaMedica cita,
             CitaMedicaRequest request
     ) {
-        cita.setTitulo(request.getTitulo());
-        cita.setLugar(request.getLugar());
-        cita.setObservaciones(request.getObservaciones());
-
-        if (request.getFecha() != null &&
-                !request.getFecha().isBlank()) {
-            cita.setFecha(LocalDate.parse(request.getFecha()));
-        }
-
-        if (request.getHora() != null &&
-                !request.getHora().isBlank()) {
-            cita.setHora(LocalTime.parse(request.getHora()));
-        }
+        cita.setTitulo(request.getTitulo().trim());
+        cita.setLugar(request.getLugar().trim());
+        cita.setObservaciones(
+                estaVacio(request.getObservaciones())
+                        ? null
+                        : request.getObservaciones().trim()
+        );
+        cita.setFecha(LocalDate.parse(request.getFecha()));
+        cita.setHora(LocalTime.parse(request.getHora()));
     }
 
     private CitaMedicaResponse aRespuesta(CitaMedica cita) {

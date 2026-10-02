@@ -319,3 +319,73 @@
 .dato--ancho {
   grid-column: 1 / -1;
 }
+
+
+/* Citas médicas */
+
+.citas__subtitulo {
+  margin: 0 0 14px;
+  color: var(--vita-navy);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.medicamentos + .citas__subtitulo,
+.citas__vacio + .citas__subtitulo {
+  margin-top: 28px;
+}
+
+.citas__vacio {
+  margin: 0;
+  color: var(--vita-text-gray);
+}
+
+.citas__fecha::first-letter {
+  text-transform: uppercase;
+}
+
+.citas__historial {
+  list-style: none;
+  margin: 0;
+  padding: 6px 20px;
+
+  border-radius: 18px;
+  background: var(--vita-white);
+  box-shadow: 0 7px 22px rgba(20, 46, 78, 0.06);
+}
+
+.citas__historial li {
+  display: grid;
+  grid-template-columns: 200px 1fr 1fr;
+  align-items: center;
+  gap: 12px;
+
+  padding: 12px 0;
+  border-bottom: 1px solid var(--vita-border);
+
+  color: var(--vita-text-gray);
+  font-size: 0.9rem;
+}
+
+.citas__historial li:last-child {
+  border-bottom: none;
+}
+
+.citas__historial strong {
+  color: var(--vita-navy);
+}
+
+.citas__historial .citas__fecha {
+  display: block;
+  color: var(--vita-navy);
+  font-weight: 600;
+}
+
+@media (max-width: 700px) {
+
+  .citas__historial li {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+}

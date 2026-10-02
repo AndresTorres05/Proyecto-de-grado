@@ -11,6 +11,7 @@ import { AuthService } from '../auth/auth.service';
 export type Recurso =
   | 'actividades'
   | 'medicamentos'
+  | 'citas-medicas'
   | 'signos-vitales'
   | 'acompanamientos'   // persona mayor <-> acompañante, solicitudes, contactos
   | 'organizaciones'    // persona mayor <-> organización, solicitudes
