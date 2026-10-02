@@ -29,8 +29,8 @@
 --     (spring.datasource.url/username/password).
 --   - Las tablas las crea Hibernate al arrancar (ddl-auto=update): arranca
 --     al menos una vez todos los servicios antes de correr este script.
---   - pgAdmin 4 o cualquier cliente: conéctate con esos datos, pega este
---     archivo completo en un Query Tool y ejecútalo.
+--   - SQL Editor de Supabase, pgAdmin 4 o cualquier cliente: pega este
+--     archivo completo y ejecútalo.
 --   - psql: psql "<cadena de conexión>" -f seed_datos_fictisios.sql
 --
 -- Es seguro volver a correrlo: al inicio borra únicamente lo que este
@@ -69,8 +69,15 @@ BEGIN;
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
+-- Tablas auxiliares del script. Van en un esquema propio y no como
+-- tablas temporales porque el SQL Editor de Supabase no mantiene la
+-- transacción: una TEMP ... ON COMMIT DROP desaparecería al crearse. Se
+-- borra al final (y aquí, por si una corrida anterior falló a medias).
+DROP SCHEMA IF EXISTS seed_tmp CASCADE;
+CREATE SCHEMA seed_tmp;
+
 -- Reloj único para todo el script, en hora de Colombia.
-CREATE TEMP TABLE seed_reloj ON COMMIT DROP AS
+CREATE TABLE seed_tmp.seed_reloj AS
 SELECT date_trunc('minute', now() AT TIME ZONE 'America/Bogota') AS ahora,
        (now() AT TIME ZONE 'America/Bogota')::date                AS hoy;
 
@@ -93,54 +100,54 @@ ALTER TABLE actividad ADD COLUMN IF NOT EXISTS estado varchar(255);
 -- persona-mayor-service y acompanante-service al arrancar.
 ALTER TABLE persona_mayor_acompanante ADD COLUMN IF NOT EXISTS solicitada_por varchar(255);
 
-CREATE TEMP TABLE seed_usuarios_viejos ON COMMIT DROP AS
+CREATE TABLE seed_tmp.seed_usuarios_viejos AS
 SELECT id_usuario, celular FROM usuario WHERE correo LIKE '%@vitaplus.test';
 
-CREATE TEMP TABLE seed_orgs_viejas ON COMMIT DROP AS
+CREATE TABLE seed_tmp.seed_orgs_viejas AS
 SELECT DISTINCT id_organizacion FROM usuario
  WHERE correo LIKE 'org%@vitaplus.test' AND id_organizacion IS NOT NULL;
 
 DELETE FROM notificacion
- WHERE celular IN (SELECT celular FROM seed_usuarios_viejos WHERE celular IS NOT NULL);
+ WHERE celular IN (SELECT celular FROM seed_tmp.seed_usuarios_viejos WHERE celular IS NOT NULL);
 
 DELETE FROM participacion
- WHERE id_persona_mayor IN (SELECT id_usuario FROM seed_usuarios_viejos)
+ WHERE id_persona_mayor IN (SELECT id_usuario FROM seed_tmp.seed_usuarios_viejos)
     OR id_actividad IN (SELECT id_actividad FROM actividad
-                         WHERE id_organizacion IN (SELECT id_organizacion FROM seed_orgs_viejas));
+                         WHERE id_organizacion IN (SELECT id_organizacion FROM seed_tmp.seed_orgs_viejas));
 
 DELETE FROM actividad
- WHERE id_organizacion IN (SELECT id_organizacion FROM seed_orgs_viejas);
+ WHERE id_organizacion IN (SELECT id_organizacion FROM seed_tmp.seed_orgs_viejas);
 
 DELETE FROM cita_medica
- WHERE id_persona_mayor IN (SELECT id_usuario FROM seed_usuarios_viejos);
+ WHERE id_persona_mayor IN (SELECT id_usuario FROM seed_tmp.seed_usuarios_viejos);
 
 DELETE FROM signo_vital
- WHERE id_persona_mayor IN (SELECT id_usuario FROM seed_usuarios_viejos);
+ WHERE id_persona_mayor IN (SELECT id_usuario FROM seed_tmp.seed_usuarios_viejos);
 
 DELETE FROM medicamento
- WHERE id_persona_mayor IN (SELECT id_usuario FROM seed_usuarios_viejos);
+ WHERE id_persona_mayor IN (SELECT id_usuario FROM seed_tmp.seed_usuarios_viejos);
 
 DELETE FROM persona_mayor_gusto
- WHERE id_persona_mayor IN (SELECT id_usuario FROM seed_usuarios_viejos);
+ WHERE id_persona_mayor IN (SELECT id_usuario FROM seed_tmp.seed_usuarios_viejos);
 
 DELETE FROM persona_mayor_organizacion
- WHERE id_persona_mayor IN (SELECT id_usuario FROM seed_usuarios_viejos)
-    OR id_organizacion IN (SELECT id_organizacion FROM seed_orgs_viejas);
+ WHERE id_persona_mayor IN (SELECT id_usuario FROM seed_tmp.seed_usuarios_viejos)
+    OR id_organizacion IN (SELECT id_organizacion FROM seed_tmp.seed_orgs_viejas);
 
 DELETE FROM persona_mayor_acompanante
- WHERE id_persona_mayor IN (SELECT id_usuario FROM seed_usuarios_viejos)
-    OR id_acompanante IN (SELECT id_usuario FROM seed_usuarios_viejos);
+ WHERE id_persona_mayor IN (SELECT id_usuario FROM seed_tmp.seed_usuarios_viejos)
+    OR id_acompanante IN (SELECT id_usuario FROM seed_tmp.seed_usuarios_viejos);
 
 DELETE FROM voluntario_organizacion
- WHERE id_voluntario IN (SELECT id_usuario FROM seed_usuarios_viejos)
-    OR id_organizacion IN (SELECT id_organizacion FROM seed_orgs_viejas);
+ WHERE id_voluntario IN (SELECT id_usuario FROM seed_tmp.seed_usuarios_viejos)
+    OR id_organizacion IN (SELECT id_organizacion FROM seed_tmp.seed_orgs_viejas);
 
-DELETE FROM usuario_rol    WHERE id_usuario IN (SELECT id_usuario FROM seed_usuarios_viejos);
-DELETE FROM voluntario     WHERE id_usuario IN (SELECT id_usuario FROM seed_usuarios_viejos);
-DELETE FROM acompanante    WHERE id_usuario IN (SELECT id_usuario FROM seed_usuarios_viejos);
-DELETE FROM persona_mayor  WHERE id_usuario IN (SELECT id_usuario FROM seed_usuarios_viejos);
-DELETE FROM usuario        WHERE id_usuario IN (SELECT id_usuario FROM seed_usuarios_viejos);
-DELETE FROM organizacion   WHERE id_organizacion IN (SELECT id_organizacion FROM seed_orgs_viejas);
+DELETE FROM usuario_rol    WHERE id_usuario IN (SELECT id_usuario FROM seed_tmp.seed_usuarios_viejos);
+DELETE FROM voluntario     WHERE id_usuario IN (SELECT id_usuario FROM seed_tmp.seed_usuarios_viejos);
+DELETE FROM acompanante    WHERE id_usuario IN (SELECT id_usuario FROM seed_tmp.seed_usuarios_viejos);
+DELETE FROM persona_mayor  WHERE id_usuario IN (SELECT id_usuario FROM seed_tmp.seed_usuarios_viejos);
+DELETE FROM usuario        WHERE id_usuario IN (SELECT id_usuario FROM seed_tmp.seed_usuarios_viejos);
+DELETE FROM organizacion   WHERE id_organizacion IN (SELECT id_organizacion FROM seed_tmp.seed_orgs_viejas);
 
 -- 1. Roles base (por si esta base de datos nunca ha arrancado el backend)
 INSERT INTO rol (nombre)
@@ -169,7 +176,7 @@ ins_usuario AS (
            r.ahora - make_interval(days => 300 + floor(random() * 300)::int)
     FROM ins_org o
     JOIN datos_org d ON d.nombre = o.nombre
-    CROSS JOIN seed_reloj r
+    CROSS JOIN seed_tmp.seed_reloj r
     RETURNING id_usuario
 )
 INSERT INTO usuario_rol (id_usuario, id_rol)
@@ -266,7 +273,7 @@ filas AS (
              ELSE NULL END AS eps,
         'pm' || lpad(d.i::text, 3, '0') || '@vitaplus.test' AS correo,
         '+5700001' || lpad(d.i::text, 5, '0') AS celular
-    FROM datos d CROSS JOIN seed_reloj r
+    FROM datos d CROSS JOIN seed_tmp.seed_reloj r
 ),
 con_ips AS (
     SELECT f.*,
@@ -291,7 +298,7 @@ ins_usuario AS (
            c.fecha_nacimiento, c.genero, c.direccion,
            random() >= 0.03,  -- ~3% de cuentas desactivadas
            r.ahora - make_interval(days => floor(random() * 400)::int)
-    FROM con_ips c CROSS JOIN seed_reloj r
+    FROM con_ips c CROSS JOIN seed_tmp.seed_reloj r
     RETURNING id_usuario, correo
 )
 INSERT INTO persona_mayor (id_usuario, eps, ips)
@@ -330,7 +337,7 @@ filas AS (
                || '-' || (2 + floor(random() * 80)::int) || ', ' || d.barrio AS direccion,
            'acomp' || lpad(d.i::text, 3, '0') || '@vitaplus.test' AS correo,
            '+5700002' || lpad(d.i::text, 5, '0') AS celular
-    FROM datos d CROSS JOIN seed_reloj r
+    FROM datos d CROSS JOIN seed_tmp.seed_reloj r
 ),
 ins_usuario AS (
     INSERT INTO usuario (nombre_usuario, contrasena_hash, correo, celular, fecha_nacimiento, genero,
@@ -338,7 +345,7 @@ ins_usuario AS (
     SELECT f.nombre_usuario, crypt('Vita2025*', gen_salt('bf', 10)), f.correo, f.celular,
            f.fecha_nacimiento, f.genero, f.direccion, true,
            r.ahora - make_interval(days => floor(random() * 400)::int)
-    FROM filas f CROSS JOIN seed_reloj r
+    FROM filas f CROSS JOIN seed_tmp.seed_reloj r
     RETURNING id_usuario, correo
 )
 INSERT INTO acompanante (id_usuario, relacion)
@@ -381,7 +388,7 @@ filas AS (
            (r.hoy - make_interval(years => d.edad, days => floor(random() * 365)::int))::date AS fecha_nacimiento,
            'vol' || lpad(d.i::text, 3, '0') || '@vitaplus.test' AS correo,
            '+5700003' || lpad(d.i::text, 5, '0') AS celular
-    FROM datos d CROSS JOIN seed_reloj r
+    FROM datos d CROSS JOIN seed_tmp.seed_reloj r
 ),
 ins_usuario AS (
     INSERT INTO usuario (nombre_usuario, contrasena_hash, correo, celular, fecha_nacimiento, genero,
@@ -389,7 +396,7 @@ ins_usuario AS (
     SELECT f.nombre_usuario, crypt('Vita2025*', gen_salt('bf', 10)), f.correo, f.celular,
            f.fecha_nacimiento, f.genero, true,
            r.ahora - make_interval(days => floor(random() * 400)::int)
-    FROM filas f CROSS JOIN seed_reloj r
+    FROM filas f CROSS JOIN seed_tmp.seed_reloj r
     RETURNING id_usuario, correo
 ),
 ins_voluntario AS (
@@ -541,7 +548,7 @@ ON CONFLICT DO NOTHING;
 --     coherentes entre sí: quien es hipertenso tiene la presión más alta,
 --     toma antihipertensivos y va a control de hipertensión.
 --     Prevalencias aproximadas en mayores de 60 años en Colombia.
-CREATE TEMP TABLE seed_perfil ON COMMIT DROP AS
+CREATE TABLE seed_tmp.seed_perfil AS
 WITH base AS (
     SELECT u.id_usuario, u.nombre_usuario, u.genero, pm.ips,
            extract(year FROM age(r.hoy, u.fecha_nacimiento))::int AS edad,
@@ -551,7 +558,7 @@ WITH base AS (
            random() AS r_signos
     FROM usuario u
     JOIN persona_mayor pm ON pm.id_usuario = u.id_usuario
-    CROSS JOIN seed_reloj r
+    CROSS JOIN seed_tmp.seed_reloj r
     WHERE u.correo LIKE 'pm%@vitaplus.test'
 )
 SELECT b.*,
@@ -601,7 +608,7 @@ candidatos AS (
     SELECT p.id_usuario, p.n_hta_meds, p.n_dm_meds, p.n_otros_meds,
            c.condicion, c.nombre, c.dosis, c.intervalo_horas, c.hora,
            row_number() OVER (PARTITION BY p.id_usuario, c.condicion ORDER BY random()) AS rn
-    FROM seed_perfil p
+    FROM seed_tmp.seed_perfil p
     JOIN catalogo c
       ON (c.condicion = 'hta'  AND p.hta)
       OR (c.condicion = 'dm'   AND p.dm)
@@ -631,7 +638,7 @@ SELECT e.id_usuario, e.nombre, e.dosis,
        (r.hoy + e.dias_proxima) + e.hora,
        (r.hoy - 1) + e.hora,
        e.r_activo >= 0.10   -- ~10% suspendidos
-FROM elegidos e CROSS JOIN seed_reloj r;
+FROM elegidos e CROSS JOIN seed_tmp.seed_reloj r;
 
 -- 13. Historial de signos vitales (últimos 6 meses).
 --     - Cada medición varía alrededor de los valores habituales de la
@@ -655,8 +662,8 @@ WITH mediciones AS (
            random() AS r_error,
            random() AS r_presion, random() AS r_temp, random() AS r_spo2,
            random() AS r_fr, random() AS r_peso, random() AS r_obs
-    FROM seed_perfil p
-    CROSS JOIN seed_reloj r
+    FROM seed_tmp.seed_perfil p
+    CROSS JOIN seed_tmp.seed_reloj r
     CROSS JOIN LATERAL generate_series(1, p.n_signos) AS k
     WHERE p.con_signos
 ),
@@ -728,7 +735,7 @@ WITH catalogo AS (
 ),
 opciones AS (
     SELECT p.id_usuario, p.ips, p.n_citas, array_agg(c.id) AS ids
-    FROM seed_perfil p
+    FROM seed_tmp.seed_perfil p
     JOIN catalogo c
       ON c.condicion = 'general'
       OR (c.condicion = 'hta'  AND p.hta)
@@ -743,7 +750,7 @@ citas AS (
            time '07:00' + make_interval(mins => 30 * floor(random() * 19)::int) AS hora,
            random() AS r_obs
     FROM opciones o
-    CROSS JOIN seed_reloj r
+    CROSS JOIN seed_tmp.seed_reloj r
     CROSS JOIN LATERAL generate_series(1, o.n_citas) AS k
 )
 INSERT INTO cita_medica (id_persona_mayor, titulo, lugar, fecha, hora, observaciones)
@@ -823,7 +830,7 @@ SELECT o.id_organizacion, p.nombre, p.descripcion,
               'Marcela Duarte', 'Liliana Rico'])[1 + floor(random() * 12)::int]
 FROM plantillas p
 CROSS JOIN generate_series(1, 3) AS ronda
-CROSS JOIN seed_reloj r
+CROSS JOIN seed_tmp.seed_reloj r
 JOIN n_org ON true
 JOIN orgs o ON o.rn = 1 + ((p.rn + ronda - 2) % n_org.n);
 
@@ -877,7 +884,7 @@ SELECT p.id_organizacion, p.id_usuario, p.estado, pl.nombre, pl.descripcion,
        p.nombre_usuario
 FROM propuestas p
 JOIN plantillas pl ON pl.rn = p.idx_plantilla
-CROSS JOIN seed_reloj r;
+CROSS JOIN seed_tmp.seed_reloj r;
 
 -- 16. Participación en actividades (inscripciones + asistencia).
 --     - Solo se inscriben personas mayores cuya relación con la
@@ -912,7 +919,7 @@ SELECT c.id_persona_mayor, c.id_actividad,
             WHEN random() < 0.85 THEN true
             ELSE false END,
        c.inicio
-FROM candidatos c CROSS JOIN seed_reloj r
+FROM candidatos c CROSS JOIN seed_tmp.seed_reloj r
 WHERE c.rn <= c.n_inscritos
 ON CONFLICT DO NOTHING;
 
@@ -924,26 +931,26 @@ ON CONFLICT DO NOTHING;
 --     - alertas de emergencia de ~5% de las personas mayores a sus
 --       acompañantes.
 --     Las de hace más de 2 días quedan casi todas leídas.
-CREATE TEMP TABLE seed_notif (celular text, mensaje text, fecha timestamp) ON COMMIT DROP;
+CREATE TABLE seed_tmp.seed_notif (celular text, mensaje text, fecha timestamp);
 
 -- Hora con el formato de los SMS: "8:00 a. m."
-CREATE OR REPLACE FUNCTION pg_temp.hora_sms(t time) RETURNS text LANGUAGE sql IMMUTABLE AS $$
+CREATE OR REPLACE FUNCTION seed_tmp.hora_sms(t time) RETURNS text LANGUAGE sql IMMUTABLE AS $$
     SELECT to_char(t, 'FMHH12:MI') || CASE WHEN t < time '12:00' THEN ' a. m.' ELSE ' p. m.' END
 $$;
 
 -- Medicamentos -> persona mayor
-INSERT INTO seed_notif
+INSERT INTO seed_tmp.seed_notif
 SELECT u.celular,
        'Es hora de tomar ' || m.nombre || coalesce(' (' || m.dosis || ')', '') || '.',
        (r.hoy - d) + m.hora
 FROM medicamento m
 JOIN usuario u ON u.id_usuario = m.id_persona_mayor AND u.correo LIKE 'pm%@vitaplus.test'
-CROSS JOIN seed_reloj r
+CROSS JOIN seed_tmp.seed_reloj r
 CROSS JOIN LATERAL (SELECT generate_series(1, 21) AS d) dias
 WHERE m.activo AND random() < 0.25;
 
 -- Medicamentos -> acompañantes aceptados
-INSERT INTO seed_notif
+INSERT INTO seed_tmp.seed_notif
 SELECT ua.celular,
        'Es hora de que ' || u.nombre_usuario || ' tome ' || m.nombre
            || coalesce(' (' || m.dosis || ')', '') || '.',
@@ -952,20 +959,20 @@ FROM medicamento m
 JOIN usuario u ON u.id_usuario = m.id_persona_mayor AND u.correo LIKE 'pm%@vitaplus.test'
 JOIN persona_mayor_acompanante pma ON pma.id_persona_mayor = m.id_persona_mayor AND pma.estado = 'ACEPTADA'
 JOIN usuario ua ON ua.id_usuario = pma.id_acompanante
-CROSS JOIN seed_reloj r
+CROSS JOIN seed_tmp.seed_reloj r
 CROSS JOIN LATERAL (SELECT generate_series(1, 21) AS d) dias
 WHERE m.activo AND random() < 0.10;
 
 -- Actividades -> persona mayor (1 hora antes)
-INSERT INTO seed_notif
+INSERT INTO seed_tmp.seed_notif
 SELECT u.celular,
-       'En 1 hora, a las ' || pg_temp.hora_sms(a.hora::time) || ', empieza tu actividad "'
+       'En 1 hora, a las ' || seed_tmp.hora_sms(a.hora::time) || ', empieza tu actividad "'
            || a.nombre || '" en ' || a.lugar || '.',
        a.fecha + a.hora::time - interval '1 hour'
 FROM participacion pa
 JOIN actividad a ON a.id_actividad = pa.id_actividad
 JOIN usuario u ON u.id_usuario = pa.id_persona_mayor AND u.correo LIKE 'pm%@vitaplus.test'
-CROSS JOIN seed_reloj r
+CROSS JOIN seed_tmp.seed_reloj r
 WHERE pa.asistio IS NOT NULL
   AND a.fecha >= r.hoy - 21;
 
@@ -974,10 +981,10 @@ WITH alertas AS (
     SELECT p.id_usuario, p.nombre_usuario,
            r.ahora - make_interval(days => floor(random() * 21)::int,
                                    hours => floor(random() * 12)::int) AS fecha
-    FROM seed_perfil p CROSS JOIN seed_reloj r
+    FROM seed_tmp.seed_perfil p CROSS JOIN seed_tmp.seed_reloj r
     WHERE random() < 0.05
 )
-INSERT INTO seed_notif
+INSERT INTO seed_tmp.seed_notif
 SELECT ua.celular,
        'ALERTA DE EMERGENCIA: ' || al.nombre_usuario
            || ' ha activado una alerta desde VITA+. Por favor, verifica que se encuentre bien.',
@@ -992,9 +999,11 @@ SELECT n.celular, n.mensaje,
        n.fecha AT TIME ZONE 'America/Bogota',
        CASE WHEN n.fecha < r.ahora - interval '2 days' THEN random() < 0.9
             ELSE random() < 0.3 END
-FROM seed_notif n CROSS JOIN seed_reloj r
+FROM seed_tmp.seed_notif n CROSS JOIN seed_tmp.seed_reloj r
 WHERE n.celular IS NOT NULL
   AND n.fecha <= r.ahora;
+
+DROP SCHEMA seed_tmp CASCADE;
 
 COMMIT;
 
